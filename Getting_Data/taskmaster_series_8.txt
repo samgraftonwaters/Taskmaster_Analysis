@@ -1,0 +1,581 @@
+<table class="tmtable">
+<tbody><tr class="tmtableheader">
+<th>Task
+</th>
+<th>Description
+</th>
+<th><a href="/wiki/Doc_Brown" title="Doc Brown"><span style="color:#FFF;">Doc Brown</span></a>
+</th>
+<th><a href="/wiki/Joe_Wilkinson" title="Joe Wilkinson"><span style="color:#FFF;">Joe Wilkinson</span></a>
+</th>
+<th><a href="/wiki/Jon_Richardson" title="Jon Richardson"><span style="color:#FFF;">Jon Richardson</span></a>
+</th>
+<th><a href="/wiki/Katherine_Ryan" title="Katherine Ryan"><span style="color:#FFF;">Katherine Ryan</span></a>
+</th>
+<th><a href="/wiki/Richard_Osman" title="Richard Osman"><span style="color:#FFF;">Richard Osman</span></a>
+</th></tr>
+<tr class="tmtableepisode">
+<td colspan="7">Episode 1: <span style="font-family: Veteran Typewriter;"><span class="color-link" style="color: #FFF;"><a href="/wiki/Fear_of_failure." title="Fear of failure.">Fear of failure.</a></span></span> (21 June 2016)
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Most_important_document" title="Most important document">1</a>
+</td>
+<td><b>Prize:</b> Most important document.
+</td>
+<td>4
+</td>
+<td><b>5</b>
+</td>
+<td>2
+</td>
+<td>3
+</td>
+<td>2
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Place_these_three_exercise_balls_on_the_yoga_mat_on_the_top_of_that_hill" title="Place these three exercise balls on the yoga mat on the top of that hill">2</a>
+</td>
+<td>Place these three exercise balls on the yoga mat on the top of that hill. The task is complete when all three balls sit fully inflated and stationary on the mat.
+</td>
+<td>1
+</td>
+<td>2
+</td>
+<td>4
+</td>
+<td>3
+</td>
+<td><b>5</b>
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Get_this_potato_into_the_golf_hole" title="Get this potato into the golf hole">3</a>
+</td>
+<td>Get this potato into the golf hole. You may not touch the red green.
+</td>
+<td>2
+</td>
+<td>DQ
+</td>
+<td><b>5</b>
+</td>
+<td>3
+</td>
+<td>4
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Find_out_the_following_information_from_this_Swedish_person" title="Find out the following information from this Swedish person">4</a>
+</td>
+<td>Find out the following information from this <a href="/wiki/Fred_the_Swede" title="Fred the Swede">Swedish person</a>. The Swedish person may not speak or write in English.
+</td>
+<td>2
+</td>
+<td>1
+</td>
+<td>3
+</td>
+<td><b>5</b>
+</td>
+<td>4
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Pack_for_your_holiday" title="Pack for your holiday">5</a>
+</td>
+<td><b>Live:</b> Pack for your holiday. All items must either be packed in your hand luggage or worn on your body.
+</td>
+<td>0
+</td>
+<td>0
+</td>
+<td>4
+</td>
+<td>3
+</td>
+<td><b>5</b>
+</td></tr>
+<tr class="tmtabletotal">
+<th colspan="2">Total
+</th>
+<td>9
+</td>
+<td>8
+</td>
+<td>18
+</td>
+<td>17
+</td>
+<td class="tmtablewinner">20
+</td></tr>
+<tr class="tmtableepisode">
+<td colspan="7">Episode 2: <span style="font-family: Veteran Typewriter;"><span class="color-link" style="color: #FFF;"><a href="/wiki/Pork_is_a_sausage." title="Pork is a sausage.">Pork is a sausage.</a></span></span> (28 June 2016)
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Trendiest_item_of_clothing" title="Trendiest item of clothing">1</a>
+</td>
+<td><b>Prize:</b> Trendiest item of clothing.
+</td>
+<td><b>5</b>
+</td>
+<td>2
+</td>
+<td>3
+</td>
+<td>4
+</td>
+<td>1
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Eat_me" title="Eat me">2</a>
+</td>
+<td>Eat me (an egg). Fastest wins.
+</td>
+<td>4
+</td>
+<td>2
+</td>
+<td>3
+</td>
+<td>0
+</td>
+<td><b>5</b>
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Make_the_best_music_video_for_a_nursery_rhyme" title="Make the best music video for a nursery rhyme">3</a>
+</td>
+<td>Make the best music video for a nursery rhyme.
+</td>
+<td><b>5</b>
+</td>
+<td>2
+</td>
+<td><b>5</b>
+</td>
+<td>4
+</td>
+<td>3
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Using_this_camera,_take_a_picture_of_an_inanimate_object_that_looks_like_you" title="Using this camera, take a picture of an inanimate object that looks like you">4</a>
+</td>
+<td>Using this camera, take a picture of an inanimate object that looks like you.
+</td>
+<td>1
+</td>
+<td>2
+</td>
+<td>4
+</td>
+<td>3
+</td>
+<td><b>5</b>
+</td></tr>
+<tr>
+<td class="tmtablerow" rowspan="2"><a href="/wiki/Order_the_following_pizza_for_the_Taskmaster" title="Order the following pizza for the Taskmaster">5</a>
+</td>
+<td>Order the following pizza for the Taskmaster: Extra large vegetarian pizza with pepperoni and bacon, and without tomato and cheese. You may not use the following words: EXTRA, LARGE, VEGETARIAN, PIZZA, PEPPERONI, BACON, TOMATO, CHEESE
+</td>
+<td>2
+</td>
+<td>4
+</td>
+<td><b>5</b>
+</td>
+<td>3
+</td>
+<td>1
+</td></tr>
+<tr class="tmtablerow">
+<td><small><i><b>Bonus:</b> Make the pizza person say the word "bubbles".</i></small>
+</td>
+<td><small>1</small>
+</td>
+<td><small>1</small>
+</td>
+<td><small>0</small>
+</td>
+<td><small>1</small>
+</td>
+<td><small>0</small>
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Using_these_big_chopsticks,_get_these_potatoes_into_your_basket" title="Using these big chopsticks, get these potatoes into your basket">6</a>
+</td>
+<td><b>Live:</b> Using these big chopsticks, get these potatoes into your basket. You must only hold the big chopsticks on the grips provided. The big chopsticks alone may touch the potatoes in turn. Whoever has the most potatoes.
+</td>
+<td>0
+</td>
+<td>0
+</td>
+<td><b>5</b>
+</td>
+<td>4
+</td>
+<td>DQ
+</td></tr>
+<tr class="tmtabletotal">
+<th colspan="2">Total
+</th>
+<td>18
+</td>
+<td>13
+</td>
+<td class="tmtablewinner">25
+</td>
+<td>19
+</td>
+<td>15
+</td></tr>
+<tr class="tmtableepisode">
+<td colspan="7">Episode 3: <span style="font-family: Veteran Typewriter;"><span class="color-link" style="color: #FFF;"><a href="/wiki/A_pistachio_eclair." title="A pistachio eclair.">A pistachio eclair.</a></span></span> (5 July 2016)
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Best_dinner_party_guest" title="Best dinner party guest">1</a>
+</td>
+<td><b>Prize:</b> Best dinner party guest.
+</td>
+<td>3
+</td>
+<td><b>5</b>
+</td>
+<td>1
+</td>
+<td>4
+</td>
+<td>2
+</td></tr>
+<tr class="tmtablerow">
+<td><a class="mw-redirect" href="/wiki/Impress_this_Mayor" title="Impress this Mayor">2</a>
+</td>
+<td>Impress this mayor.
+</td>
+<td>2
+</td>
+<td>3
+</td>
+<td>1
+</td>
+<td><b>5</b>
+</td>
+<td>4
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Make_the_most_unexpected_silhouette_on_this_screen" title="Make the most unexpected silhouette on this screen">3</a>
+</td>
+<td>Make the most unexpected silhouette on this screen.
+</td>
+<td>1
+</td>
+<td>3
+</td>
+<td><b>5</b>
+</td>
+<td>2
+</td>
+<td>4
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Buy_a_gift_for_the_Taskmaster" title="Buy a gift for the Taskmaster">4</a>
+</td>
+<td>Buy a gift for the Taskmaster.
+</td>
+<td>3
+</td>
+<td>2
+</td>
+<td>1
+</td>
+<td>4
+</td>
+<td><b>5</b>
+</td></tr>
+<tr class="tmtablerow">
+<td rowspan="3"><a href="/wiki/Get_a_potato" title="Get a potato">5</a>
+</td>
+<td><b>Team:</b> Put on this blindfold, then instruct only the person closest to you to open their task.
+</td>
+<td>0
+</td>
+<td>-
+</td>
+<td>-
+</td>
+<td>-
+</td>
+<td>-
+</td></tr>
+<tr class="tmtablerow">
+<td><b>Team:</b> Put the earplugs in your ears and the ear protectors over the earplugs, then continue reading. You must remain within your bandstand. Instruct the next person to open their task.
+</td>
+<td>-
+</td>
+<td>0
+</td>
+<td>-
+</td>
+<td>-
+</td>
+<td><b>5</b><sup class="reference" id="cite_ref-Josh_1-0"><a href="#cite_note-Josh-1"><span class="cite-bracket">[</span>1<span class="cite-bracket">]</span></a></sup>
+</td></tr>
+<tr class="tmtablerow">
+<td><b>Team:</b> Do not read this out loud. Get a potato.
+</td>
+<td>-
+</td>
+<td>-
+</td>
+<td><b>5</b><sup class="reference" id="cite_ref-Josh_1-1"><a href="#cite_note-Josh-1"><span class="cite-bracket">[</span>1<span class="cite-bracket">]</span></a></sup>
+</td>
+<td>0
+</td>
+<td>-
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Throw_the_rabbits_into_your_hat" title="Throw the rabbits into your hat">6</a>
+</td>
+<td><b>Live:</b> Throw the rabbits into your hat.
+</td>
+<td>12
+</td>
+<td>12
+</td>
+<td>4
+</td>
+<td><b>15</b>
+</td>
+<td>7
+</td></tr>
+<tr class="tmtabletotal">
+<th colspan="2">Total
+</th>
+<td>21
+</td>
+<td>25
+</td>
+<td>17
+</td>
+<td class="tmtablewinner">30
+</td>
+<td>27
+</td></tr>
+<tr class="tmtableepisode">
+<td colspan="7">Episode 4: <span style="font-family: Veteran Typewriter;"><span class="color-link" style="color: #FFF;"><a href="/wiki/Welcome_to_Rico_Face." title="Welcome to Rico Face.">Welcome to Rico Face.</a></span></span> (12 July 2016)
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Coolest_blue_thing" title="Coolest blue thing">1</a>
+</td>
+<td><b>Prize:</b> Coolest blue thing.
+</td>
+<td>3
+</td>
+<td>4
+</td>
+<td><b>5</b>
+</td>
+<td>2
+</td>
+<td>1
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Rescue_the_cat_(Series_2)" title="Rescue the cat (Series 2)">2</a>
+</td>
+<td>Rescue the cat.
+</td>
+<td>4
+</td>
+<td>3
+</td>
+<td>2
+</td>
+<td><b>5</b>
+</td>
+<td>0
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Conceal_this_pineapple_on_your_person" title="Conceal this pineapple on your person">3</a>
+</td>
+<td>Conceal this pineapple on your person. No part of the pineapple may be thrown away.
+</td>
+<td>2
+</td>
+<td>1
+</td>
+<td><b>5</b>
+</td>
+<td>4
+</td>
+<td>3
+</td></tr>
+<tr class="tmtablerow">
+<td rowspan="2"><a href="/wiki/Set_a_fun_task" title="Set a fun task">4</a>
+</td>
+<td>Set a fun task. Your task must take no more than one minute.
+</td>
+<td>0
+</td>
+<td>0
+</td>
+<td>-
+</td>
+<td>0
+</td>
+<td>0
+</td></tr>
+<tr class="tmtablerow">
+<td>Guess who set you each task.
+</td>
+<td>-
+</td>
+<td>-
+</td>
+<td><b>4</b>
+</td>
+<td>-
+</td>
+<td>-
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Construct_the_best_thing_for_the_Taskmaster" title="Construct the best thing for the Taskmaster">5</a>
+</td>
+<td><b>Team:</b> Using only the items on the rug, construct the best thing for the Taskmaster.
+</td>
+<td><b>4</b>
+</td>
+<td><b>4</b>
+</td>
+<td>1
+</td>
+<td><b>4</b>
+</td>
+<td>1
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Create_the_highest_tower_using_only_these_potato-based_items" title="Create the highest tower using only these potato-based items">6</a>
+</td>
+<td><b>Live:</b> Create the highest tower using only these potato-based items. Your potato tower must be self-standing. Your potato tower must be built on the table. Your potato tower will be measured from the tabletop to the highest potato point.
+</td>
+<td><b>5</b>
+</td>
+<td>0
+</td>
+<td>0
+</td>
+<td>0
+</td>
+<td>0
+</td></tr>
+<tr class="tmtabletotal">
+<th colspan="2">Total
+</th>
+<td class="tmtablewinner">18
+</td>
+<td>12
+</td>
+<td>17
+</td>
+<td>15
+</td>
+<td>5
+</td></tr>
+<tr class="tmtableepisode">
+<td colspan="7">Episode 5: <span style="font-family: Veteran Typewriter;"><span class="color-link" style="color: #FFF;"><a href="/wiki/There%27s_strength_in_arches." title="There's strength in arches.">There's strength in arches.</a></span></span> (19 July 2016)
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Best_piece_of_memorabilia" title="Best piece of memorabilia">1</a>
+</td>
+<td><b>Prize:</b> Best piece of memorabilia.
+</td>
+<td>2
+</td>
+<td>1
+</td>
+<td>3
+</td>
+<td>4
+</td>
+<td><b>5</b>
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Get_all_this_shopping_into_the_shopping_trolley" title="Get all this shopping into the shopping trolley">2</a>
+</td>
+<td>Get all this shopping into the shopping trolley.
+</td>
+<td>DQ
+</td>
+<td><b>5</b>
+</td>
+<td>DQ
+</td>
+<td>3
+</td>
+<td>4
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Make_the_best_stop-motion_film_starring_this_potato" title="Make the best stop-motion film starring this potato">3</a>
+</td>
+<td><b>Team:</b> Make the best stop-motion film starring this potato.
+</td>
+<td>2
+</td>
+<td>2
+</td>
+<td><b>3</b>
+</td>
+<td>2
+</td>
+<td><b>3</b>
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Make_a_bridge_over_the_river_using_only_items_on_this_table" title="Make a bridge over the river using only items on this table">4</a>
+</td>
+<td>Make a bridge over the river using only items on this table. Highest self-supporting bridge wins. The bridge alone must support the potato. You must not touch the Taskmaster's house.
+</td>
+<td>4
+</td>
+<td>3
+</td>
+<td><b>5</b>
+</td>
+<td>1
+</td>
+<td>2
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Clap_as_many_times_as_possible" title="Clap as many times as possible">5</a>
+</td>
+<td><b>Live:</b> Put on a pair of food handling gloves, eat a whole banana correctly, put on a tie, and clap as many times as possible.
+</td>
+<td>4
+</td>
+<td>0
+</td>
+<td>2
+</td>
+<td>3
+</td>
+<td><b>5</b>
+</td></tr>
+<tr class="tmtabletotal">
+<th colspan="2">Total
+</th>
+<td>12
+</td>
+<td>11
+</td>
+<td>13
+</td>
+<td>13
+</td>
+<td class="tmtablewinner">19
+</td></tr>
+<tr class="tmtablegrandtotal">
+<th colspan="2">Grand Total
+</th>
+<td>78
+</td>
+<td>69
+</td>
+<td>90
+</td>
+<td class="tmtablewinner">94
+</td>
+<td>86
+</td></tr></tbody></table>
