@@ -62,13 +62,32 @@ def extracting_table(table):
             current_episode = row.get_text(strip=True).split(' (')[0]
             task_id = 0
         
-        if '' in row_class:
-            print(rows)
+        if not row_class:
+            cols = row.find_all(['td', 'th'])
+            
+            task_number = cols[0].get_text(strip=True)
+            description = cols[1].get_text(strip=True)
+
+            # Scores
+            scores = [td.get_text(strip=True).replace('\xa0', '') for td in cols[2:]]
+
+            # Pad scores if needed
+            scores += [None] * (len(contestants) - len(scores))
+
+            # Task ID for uniqueness
+            task_id += 1
+            data.append({
+                'Episode': current_episode,
+                'Task Number': task_number,
+                'Task ID': f"{current_episode.split(':')[0]}-T{task_id}",
+                'Description': description,
+                **{contestants[i]: scores[i] for i in range(len(contestants))}
+            })
 
         # Task row
         elif 'tmtablerow' in row_class:
             cols = row.find_all(['td', 'th'])
-            print(cols)
+            # print(cols)
 
             # Skip malformed rows
             if len(cols) < 3:
@@ -125,13 +144,10 @@ def extracting_table(table):
         else:
             continue
     
-    # print('contestents: ', contestants)
+    df = pd.DataFrame(data)
+    df[contestants] = df[contestants].replace('✘', 0).replace('–', 0).replace('✔', 1)
 
-    # print(data)
-    # df = pd.DataFrame(data)
-    # print(df)
-
-    # print(df.columns)
+    return df
 
 
 #def extracting_tables(table):

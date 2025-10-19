@@ -33,9 +33,11 @@ table = soup.find('table', class_='tmtable')
 with open('taskmaster_series_8.txt', 'w') as f:
      f.write(str(table))
 
-SF.extracting_table(table = table)
+df = SF.extracting_table(table = table)
 
-# cols = df.columns
+cols = df.columns
+
+print(df.head(50))
 
 # df['Tasknumber'] = df['Task Number'].replace('1', 'Prize').replace('S', 'Bonus').replace('T', 'Tie Break')
 
