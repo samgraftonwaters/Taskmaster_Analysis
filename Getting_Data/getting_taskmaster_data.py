@@ -37,7 +37,9 @@ df = SF.extracting_table(table = table)
 
 cols = df.columns
 
-print(df.head(50))
+# print(df.head(50))
+
+df.to_csv('series_2_test.csv', index = False)
 
 # df['Tasknumber'] = df['Task Number'].replace('1', 'Prize').replace('S', 'Bonus').replace('T', 'Tie Break')
 

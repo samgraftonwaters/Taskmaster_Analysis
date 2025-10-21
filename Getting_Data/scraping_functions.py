@@ -97,6 +97,10 @@ def extracting_table(table):
             task_number = cols[0].get_text(strip=True)
             description = cols[1].get_text(strip=True)
 
+            # print(task_number)
+            # print(description)
+            # print(type(task_number))
+
             # Scores
             scores = [td.get_text(strip=True).replace('\xa0', '') for td in cols[2:]]
 
@@ -105,24 +109,42 @@ def extracting_table(table):
 
             # Task ID for uniqueness
             task_id += 1
-            data.append({
-                'Episode': current_episode,
-                'Task Number': task_number,
-                'Task ID': f"{current_episode.split(':')[0]}-T{task_id}",
-                'Description': description,
-                **{contestants[i]: scores[i] for i in range(len(contestants))}
-            })
-        
+            if (description != '-') | (re.findall(r'[0-9]+', description) != False):
+                print(re.findall(r'[0-9]+', '83') == True)               
+                data.append({
+                    'Episode': current_episode,
+                    'Task Number': task_number,
+                    'Task ID': f"{current_episode.split(':')[0]}-T{task_id}",
+                    'Description': description,
+                    **{contestants[i]: scores[i] for i in range(len(contestants))}
+                })
+            
+            else:
+                print(description)
+                # print(task_number)
+                # print(current_episode)
+                data.append({
+                    'Episode': current_episode,
+                    'Task Number': 'Extra',
+                    'Task ID': f"{current_episode.split(':')[0]}-T{task_id}",
+                    'Description': task_number,
+                    '':'',
+                    **{contestants[i]: scores[i] for i in range(len(contestants))}
+                })
+            
         elif 'tmtabletotal' in row_class:
             cols = row.find_all(['td', 'th'])
 
             total_scores = [td.get_text(strip=True).replace('\xa0', '') for td in cols[1:]]
 
+            ep = f"{current_episode.split(':')[0]} Total"
+            ep = ep.replace('Episode ', 'Ep')
+
             data.append({
                 'Episode': current_episode,
-                'Task Number': 'Total',
-                'Task ID': 'Total',
-                'Description': 'Total',
+                'Task Number': ep,
+                'Task ID': ep,
+                'Description': ep,
                 **{contestants[i]: total_scores[i] for i in range(len(contestants))}
             })
         
