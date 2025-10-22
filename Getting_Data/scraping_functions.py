@@ -97,9 +97,14 @@ def extracting_table(table):
             task_number = cols[0].get_text(strip=True)
             description = cols[1].get_text(strip=True)
 
+            # print(description)
+
             # print(task_number)
             # print(description)
             # print(type(task_number))
+
+            #print(re.search(r'\D', description) == 1)
+            
 
             # Scores
             scores = [td.get_text(strip=True).replace('\xa0', '') for td in cols[2:]]
@@ -109,8 +114,8 @@ def extracting_table(table):
 
             # Task ID for uniqueness
             task_id += 1
-            if (description != '-') | (re.findall(r'[0-9]+', description) != False):
-                print(re.findall(r'[0-9]+', '83') == True)               
+            if (description != '-') & (description != 1):   
+                # print(task_number)      
                 data.append({
                     'Episode': current_episode,
                     'Task Number': task_number,
@@ -118,7 +123,6 @@ def extracting_table(table):
                     'Description': description,
                     **{contestants[i]: scores[i] for i in range(len(contestants))}
                 })
-            
             else:
                 print(description)
                 # print(task_number)
@@ -131,6 +135,8 @@ def extracting_table(table):
                     '':'',
                     **{contestants[i]: scores[i] for i in range(len(contestants))}
                 })
+
+        #df['Extra Score'] = df['Extra Score'].astype(str).str.extract(r'(\d+)')
             
         elif 'tmtabletotal' in row_class:
             cols = row.find_all(['td', 'th'])
