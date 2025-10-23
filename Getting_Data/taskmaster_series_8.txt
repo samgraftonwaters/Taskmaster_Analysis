@@ -4,55 +4,237 @@
 </th>
 <th>Description
 </th>
-<th><a href="/wiki/Doc_Brown" title="Doc Brown"><span style="color:#FFF;">Doc Brown</span></a>
+<th><a href="/wiki/James_Acaster" title="James Acaster"><span style="color:#FFF;">James Acaster</span></a>
 </th>
-<th><a href="/wiki/Joe_Wilkinson" title="Joe Wilkinson"><span style="color:#FFF;">Joe Wilkinson</span></a>
+<th><a href="/wiki/Jessica_Knappett" title="Jessica Knappett"><span style="color:#FFF;">Jessica Knappett</span></a>
 </th>
-<th><a href="/wiki/Jon_Richardson" title="Jon Richardson"><span style="color:#FFF;">Jon Richardson</span></a>
+<th><a href="/wiki/Kerry_Godliman" title="Kerry Godliman"><span style="color:#FFF;">Kerry Godliman</span></a>
 </th>
-<th><a href="/wiki/Katherine_Ryan" title="Katherine Ryan"><span style="color:#FFF;">Katherine Ryan</span></a>
+<th><a href="/wiki/Phil_Wang" title="Phil Wang"><span style="color:#FFF;">Phil Wang</span></a>
 </th>
-<th><a href="/wiki/Richard_Osman" title="Richard Osman"><span style="color:#FFF;">Richard Osman</span></a>
+<th><a href="/wiki/Rhod_Gilbert" title="Rhod Gilbert"><span style="color:#FFF;">Rhod Gilbert</span></a>
 </th></tr>
 <tr class="tmtableepisode">
-<td colspan="7">Episode 1: <span style="font-family: Veteran Typewriter;"><span class="color-link" style="color: #FFF;"><a href="/wiki/Fear_of_failure." title="Fear of failure.">Fear of failure.</a></span></span> (21 June 2016)
+<td colspan="7">Episode 1: <span style="font-family: Veteran Typewriter;"><span class="color-link" style="color: #FFF;"><a href="/wiki/The_mean_bean." title="The mean bean.">The mean bean.</a></span></span> (5 September 2018)
 </td></tr>
 <tr class="tmtablerow">
-<td><a href="/wiki/Most_important_document" title="Most important document">1</a>
+<td><a href="/wiki/The_thing_that_most_people_would_like_to_touch" title="The thing that most people would like to touch">1</a>
 </td>
-<td><b>Prize:</b> Most important document.
-</td>
-<td>4
-</td>
-<td><b>5</b>
+<td><b>Prize:</b> The thing that most people would like to touch.
 </td>
 <td>2
-</td>
-<td>3
-</td>
-<td>2
-</td></tr>
-<tr class="tmtablerow">
-<td><a href="/wiki/Place_these_three_exercise_balls_on_the_yoga_mat_on_the_top_of_that_hill" title="Place these three exercise balls on the yoga mat on the top of that hill">2</a>
-</td>
-<td>Place these three exercise balls on the yoga mat on the top of that hill. The task is complete when all three balls sit fully inflated and stationary on the mat.
 </td>
 <td>1
 </td>
 <td>2
 </td>
+<td><b>5</b>
+</td>
+<td>4
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Design_and_demonstrate_the_best_quick-change_outfit" title="Design and demonstrate the best quick-change outfit">2</a>
+</td>
+<td>Design and demonstrate the best quick-change outfit.
+</td>
+<td>2
+</td>
+<td>4
+</td>
+<td><b>5</b>
+</td>
+<td>1
+</td>
+<td>3
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Build_the_highest_tower" title="Build the highest tower">3</a>
+</td>
+<td>Build the highest tower.
+</td>
+<td>1
+</td>
+<td>3
+</td>
+<td>4
+</td>
+<td>2
+</td>
+<td><b>5</b>
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Work_out_the_circumference_of_the_caravan_in_baked_beans" title="Work out the circumference of the caravan in baked beans">4</a>
+</td>
+<td>Work out the circumference of the caravan in baked beans.
+</td>
 <td>4
 </td>
 <td>3
 </td>
 <td><b>5</b>
-</td></tr>
-<tr class="tmtablerow">
-<td><a href="/wiki/Get_this_potato_into_the_golf_hole" title="Get this potato into the golf hole">3</a>
 </td>
-<td>Get this potato into the golf hole. You may not touch the red green.
+<td>1
 </td>
 <td>2
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Make_the_best_fruit_display_hat" title="Make the best fruit display hat">5</a>
+</td>
+<td><b>Live:</b> Make the best fruit display hat. You may not touch or tamper with your hat. Only the fruit picker-uppers may touch the fruit. You may only hold the fruit picker-uppers by their handles.
+</td>
+<td>2
+</td>
+<td>3
+</td>
+<td>4
+</td>
+<td>4
+</td>
+<td><b>5</b>
+</td></tr>
+<tr class="tmtabletotal">
+<th colspan="2">Total
+</th>
+<td>11
+</td>
+<td>14
+</td>
+<td class="tmtablewinner">20
+</td>
+<td>13
+</td>
+<td>19
+</td></tr>
+<tr class="tmtableepisode">
+<td colspan="7">Episode 2: <span style="font-family: Veteran Typewriter;"><span class="color-link" style="color: #FFF;"><a href="/wiki/My_eyes_are_circles." title="My eyes are circles.">My eyes are circles.</a></span></span> (12 September 2018)
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Boldest_belt" title="Boldest belt">1</a>
+</td>
+<td><b>Prize:</b> Boldest belt.
+</td>
+<td>1
+</td>
+<td>2
+</td>
+<td>3
+</td>
+<td>4
+</td>
+<td><b>5</b>
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Write_a_ten-word_story_before_you_reach_the_finish_line" title="Write a ten-word story before you reach the finish line">2</a>
+</td>
+<td>Write a ten-word story before you reach the finish line. You must be running while writing.
+</td>
+<td><b>5</b>
+</td>
+<td>4
+</td>
+<td>3
+</td>
+<td>2
+</td>
+<td>1
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Paint_the_best_picture_of_this_still_life" title="Paint the best picture of this still life">3</a>
+</td>
+<td><b>Team:</b> Paint the best picture of this still life. The painter must remain blindfolded throughout. The other person may not move from their chair and may only say certain words.
+</td>
+<td><b>3</b>
+</td>
+<td>2
+</td>
+<td>2
+</td>
+<td><b>3</b>
+</td>
+<td><b>3</b>
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Predict_what_another_contestant_will_do_with_one_of_the_objects" title="Predict what another contestant will do with one of the objects">4</a>
+</td>
+<td>Predict what one of the other contestants (specified) will do with one of the objects and and do something yourself with one of the objects. You also get 5 points if a third contestant (specified, different) correctly predicts your own action.
+</td>
+<td>5
+</td>
+<td><b>10</b>
+</td>
+<td>5
+</td>
+<td>5
+</td>
+<td>5
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Draw_the_biggest_and_best_circle" title="Draw the biggest and best circle">5</a>
+</td>
+<td>Draw the biggest and best circle. Your circle must be completed in one single sweep.
+</td>
+<td>1
+</td>
+<td>3
+</td>
+<td><b>5</b>
+</td>
+<td>2
+</td>
+<td>4
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Make_the_highest_tower_of_cans_within_your_hoop" title="Make the highest tower of cans within your hoop">6</a>
+</td>
+<td><b>Live:</b>Make the highest tower of cans within your hoop. If you step out of your hoop during the 100 seconds, you will be disqualified.
+</td>
+<td>1
+</td>
+<td>2
+</td>
+<td><b>5</b>
+</td>
+<td>3
+</td>
+<td>4
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/What_number_is_written_on_Alex%27s_left_forearm%3F" title="What number is written on Alex's left forearm?">T</a>
+</td>
+<td>What number is written on Alex's left forearm?
+</td>
+<td>–
+</td>
+<td>✘
+</td>
+<td><b>✔</b>
+</td>
+<td>–
+</td>
+<td>–
+</td></tr>
+<tr class="tmtabletotal">
+<th colspan="2">Total
+</th>
+<td>16
+</td>
+<td>23
+</td>
+<td class="tmtablewinner">23
+</td>
+<td>19
+</td>
+<td>22
+</td></tr>
+<tr class="tmtableepisode">
+<td colspan="7">Episode 3: <span style="font-family: Veteran Typewriter;"><span class="color-link" style="color: #FFF;"><a href="/wiki/Twelve_blush_majesty_two." title="Twelve blush majesty two.">Twelve blush majesty two.</a></span></span> (19 September 2018)
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Best_thing_from_the_%2790s" title="Best thing from the '90s">1</a>
+</td>
+<td><b>Prize:</b> Best thing from the '90s.
+</td>
+<td>4
 </td>
 <td>DQ
 </td>
@@ -60,522 +242,876 @@
 </td>
 <td>3
 </td>
-<td>4
+<td>DQ
 </td></tr>
 <tr class="tmtablerow">
-<td><a href="/wiki/Find_out_the_following_information_from_this_Swedish_person" title="Find out the following information from this Swedish person">4</a>
+<td><a href="/wiki/Excite_Alex" title="Excite Alex">2</a>
 </td>
-<td>Find out the following information from this <a href="/wiki/Fred_the_Swede" title="Fred the Swede">Swedish person</a>. The Swedish person may not speak or write in English.
+<td>Excite Alex.
 </td>
-<td>2
+<td>4
+</td>
+<td><b>5</b>
+</td>
+<td>3
 </td>
 <td>1
 </td>
-<td>3
-</td>
-<td><b>5</b>
-</td>
-<td>4
+<td>2
 </td></tr>
 <tr class="tmtablerow">
-<td><a href="/wiki/Pack_for_your_holiday" title="Pack for your holiday">5</a>
+<td><a href="/wiki/Make_the_best_noise" title="Make the best noise">3</a>
 </td>
-<td><b>Live:</b> Pack for your holiday. All items must either be packed in your hand luggage or worn on your body.
-</td>
-<td>0
-</td>
-<td>0
-</td>
-<td>4
-</td>
-<td>3
-</td>
-<td><b>5</b>
-</td></tr>
-<tr class="tmtabletotal">
-<th colspan="2">Total
-</th>
-<td>9
-</td>
-<td>8
-</td>
-<td>18
-</td>
-<td>17
-</td>
-<td class="tmtablewinner">20
-</td></tr>
-<tr class="tmtableepisode">
-<td colspan="7">Episode 2: <span style="font-family: Veteran Typewriter;"><span class="color-link" style="color: #FFF;"><a href="/wiki/Pork_is_a_sausage." title="Pork is a sausage.">Pork is a sausage.</a></span></span> (28 June 2016)
-</td></tr>
-<tr class="tmtablerow">
-<td><a href="/wiki/Trendiest_item_of_clothing" title="Trendiest item of clothing">1</a>
-</td>
-<td><b>Prize:</b> Trendiest item of clothing.
-</td>
-<td><b>5</b>
+<td>Make the best noise. When you are ready to make your noise, you must say "This is my best noise". After you have made your noise, you must remain still and silent for at least 10 seconds.
 </td>
 <td>2
 </td>
+<td>4
+</td>
 <td>3
 </td>
-<td>4
+<td><b>5</b>
 </td>
 <td>1
 </td></tr>
 <tr class="tmtablerow">
-<td><a href="/wiki/Eat_me" title="Eat me">2</a>
+<td><a href="/wiki/Get_this_ball_in_that_hole_in_as_few_strokes_as_possible" title="Get this ball in that hole in as few strokes as possible">4</a>
 </td>
-<td>Eat me (an egg). Fastest wins.
-</td>
-<td>4
-</td>
-<td>2
+<td>Get this ball in that hole in as few strokes as possible. The ball must only be struck. The ball must never be carried.
 </td>
 <td>3
-</td>
-<td>0
-</td>
-<td><b>5</b>
-</td></tr>
-<tr class="tmtablerow">
-<td><a href="/wiki/Make_the_best_music_video_for_a_nursery_rhyme" title="Make the best music video for a nursery rhyme">3</a>
-</td>
-<td>Make the best music video for a nursery rhyme.
-</td>
-<td><b>5</b>
-</td>
-<td>2
-</td>
-<td><b>5</b>
-</td>
-<td>4
-</td>
-<td>3
-</td></tr>
-<tr class="tmtablerow">
-<td><a href="/wiki/Using_this_camera,_take_a_picture_of_an_inanimate_object_that_looks_like_you" title="Using this camera, take a picture of an inanimate object that looks like you">4</a>
-</td>
-<td>Using this camera, take a picture of an inanimate object that looks like you.
 </td>
 <td>1
 </td>
 <td>2
 </td>
 <td>4
-</td>
-<td>3
 </td>
 <td><b>5</b>
 </td></tr>
 <tr>
-<td class="tmtablerow" rowspan="2"><a href="/wiki/Order_the_following_pizza_for_the_Taskmaster" title="Order the following pizza for the Taskmaster">5</a>
+<td class="tmtablerow" rowspan="3"><a href="/wiki/Write_down_a_ten-word_fact" title="Write down a ten-word fact">5</a>
 </td>
-<td>Order the following pizza for the Taskmaster: Extra large vegetarian pizza with pepperoni and bacon, and without tomato and cheese. You may not use the following words: EXTRA, LARGE, VEGETARIAN, PIZZA, PEPPERONI, BACON, TOMATO, CHEESE
+<td class="tmtablerow"><b>Live:</b> Write down a ten-word fact.
 </td>
-<td>2
+<td rowspan="2">4
 </td>
-<td>4
+<td rowspan="2"><b>5</b>
 </td>
-<td><b>5</b>
+<td rowspan="2">4
 </td>
-<td>3
+<td rowspan="2">2
 </td>
-<td>1
+<td rowspan="2">1
+</td></tr>
+<tr>
+<td><b>Live:</b> Mouth your fact to the Taskmaster without making any noise whatsoever.
 </td></tr>
 <tr class="tmtablerow">
-<td><small><i><b>Bonus:</b> Make the pizza person say the word "bubbles".</i></small>
-</td>
-<td><small>1</small>
-</td>
-<td><small>1</small>
-</td>
-<td><small>0</small>
+<td><small><i><b>Bonus:</b> Best fact.</i></small>
 </td>
 <td><small>1</small>
 </td>
 <td><small>0</small>
-</td></tr>
-<tr class="tmtablerow">
-<td><a href="/wiki/Using_these_big_chopsticks,_get_these_potatoes_into_your_basket" title="Using these big chopsticks, get these potatoes into your basket">6</a>
 </td>
-<td><b>Live:</b> Using these big chopsticks, get these potatoes into your basket. You must only hold the big chopsticks on the grips provided. The big chopsticks alone may touch the potatoes in turn. Whoever has the most potatoes.
+<td><small>0</small>
 </td>
-<td>0
+<td><small>0</small>
 </td>
-<td>0
-</td>
-<td><b>5</b>
-</td>
-<td>4
-</td>
-<td>DQ
-</td></tr>
-<tr class="tmtabletotal">
-<th colspan="2">Total
-</th>
-<td>18
-</td>
-<td>13
-</td>
-<td class="tmtablewinner">25
-</td>
-<td>19
-</td>
-<td>15
-</td></tr>
-<tr class="tmtableepisode">
-<td colspan="7">Episode 3: <span style="font-family: Veteran Typewriter;"><span class="color-link" style="color: #FFF;"><a href="/wiki/A_pistachio_eclair." title="A pistachio eclair.">A pistachio eclair.</a></span></span> (5 July 2016)
-</td></tr>
-<tr class="tmtablerow">
-<td><a href="/wiki/Best_dinner_party_guest" title="Best dinner party guest">1</a>
-</td>
-<td><b>Prize:</b> Best dinner party guest.
-</td>
-<td>3
-</td>
-<td><b>5</b>
-</td>
-<td>1
-</td>
-<td>4
-</td>
-<td>2
-</td></tr>
-<tr class="tmtablerow">
-<td><a class="mw-redirect" href="/wiki/Impress_this_Mayor" title="Impress this Mayor">2</a>
-</td>
-<td>Impress this mayor.
-</td>
-<td>2
-</td>
-<td>3
-</td>
-<td>1
-</td>
-<td><b>5</b>
-</td>
-<td>4
-</td></tr>
-<tr class="tmtablerow">
-<td><a href="/wiki/Make_the_most_unexpected_silhouette_on_this_screen" title="Make the most unexpected silhouette on this screen">3</a>
-</td>
-<td>Make the most unexpected silhouette on this screen.
-</td>
-<td>1
-</td>
-<td>3
-</td>
-<td><b>5</b>
-</td>
-<td>2
-</td>
-<td>4
-</td></tr>
-<tr class="tmtablerow">
-<td><a href="/wiki/Buy_a_gift_for_the_Taskmaster" title="Buy a gift for the Taskmaster">4</a>
-</td>
-<td>Buy a gift for the Taskmaster.
-</td>
-<td>3
-</td>
-<td>2
-</td>
-<td>1
-</td>
-<td>4
-</td>
-<td><b>5</b>
-</td></tr>
-<tr class="tmtablerow">
-<td rowspan="3"><a href="/wiki/Get_a_potato" title="Get a potato">5</a>
-</td>
-<td><b>Team:</b> Put on this blindfold, then instruct only the person closest to you to open their task.
-</td>
-<td>0
-</td>
-<td>-
-</td>
-<td>-
-</td>
-<td>-
-</td>
-<td>-
-</td></tr>
-<tr class="tmtablerow">
-<td><b>Team:</b> Put the earplugs in your ears and the ear protectors over the earplugs, then continue reading. You must remain within your bandstand. Instruct the next person to open their task.
-</td>
-<td>-
-</td>
-<td>0
-</td>
-<td>-
-</td>
-<td>-
-</td>
-<td><b>5</b><sup class="reference" id="cite_ref-Josh_1-0"><a href="#cite_note-Josh-1"><span class="cite-bracket">[</span>1<span class="cite-bracket">]</span></a></sup>
-</td></tr>
-<tr class="tmtablerow">
-<td><b>Team:</b> Do not read this out loud. Get a potato.
-</td>
-<td>-
-</td>
-<td>-
-</td>
-<td><b>5</b><sup class="reference" id="cite_ref-Josh_1-1"><a href="#cite_note-Josh-1"><span class="cite-bracket">[</span>1<span class="cite-bracket">]</span></a></sup>
-</td>
-<td>0
-</td>
-<td>-
-</td></tr>
-<tr class="tmtablerow">
-<td><a href="/wiki/Throw_the_rabbits_into_your_hat" title="Throw the rabbits into your hat">6</a>
-</td>
-<td><b>Live:</b> Throw the rabbits into your hat.
-</td>
-<td>12
-</td>
-<td>12
-</td>
-<td>4
-</td>
-<td><b>15</b>
-</td>
-<td>7
-</td></tr>
-<tr class="tmtabletotal">
-<th colspan="2">Total
-</th>
-<td>21
-</td>
-<td>25
-</td>
-<td>17
-</td>
-<td class="tmtablewinner">30
-</td>
-<td>27
-</td></tr>
-<tr class="tmtableepisode">
-<td colspan="7">Episode 4: <span style="font-family: Veteran Typewriter;"><span class="color-link" style="color: #FFF;"><a href="/wiki/Welcome_to_Rico_Face." title="Welcome to Rico Face.">Welcome to Rico Face.</a></span></span> (12 July 2016)
-</td></tr>
-<tr class="tmtablerow">
-<td><a href="/wiki/Coolest_blue_thing" title="Coolest blue thing">1</a>
-</td>
-<td><b>Prize:</b> Coolest blue thing.
-</td>
-<td>3
-</td>
-<td>4
-</td>
-<td><b>5</b>
-</td>
-<td>2
-</td>
-<td>1
-</td></tr>
-<tr class="tmtablerow">
-<td><a href="/wiki/Rescue_the_cat_(Series_2)" title="Rescue the cat (Series 2)">2</a>
-</td>
-<td>Rescue the cat.
-</td>
-<td>4
-</td>
-<td>3
-</td>
-<td>2
-</td>
-<td><b>5</b>
-</td>
-<td>0
-</td></tr>
-<tr class="tmtablerow">
-<td><a href="/wiki/Conceal_this_pineapple_on_your_person" title="Conceal this pineapple on your person">3</a>
-</td>
-<td>Conceal this pineapple on your person. No part of the pineapple may be thrown away.
-</td>
-<td>2
-</td>
-<td>1
-</td>
-<td><b>5</b>
-</td>
-<td>4
-</td>
-<td>3
-</td></tr>
-<tr class="tmtablerow">
-<td rowspan="2"><a href="/wiki/Set_a_fun_task" title="Set a fun task">4</a>
-</td>
-<td>Set a fun task. Your task must take no more than one minute.
-</td>
-<td>0
-</td>
-<td>0
-</td>
-<td>-
-</td>
-<td>0
-</td>
-<td>0
-</td></tr>
-<tr class="tmtablerow">
-<td>Guess who set you each task.
-</td>
-<td>-
-</td>
-<td>-
-</td>
-<td><b>4</b>
-</td>
-<td>-
-</td>
-<td>-
-</td></tr>
-<tr class="tmtablerow">
-<td><a href="/wiki/Construct_the_best_thing_for_the_Taskmaster" title="Construct the best thing for the Taskmaster">5</a>
-</td>
-<td><b>Team:</b> Using only the items on the rug, construct the best thing for the Taskmaster.
-</td>
-<td><b>4</b>
-</td>
-<td><b>4</b>
-</td>
-<td>1
-</td>
-<td><b>4</b>
-</td>
-<td>1
-</td></tr>
-<tr class="tmtablerow">
-<td><a href="/wiki/Create_the_highest_tower_using_only_these_potato-based_items" title="Create the highest tower using only these potato-based items">6</a>
-</td>
-<td><b>Live:</b> Create the highest tower using only these potato-based items. Your potato tower must be self-standing. Your potato tower must be built on the table. Your potato tower will be measured from the tabletop to the highest potato point.
-</td>
-<td><b>5</b>
-</td>
-<td>0
-</td>
-<td>0
-</td>
-<td>0
-</td>
-<td>0
+<td><small>0</small>
 </td></tr>
 <tr class="tmtabletotal">
 <th colspan="2">Total
 </th>
 <td class="tmtablewinner">18
 </td>
-<td>12
+<td>15
 </td>
 <td>17
 </td>
 <td>15
 </td>
-<td>5
+<td>9
 </td></tr>
 <tr class="tmtableepisode">
-<td colspan="7">Episode 5: <span style="font-family: Veteran Typewriter;"><span class="color-link" style="color: #FFF;"><a href="/wiki/There%27s_strength_in_arches." title="There's strength in arches.">There's strength in arches.</a></span></span> (19 July 2016)
+<td colspan="7">Episode 4: <span style="font-family: Veteran Typewriter;"><span class="color-link" style="color: #FFF;"><a href="/wiki/OLLIE." title="OLLIE.">OLLIE.</a></span></span> (26 September 2018)
 </td></tr>
 <tr class="tmtablerow">
-<td><a href="/wiki/Best_piece_of_memorabilia" title="Best piece of memorabilia">1</a>
+<td><a href="/wiki/Most_confusing_thing" title="Most confusing thing">1</a>
 </td>
-<td><b>Prize:</b> Best piece of memorabilia.
+<td><b>Prize:</b> Most confusing thing.
+</td>
+<td>1
+</td>
+<td><b>5</b>
 </td>
 <td>2
+</td>
+<td>4
+</td>
+<td>3
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Work_out_what_happens_when_you_flick_this_switch_on" title="Work out what happens when you flick this switch on">2</a>
+</td>
+<td>Work out what happens when you flick this switch on. You may not take this switch out of this room.
+</td>
+<td><b>5</b>
+</td>
+<td>2
+</td>
+<td>4
+</td>
+<td>3
+</td>
+<td>1
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Dramatically_alter_your_appearance" title="Dramatically alter your appearance">3</a>
+</td>
+<td>Dramatically alter your appearance. You may start altering your appearance when you are inside the lift and the doors have closed. You must stop altering your appearance when the doors open again.
+</td>
+<td>1
+</td>
+<td>4
+</td>
+<td>3
+</td>
+<td>2
+</td>
+<td><b>5</b>
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Make_these_scales_read_31.770kg" title="Make these scales read 31.770kg">4</a>
+</td>
+<td>Make these scales read 31.770kg. The scales must read 31.770kg for at least 5 seconds.
+</td>
+<td><b>5</b>
 </td>
 <td>1
 </td>
 <td>3
 </td>
-<td>4
+<td>2
 </td>
-<td><b>5</b>
+<td>4
 </td></tr>
 <tr class="tmtablerow">
-<td><a href="/wiki/Get_all_this_shopping_into_the_shopping_trolley" title="Get all this shopping into the shopping trolley">2</a>
+<td><a href="/wiki/Correctly_don_the_most_items_of_clothing" title="Correctly don the most items of clothing">5</a>
 </td>
-<td>Get all this shopping into the shopping trolley.
-</td>
-<td>DQ
+<td><b>Live:</b> Correctly don the most items of clothing.
 </td>
 <td><b>5</b>
 </td>
-<td>DQ
+<td>4
+</td>
+<td>4
+</td>
+<td>1
+</td>
+<td>4
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Make_the_best_loo_roll_paper_airplane" title="Make the best loo roll paper airplane">T</a>
+</td>
+<td>Make the best loo roll paper airplane.
+</td>
+<td>✘
+</td>
+<td>–
+</td>
+<td>–
+</td>
+<td>–
+</td>
+<td><b>✔</b>
+</td></tr>
+<tr class="tmtabletotal">
+<th colspan="2">Total
+</th>
+<td>17
+</td>
+<td>16
+</td>
+<td>16
+</td>
+<td>12
+</td>
+<td class="tmtablewinner">17
+</td></tr>
+<tr class="tmtableepisode">
+<td colspan="7">Episode 5: <span style="font-family: Veteran Typewriter;"><span class="color-link" style="color: #FFF;"><a href="/wiki/Lotta_soup." title="Lotta soup.">Lotta soup.</a></span></span> (3 October 2018)
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Worst_present_from_a_named_relative" title="Worst present from a named relative">1</a>
+</td>
+<td><b>Prize:</b> Worst present from a named relative.
+</td>
+<td>2
+</td>
+<td><b>5</b>
 </td>
 <td>3
 </td>
+<td>1
+</td>
 <td>4
 </td></tr>
 <tr class="tmtablerow">
-<td><a href="/wiki/Make_the_best_stop-motion_film_starring_this_potato" title="Make the best stop-motion film starring this potato">3</a>
+<td><a href="/wiki/Deliver_this_task_to_Alex_in_the_most_spectacular_way" title="Deliver this task to Alex in the most spectacular way">2</a>
 </td>
-<td><b>Team:</b> Make the best stop-motion film starring this potato.
-</td>
-<td>2
-</td>
-<td>2
-</td>
-<td><b>3</b>
-</td>
-<td>2
-</td>
-<td><b>3</b>
-</td></tr>
-<tr class="tmtablerow">
-<td><a href="/wiki/Make_a_bridge_over_the_river_using_only_items_on_this_table" title="Make a bridge over the river using only items on this table">4</a>
-</td>
-<td>Make a bridge over the river using only items on this table. Highest self-supporting bridge wins. The bridge alone must support the potato. You must not touch the Taskmaster's house.
-</td>
-<td>4
-</td>
-<td>3
+<td>Deliver this task to Alex in the most spectacular way. Alex is in his caravan.
 </td>
 <td><b>5</b>
+</td>
+<td>3
 </td>
 <td>1
 </td>
 <td>2
-</td></tr>
-<tr class="tmtablerow">
-<td><a href="/wiki/Clap_as_many_times_as_possible" title="Clap as many times as possible">5</a>
-</td>
-<td><b>Live:</b> Put on a pair of food handling gloves, eat a whole banana correctly, put on a tie, and clap as many times as possible.
 </td>
 <td>4
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Make_as_many_white_circles_on_the_target_as_possible" title="Make as many white circles on the target as possible">3</a>
+</td>
+<td>Make as many white circles on the target as possible. You must not step beyond this rope. You must not move the rope or the target.
+</td>
+<td><b>5</b>
+</td>
+<td><b>5</b>
+</td>
+<td><b>5</b>
 </td>
 <td>0
 </td>
+<td><b>5</b>
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Cheer_up_this_former_traffic_warden" title="Cheer up this former traffic warden">4</a>
+</td>
+<td>Cheer up this former traffic warden.
+</td>
+<td><b>5</b>
+</td>
+<td><b>5</b>
+</td>
+<td>1
+</td>
+<td>3
+</td>
+<td>2
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Make_yourselves_look_as_little_or_big_as_possible" title="Make yourselves look as little or big as possible">5</a>
+</td>
+<td><b>Team:</b> Make yourselves look as little or big as possible.
+</td>
+<td><b>3</b>
+</td>
+<td>2
+</td>
+<td>2
+</td>
+<td><b>3</b>
+</td>
+<td><b>3</b>
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Dangle_one_of_these_items_on_the_hanger" title="Dangle one of these items on the hanger">6</a>
+</td>
+<td><b>Team Live:</b> Taking it in turn, each team must dangle on of these items on the hanger. A different member of the team must dangle each time. Once you've touched one of the items, you must dangle it, and you must dangle it within 20 seconds of the previous dangler.
+</td>
+<td>0
+</td>
+<td><b>5</b>
+</td>
+<td><b>5</b>
+</td>
+<td>0
+</td>
+<td>0
+</td></tr>
+<tr class="tmtabletotal">
+<th colspan="2">Total
+</th>
+<td>20
+</td>
+<td class="tmtablewinner">25
+</td>
+<td>17
+</td>
+<td>9
+</td>
+<td>18
+</td></tr>
+<tr class="tmtableepisode">
+<td colspan="7">Episode 6: <span style="font-family: Veteran Typewriter;"><span class="color-link" style="color: #FFF;"><a href="/wiki/A_coquettish_fascinator." title="A coquettish fascinator.">A coquettish fascinator.</a></span></span> (10 October 2018)
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Best_key" title="Best key">1</a>
+</td>
+<td><b>Prize:</b> Best key.
+</td>
+<td>1
+</td>
+<td>4
+</td>
+<td><b>5</b>
+</td>
 <td>2
 </td>
 <td>3
+</td></tr>
+<tr class="tmtablerow">
+<td rowspan="2"><a href="/wiki/Put_exactly_50_different_things_in_this_bin" title="Put exactly 50 different things in this bin">2</a>
+</td>
+<td>Put exactly 50 different things in this bin.
+</td>
+<td><b>5</b>
+</td>
+<td>2
+</td>
+<td>4
+</td>
+<td>2
+</td>
+<td>3
+</td></tr>
+<tr class="tmtablerow">
+<td>Using all the items on this mat, make the best picture of the Taskmaster.
+</td>
+<td><b>5</b>
+</td>
+<td>2
+</td>
+<td>3
+</td>
+<td>1
+</td>
+<td>4
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Write_and_perform_the_most_suspenseful_soap_opera_cliff-hanger" title="Write and perform the most suspenseful soap opera cliff-hanger">3</a>
+</td>
+<td><b>Team:</b> Write and perform the most suspenseful soap opera cliff-hanger. Your scene may last no more than one minute.
+</td>
+<td><b>3</b>
+</td>
+<td>2
+</td>
+<td>2
+</td>
+<td><b>3</b>
+</td>
+<td><b>3</b>
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Put_all_the_pairs_of_glasses_into_the_smallest_of_these_boxes" title="Put all the pairs of glasses into the smallest of these boxes">4</a>
+</td>
+<td>In the lab, there are 10 pairs of glasses. The pairs of glasses may not leave the lab. Without breaking any of the pairs of glasses, put all the pairs of glasses into the smallest of these boxes. You must select your box before leaving the caravan, and may not then change your mind.
+</td>
+<td>2
+</td>
+<td>4
+</td>
+<td>3
+</td>
+<td><b>5</b>
+</td>
+<td>DQ
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Get_your_doughnut_as_high_as_possible" title="Get your doughnut as high as possible">5</a>
+</td>
+<td><b>Live:</b> Get your doughnut as high as possible. You must be holding hands with the people on either side of you at all times. If your doughnut is in the air after the 100 seconds, its height will be measured from where it lands.
+</td>
+<td>3
+</td>
+<td>2
+</td>
+<td>DQ
+</td>
+<td>4
 </td>
 <td><b>5</b>
 </td></tr>
 <tr class="tmtabletotal">
 <th colspan="2">Total
 </th>
-<td>12
+<td class="tmtablewinner">19
+</td>
+<td>16
+</td>
+<td>17
+</td>
+<td>17
+</td>
+<td>18
+</td></tr>
+<tr class="tmtableepisode">
+<td colspan="7">Episode 7: <span style="font-family: Veteran Typewriter;"><span class="color-link" style="color: #FFF;"><a href="/wiki/The_perfect_stuff." title="The perfect stuff.">The perfect stuff.</a></span></span> (17 October 2018)
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Most_exciting_thing_beginning_with_G" title="Most exciting thing beginning with G">1</a>
+</td>
+<td><b>Prize:</b> Most exciting thing beginning with G.
+</td>
+<td><b>2</b>
+</td>
+<td>1
+</td>
+<td>1
+</td>
+<td>1
+</td>
+<td><b>2</b>
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Throw_something_into_the_bin_on_the_other_side_of_this_fence" title="Throw something into the bin on the other side of this fence">2</a>
+</td>
+<td>Throw something into the bin on the other side of this fence. You may not use ladders, you may not touch the fence and you must stay this side of the fence.
+</td>
+<td>1
+</td>
+<td>3
+</td>
+<td>2
+</td>
+<td>4
+</td>
+<td><b>5</b>
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Don%27t_blink" title="Don't blink">3</a>
+</td>
+<td>Don't blink.
+</td>
+<td>3
+</td>
+<td>4
+</td>
+<td>1
+</td>
+<td>2
+</td>
+<td><b>5</b>
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Make_the_best_extension_to_the_Taskmaster_House" title="Make the best extension to the Taskmaster House">4</a>
+</td>
+<td><b>Team:</b> Make the best extension to the Taskmaster House.
+</td>
+<td>2
+</td>
+<td><b>4</b>
+</td>
+<td><b>4</b>
+</td>
+<td>1
+</td>
+<td>1
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Make_the_best_Christmas_cracker" title="Make the best Christmas cracker">5</a>
+</td>
+<td>Make the best Christmas cracker.
+</td>
+<td>3
+</td>
+<td>3
+</td>
+<td>3
+</td>
+<td><b>5</b>
+</td>
+<td>3
+</td></tr>
+<tr>
+<td class="tmtablerow" rowspan="2"><a href="/wiki/Walk_over_and_hit_that_drum_in_exactly_9.58_seconds" title="Walk over and hit that drum in exactly 9.58 seconds">6</a>
+</td>
+<td><b>Live:</b> Walk over and hit that drum in exactly 9.58 seconds.
+</td>
+<td>4
+</td>
+<td>1
+</td>
+<td>3
+</td>
+<td>2
+</td>
+<td><b>5</b>
+</td></tr>
+<tr class="tmtablerow">
+<td><small><i><b>Bonus:</b> Most magnificent walk.</i></small>
+</td>
+<td><small>0</small>
+</td>
+<td><small>2</small>
+</td>
+<td><small>0</small>
+</td>
+<td><small>0</small>
+</td>
+<td><small>0</small>
+</td></tr>
+<tr class="tmtabletotal">
+<th colspan="2">Total
+</th>
+<td>15
+</td>
+<td>18
+</td>
+<td>14
+</td>
+<td>15
+</td>
+<td class="tmtablewinner">21
+</td></tr>
+<tr class="tmtableepisode">
+<td colspan="7">Episode 8: <span style="font-family: Veteran Typewriter;"><span class="color-link" style="color: #FFF;"><a href="/wiki/Mother_honks_her_horn." title="Mother honks her horn.">Mother honks her horn.</a></span></span> (24 October 2018)
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Creepiest_thing" title="Creepiest thing">1</a>
+</td>
+<td><b>Prize:</b> Creepiest thing.
+</td>
+<td>4
+</td>
+<td>2
+</td>
+<td><b>5</b>
+</td>
+<td>1
+</td>
+<td><b>5</b>
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Poke_something_out_of_the_hole_in_the_roof_of_this_grotto" title="Poke something out of the hole in the roof of this grotto">2</a>
+</td>
+<td>Poke something out of the hole in the roof of this grotto.
+</td>
+<td>2
+</td>
+<td>4
+</td>
+<td>2
+</td>
+<td>2
+</td>
+<td><b>5</b>
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Scream" title="Scream">3</a>
+</td>
+<td><b>Puzzle:</b> C. Now look in the microwave (End task: Scream).
+</td>
+<td><b>5</b>
+</td>
+<td>4
+</td>
+<td>3
+</td>
+<td>2
+</td>
+<td>1
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Compose_the_best_30_second_piece_of_music" title="Compose the best 30 second piece of music">4</a>
+</td>
+<td>Compose the best 30 second piece of music.
+</td>
+<td>4
+</td>
+<td><b>5</b>
+</td>
+<td>3
+</td>
+<td>2
+</td>
+<td>4
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Bob_when_you_hear_the_surname_of_a_famous_Bob" title="Bob when you hear the surname of a famous Bob">5</a>
+</td>
+<td><b>Live:</b> <br/>Bob when you hear the surname of a famous Bob. <br/>Pat when you hear the surname of a famous Pat. <br/>Kneel when you hear the surname of a famous Neil. <br/>Stew when you hear the surname of a famous Stu. <br/>Wane when you hear the surname of a famous Wayne.
+</td>
+<td>1
+</td>
+<td>4
+</td>
+<td>3
+</td>
+<td>2
+</td>
+<td><b>5</b>
+</td></tr>
+<tr class="tmtabletotal">
+<th colspan="2">Total
+</th>
+<td>16
+</td>
+<td>19
+</td>
+<td>16
+</td>
+<td>9
+</td>
+<td class="tmtablewinner"><b>20</b>
+</td></tr>
+<tr class="tmtableepisode">
+<td colspan="7">Episode 9: <span style="font-family: Veteran Typewriter;"><span class="color-link" style="color: #FFF;"><a href="/wiki/The_pendulum_draws_the_eye." title="The pendulum draws the eye.">The pendulum draws the eye.</a></span></span> (31 October 2018)
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Most_surprisingly_beautiful_thing" title="Most surprisingly beautiful thing">1</a>
+</td>
+<td><b>Prize:</b> Most surprisingly beautiful thing.
+</td>
+<td>3
+</td>
+<td>4
+</td>
+<td>2
+</td>
+<td><b>5</b>
+</td>
+<td>1
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Put_the_most_money_in_the_small_bowl" title="Put the most money in the small bowl">2</a>
+</td>
+<td>Put the most money in the small bowl. You may not touch the small bowl. The small bowl must not sink. Also, you must say your own name at least once every 30 seconds.
+</td>
+<td>DQ
+</td>
+<td>DQ
+</td>
+<td><b>5</b>
+</td>
+<td>DQ
+</td>
+<td>DQ
+</td></tr>
+<tr style="border-bottom: 1px dashed #ddd;">
+<td><a href="/wiki/Be_photographed_in_the_most_unusual_situation_wearing_this_fez" title="Be photographed in the most unusual situation wearing this fez">3</a>
+</td>
+<td>Be photographed in the most unusual situation wearing this fez.
+</td>
+<td>–
+</td>
+<td><b>3</b>
+</td>
+<td>2
+</td>
+<td>–
+</td>
+<td>1
+</td></tr>
+<tr class="tmtablerow">
+<td rowspan="2"><a href="/wiki/Hula" title="Hula">4</a>
+</td>
+<td>Hula.
+</td>
+<td rowspan="2"><b>2</b>
+</td>
+<td rowspan="2">–
+</td>
+<td rowspan="2">–
+</td>
+<td rowspan="2">1
+</td>
+<td rowspan="2">–
+</td></tr>
+<tr class="tmtablerow">
+<td><b>Live:</b> Improve your hulaing.
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Find_the_sock_with_a_satsuma_inside" title="Find the sock with a satsuma inside">5</a>
+</td>
+<td>Find the sock with a satsuma inside. You may not look inside any of the socks. You may squeeze 5 socks, strike 10 socks and sniff 20 socks. You may put your hand inside 3 socks. You may put 11 socks on your feet.
+</td>
+<td>3
+</td>
+<td>2
+</td>
+<td><b>4</b>
+</td>
+<td>0
+</td>
+<td><b>4</b>
+</td></tr>
+<tr>
+<td class="tmtablerow" rowspan="2"><a href="/wiki/Achieve_a_rally_of_exactly_24_shots" title="Achieve a rally of exactly 24 shots">6</a>
+</td>
+<td><b>Team:</b> Achieve a rally of exactly 24 shots. You must each take the same amount of shots. You must be stood at least 6 foot 8 inches apart from one another. The object struck may neither touch the ground nor be held at any point during the rally.
+</td>
+<td>0
+</td>
+<td><b>5</b>
+</td>
+<td><b>5</b>
+</td>
+<td>0
+</td>
+<td>0
+</td></tr>
+<tr class="tmtablerow">
+<td><small><i><b>Bonus:</b> Most ambitious equipment.</i></small>
+</td>
+<td><small>1</small>
+</td>
+<td><small>0</small>
+</td>
+<td><small>0</small>
+</td>
+<td><small>1</small>
+</td>
+<td><small>1</small>
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Write_your_name_and_draw_a_picture_of_a_happy_horse" title="Write your name and draw a picture of a happy horse">7</a>
+</td>
+<td><b>Live:</b> Write your name and draw a happy horse on on your overhead projector acetate upside down. You must not rotate or manipulate acetate.
+</td>
+<td><b>5</b>
+</td>
+<td>4
+</td>
+<td>3
+</td>
+<td>4
+</td>
+<td>2
+</td></tr>
+<tr class="tmtabletotal">
+<th colspan="2">Total
+</th>
+<td>14
+</td>
+<td>18
+</td>
+<td class="tmtablewinner">21
 </td>
 <td>11
 </td>
-<td>13
+<td>9
+</td></tr>
+<tr class="tmtableepisode">
+<td colspan="7">Episode 10: <span style="font-family: Veteran Typewriter;"><span class="color-link" style="color: #FFF;"><a href="/wiki/I_can_hear_it_gooping." title="I can hear it gooping.">I can hear it gooping.</a></span></span> (7 November 2018)
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Most_magnificent_stationery" title="Most magnificent stationery">1</a>
 </td>
-<td>13
+<td><b>Prize:</b> Most magnificent stationery.
 </td>
+<td>3
+</td>
+<td>2
+</td>
+<td><b>5</b>
+</td>
+<td>4
+</td>
+<td>1
+</td></tr>
+<tr class="tmtablerow">
+<td>2a
+</td>
+<td>When you hear this siren during a future task, put on a boiler suit and lie flat on the ground. You may not touch or move a boiler suit until the siren sounds.
+</td>
+<td>2
+</td>
+<td>3
+</td>
+<td>1
+</td>
+<td><b>5</b>
+</td>
+<td>4
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Find_the_boiled_egg" title="Find the boiled egg">3</a>
+</td>
+<td>Find the boiled egg. You may touch two eggs. You may damage two eggs. You may not damage the boiled egg.
+</td>
+<td><b>5</b>
+</td>
+<td>DQ
+</td>
+<td>DQ
+</td>
+<td>DQ
+</td>
+<td>DQ
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Physically_recreate_a_classic_computer_game" title="Physically recreate a classic computer game">4</a>
+</td>
+<td>Physically recreate a classic computer game.
+</td>
+<td><b>5</b>
+</td>
+<td>3
+</td>
+<td>2
+</td>
+<td>3
+</td>
+<td>4
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Tie_yourself_up_as_securely_as_possible" title="Tie yourself up as securely as possible">2b</a>
+</td>
+<td>Tie yourself up as securely as possible. <br/><small><i>**Siren sounds**</i></small>
+</td>
+<td>4
+</td>
+<td>3
+</td>
+<td>2
+</td>
+<td>1
+</td>
+<td><b>5</b>
+</td></tr>
+<tr class="tmtablerow">
+<td><a href="/wiki/Prod_the_person_in_front_of_you_with_either_a_finger_or_a_sausage" title="Prod the person in front of you with either a finger or a sausage">5</a>
+</td>
+<td><b>Live:</b> Prod the person in front of you with either a finger or a sausage. If the prodded person guesses incorrectly whether they were prodded by a finger or a sausage, they get eliminated.
+</td>
+<td>0
+</td>
+<td>0
+</td>
+<td><b>5</b>
+</td>
+<td>0
+</td>
+<td>0
+</td></tr>
+<tr class="tmtabletotal">
+<th colspan="2">Total
+</th>
 <td class="tmtablewinner">19
+</td>
+<td>11
+</td>
+<td>15
+</td>
+<td>13
+</td>
+<td>14
 </td></tr>
 <tr class="tmtablegrandtotal">
 <th colspan="2">Grand Total
 </th>
-<td>78
+<td>165
 </td>
-<td>69
+<td>175
 </td>
-<td>90
+<td class="tmtablewinner">176
 </td>
-<td class="tmtablewinner">94
+<td>133
 </td>
-<td>86
+<td>167
 </td></tr></tbody></table>

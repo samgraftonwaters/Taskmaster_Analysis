@@ -66,7 +66,6 @@ def extracting_table(table):
             cols = row.find_all(['td', 'th'])
             
             task_number = cols[0].get_text(strip=True)
-            description = cols[1].get_text(strip=True)
 
             # Scores
             scores = [td.get_text(strip=True).replace('\xa0', '') for td in cols[2:]]
@@ -76,18 +75,47 @@ def extracting_table(table):
 
             # Task ID for uniqueness
             task_id += 1
-            data.append({
-                'Episode': current_episode,
-                'Task Number': task_number,
-                'Task ID': f"{current_episode.split(':')[0]}-T{task_id}",
-                'Description': description,
-                **{contestants[i]: scores[i] for i in range(len(contestants))}
-            })
+            if (description != '-') & (len(cols) > 6): 
+                print('hi') 
+                
+                description = cols[1].get_text(strip=True)
+
+                data.append({
+                    'Episode': current_episode,
+                    'Task Number': task_number,
+                    'Task ID': f"{current_episode.split(':')[0]}-T{task_id}",
+                    'Description': description,
+                    **{contestants[i]: scores[i] for i in range(len(contestants))}
+                })
+            elif  (len(cols) < 3): 
+                print('sup')
+                
+                description = cols[0].get_text(strip=True)
+
+                data.append({
+                    'Episode': current_episode,
+                    'Task Number': 'Extra',
+                    'Task ID': f"{current_episode.split(':')[0]}-T{task_id}",
+                    'Description': task_number,
+                    **{contestants[i]: '-' for i in range(len(contestants))}
+                })
+            else:
+                print('hello')
+                scores = [td.get_text(strip=True).replace('\xa0', '') for td in cols[1:]]
+                scores += [None] * (len(contestants) - len(scores))
+                description = cols[1].get_text(strip=True)
+
+                data.append({
+                    'Episode': current_episode,
+                    'Task Number': 'Extra',
+                    'Task ID': f"{current_episode.split(':')[0]}-T{task_id}",
+                    'Description': task_number,
+                    **{contestants[i]: scores[i] for i in range(len(contestants))}
+                })
 
         # Task row
         elif 'tmtablerow' in row_class:
             cols = row.find_all(['td', 'th'])
-            # print(cols)
 
             # Skip malformed rows
             if len(cols) < 3:
@@ -97,25 +125,14 @@ def extracting_table(table):
             task_number = cols[0].get_text(strip=True)
             description = cols[1].get_text(strip=True)
 
-            # print(description)
-
-            # print(task_number)
-            # print(description)
-            # print(type(task_number))
-
-            #print(re.search(r'\D', description) == 1)
-            
-
             # Scores
             scores = [td.get_text(strip=True).replace('\xa0', '') for td in cols[2:]]
 
             # Pad scores if needed
             scores += [None] * (len(contestants) - len(scores))
 
-            # Task ID for uniqueness
             task_id += 1
-            if (description != '-') & (description != 1):   
-                # print(task_number)      
+            if (description != '-') & (len(cols) != 6):   
                 data.append({
                     'Episode': current_episode,
                     'Task Number': task_number,
@@ -124,15 +141,14 @@ def extracting_table(table):
                     **{contestants[i]: scores[i] for i in range(len(contestants))}
                 })
             else:
-                print(description)
-                # print(task_number)
-                # print(current_episode)
+                scores = [td.get_text(strip=True).replace('\xa0', '') for td in cols[1:]]
+                scores += [None] * (len(contestants) - len(scores))
+
                 data.append({
                     'Episode': current_episode,
                     'Task Number': 'Extra',
                     'Task ID': f"{current_episode.split(':')[0]}-T{task_id}",
                     'Description': task_number,
-                    '':'',
                     **{contestants[i]: scores[i] for i in range(len(contestants))}
                 })
 
@@ -167,13 +183,15 @@ def extracting_table(table):
                 **{contestants[i]: grand_total[i] for i in range(len(contestants))}
             })
 
-
         # Skip total rows, etc.
         else:
             continue
     
     df = pd.DataFrame(data)
     df[contestants] = df[contestants].replace('✘', 0).replace('–', 0).replace('✔', 1)
+    for i in range(len(contestants)):
+       
+        df[contestants] = df[contestants].replace(r"(?<=\d)\[\d+\]", " ", regex=True)
 
     return df
 
