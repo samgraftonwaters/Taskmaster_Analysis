@@ -10,7 +10,7 @@ import re
 
 
 # URL to scrape
-url = "https://taskmaster.fandom.com/wiki/Series_7"
+url = f"https://taskmaster.fandom.com/wiki/Taskmaster%27s_New_Year_Treat"
 header = {"Content-Type": "application/json", "User-agent":"Mozilla/5.0"}
 
 
@@ -30,49 +30,19 @@ series_1 = soup.find_all('table', class_='tmtable')
 
 table = soup.find('table', class_='tmtable')
 
-with open('taskmaster_series_8.txt', 'w') as f:
-     f.write(str(table))
+# with open('taskmaster_new_years.txt', 'w') as f:
+#      f.write(soup_output)
 
 df = SF.extracting_table(table = table)
 
 cols = df.columns
 
-# print(df.head(50))
-
-df.to_csv('series_7_test.csv', index = False)
-
-
-
-# df['Tasknumber'] = df['Task Number'].replace('1', 'Prize').replace('S', 'Bonus').replace('T', 'Tie Break')
-
-# # df = df.drop(columns = ["Episode"], axis = 1)
-# eps_task = df['Task ID'].str.split('-', expand = True)
-# df['Eps'] = eps_task[0]
-# df['Eps'] = df['Eps'].str.replace('Episode ', 'Ep')
-# df['Series'] = f"S2"
-
-# task_type = df['Description'].str.split(":", expand = True)
-
-# df['Team Task'] = np.where(task_type[0] == 'Team', 1, 0)
-
-# df[cols[4:]] = df[cols[4:]].replace('DQ', np.nan)
-
-# for contestent in cols[4:]:
-#     df[contestent] = pd.to_numeric(df[contestent], errors='coerce')
-
-# df = df.drop(columns = ["Task ID"], axis = 1)
-
-# print(df.head())
-# print(df.info())   
-
-# df.to_csv('Series_2_output.csv', index = False, sep = ',')
-
+#Main Series
 with pd.ExcelWriter('Taskmaster_Series_Scores.xlsx') as writer:
     for series in range(1, 21):
 
         url = f"https://taskmaster.fandom.com/wiki/Series_{series}"
         header = {"Content-Type": "application/json", "User-agent":"Mozilla/5.0"}
-
 
         if SF.scrape_with_requests(url, headers = header) == 'error':
             soup = SF.scrape_with_selenium(url)
@@ -86,29 +56,6 @@ with pd.ExcelWriter('Taskmaster_Series_Scores.xlsx') as writer:
         df = SF.extracting_table(table = table)
         cols = df.columns
 
-        # df['Tasknumber'] = df['Task Number'].replace('1', 'Prize').replace('S', 'Bonus').replace('T', 'Tie Break')
-
-        # df = df.drop(columns = ["Episode"], axis = 1)
-        # eps_task = df['Task ID'].str.split('-', expand = True)
-        # df['Episode'] = eps_task[0]
-        # df['Episode'] = df['Episode'].str.replace('Episode ', 'Ep')
-        # df['Series'] = f"S{series}"
-
-        # task_type = df['Description'].str.split(":", expand = True)
-
-        # df['Team Task'] = np.where(task_type[0] == 'Team', 1, 0)
-        # df['Prize Task'] = np.where(task_type[0] == 'Prize', 1, 0)
-        # df['Live Task'] = np.where(task_type[0] == 'Live', 1, 0)
-        # df['Tie Break'] = np.where(df['Task Number'] == 'T', 1, 0)
-        # df['Bonus Task'] = np.where(df['Description'].str.contains('Bonus'), 1, 0)
-        # df['Extra Part'] = np.where(df['Task Number'].str.contains('Extra'), 1, 0)
-
-        # df[cols[4:]] = df[cols[4:]].replace('DQ', np.nan)
-
-        # for contestent in cols[4:]:
-        #     df[contestent] = pd.to_numeric(df[contestent], errors='coerce')
-
-        # df = df.drop(columns = ["Task ID"], axis = 1)
         print(' ')
         print(f'series {series}')
         print(df.head())
@@ -116,3 +63,56 @@ with pd.ExcelWriter('Taskmaster_Series_Scores.xlsx') as writer:
 
         df.to_excel(writer, sheet_name = f'Series_{series}', index = False)
 
+#Champion of Champions
+champ_of_champs = ['', '_2', "_3"]
+with pd.ExcelWriter('Taskmaster_CoC_Scores.xlsx') as writer:
+    
+    for series in champ_of_champs:
+
+        url = f"https://taskmaster.fandom.com/wiki/Champion_of_Champions{series}"
+        header = {"Content-Type": "application/json", "User-agent":"Mozilla/5.0"}
+
+        if SF.scrape_with_requests(url, headers = header) == 'error':
+            soup = SF.scrape_with_selenium(url)
+            print('scrape with selenium')
+        else:
+            soup = SF.scrape_with_requests(url, headers = header)
+            print('scrape with requests')
+
+        table = soup.find('table', class_='tmtable')
+
+        df = SF.extracting_table(table = table)
+        cols = df.columns
+
+        print(' ')
+        print(f'series {series}')
+        print(df.head())
+        print(df.info())    
+
+        df.to_excel(writer, sheet_name = f'Series_{series}', index = False)
+
+
+#New Years Treats
+url = f"https://taskmaster.fandom.com/wiki/Taskmaster%27s_New_Year_Treat"
+header = {"Content-Type": "application/json", "User-agent":"Mozilla/5.0"}
+
+if SF.scrape_with_requests(url, headers = header) == 'error':
+    soup = SF.scrape_with_selenium(url)
+    print('scrape with selenium')
+else:
+    soup = SF.scrape_with_requests(url, headers = header)
+    print('scrape with requests')
+
+tables = soup.find_all('table', class_='tmtable')
+
+with pd.ExcelWriter('Taskmaster_NewYears_Scores.xlsx') as writer:
+    for series, table in zip(range(1,6), tables):
+        df = SF.extracting_table(table = table)
+        cols = df.columns
+
+        print(' ')
+        print(f'series {series}')
+        print(df.head())
+        print(df.info())    
+
+        df.to_excel(writer, sheet_name = f'Series_{series}', index = False)

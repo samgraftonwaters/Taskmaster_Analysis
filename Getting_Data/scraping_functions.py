@@ -94,7 +94,7 @@ def extracting_table(table):
                     'Episode': current_episode,
                     'Task Number': 'Extra',
                     'Task ID': f"{current_episode.split(':')[0]}-T{task_id}",
-                    'Description': task_number,
+                    'Description': description,
                     **{contestants[i]: '-' for i in range(len(contestants))}
                 })
             else:
