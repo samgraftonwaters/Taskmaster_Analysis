@@ -71,22 +71,26 @@ def total_scores(dataframe, total, per_number_eps, per_number_tasks):
 
     if total == True:
 
-        total = total_score[contestents]
+        total = total_score[contestents].reset_index(drop = True)
 
         return(total)
 
     if per_number_eps == True:
 
-        number_eps = dataframe['Episode'].isin(['Ep','Total']).count()
+        number_eps = dataframe['Episode'].str.contains(r"Ep.*Total", regex=True).sum()
 
-        total_per_number_eps = total_score / number_eps
+        print(f'{number_eps=}')
 
-        return(total_per_number_eps)
+        total_per_number_eps = pd.DataFrame(total_score[contestents] / number_eps)
+
+        return(total_per_number_eps.reset_index(drop = True), number_eps)
     
     if per_number_tasks == True:
 
-        number_tasks = dataframe[dataframe['Episode'].str.contains('Total') == False].count()
+        number_tasks = (~dataframe['Episode'].str.contains('Total', case=False, na=False)).sum()
 
-        total_per_number_tasks = total_score / number_tasks
+        print(f'{number_tasks=}')
 
-        return(total_per_number_tasks)
+        total_per_number_tasks = pd.DataFrame(total_score[contestents] / number_tasks)
+
+        return(total_per_number_tasks.reset_index(drop = True), number_tasks)
