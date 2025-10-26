@@ -14,19 +14,22 @@ def get_data(filepath, filename, sheetname, number_tables = None):
             data.append(data_tabs)
         return(data)
 
-def total_scores(dataframe, total, per_number_eps, per_number_tasks):
+def total_scores(dataframe, total, per_number_eps, per_number_tasks, include_col_names = True):
 
     dataframe = pd.DataFrame(dataframe)
     cols = dataframe.columns
     contestents = cols[2:7]
-    
-    total_score = dataframe[dataframe['Task Number'].str.contains('Grand Total')]
 
-    series = dataframe.loc[dataframe['Task Number'].str.contains('Grand Total')]['Series'].values
+    print(dataframe.info())
+    print(dataframe.isna().sum())
+    
+    total_score = dataframe[dataframe['Task Number'].str.contains('Grand Total', na = False)]
+
+    print(total_score)
+
+    series = dataframe.loc[dataframe['Task Number'].str.contains('Grand Total', na = False)]['Series'].values
 
     if total == True:
-
-        print(series)
 
         total = total_score[contestents].reset_index(drop = True)
 
@@ -34,7 +37,17 @@ def total_scores(dataframe, total, per_number_eps, per_number_tasks):
 
         total.columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Series']
 
-        return(total)
+        if include_col_names == False:
+
+            # total.columns = range(total.shape[1])
+
+            total = total.values
+
+            return(total)
+
+        else:
+
+            return(total)
 
     if per_number_eps == True:
 
@@ -48,7 +61,16 @@ def total_scores(dataframe, total, per_number_eps, per_number_tasks):
         total_per_number_eps['Number of Episodes'] = number_eps
         total_per_number_eps.columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Series', 'Number of Episodes']
 
-        return(total_per_number_eps.reset_index(drop = True))
+        if include_col_names == False:
+
+            # total_per_number_eps.columns = range(total_per_number_eps.shape[1])
+
+            total_per_number_eps = total_per_number_eps.reset_index(drop = True).values
+
+            return(total_per_number_eps)
+        
+        else:
+            return(total_per_number_eps.reset_index(drop = True))
     
     if per_number_tasks == True:
 
@@ -62,4 +84,13 @@ def total_scores(dataframe, total, per_number_eps, per_number_tasks):
         total_per_number_tasks['Number of Tasks'] = number_tasks
         total_per_number_tasks.columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Series', 'Number Tasks']
 
-        return(total_per_number_tasks.reset_index(drop = True))
+        if include_col_names == False:
+
+            # total_per_number_tasks.columns = range(total_per_number_tasks.shape[1])
+
+            total_per_number_tasks = total_per_number_tasks.reset_index(drop = True).values
+
+            return(total_per_number_tasks)
+        
+        else:
+            return(total_per_number_tasks.reset_index(drop = True))
