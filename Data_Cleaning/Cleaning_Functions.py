@@ -34,7 +34,7 @@ def clean_numerical(file_path, file_name, sheet_name, number_sheets, output_file
             eps_task = df['Task ID'].str.split('-', expand = True)
             df['Episode'] = eps_task[0]
             df['Episode'] = df['Episode'].str.replace('Episode ', 'Ep')
-            # df['Series'] = f"S{series}"
+            df['Series'] = f"S{series}"
 
             task_type = df['Description'].str.split(":", expand = True)
 
@@ -59,6 +59,33 @@ def clean_numerical(file_path, file_name, sheet_name, number_sheets, output_file
             print(df.head())
 
             df.to_excel(writer, sheet_name = f'Series_{series}', index = False)
+
+def seat_to_name(file_path, file_name):
+
+    clean_table_cols = []
+    for series in range(1, 21):
+
+        dataframe = pd.read_excel(file_path + file_name + '.xlsx', sheet_name = f'Series_{series}')
+
+        cols = dataframe.columns
+
+        contestents = cols[2:7]
+
+        df = pd.DataFrame(columns=[contestents])
+
+        clean_cols = [col[0] if isinstance(col, tuple) else col for col in df.columns]
+        
+        clean_table_cols.append(clean_cols)
+
+    new_cols = [f"Seat {i+1}" for i in range(5)]
+
+    new_df = pd.DataFrame(clean_table_cols, columns=new_cols)
+
+    new_df = new_df.astype(str)
+
+    return(new_df)
+
+
 
 
 def total_scores(dataframe, total, per_number_eps, per_number_tasks):
