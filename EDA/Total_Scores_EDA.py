@@ -11,11 +11,7 @@ series1_total_per_ep = EF.total_scores(dataframe = series1, total = False, per_n
 series1_total_per_task = EF.total_scores(dataframe = series1, total = False, per_number_eps = False, per_number_tasks = True)
 
 print(series1_total)
-print(series1_total_per_ep[0])
-print(series1_total_per_task[1])
+print(series1_total_per_ep)
+print(series1_total_per_task)
 
-total_per_ep = series1_total_per_ep[0]
 
-total_per_ep['Number of eps'] = series1_total_per_ep[1]
-
-print(total_per_ep)

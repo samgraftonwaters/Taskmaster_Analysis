@@ -1,21 +1,6 @@
 import pandas as pd
 import numpy as np
 
-def get_data(filepath, filename, sheetname, number_tables = None):
-
-    if number_tables == None:
-        data = pd.read_excel(filepath + filename, sheet_name = sheetname)
-        return(data)
-    
-    else:
-        data = []
-        for tables in range(1, number_tables):
-            data_tabs = pd.read_excel(filepath + filename, sheet_name = f'Series_{tables}')
-            data.append(data_tabs)
-        return(data)
-
-
-
 def clean_numerical(file_path, file_name, sheet_name, number_sheets, output_filename):
 
     with pd.ExcelWriter(file_path + output_filename + '.xlsx') as writer:
