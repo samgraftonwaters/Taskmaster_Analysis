@@ -31,7 +31,7 @@ def total_scores(dataframe, total, per_number_eps, per_number_tasks, include_col
 
     if total == True:
 
-        total = total_score[contestents].reset_index(drop = True)
+        total = total_score[contestents].reset_index(drop = True).astype(int)
 
         total['Series'] = series
 
@@ -117,25 +117,48 @@ def total_score_tables(table, extra_columns):
     return(total_table)
 
 
-# new_cols = [f"Seat {i+1}" for i in range(5)]
+def find_highest_lowest_seat(value_table, name_table):
 
-# new_cols.append('Series')
-# new_cols.append('Number of Episodes')
+    value_table = pd.DataFrame(value_table)
 
-# Total_per_episode_combined = np.vstack(Total_per_episode)
+    max_table = []
+    min_table = []
+    for seat in range(1,6):
 
-# Total_per_episode = pd.DataFrame(Total_per_episode_combined , columns=new_cols)
+        maximum = max(value_table[f'Seat {seat}'])
+        minimum = min(value_table[f'Seat {seat}'])
 
-# print(Total_per_episode.head())
+        series_max = value_table.loc[value_table[f'Seat {seat}'] == maximum]['Series'].reset_index(drop = True).values[0]
+        series_min = value_table.loc[value_table[f'Seat {seat}'] == minimum]['Series'].reset_index(drop = True).values[0]
 
+        max_table.append([f'Seat {seat}', maximum, series_max])
 
-# new_cols = [f"Seat {i+1}" for i in range(5)]
+        min_table.append([f'Seat {seat}', minimum, series_min])
 
-# new_cols.append('Series')
-# new_cols.append('Number of Tasks')
+        print(f'{seat=}, {maximum=}, {minimum=}, {series_max=}, {series_min=}')
+    
+    max_table = pd.DataFrame(max_table, columns = ['Seat Number', 'Max Score', 'Series'])
+    min_table = pd.DataFrame(min_table, columns = ['Seat Number', 'Min Score', 'Series'])
 
-# Total_per_task_combined = np.vstack(Total_per_task)
+    print(max_table)
+    print(min_table)
 
-# Total_per_task = pd.DataFrame(Total_per_task_combined , columns=new_cols)
+    names_max = []
+    names_min = []
 
-# print(Total_per_task.head())
+    for seat in range(5):
+
+        name_max = name_table[name_table['Series'] == max_table['Series'][seat]].reset_index(drop = True)
+        name_min = name_table[name_table['Series'] == min_table['Series'][seat]].reset_index(drop = True)
+
+        names_max.append(name_max[[f'Seat Name {seat+1}', 'Series']].values[0])
+        names_min.append(name_min[[f'Seat Name {seat+1}', 'Series']].values[0])
+    
+    names_max = pd.DataFrame(names_max, columns = ['Name', 'Series'])
+    names_min = pd.DataFrame(names_min, columns = ['Name', 'Series'])
+
+    max_named_table = pd.merge(max_table, names_max, on = 'Series', how = 'left')
+    min_named_table = pd.merge(min_table, names_min, on = 'Series', how = 'left')
+
+    print(max_named_table)
+    print(min_named_table)

@@ -38,8 +38,13 @@ print(Total_per_series)
 print(Total_per_episode)
 print(Total_per_task)
 
-
 Total_per_series = EF.total_score_tables(table = Total_per_series, extra_columns=['Series'])
 Total_per_episode = EF.total_score_tables(table = Total_per_episode, extra_columns=['Series', 'Number of Episodes'])
 Total_per_task = EF.total_score_tables(table = Total_per_task, extra_columns=['Series', 'Number of Tasks'])
 
+named_series_table = pd.read_csv(file_path + 'seat_contestent_series_table.csv')
+print(named_series_table.head())
+
+EF.find_highest_lowest_seat(value_table = Total_per_series, name_table = named_series_table)
+# EF.find_highest_lowest_seat(value_table = Total_per_episode, name_table = None)
+# EF.find_highest_lowest_seat(value_table = Total_per_task, name_table = None)
