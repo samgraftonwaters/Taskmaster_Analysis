@@ -55,7 +55,7 @@ def total_scores(dataframe, total, per_number_eps, per_number_tasks, include_col
 
         print(f'{number_eps=}')
 
-        total_per_number_eps = pd.DataFrame(total_score[contestents] / number_eps)
+        total_per_number_eps = pd.DataFrame(round((total_score[contestents] / number_eps), 2))
 
         total_per_number_eps['Series'] = series
         total_per_number_eps['Number of Episodes'] = number_eps
@@ -78,7 +78,7 @@ def total_scores(dataframe, total, per_number_eps, per_number_tasks, include_col
 
         print(f'{number_tasks=}')
 
-        total_per_number_tasks = pd.DataFrame(total_score[contestents] / number_tasks)
+        total_per_number_tasks = pd.DataFrame(round((total_score[contestents] / number_tasks), 2))
        
         total_per_number_tasks['Series'] = series
         total_per_number_tasks['Number of Tasks'] = number_tasks
@@ -94,3 +94,48 @@ def total_scores(dataframe, total, per_number_eps, per_number_tasks, include_col
         
         else:
             return(total_per_number_tasks.reset_index(drop = True))
+        
+
+def total_score_tables(table, extra_columns):
+
+    new_cols = [f"Seat {i+1}" for i in range(5)]
+
+    if len(extra_columns) == 1:
+
+        new_cols.append(extra_columns[0])
+    
+    else:
+        new_cols.append(extra_columns[0])
+        new_cols.append(extra_columns[1])
+
+    table = np.vstack(table)
+
+    total_table = pd.DataFrame(table, columns=new_cols)
+
+    print(total_table)
+
+    return(total_table)
+
+
+# new_cols = [f"Seat {i+1}" for i in range(5)]
+
+# new_cols.append('Series')
+# new_cols.append('Number of Episodes')
+
+# Total_per_episode_combined = np.vstack(Total_per_episode)
+
+# Total_per_episode = pd.DataFrame(Total_per_episode_combined , columns=new_cols)
+
+# print(Total_per_episode.head())
+
+
+# new_cols = [f"Seat {i+1}" for i in range(5)]
+
+# new_cols.append('Series')
+# new_cols.append('Number of Tasks')
+
+# Total_per_task_combined = np.vstack(Total_per_task)
+
+# Total_per_task = pd.DataFrame(Total_per_task_combined , columns=new_cols)
+
+# print(Total_per_task.head())

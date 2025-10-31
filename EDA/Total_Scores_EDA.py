@@ -38,39 +38,8 @@ print(Total_per_series)
 print(Total_per_episode)
 print(Total_per_task)
 
-new_cols = [f"Seat {i+1}" for i in range(5)]
 
-new_cols.append('Series')
+Total_per_series = EF.total_score_tables(table = Total_per_series, extra_columns=['Series'])
+Total_per_episode = EF.total_score_tables(table = Total_per_episode, extra_columns=['Series', 'Number of Episodes'])
+Total_per_task = EF.total_score_tables(table = Total_per_task, extra_columns=['Series', 'Number of Tasks'])
 
-Total_per_series_combined = np.vstack(Total_per_series)
-
-Total_per_series = pd.DataFrame(Total_per_series_combined , columns=new_cols)
-
-print(Total_per_series.head())
-
-
-new_cols = [f"Seat {i+1}" for i in range(5)]
-
-new_cols.append('Series')
-new_cols.append('Number of Episodes')
-
-Total_per_episode_combined = np.vstack(Total_per_episode)
-
-Total_per_episode = pd.DataFrame(Total_per_episode_combined , columns=new_cols)
-
-print(Total_per_episode.head())
-
-
-new_cols = [f"Seat {i+1}" for i in range(5)]
-
-new_cols.append('Series')
-new_cols.append('Number of Tasks')
-
-Total_per_task_combined = np.vstack(Total_per_task)
-
-Total_per_task = pd.DataFrame(Total_per_task_combined , columns=new_cols)
-
-print(Total_per_task.head())
-
-####ROUND ALL VALUES TO 2 DP IF FLOAT, REST INTS
-# SAVE AS TABLES IN SAME EXCEL FILE, DIFFERENT TABS
