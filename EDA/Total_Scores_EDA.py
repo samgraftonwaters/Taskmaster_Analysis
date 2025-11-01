@@ -34,13 +34,10 @@ for series in range(1, 21):
     Total_per_task.append(series_total_per_task)
 
 
-print(Total_per_series)
-print(Total_per_episode)
-print(Total_per_task)
-
 Total_per_series = EF.total_score_tables(table = Total_per_series, extra_columns=['Series'])
 Total_per_episode = EF.total_score_tables(table = Total_per_episode, extra_columns=['Series', 'Number of Episodes'])
 Total_per_task = EF.total_score_tables(table = Total_per_task, extra_columns=['Series', 'Number of Tasks'])
+
 
 named_series_table = pd.read_csv(file_path + 'seat_contestent_series_table.csv')
 # print(named_series_table.head())
@@ -53,6 +50,8 @@ tasks_highest_seat = EF.find_highest_seat(value_table = Total_per_task, name_tab
 tasks_lowest_seat = EF.find_lowest_seat(value_table = Total_per_task, name_table = named_series_table)
 
 
+EF.total_scores_all_series(total_scores_df = Total_per_series, number_episodes_df = Total_per_episode,
+                            number_tasks_df = Total_per_task)
 
 #Sum totals for all series and get average per episodes and tasks - which seat is best?
 #Which seat one most times, which one least and others in between (bar chart)

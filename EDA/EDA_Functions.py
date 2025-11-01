@@ -19,13 +19,8 @@ def total_scores(dataframe, total, per_number_eps, per_number_tasks, include_col
     dataframe = pd.DataFrame(dataframe)
     cols = dataframe.columns
     contestents = cols[2:7]
-
-    print(dataframe.info())
-    print(dataframe.isna().sum())
     
     total_score = dataframe[dataframe['Task Number'].str.contains('Grand Total', na = False)]
-
-    print(total_score)
 
     series = dataframe.loc[dataframe['Task Number'].str.contains('Grand Total', na = False)]['Series'].values
 
@@ -38,8 +33,6 @@ def total_scores(dataframe, total, per_number_eps, per_number_tasks, include_col
         total.columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Series']
 
         if include_col_names == False:
-
-            # total.columns = range(total.shape[1])
 
             total = total.values
 
@@ -63,8 +56,6 @@ def total_scores(dataframe, total, per_number_eps, per_number_tasks, include_col
 
         if include_col_names == False:
 
-            # total_per_number_eps.columns = range(total_per_number_eps.shape[1])
-
             total_per_number_eps = total_per_number_eps.reset_index(drop = True).values
 
             return(total_per_number_eps)
@@ -85,8 +76,6 @@ def total_scores(dataframe, total, per_number_eps, per_number_tasks, include_col
         total_per_number_tasks.columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Series', 'Number Tasks']
 
         if include_col_names == False:
-
-            # total_per_number_tasks.columns = range(total_per_number_tasks.shape[1])
 
             total_per_number_tasks = total_per_number_tasks.reset_index(drop = True).values
 
@@ -182,3 +171,34 @@ def find_lowest_seat(value_table, name_table):
 
     print(min_named_table)
     return(min_named_table)
+
+
+
+def total_scores_all_series(total_scores_df, number_episodes_df, number_tasks_df):
+
+    new_cols = [f"Seat {i+1}" for i in range(5)]
+
+    seat_totals = []
+    for seat in range(1, 6):
+        total_scores = total_scores_df[f'Seat {seat}'].sum()
+
+        seat_totals.append(total_scores)
+    
+    print(seat_totals)
+
+    summed_total_per_episodes = [x / number_episodes_df['Number of Episodes'].sum() for x in seat_totals]
+    summed_total_per_episodes = pd.DataFrame([summed_total_per_episodes]).round(2)
+    summed_total_per_tasks = [x / number_tasks_df['Number of Tasks'].sum() for x in seat_totals]
+    summed_total_per_tasks = pd.DataFrame([summed_total_per_tasks]).round(2)
+    seat_totals = pd.DataFrame([seat_totals])
+    summed_totals_table = pd.concat([seat_totals, summed_total_per_episodes, summed_total_per_tasks], axis = 0).reset_index(drop = True)
+    summed_totals_table.columns = new_cols
+
+    Numbers = pd.DataFrame([20, number_episodes_df['Number of Episodes'].sum(), number_tasks_df['Number of Tasks'].sum()], columns = ['Series_Episodes_Tasks'])
+    summed_totals_table = pd.concat([summed_totals_table, Numbers], axis = 1)
+
+
+    return(summed_totals_table)
+
+
+    
