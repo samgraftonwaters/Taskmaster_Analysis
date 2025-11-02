@@ -1,7 +1,25 @@
 import pandas as pd
 import numpy as np
 
-def get_data(filepath, filename, sheetname, number_tables = None):
+def get_data(filepath:str, filename:str, sheetname:str, number_tables:int = None):
+
+    """
+    Used to obtain the data for analysis, either calling one series at a time or multiple.
+
+    Parameters:
+    -----------
+        filepath (string): path to the directory where the data is saved
+        filename (string): name of the file that contains the data
+        sheetname (list of strings): name of the sheet or sheets that contain the data
+        number_tables (int): number of tables to be extracted from the data table. Note, 
+                            this is taken in order of the series. i.e. if "number_tables" = 3,
+                            series 1, 2, and 3 will be extracted.
+
+    Returns:
+    --------
+        Dataframe(s) with the data to analyse.
+    
+    """
 
     if number_tables == None:
         data = pd.read_excel(filepath + filename, sheet_name = sheetname)
@@ -14,7 +32,33 @@ def get_data(filepath, filename, sheetname, number_tables = None):
             data.append(data_tabs)
         return(data)
 
-def total_scores(dataframe, total, per_number_eps, per_number_tasks, include_col_names = True):
+def total_scores(dataframe, total:bool = True, per_number_eps:bool = False, 
+                 per_number_tasks:bool = False, include_col_names:bool = True):
+
+    """
+    Calculates the total scores for a single series, and ccclulates the average per number of 
+    episodes and number of tasks. One option can be taken at a time - e.g. only the totals or average
+    per episodes are returned
+
+    Parameters:
+    -----------
+        dataframe (dataframe): data table that is to be analysed
+        total (bool): if True, then the total for each series will be calculated (default is True)
+        per_number_eps (bool): if True, then it averages the total for each contestent based on the 
+                                number of episodes in the series (default = False)
+        per_number_tasks (bool): : if True, then it averages the total for each contestent based on the 
+                                number of tasks in the series (default = False)
+        include_col_names (bool): if True, then the final output will contain the column headings. (Default = True)
+                                As this function returns the values for one series at a time, setting this
+                                to False means that multiple outputs can be merged without every other row
+                                containing the column names
+
+    Returns:
+    --------
+        Values for each chair (and the respective Series) for a single series. Boolean option determines
+        what output is given - total, average per episodes or average per number of tasks
+    
+    """
 
     dataframe = pd.DataFrame(dataframe)
     cols = dataframe.columns
@@ -226,7 +270,7 @@ def seat_loser_each_series(dataframe):
     return(losing_seat)
 
 
-def order_seats(score_table, name_table):
+def final_score_seat_orders(score_table, name_table):
 
     cols = [f"Seat {i+1}" for i in range(5)]
 
@@ -247,18 +291,31 @@ def order_seats(score_table, name_table):
         
     # # Create a new DataFrame of names in the same order
     name_order_df = series_ranks.apply(
-    lambda row: [name_table.loc[name_table['Series'] == row['Series'], name_map[c]].values[0] for c in row[1:]],
-    axis=1,
-    result_type='expand'
+        lambda row: [name_table.loc[name_table['Series'] == row['Series'], name_map[c]]
+                     .values[0] for c in row[1:]], axis=1, result_type='expand'
     )
     name_order_df.columns = [f'order_{i+1}_name' for i in range(len(cols))]
     name_order_df.insert(0, 'Series', score_table['Series'])
 
+    ordered_vals = (
+        score_table[cols].apply(lambda row: row.sort_values().tolist(), axis=1)
+        .apply(pd.Series).rename(columns=lambda i: f'value_{i+1}')
+)
+    print(ordered_vals)
     # # Combine both order and name order if desired
     result = pd.concat([series_ranks, name_order_df.drop(columns='Series')], axis=1)
-    result.columns = ['Series', 'Last Seat', '4th Seat', '3rd Seat', '2nd Seat', '1st Seat',
-                      'Last Place', 'Penultimate', 'Middle', 'Runner Up', 'Winner']
+
     print(result)
+    result = pd.concat([result, ordered_vals], axis=1)
+
+    print(result)
+    result.columns = ['Series', 'Last Seat', 'Penultimate Seat', 'Middle Seat', 'Runner Up Seat', 'Winner Seat',
+                      'Last Place Name', 'Penultimate Name', 'Middle Name', 'Runner Up Name', 'Winner Name', 
+                      'Last Place Score', 'Penultimate Score', 'Middle Score', 'Runner Up Score',
+                      'Winner Score']
+
+
+    return(result)
 
     
 
