@@ -46,8 +46,6 @@ def total_scores(dataframe, total, per_number_eps, per_number_tasks, include_col
 
         number_eps = dataframe['Episode'].str.contains(r"Ep.*Total", regex=True).sum()
 
-        print(f'{number_eps=}')
-
         total_per_number_eps = pd.DataFrame(round((total_score[contestents] / number_eps), 2))
 
         total_per_number_eps['Series'] = series
@@ -66,8 +64,6 @@ def total_scores(dataframe, total, per_number_eps, per_number_tasks, include_col
     if per_number_tasks == True:
 
         number_tasks = (~dataframe['Episode'].str.contains('Total', case=False, na=False)).sum()
-
-        print(f'{number_tasks=}')
 
         total_per_number_tasks = pd.DataFrame(round((total_score[contestents] / number_tasks), 2))
        
@@ -106,9 +102,6 @@ def total_score_tables(table, extra_columns, drop_total=True):
     if drop_total == True:
         total_table = total_table.drop('Total', axis = 1)
 
-
-    print(total_table)
-
     return(total_table)
 
 
@@ -142,7 +135,6 @@ def find_highest_seat(value_table, name_table):
 
     max_named_table = max_named_table.drop('Series Name', axis = 1)
 
-    print(max_named_table)
     return(max_named_table)
 
 
@@ -175,7 +167,6 @@ def find_lowest_seat(value_table, name_table):
 
     min_named_table = min_named_table.drop('Series Name', axis = 1)
 
-    print(min_named_table)
     return(min_named_table)
 
 
@@ -202,7 +193,6 @@ def total_scores_all_series(total_scores_df, number_episodes_df, number_tasks_df
 
     Numbers = pd.DataFrame([20, number_episodes_df['Number of Episodes'].sum(), number_tasks_df['Number of Tasks'].sum()], columns = ['Series_Episodes_Tasks'])
     summed_totals_table = pd.concat([summed_totals_table, Numbers], axis = 1)
-    print(summed_totals_table)
 
     return(summed_totals_table)
 
@@ -219,7 +209,6 @@ def seat_winner_each_series(dataframe):
     winning_seat = pd.concat([series, winning_seat_each_series], axis = 1)
     winning_seat.columns = ['Series', 'Seat Winner']
 
-    print(winning_seat)
     return(winning_seat)
 
 def seat_loser_each_series(dataframe):
@@ -232,9 +221,8 @@ def seat_loser_each_series(dataframe):
     series = dataframe[cols[5]]
 
     losing_seat = pd.concat([series, columns], axis = 1)
-    losing_seat.columns = ['Series', 'Seat Winner']
+    losing_seat.columns = ['Series', 'Seat Loser']
     
-    print(losing_seat)
     return(losing_seat)
 
 
@@ -242,29 +230,38 @@ def order_seats(score_table, name_table):
 
     cols = [f"Seat {i+1}" for i in range(5)]
 
+    score_table = score_table.drop('Total', axis =1)
     score_cols = score_table.columns
+
     name_cols = name_table.columns
+
     # Get sorted column order for each row
-    series_ranks = score_table[cols].apply(lambda row: row.sort_values().index.tolist(), axis=1)
-    eries_ranks = pd.DataFrame(series_ranks.tolist(), columns=[f'order_{i+1}' for i in range(len(cols))])
-    eries_ranks.insert(0, 'Series', score_table['Series'])
+    series_ranks = score_table[cols].apply(lambda row: row.sort_values().index.tolist(), axis = 1)
+    print(series_ranks)
+
+    series_ranks = pd.DataFrame([series_ranks.tolist()], columns=[f'order_{i+1}' for i in range(len(cols))])
+    print(series_ranks)
+    series_ranks.insert(0, 'Series', score_table['Series'])
+    print(series_ranks)
 
     # Map column name to its corresponding _name column in df2
-    for i in len(score_cols):
-        name_map = {score_table[i] : name_cols[i]}
+    name_map = {}
+    for i, j in zip(score_cols,  name_cols):
+        name_map.update({i : j})
+        
+    print(name_map)
+    # # Create a new DataFrame of names in the same order
+    # name_order_df = eries_ranks.apply(
+    # lambda row: [name_table.loc[name_table['id'] == row['id'], name_map[c]].values[0] for c in row[1:]],
+    # axis=1,
+    # result_type='expand'
+    # )
+    # name_order_df.columns = [f'order_{i+1}_name' for i in range(len(cols))]
+    # name_order_df.insert(0, 'id', score_table['id'])
 
-    # Create a new DataFrame of names in the same order
-    name_order_df = eries_ranks.apply(
-    lambda row: [name_table.loc[name_table['id'] == row['id'], name_map[c]].values[0] for c in row[1:]],
-    axis=1,
-    result_type='expand'
-    )
-    name_order_df.columns = [f'order_{i+1}_name' for i in range(len(cols))]
-    name_order_df.insert(0, 'id', score_table['id'])
-
-    # Combine both order and name order if desired
-    result = pd.concat([series_ranks, name_order_df.drop(columns='id')], axis=1)
-    print(result)
+    # # Combine both order and name order if desired
+    # result = pd.concat([series_ranks, name_order_df.drop(columns='id')], axis=1)
+    # print(result)
 
     
 
