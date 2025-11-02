@@ -236,32 +236,29 @@ def order_seats(score_table, name_table):
     name_cols = name_table.columns
 
     # Get sorted column order for each row
-    series_ranks = score_table[cols].apply(lambda row: row.sort_values().index.tolist(), axis = 1)
-    print(series_ranks)
+    series_ordered = score_table[cols].apply(lambda row: row.sort_values(ascending = True).index.tolist(), axis = 1)
+    series_ranks = pd.DataFrame(series_ordered.tolist(), columns=[f'order_{i+1}' for i in range(len(cols))])
 
-    series_ranks = pd.DataFrame([series_ranks.tolist()], columns=[f'order_{i+1}' for i in range(len(cols))])
-    print(series_ranks)
     series_ranks.insert(0, 'Series', score_table['Series'])
-    print(series_ranks)
-
     # Map column name to its corresponding _name column in df2
     name_map = {}
     for i, j in zip(score_cols,  name_cols):
         name_map.update({i : j})
         
-    print(name_map)
     # # Create a new DataFrame of names in the same order
-    # name_order_df = eries_ranks.apply(
-    # lambda row: [name_table.loc[name_table['id'] == row['id'], name_map[c]].values[0] for c in row[1:]],
-    # axis=1,
-    # result_type='expand'
-    # )
-    # name_order_df.columns = [f'order_{i+1}_name' for i in range(len(cols))]
-    # name_order_df.insert(0, 'id', score_table['id'])
+    name_order_df = series_ranks.apply(
+    lambda row: [name_table.loc[name_table['Series'] == row['Series'], name_map[c]].values[0] for c in row[1:]],
+    axis=1,
+    result_type='expand'
+    )
+    name_order_df.columns = [f'order_{i+1}_name' for i in range(len(cols))]
+    name_order_df.insert(0, 'Series', score_table['Series'])
 
     # # Combine both order and name order if desired
-    # result = pd.concat([series_ranks, name_order_df.drop(columns='id')], axis=1)
-    # print(result)
+    result = pd.concat([series_ranks, name_order_df.drop(columns='Series')], axis=1)
+    result.columns = ['Series', 'Last Seat', '4th Seat', '3rd Seat', '2nd Seat', '1st Seat',
+                      'Last Place', 'Penultimate', 'Middle', 'Runner Up', 'Winner']
+    print(result)
 
     
 
