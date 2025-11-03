@@ -297,8 +297,6 @@ def total_scores_all_series(total_scores_df, number_episodes_df, number_tasks_df
     Numbers = pd.DataFrame([20, number_episodes_df['Number of Episodes'].sum(), number_tasks_df['Number of Tasks'].sum()], columns = ['Series_Episodes_Tasks'])
     summed_totals_table = pd.concat([summed_totals_table, Numbers], axis = 1)
 
-    print(summed_totals_table)
-
     return(summed_totals_table)
 
 
@@ -320,7 +318,7 @@ def seat_winner_each_series(dataframe):
 
     winning_seat_each_series = dataframe[cols[0:5]].idxmax(axis = 1)
 
-    series = dataframe[cols[5]]
+    series = dataframe[cols[6]]
 
     winning_seat = pd.concat([series, winning_seat_each_series], axis = 1)
     winning_seat.columns = ['Series', 'Seat Winner']
@@ -345,7 +343,7 @@ def seat_loser_each_series(dataframe):
 
     columns = dataframe[cols[0:5]].idxmin(axis = 1)
 
-    series = dataframe[cols[5]]
+    series = dataframe[cols[6]]
 
     losing_seat = pd.concat([series, columns], axis = 1)
     losing_seat.columns = ['Series', 'Seat Loser']

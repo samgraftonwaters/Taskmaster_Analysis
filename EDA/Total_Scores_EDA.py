@@ -44,14 +44,13 @@ episodes_lowest_seat = EF.find_lowest_seat(value_table = Total_per_episode, name
 tasks_highest_seat = EF.find_highest_seat(value_table = Total_per_task, name_table = named_series_table)
 tasks_lowest_seat = EF.find_lowest_seat(value_table = Total_per_task, name_table = named_series_table)
 
-EF.total_scores_all_series(total_scores_df = Total_per_series, number_episodes_df = Total_per_episode,
+total_scores_all_series = EF.total_scores_all_series(total_scores_df = Total_per_series, number_episodes_df = Total_per_episode,
                             number_tasks_df = Total_per_task)
 
-EF.seat_winner_each_series(dataframe = Total_per_series)
-EF.seat_loser_each_series(dataframe = Total_per_series)
+seat_winners = EF.seat_winner_each_series(dataframe = Total_per_series)
+seat_losers = EF.seat_loser_each_series(dataframe = Total_per_series)
 
-
-EF.final_score_seat_orders(score_table = Total_per_series, name_table = named_series_table)
+final_scores_ordered_seats = EF.final_score_seat_orders(score_table = Total_per_series, name_table = named_series_table)
 
 #Sum totals for all series and get average per episodes and tasks - which seat is best?
 #Which seat one most times, which one least and others in between (bar chart)
