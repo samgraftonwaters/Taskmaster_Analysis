@@ -123,9 +123,24 @@ def total_scores(dataframe, total:bool = True, per_number_eps:bool = False,
         
         else:
             return(total_per_number_tasks.reset_index(drop = True))
-        
 
-def total_score_tables(table, extra_columns, drop_total=True):
+def total_score_tables(table, extra_columns:list | str, drop_total=True):
+
+    """
+    Cleans and structures the total and average total tables obtained from the function "total_scores()"
+
+    Parameters:
+    ---------
+        table (array): series total scores array/table to be combined
+        extra_column (list of strings): Adds additional columns such as "number of tasks", depending on 
+                                        the initial table values
+        drop_total (boolean): if True, the "Total" column, automatically constructed, is dropped from the
+                            final dataframe output
+    
+    Returns:
+    --------
+        Structed and combined dataframe table for all series totals.
+    """
 
     new_cols = [f"Seat {i+1}" for i in range(5)]
 
@@ -150,6 +165,19 @@ def total_score_tables(table, extra_columns, drop_total=True):
 
 
 def find_highest_seat(value_table, name_table):
+
+    """
+    Function to find the highest scores and contestents for each seat.
+
+    Parameters:
+    -----------
+        value_table (data): table that contains all scores for each seat over all searies
+        name_table (data): table that contains the contestents and their respective seats for each series
+    
+    Returns:
+    --------
+        data table containing the highest score, series and contestent name for each seat
+    """
 
     value_table = pd.DataFrame(value_table)
 
@@ -184,6 +212,19 @@ def find_highest_seat(value_table, name_table):
 
 def find_lowest_seat(value_table, name_table):
 
+    """
+    Function to find the lowest scores and contestents for each seat.
+
+    Parameters:
+    -----------
+        value_table (data): table that contains all scores for each seat over all searies
+        name_table (data): table that contains the contestents and their respective seats for each series
+    
+    Returns:
+    --------
+        data table containing the lowest score, series and contestent name for each seat
+    """
+        
     value_table = pd.DataFrame(value_table)
 
     min_table = []
@@ -217,6 +258,24 @@ def find_lowest_seat(value_table, name_table):
 
 def total_scores_all_series(total_scores_df, number_episodes_df, number_tasks_df):
 
+    """
+    Calculates the total scores for all series summed, and the average per number of episodes or tasks
+    in one output table.
+
+    Parameters:
+    ----------
+        total_scores_df (data): data table containing all total scores for each seat and series
+        number_episodes_df (data): data table containing all total scores per number of epdisodes
+                                for each seat and series
+        number_tasks_df (data): data table containing all total scores per number of tasks
+                                for each seat and series
+
+    Returns:
+    --------
+        Three row table (excluding column names) with the total and averages for all series for each seat.
+
+    """
+
     new_cols = [f"Seat {i+1}" for i in range(5)]
 
     seat_totals = []
@@ -238,10 +297,23 @@ def total_scores_all_series(total_scores_df, number_episodes_df, number_tasks_df
     Numbers = pd.DataFrame([20, number_episodes_df['Number of Episodes'].sum(), number_tasks_df['Number of Tasks'].sum()], columns = ['Series_Episodes_Tasks'])
     summed_totals_table = pd.concat([summed_totals_table, Numbers], axis = 1)
 
+    print(summed_totals_table)
+
     return(summed_totals_table)
 
 
 def seat_winner_each_series(dataframe):
+
+    """
+    Obtains the winning seat for each season
+
+    Parameters:
+        dataframe (data): a table that contains all scores for each seat over all series
+
+    Returns:
+        Two column table containing the series and the seat winner 
+    """
+    
     dataframe = pd.DataFrame(dataframe)
 
     cols = dataframe.columns
@@ -256,6 +328,17 @@ def seat_winner_each_series(dataframe):
     return(winning_seat)
 
 def seat_loser_each_series(dataframe):
+
+    """
+    Obtains the losing seat for each season
+
+    Parameters:
+        dataframe (data): a table that contains all scores for each seat over all series
+
+    Returns:
+        Two column table containing the series and the seat loser
+    """
+
     dataframe = pd.DataFrame(dataframe)
 
     cols = dataframe.columns
@@ -271,6 +354,20 @@ def seat_loser_each_series(dataframe):
 
 
 def final_score_seat_orders(score_table, name_table):
+
+    """
+    Obtains a table that contains the seat order and therefore the contestent order for each series, 
+    loser to winner
+
+    Parameters:
+    -----------
+        scoree_table (data): table that contains all scores for each seat over all searies
+        name_table (data): table that contains the contestents and their respective seats for each series
+    
+    Returns:
+    --------
+        Table with series orders from loser to winner based on seats and contestent names    
+    """
 
     cols = [f"Seat {i+1}" for i in range(5)]
 
@@ -301,14 +398,11 @@ def final_score_seat_orders(score_table, name_table):
         score_table[cols].apply(lambda row: row.sort_values().tolist(), axis=1)
         .apply(pd.Series).rename(columns=lambda i: f'value_{i+1}')
 )
-    print(ordered_vals)
     # # Combine both order and name order if desired
     result = pd.concat([series_ranks, name_order_df.drop(columns='Series')], axis=1)
 
-    print(result)
     result = pd.concat([result, ordered_vals], axis=1)
 
-    print(result)
     result.columns = ['Series', 'Last Seat', 'Penultimate Seat', 'Middle Seat', 'Runner Up Seat', 'Winner Seat',
                       'Last Place Name', 'Penultimate Name', 'Middle Name', 'Runner Up Name', 'Winner Name', 
                       'Last Place Score', 'Penultimate Score', 'Middle Score', 'Runner Up Score',
