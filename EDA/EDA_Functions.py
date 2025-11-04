@@ -297,6 +297,8 @@ def total_scores_all_series(total_scores_df, number_episodes_df, number_tasks_df
     Numbers = pd.DataFrame([20, number_episodes_df['Number of Episodes'].sum(), number_tasks_df['Number of Tasks'].sum()], columns = ['Series_Episodes_Tasks'])
     summed_totals_table = pd.concat([summed_totals_table, Numbers], axis = 1)
 
+    summed_totals_table['Averages'] = round(summed_totals_table[summed_totals_table.columns[0:5]].sum(axis = 1)/5, 2)
+
     return(summed_totals_table)
 
 
