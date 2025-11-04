@@ -44,9 +44,9 @@ episodes_lowest_seat = EF.find_lowest_seat(value_table = Total_per_episode, name
 tasks_highest_seat = EF.find_highest_seat(value_table = Total_per_task, name_table = named_series_table)
 tasks_lowest_seat = EF.find_lowest_seat(value_table = Total_per_task, name_table = named_series_table)
 
+#Average scores and total scores per seat
 total_scores_all_series = EF.total_scores_all_series(total_scores_df = Total_per_series, number_episodes_df = Total_per_episode,
                             number_tasks_df = Total_per_task)
-print(total_scores_all_series)
 
 ####### Number of times each seat has won or lost a series of Taskmaster
 seat_winners = EF.seat_winner_each_series(dataframe = Total_per_series)
@@ -62,11 +62,12 @@ seat_losers['Numbers'] = range(1, 6)
 seat_losers.columns = ['Seat', 'Count Losers', 'Seat Number']
 seat_losers = seat_losers.drop('Seat', axis = 1)
 
-#seats_win_lose_counts = pd.concat([seat_losers.drop(['Seat', 'Seat Number'], axis = 1), seat_winners.drop('Seat', axis = 1)], axis = 1)
-# print(seats_win_lose_counts)
 
 ######
 final_scores_ordered_seats = EF.final_score_seat_orders(score_table = Total_per_series, name_table = named_series_table)
 
-#Sum totals for all series and get average per episodes and tasks - which seat is best?
-#Which seat one most times, which one least and others in between (bar chart)
+###
+#Create Bump charts for all episode totals (and tasks) for each series: 
+#https://towardsdatascience.com/create-bump-charts-with-matplotlib-431b0e6fcb90/
+#https://medium.com/data-science/7-visualizations-with-python-to-express-changes-in-rank-over-time-71c1f11d7e4b
+#https://stackoverflow.com/questions/68095438/how-to-make-a-bump-chart
