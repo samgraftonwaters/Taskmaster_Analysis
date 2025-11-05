@@ -37,6 +37,10 @@ Total_per_series = EF.total_score_tables(table = Total_per_series, extra_columns
 Total_per_episode = EF.total_score_tables(table = Total_per_episode, extra_columns=['Series', 'Number of Episodes'])
 Total_per_task = EF.total_score_tables(table = Total_per_task, extra_columns=['Series', 'Number of Tasks'])
 
+print(Total_per_series)
+print(Total_per_episode)
+print(Total_per_task)
+
 total_highest_seat = EF.find_highest_seat(value_table = Total_per_series, name_table = named_series_table)
 total_lowest_seat = EF.find_lowest_seat(value_table = Total_per_series, name_table = named_series_table)
 episodes_highest_seat = EF.find_highest_seat(value_table = Total_per_episode, name_table = named_series_table)

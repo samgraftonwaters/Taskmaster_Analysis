@@ -4,6 +4,9 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
 
+colours = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2',
+ '#7f7f7f', '#bcbd22', '#17becf']
+
 #### Visual Settings
 # plt.style.use('ggplot')
 
@@ -99,4 +102,155 @@ plt.ylabel('Total Score per Number of Tasks', fontsize = 14)
 plt.xticks(fontsize = 12)
 plt.yticks(fontsize = 12)
 plt.legend(loc = 'best', fontsize = 15)
+plt.show()
+
+
+#Total scores per seat for each series
+
+for seat in TSE.Total_per_series.columns[:5]:
+    plt.plot(TSE.Total_per_series['Series'], TSE.Total_per_series[seat], 'o-', 
+             lw = 3, label = f'{seat}')
+    
+plt.xlabel('Series', fontsize = 20)
+plt.ylabel('Score', fontsize = 20)
+plt.xticks(fontsize = 15)
+plt.yticks(fontsize = 15)
+plt.grid()
+plt.title('The total scores for each seat over all 20 series', fontsize = 20)
+
+plt.legend(loc = 'best', fontsize = 15)
+plt.show()
+
+fig, axes = plt.subplots(nrows = 2, ncols = 3, sharex = False, sharey = True)
+plt.subplots_adjust(wspace=0, hspace=0)
+for ax, seat, colour in zip(axes.flatten(), TSE.Total_per_series.columns[:5], colours[:5]):
+
+    ax.plot(TSE.Total_per_series['Series'], TSE.Total_per_series[seat], 'o-', 
+             lw = 3, label = f'{seat}', color = colour)
+
+    ax.tick_params(axis='x', labelsize=12)
+    ax.tick_params(axis='y', labelsize=15)
+
+    ticks = ax.get_xticks()              
+    ax.set_xticks(ticks[::2])   
+
+    ax.legend(loc = 'best', fontsize = 15, frameon=False)
+
+fig.supxlabel('Series', fontsize = 25)
+fig.supylabel('Scores', fontsize = 25)
+
+plt.suptitle('The total scores for each seat over all 20 series', fontsize = 20)
+fig.delaxes(axes[1, 2])
+plt.show()
+
+
+
+#Total scores per number of episodes in each seat for each series
+
+for seat in TSE.Total_per_episode.columns[:5]:
+    plt.plot(TSE.Total_per_episode['Series'], TSE.Total_per_episode[seat], 'o-', 
+             lw = 3, label = f'{seat}')
+    
+plt.xlabel('Series', fontsize = 20)
+plt.ylabel('Average score per Episode', fontsize = 20)
+plt.xticks(fontsize = 15)
+plt.yticks(fontsize = 15)
+plt.grid()
+plt.title('The total scores per number of episodes for each seat over all 20 series', fontsize = 20)
+
+plt.legend(loc = 'best', fontsize = 15)
+plt.show()
+
+fig, axes = plt.subplots(nrows = 2, ncols = 3, sharex = False, sharey = True)
+plt.subplots_adjust(wspace=0, hspace=0)
+for ax, seat, colour in zip(axes.flatten(), TSE.Total_per_episode.columns[:5], colours[:5]):
+
+    ax.plot(TSE.Total_per_episode['Series'], TSE.Total_per_episode[seat], 'o-', 
+             lw = 3, label = f'{seat}', color = colour)
+
+    ax.tick_params(axis='x', labelsize=12)
+    ax.tick_params(axis='y', labelsize=15)
+
+    ticks = ax.get_xticks()              
+    ax.set_xticks(ticks[::2])   
+    
+    ax.legend(loc = 'best', fontsize = 15, frameon=False)
+
+fig.supxlabel('Series', fontsize = 25)
+fig.supylabel('Average scores per episode', fontsize = 25)
+
+plt.suptitle('The total scores per number of episode for each seat over all 20 series', fontsize = 20)
+fig.delaxes(axes[1, 2])
+plt.show()
+
+#Total scores per number of tasks in each seat for each series
+
+for seat in TSE.Total_per_task.columns[:5]:
+    plt.plot(TSE.Total_per_task['Series'], TSE.Total_per_task[seat], 'o-', 
+             lw = 3, label = f'{seat}')
+    
+plt.xlabel('Series', fontsize = 20)
+plt.ylabel('Average scores per tasks', fontsize = 20)
+plt.xticks(fontsize = 15)
+plt.yticks(fontsize = 15)
+plt.grid()
+plt.title('The total scores per number of tasks for each seat over all 20 series', fontsize = 20)
+
+plt.legend(loc = 'best', fontsize = 15)
+plt.show()
+
+fig, axes = plt.subplots(nrows = 2, ncols = 3, sharex = False, sharey = True)
+plt.subplots_adjust(wspace=0, hspace=0)
+for ax, seat, colour in zip(axes.flatten(), TSE.Total_per_task.columns[:5], colours[:5]):
+
+    ax.plot(TSE.Total_per_task['Series'], TSE.Total_per_task[seat], 'o-', 
+             lw = 3, label = f'{seat}', color = colour)
+
+    ax.tick_params(axis='x', labelsize=12)
+    ax.tick_params(axis='y', labelsize=15)
+
+    ticks = ax.get_xticks()              
+    ax.set_xticks(ticks[::2])   
+    
+    ax.legend(loc = 'best', fontsize = 15, frameon=False)
+
+fig.supxlabel('Series', fontsize = 25)
+fig.supylabel('Average scores per tasks', fontsize = 25)
+
+plt.suptitle('The total scores per number of tasks for each seat over all 20 series', fontsize = 20)
+fig.delaxes(axes[1, 2])
+plt.show()
+
+
+### Total scores, and averages per episodes and tasks
+
+fig, axes = plt.subplots(nrows = 2, ncols = 3, sharex = False, sharey = True)
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.93, left = 0.08)
+
+for ax, seat, colour in zip(axes.flatten(), TSE.Total_per_task.columns[:5], colours[:5]):
+
+    ax.plot(TSE.Total_per_series['Series'], TSE.Total_per_series[seat]/4, 'o-.', 
+             lw = 3, color = colour)
+    
+    ax.plot(TSE.Total_per_episode['Series'], TSE.Total_per_episode[seat], 'o-', 
+            lw = 3, color = colour)
+
+    ax.plot(TSE.Total_per_task['Series'], TSE.Total_per_task[seat]*2, 'o--', 
+             lw = 3, color = colour)
+
+    ax.plot([], [], 'o-', label = f'{seat}', color = colour, lw = 3)
+    ax.set_xticks([]) 
+    ax.set_yticks([])
+
+plt.plot([],[], 'o-.', label = 'Total Scores', lw = 3)
+plt.plot([],[], 'o-', label = 'Scores per Episodes', lw = 3)
+plt.plot([],[], 'o--', label = 'Scores per Tasks', lw = 3)
+    
+fig.legend(loc=(0.7, 0.14), fontsize = 15, frameon=False, ncol=1)
+
+fig.supxlabel('Series', fontsize = 25)
+fig.supylabel('Average scores per tasks', fontsize = 25)
+
+plt.suptitle('The total scores and averages for each seat over all 20 series', fontsize = 20)
+fig.delaxes(axes[1, 2])
 plt.show()
