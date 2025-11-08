@@ -2,9 +2,9 @@ import pandas as pd
 import numpy as np
 import EDA_Functions as EF
 
-pd.set_option('display.max_rows', 500)
-pd.set_option('display.max_columns', 500)
-pd.set_option('display.width', 1000)
+# pd.set_option('display.max_rows', 500)
+# pd.set_option('display.max_columns', 500)
+# pd.set_option('display.width', 1000)
 
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
 
@@ -33,10 +33,12 @@ for series in range(1, 21):
                                             include_col_names = False)
     Total_per_task.append(series_total_per_task)
 
+#Total scores for all series
 Total_per_series = EF.total_score_tables(table = Total_per_series, extra_columns=['Series'], drop_total = False)
 Total_per_episode = EF.total_score_tables(table = Total_per_episode, extra_columns=['Series', 'Number of Episodes'])
 Total_per_task = EF.total_score_tables(table = Total_per_task, extra_columns=['Series', 'Number of Tasks'])
 
+#Highest and lowest scores and averages per epsiodes or tasks for each seat
 total_highest_seat = EF.find_highest_seat(value_table = Total_per_series, name_table = named_series_table)
 total_lowest_seat = EF.find_lowest_seat(value_table = Total_per_series, name_table = named_series_table)
 episodes_highest_seat = EF.find_highest_seat(value_table = Total_per_episode, name_table = named_series_table)
@@ -44,8 +46,6 @@ episodes_lowest_seat = EF.find_lowest_seat(value_table = Total_per_episode, name
 tasks_highest_seat = EF.find_highest_seat(value_table = Total_per_task, name_table = named_series_table)
 tasks_lowest_seat = EF.find_lowest_seat(value_table = Total_per_task, name_table = named_series_table)
 
-print(total_highest_seat)
-print(total_lowest_seat)
 #Average scores and total scores per seat
 total_scores_all_series = EF.total_scores_all_series(total_scores_df = Total_per_series, number_episodes_df = Total_per_episode,
                             number_tasks_df = Total_per_task)
@@ -67,8 +67,19 @@ seat_losers = seat_losers.drop('Seat', axis = 1)
 
 ######
 final_scores_ordered_seats = EF.final_score_seat_orders(score_table = Total_per_series, name_table = named_series_table)
+# print(final_scores_ordered_seats.columns)
 
-###
+final_scores_players = final_scores_ordered_seats[['Series', 'Last Place Name', 'Penultimate Name',
+       'Middle Name', 'Runner Up Name', 'Winner Name', 'Last Place Score',
+       'Penultimate Score', 'Middle Score', 'Runner Up Score', 'Winner Score']]
+print(final_scores_players.head())
+
+losers = EF.ordering_final_scores_seat(datafame = final_scores_players, series_col = 'Series',
+                                       name_col = 'Last Place Name', score_col = 'Last Place Score')
+
+winners = EF.ordering_final_scores_seat(datafame = final_scores_players, series_col = 'Series',
+                                       name_col = 'Winner Name', score_col = 'Winner Score')
+
 #Create Bump charts for all episode totals (and tasks) for each series: 
 #https://towardsdatascience.com/create-bump-charts-with-matplotlib-431b0e6fcb90/
 #https://medium.com/data-science/7-visualizations-with-python-to-express-changes-in-rank-over-time-71c1f11d7e4b
