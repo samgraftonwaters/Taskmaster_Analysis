@@ -415,7 +415,9 @@ def ordering_final_scores_seat(datafame, series_col:str, name_col:str, score_col
     
     final_position = pd.concat([datafame[series_col], datafame[name_col], datafame[score_col]], axis = 1)
 
-    final_position = final_position.sort_values(by = score_col, ascending = True)
+    final_position.columns = ['Series', 'Name', 'Score']
+
+    final_position = final_position.sort_values(by = 'Score', ascending = True)
 
     return(final_position)
     

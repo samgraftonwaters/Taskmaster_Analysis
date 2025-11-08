@@ -77,6 +77,15 @@ print(final_scores_players.head())
 losers = EF.ordering_final_scores_seat(datafame = final_scores_players, series_col = 'Series',
                                        name_col = 'Last Place Name', score_col = 'Last Place Score')
 
+fourth = EF.ordering_final_scores_seat(datafame = final_scores_players, series_col = 'Series',
+                                       name_col = 'Penultimate Name', score_col = 'Penultimate Score')
+
+third = EF.ordering_final_scores_seat(datafame = final_scores_players, series_col = 'Series',
+                                       name_col = 'Middle Name', score_col = 'Middle Score')
+
+second = EF.ordering_final_scores_seat(datafame = final_scores_players, series_col = 'Series',
+                                       name_col = 'Runner Up Name', score_col = 'Runner Up Score')
+
 winners = EF.ordering_final_scores_seat(datafame = final_scores_players, series_col = 'Series',
                                        name_col = 'Winner Name', score_col = 'Winner Score')
 

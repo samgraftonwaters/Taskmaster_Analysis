@@ -374,77 +374,90 @@ plt.rcParams['figure.figsize'] = (13, 7)
 # plt.show()
 
 
-#Losing contestent over all 20 series
 
 
-fig, axes = plt.subplots()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.2)
 
-for i, score, name, series, colour in zip(range(1, 11), TSE.final_scores_players['Last Place Score'][0:10],
-                                  TSE.final_scores_players['Last Place Name'][0:10], 
-                                  TSE.final_scores_players['Series'][0:10],  colours):
-    plt.barh(y = name, width = score, color = colour, edgecolor = 'black')
-    plt.text(score + 1, i-1, str(score), va='center', fontsize = 15, color = colour)  
-    plt.text(5, i-1, str(series), va = 'center', fontsize = 15, color = 'white')
-plt.xlim(0, 160)
-plt.xticks(fontsize = 15)
-plt.yticks(fontsize = 15)
-plt.xlabel('Total Score', fontsize = 18)
-plt.title('Final Scores of Losers per Series', fontsize = 20)
-plt.show()
-
-fig, axes = plt.subplots()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.2)
-
-for i, score, name, series, colour in zip(range(1, 11), TSE.final_scores_players['Last Place Score'][10:21],
-                                  TSE.final_scores_players['Last Place Name'][10:21], 
-                                  TSE.final_scores_players['Series'][10:21],  colours):
-    plt.barh(y = name, width = score, color = colour, edgecolor = 'black')
-    plt.text(score + 1, i-1, str(score), va='center', fontsize = 15, color = colour)  
-    plt.text(5, i-1, str(series), va = 'center', fontsize = 15, color = 'white')
-plt.xlim(0, 150)
-plt.xticks(fontsize = 15)
-plt.yticks(fontsize = 15)
-plt.xlabel('Total Score', fontsize = 18)
-plt.title('Final Scores of Losers per Series', fontsize = 20)
-plt.show()
 
 
 fig, axes = plt.subplots()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.2)
 
-for i, score, name, series, colour in zip(range(1, 21), TSE.final_scores_players['Last Place Score'],
-                                  TSE.final_scores_players['Last Place Name'], 
-                                  TSE.final_scores_players['Series'],  colours2):
+for i, score, name, series, colour in zip(range(1, 21), TSE.winners['Score'],
+                                  TSE.winners['Name'], 
+                                  TSE.winners['Series'],  colours2):
     plt.barh(y = name, width = score, color = colour, edgecolor = 'black')
     plt.text(score + 1, i-1, str(score), va='center', fontsize = 15, color = colour)  
     plt.text(5, i-1, str(series), va = 'center', fontsize = 12, color = 'white')
-plt.xlim(0, 160)
+plt.xlim(0, 200)
 plt.xticks(fontsize = 15)
 plt.yticks(fontsize = 15)
 plt.xlabel('Total Score', fontsize = 18)
-plt.title('Final Scores of Losers per Series', fontsize = 20)
+plt.title('Final Scores of First Place per Series', fontsize = 20)
 plt.show()
-
-last_place = pd.concat([TSE.final_scores_players['Series'], 
-                          TSE.final_scores_players['Last Place Score'], 
-                          TSE.final_scores_players['Last Place Name']], axis = 1)
-
-last_place = last_place.sort_values(by = 'Last Place Score', ascending = True)
 
 
 fig, axes = plt.subplots()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.2)
 
-for i, score, name, series, colour in zip(range(1, 21), last_place['Last Place Score'],
-                                  last_place['Last Place Name'], 
-                                  last_place['Series'],  colours2):
+for i, score, name, series, colour in zip(range(1, 21), TSE.second['Score'],
+                                  TSE.second['Name'], 
+                                  TSE.second['Series'],  colours2):
     plt.barh(y = name, width = score, color = colour, edgecolor = 'black')
     plt.text(score + 1, i-1, str(score), va='center', fontsize = 15, color = colour)  
     plt.text(5, i-1, str(series), va = 'center', fontsize = 12, color = 'white')
-plt.xlim(0, 160)
+plt.xlim(0, 190)
 plt.xticks(fontsize = 15)
 plt.yticks(fontsize = 15)
 plt.xlabel('Total Score', fontsize = 18)
-plt.title('Final Scores of Losers per Series', fontsize = 20)
+plt.title('Final Scores of Second Place per Series', fontsize = 20)
+plt.show()
+
+
+fig, axes = plt.subplots()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.2)
+
+for i, score, name, series, colour in zip(range(1, 21), TSE.third['Score'],
+                                  TSE.third['Name'], 
+                                  TSE.third['Series'],  colours2):
+    plt.barh(y = name, width = score, color = colour, edgecolor = 'black')
+    plt.text(score + 1, i-1, str(score), va='center', fontsize = 15, color = colour)  
+    plt.text(5, i-1, str(series), va = 'center', fontsize = 12, color = 'white')
+plt.xlim(0, 180)
+plt.xticks(fontsize = 15)
+plt.yticks(fontsize = 15)
+plt.xlabel('Total Score', fontsize = 18)
+plt.title('Final Scores of Third Place per Series', fontsize = 20)
+plt.show()
+
+fig, axes = plt.subplots()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.2)
+
+for i, score, name, series, colour in zip(range(1, 21), TSE.fourth['Score'],
+                                  TSE.fourth['Name'], 
+                                  TSE.fourth['Series'],  colours2):
+    plt.barh(y = name, width = score, color = colour, edgecolor = 'black')
+    plt.text(score + 1, i-1, str(score), va='center', fontsize = 15, color = colour)  
+    plt.text(5, i-1, str(series), va = 'center', fontsize = 12, color = 'white')
+plt.xlim(0, 175)
+plt.xticks(fontsize = 15)
+plt.yticks(fontsize = 15)
+plt.xlabel('Total Score', fontsize = 18)
+plt.title('Final Scores of Fourth Place per Series', fontsize = 20)
+plt.show()
+
+
+fig, axes = plt.subplots()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.2)
+
+for i, score, name, series, colour in zip(range(1, 21), TSE.losers['Score'],
+                                  TSE.losers['Name'], 
+                                  TSE.losers['Series'],  colours2):
+    plt.barh(y = name, width = score, color = colour, edgecolor = 'black')
+    plt.text(score + 1, i-1, str(score), va='center', fontsize = 15, color = colour)  
+    plt.text(5, i-1, str(series), va = 'center', fontsize = 12, color = 'white')
+plt.xlim(0, 162)
+plt.xticks(fontsize = 15)
+plt.yticks(fontsize = 15)
+plt.xlabel('Total Score', fontsize = 18)
+plt.title('Final Scores of Last Place per Series', fontsize = 20)
 plt.show()
