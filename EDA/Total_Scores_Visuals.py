@@ -26,6 +26,9 @@ plt.rcParams['figure.figsize'] = (13, 7)
 
 
 # VF.summed_total_scores(dataframe = TSE.total_scores_all_series)
+VF. scores_over_series_single(total_series_table = TSE.Total_per_series, 
+                               total_episodes_table = TSE.Total_per_episode, 
+                               total_tasks_table = TSE.Total_per_task)
 
 VF.scores_over_series_panelled(total_series_table = TSE.Total_per_series, 
                                total_episodes_table = TSE.Total_per_episode, 

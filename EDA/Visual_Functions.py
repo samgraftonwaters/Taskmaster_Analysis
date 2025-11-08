@@ -92,57 +92,32 @@ def summed_total_scores(dataframe):
 
 #Total scores per seat for each series
 
-# def scores_over_series_single():
+def scores_over_series_single(total_series_table, total_episodes_table, total_tasks_table):
 
-# for seat in TSE.Total_per_series.columns[:5]:
-#     plt.plot(TSE.Total_per_series['Series'], TSE.Total_per_series[seat], 'o-', 
-#              lw = 3, label = f'{seat}')
-    
-# plt.xlabel('Series', fontsize = 20)
-# plt.ylabel('Score', fontsize = 20)
-# plt.xticks(fontsize = 15)
-# plt.yticks(fontsize = 15)
-# plt.grid()
-# plt.title('The total scores for each seat over all 20 series', fontsize = 20)
+    for i, tables in enumerate([total_series_table, total_episodes_table, total_tasks_table]):
 
-# plt.legend(loc = 'best', fontsize = 15)
-# plt.show()
+        for seat in tables.columns[:5]:
+            plt.plot(tables['Series'], tables[seat], 'o-', 
+                lw = 3, label = f'{seat}')
+        
+        plt.xlabel('Series', fontsize = 20)
+        plt.ylabel('Score', fontsize = 20)
+        plt.xticks(fontsize = 15)
+        plt.yticks(fontsize = 15)
+        plt.grid()
+        plt.legend(loc = 'best', fontsize = 15)
+        
+        if i == 0:
+            plt.title('The total scores for each seat over all 20 series', fontsize = 20)
+        elif i == 1:
+            plt.title('The total scores per number of episodes for each seat over all 20 series', fontsize = 20)
+        else:
+            plt.title('The total scores per number of tasks for each seat over all 20 series', fontsize = 20)
+
+        plt.show()
 
 
-
-
-
-# #Total scores per number of episodes in each seat for each series
-
-# for seat in TSE.Total_per_episode.columns[:5]:
-#     plt.plot(TSE.Total_per_episode['Series'], TSE.Total_per_episode[seat], 'o-', 
-#              lw = 3, label = f'{seat}')
-    
-# plt.xlabel('Series', fontsize = 20)
-# plt.ylabel('Average score per Episode', fontsize = 20)
-# plt.xticks(fontsize = 15)
-# plt.yticks(fontsize = 15)
-# plt.grid()
-# plt.title('The total scores per number of episodes for each seat over all 20 series', fontsize = 20)
-
-# plt.legend(loc = 'best', fontsize = 15)
-# plt.show()
-
-# #Total scores per number of tasks in each seat for each series
-
-# for seat in TSE.Total_per_task.columns[:5]:
-#     plt.plot(TSE.Total_per_task['Series'], TSE.Total_per_task[seat], 'o-', 
-#              lw = 3, label = f'{seat}')
-    
-# plt.xlabel('Series', fontsize = 20)
-# plt.ylabel('Average scores per tasks', fontsize = 20)
-# plt.xticks(fontsize = 15)
-# plt.yticks(fontsize = 15)
-# plt.grid()
-# plt.title('The total scores per number of tasks for each seat over all 20 series', fontsize = 20)
-
-# plt.legend(loc = 'best', fontsize = 15)
-# plt.show()
+  
 
 def scores_over_series_panelled(total_series_table, total_episodes_table, total_tasks_table, colour_list):
 
