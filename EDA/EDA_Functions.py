@@ -308,9 +308,11 @@ def seat_winner_each_series(dataframe):
     Obtains the winning seat for each season
 
     Parameters:
+    -----------
         dataframe (data): a table that contains all scores for each seat over all series
 
     Returns:
+    --------
         Two column table containing the series and the seat winner 
     """
     
@@ -333,9 +335,11 @@ def seat_loser_each_series(dataframe):
     Obtains the losing seat for each season
 
     Parameters:
+    -----------
         dataframe (data): a table that contains all scores for each seat over all series
 
     Returns:
+    --------
         Two column table containing the series and the seat loser
     """
 
@@ -412,6 +416,26 @@ def final_score_seat_orders(score_table, name_table):
     return(result)
 
 def ordering_final_scores_seat(datafame, series_col:str, name_col:str, score_col:str):
+
+    """
+    Combines the contestent name, total scores and series from the ordered table 
+    for each series (1st to 5th), to then be used for plotting the total scores for each winner, loser,
+    and those inbetween.
+
+    Parameters:
+    ----------
+        dataframe (dataframe): dataframe created in function final_score_seat_orders(), which obtains 
+                             series' first to fifth places
+        series_col (string): name of the column that contains the series
+        nam_col (string): column name that contains the names of all contestents finishing in the the
+                        position of interest - e.g first place
+        score_col (string): column name of the contestents final score
+
+    Returns:
+    --------
+        dataframe with the above columns combined and ordered in ascending order based on the score.
+        The column names are updated to 'Series', 'Name', and 'Score'.
+    """
     
     final_position = pd.concat([datafame[series_col], datafame[name_col], datafame[score_col]], axis = 1)
 
