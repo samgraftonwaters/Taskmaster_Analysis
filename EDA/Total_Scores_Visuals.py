@@ -1,4 +1,5 @@
 import Total_Scores_EDA as TSE
+import Visual_Functions as VF
 
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -17,6 +18,11 @@ plt.rcParams['figure.figsize'] = (13, 7)
 
 
 #Number of times each seat won or lost over all series of Taskmaster
+
+VF.bar_number_seat_wins_loses(seat_number_winner = TSE.seat_winners['Seat Number'],
+                           seat_number_losers = TSE.seat_losers['Seat Number'], 
+                           count_winners = TSE.seat_winners['Count Winners'], 
+                           count_losers = TSE.seat_losers['Count Losers'])
 
 # plt.bar(x = TSE.seat_winners['Seat Number']-0.2, height = TSE.seat_winners['Count Winners'], 
 #         label = 'Number of Wins', width = 0.40, color = 'blue', alpha = 0.6, edgecolor ='black')
@@ -372,12 +378,6 @@ plt.rcParams['figure.figsize'] = (13, 7)
 # plt.xlabel('Total Score', fontsize = 18)
 # plt.title('Seat Lowest Scores per Number of Tasks and the Contestent Names', fontsize = 20)
 # plt.show()
-
-
-
-
-
-
 
 fig, axes = plt.subplots()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.2)
