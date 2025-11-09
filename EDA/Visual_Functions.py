@@ -48,6 +48,20 @@ def bar_number_seat_wins_loses(seat_number_winner, seat_number_losers, count_win
 
 def summed_total_scores(dataframe):
 
+    """
+    Plots for the total scores summed or average scores for each seat.
+
+    Parameters:
+    -----------
+        dataframe (dataframe): table that contains total scores summed for each seat and then the
+        averages per number of episodes and number of tasks taken from this score.
+    
+    Returns:
+    --------
+        Three bar charts for each set of values and their means of each seat   
+    
+    """
+
     for score, bar_colour, mean_colour in zip(range(3), ['blue', 'green', 'darkorange'], ['orange', 'red', 'blue']):
 
         plt.bar(x = range(1,6), height = dataframe.iloc[[score]].values[0][0:5], 
@@ -94,6 +108,24 @@ def summed_total_scores(dataframe):
 
 def scores_over_series_single(total_series_table, total_episodes_table, total_tasks_table):
 
+    """
+    Plots total scores and averages per number of episodes and tasks over the course of each series 
+    for each seat.
+
+    Parameters:
+    -----------
+        total_series_table (dataframe): dataframe with total scores for each series for each respective seat
+        total_episodes_table (dataframe): dataframe with average total scores per number of episodes
+                                        for each series for each respective seat
+        total_tasks_table (dataframe): dataframe with average total scores per number of tasks
+                                        for each series for each respective seat
+    
+    Returns:
+    --------
+        Three separate line or bump plots where all 5 seats are compared over all series
+    
+    """
+
     for i, tables in enumerate([total_series_table, total_episodes_table, total_tasks_table]):
 
         for seat in tables.columns[:5]:
@@ -118,6 +150,26 @@ def scores_over_series_single(total_series_table, total_episodes_table, total_ta
 
 def scores_over_series_panelled(total_series_table, total_episodes_table, total_tasks_table, colour_list):
 
+    """
+    Plots total scores and averages per number of episodes and tasks over the course of each series, where
+    each seat is in it's own panel
+
+    Parameters:
+    -----------
+        total_series_table (dataframe): dataframe with total scores for each series for each respective seat
+        total_episodes_table (dataframe): dataframe with average total scores per number of episodes
+                                        for each series for each respective seat
+        total_tasks_table (dataframe): dataframe with average total scores per number of tasks
+                                        for each series for each respective seat
+        colour_list (list): list of colours for each panel (seats)
+    
+    Returns:
+    --------
+        Three separate line or bump plots where all 5 seats are compared over all series, presented
+        in their own panels
+    
+    """
+        
     for i, tables in enumerate([total_series_table, total_episodes_table, total_tasks_table]):
 
         fig, axes = plt.subplots(nrows = 2, ncols = 3, sharex = False, sharey = True)
@@ -155,6 +207,26 @@ def scores_over_series_panelled(total_series_table, total_episodes_table, total_
         plt.show()
 
 def compare_total_avg_scores(total_series_table, total_episodes_table, total_tasks_table, colour_list):
+
+    """
+    Compares total scores, averages per number of episodes and average per number of tasks 
+    over the course of each series on the same figure, where each seat is in it's own panel
+
+    Parameters:
+    -----------
+        total_series_table (dataframe): dataframe with total scores for each series for each respective seat
+        total_episodes_table (dataframe): dataframe with average total scores per number of episodes
+                                        for each series for each respective seat
+        total_tasks_table (dataframe): dataframe with average total scores per number of tasks
+                                        for each series for each respective seat
+        colour_list (list): list of colours for each panel (seats)
+    
+    Returns:
+    --------
+        Line or bump plots comparing totals and averages per number of episodes and tasks on the same plot,
+        where all 5 seats are compared over all series, presented in their own panels
+    
+    """
 
     fig, axes = plt.subplots(nrows = 2, ncols = 3, sharex = False, sharey = True)
     plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.93, left = 0.08)
