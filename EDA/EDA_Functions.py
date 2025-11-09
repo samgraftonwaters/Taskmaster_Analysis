@@ -357,7 +357,7 @@ def seat_loser_each_series(dataframe):
     return(losing_seat)
 
 
-def final_score_seat_orders(score_table, name_table):
+def final_score_seat_positions(score_table, name_table):
 
     """
     Obtains a table that contains the seat order and therefore the contestent order for each series, 
@@ -407,11 +407,11 @@ def final_score_seat_orders(score_table, name_table):
 
     result = pd.concat([result, ordered_vals], axis=1)
 
-    result.columns = ['Series', 'Last Seat', 'Penultimate Seat', 'Middle Seat', 'Runner Up Seat', 'Winner Seat',
-                      'Last Place Name', 'Penultimate Name', 'Middle Name', 'Runner Up Name', 'Winner Name', 
-                      'Last Place Score', 'Penultimate Score', 'Middle Score', 'Runner Up Score',
-                      'Winner Score']
-
+    result.columns = ['Series', 'Fifth Place Seat', 'Fourth Place Seat', 'Third Place Seat', 
+                      'Second Place Seat', 'First Place Seat', 'Fifth Place Name', 'Fourth Place Name', 
+                      'Third Place Name', 'Second Place Name', 'First Place Name', 'Fifth Place Score', 
+                      'Fourth Place Score', 'Third Place Score', 'Second Place Score',
+                      'First Place Score']
 
     return(result)
 

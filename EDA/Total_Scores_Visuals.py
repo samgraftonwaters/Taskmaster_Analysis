@@ -50,6 +50,11 @@ plt.rcParams['figure.figsize'] = (13, 7)
 #                             colour_list = colours)
 
 
-VF.final_score_seat_positions(first_table = TSE.winners, second_table = TSE.second, 
-                              third_table = TSE.third, fourth_table = TSE.fourth, 
-                              fifth_table = TSE.losers, colour_list = colours2)
+VF.final_score_seat_positions(first_table = TSE.winners_ordered, second_table = TSE.second_ordered, 
+                              third_table = TSE.third_ordered, fourth_table = TSE.fourth_ordered, 
+                              fifth_table = TSE.losers_ordered, colour_list = colours2)
+
+
+VF.final_score_seat_positions(first_table = TSE.winners_unordered, second_table = TSE.second_unordered, 
+                              third_table = TSE.third_unordered, fourth_table = TSE.fourth_unordered, 
+                              fifth_table = TSE.losers_unordered, colour_list = colours2)
