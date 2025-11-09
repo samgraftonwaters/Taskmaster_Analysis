@@ -74,7 +74,7 @@ final_scores_players = final_scores_ordered_seats[['Series', 'Fifth Place Name',
                       'Fourth Place Score', 'Third Place Score', 'Second Place Score',
                       'First Place Score']]
 
-
+#Final contestent positions for all series - ordered on the scores
 losers_ordered = EF.ordering_final_scores_seat(datafame = final_scores_players, series_col = 'Series',
                                        name_col = 'Fifth Place Name', score_col = 'Fifth Place Score', 
                                        order = True)
@@ -95,7 +95,7 @@ winners_ordered  = EF.ordering_final_scores_seat(datafame = final_scores_players
                                        name_col = 'First Place Name', score_col = 'First Place Score', 
                                        order = True)
 
-
+#Final contestent positions for all series - in order of Series number
 losers_unordered = EF.ordering_final_scores_seat(datafame = final_scores_players, series_col = 'Series',
                                        name_col = 'Fifth Place Name', score_col = 'Fifth Place Score', 
                                        order = False)
