@@ -64,7 +64,6 @@ seat_losers['Numbers'] = range(1, 6)
 seat_losers.columns = ['Seat', 'Count Losers', 'Seat Number']
 seat_losers = seat_losers.drop('Seat', axis = 1)
 
-
 ######
 final_scores_ordered_seats = EF.final_score_seat_orders(score_table = Total_per_series, name_table = named_series_table)
 # print(final_scores_ordered_seats.columns)
@@ -72,23 +71,30 @@ final_scores_ordered_seats = EF.final_score_seat_orders(score_table = Total_per_
 final_scores_players = final_scores_ordered_seats[['Series', 'Last Place Name', 'Penultimate Name',
        'Middle Name', 'Runner Up Name', 'Winner Name', 'Last Place Score',
        'Penultimate Score', 'Middle Score', 'Runner Up Score', 'Winner Score']]
-print(final_scores_players.head())
 
-losers = EF.ordering_final_scores_seat(datafame = final_scores_players, series_col = 'Series',
-                                       name_col = 'Last Place Name', score_col = 'Last Place Score')
 
-fourth = EF.ordering_final_scores_seat(datafame = final_scores_players, series_col = 'Series',
-                                       name_col = 'Penultimate Name', score_col = 'Penultimate Score')
+losers_ordered = EF.ordering_final_scores_seat(datafame = final_scores_players, series_col = 'Series',
+                                       name_col = 'Last Place Name', score_col = 'Last Place Score', 
+                                       order = True)
 
-third = EF.ordering_final_scores_seat(datafame = final_scores_players, series_col = 'Series',
-                                       name_col = 'Middle Name', score_col = 'Middle Score')
+fourth_ordered  = EF.ordering_final_scores_seat(datafame = final_scores_players, series_col = 'Series',
+                                       name_col = 'Penultimate Name', score_col = 'Penultimate Score', 
+                                       order = True)
 
-second = EF.ordering_final_scores_seat(datafame = final_scores_players, series_col = 'Series',
-                                       name_col = 'Runner Up Name', score_col = 'Runner Up Score')
+third_ordered  = EF.ordering_final_scores_seat(datafame = final_scores_players, series_col = 'Series',
+                                       name_col = 'Middle Name', score_col = 'Middle Score', 
+                                       order = True)
 
-winners = EF.ordering_final_scores_seat(datafame = final_scores_players, series_col = 'Series',
-                                       name_col = 'Winner Name', score_col = 'Winner Score')
+second_ordered  = EF.ordering_final_scores_seat(datafame = final_scores_players, series_col = 'Series',
+                                       name_col = 'Runner Up Name', score_col = 'Runner Up Score', 
+                                       order = True)
 
+winners_ordered  = EF.ordering_final_scores_seat(datafame = final_scores_players, series_col = 'Series',
+                                       name_col = 'Winner Name', score_col = 'Winner Score', 
+                                       order = True)
+
+print(winners_ordered)
+print(losers_ordered)
 #Create Bump charts for all episode totals (and tasks) for each series: 
 #https://towardsdatascience.com/create-bump-charts-with-matplotlib-431b0e6fcb90/
 #https://medium.com/data-science/7-visualizations-with-python-to-express-changes-in-rank-over-time-71c1f11d7e4b

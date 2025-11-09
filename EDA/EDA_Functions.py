@@ -415,7 +415,7 @@ def final_score_seat_orders(score_table, name_table):
 
     return(result)
 
-def ordering_final_scores_seat(datafame, series_col:str, name_col:str, score_col:str):
+def ordering_final_scores_seat(datafame, series_col:str, name_col:str, score_col:str, order:bool = True):
 
     """
     Combines the contestent name, total scores and series from the ordered table 
@@ -430,18 +430,22 @@ def ordering_final_scores_seat(datafame, series_col:str, name_col:str, score_col
         nam_col (string): column name that contains the names of all contestents finishing in the the
                         position of interest - e.g first place
         score_col (string): column name of the contestents final score
+        order (boolean): if true, this will order the score column in ascending order, else the scores
+                        will be in order of Series number. Default = True.
 
     Returns:
     --------
-        dataframe with the above columns combined and ordered in ascending order based on the score.
-        The column names are updated to 'Series', 'Name', and 'Score'.
+        dataframe with the above columns combined and ordered in ascending order (if set to True)
+        based on the score. The column names are updated to 'Series', 'Name', and 'Score'.
     """
     
     final_position = pd.concat([datafame[series_col], datafame[name_col], datafame[score_col]], axis = 1)
 
     final_position.columns = ['Series', 'Name', 'Score']
 
-    final_position = final_position.sort_values(by = 'Score', ascending = True)
+    if order == True:
+
+        final_position = final_position.sort_values(by = 'Score', ascending = True).reset_index(drop = True)
 
     return(final_position)
     
