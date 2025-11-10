@@ -123,6 +123,36 @@ def total_scores(dataframe, total:bool = True, per_number_eps:bool = False,
         
         else:
             return(total_per_number_tasks.reset_index(drop = True))
+        
+
+def contestent_averages(average_table, name_table):
+
+    cols = [f"Seat {i+1}" for i in range(5)]
+    name_cols = name_table.columns
+    score_cols = average_table.columns
+
+    series_ordered = average_table[cols].apply(lambda row: row.index.tolist(), axis = 1)
+    series_ranks = pd.DataFrame(series_ordered.tolist(), columns=[f'order_{i+1}' for i in range(len(cols))])
+    series_ranks.insert(0, 'Series', average_table['Series'])
+
+    name_map = {}
+    for i, j in zip(score_cols,  name_cols):
+        name_map.update({i : j})    
+
+    print(average_table.head())
+    print(name_table.head())
+    
+    # # Create a new DataFrame of names in the same order
+    name_average_score_df = series_ranks.apply(
+        lambda row: [name_table.loc[name_table['Series'] == row['Series'], name_map[c]]
+                     .values[0] for c in row[1:]], axis=1, result_type='expand'
+    )
+    name_average_score_df.columns = [f'order_{i+1}_name' for i in range(len(cols))]
+    name_average_score_df.insert(0, 'Series', average_table['Series'])
+
+    print(name_average_score_df)
+
+
 
 def total_score_tables(table, extra_columns:list | str, drop_total=True):
 
@@ -383,13 +413,13 @@ def final_score_seat_positions(score_table, name_table):
     # Get sorted column order for each row
     series_ordered = score_table[cols].apply(lambda row: row.sort_values(ascending = True).index.tolist(), axis = 1)
     series_ranks = pd.DataFrame(series_ordered.tolist(), columns=[f'order_{i+1}' for i in range(len(cols))])
-
+    print(series_ranks)
     series_ranks.insert(0, 'Series', score_table['Series'])
     # Map column name to its corresponding _name column in df2
     name_map = {}
     for i, j in zip(score_cols,  name_cols):
         name_map.update({i : j})
-        
+
     # # Create a new DataFrame of names in the same order
     name_order_df = series_ranks.apply(
         lambda row: [name_table.loc[name_table['Series'] == row['Series'], name_map[c]]

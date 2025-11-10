@@ -42,23 +42,27 @@ VF.compare_total_avg_scores(total_series_table = TSE.Total_per_series,
                                total_tasks_table = TSE.Total_per_task, colour_list = colours)
 
 # Highest scores for each seat, including averages (per episodes or per tasks)
-VF.highest_scores_each_seat(total_series_table = TSE.total_highest_seat,
-                            total_episodes_table = TSE.episodes_highest_seat,
-                            total_tasks_table = TSE.tasks_highest_seat, 
+VF.highest_scores_each_seat(highest_seat_series_table = TSE.total_highest_seat,
+                            highest_seat_episodes_table = TSE.episodes_highest_seat,
+                            highest_seat_tasks_table = TSE.tasks_highest_seat, 
                             colour_list = colours)
 
 # Lowest scores for each seat, including averages (per episodes or per tasks)   
-VF.lowest_scores_each_seat(total_series_table = TSE.total_lowest_seat,
-                            total_episodes_table = TSE.episodes_lowest_seat,
-                            total_tasks_table = TSE.tasks_lowest_seat, 
+VF.lowest_scores_each_seat(lowest_seat_series_table = TSE.total_lowest_seat,
+                            lowest_seat_episodes_table = TSE.episodes_lowest_seat,
+                            lowest_seat_tasks_table = TSE.tasks_lowest_seat, 
                             colour_list = colours)
 
 # Final contestest positions for each series - ordered based on score
 VF.final_score_seat_positions(first_table = TSE.winners_ordered, second_table = TSE.second_ordered, 
                               third_table = TSE.third_ordered, fourth_table = TSE.fourth_ordered, 
-                              fifth_table = TSE.losers_ordered, colour_list = colours2)
+                              fifth_table = TSE.losers_ordered, colour_list = colours2,
+                              top = True, top_n = 20,
+                              bottom = False, bottom_n = 1)
 
 # Final contestest positions for each series - ordered based on series
 VF.final_score_seat_positions(first_table = TSE.winners_unordered, second_table = TSE.second_unordered, 
                               third_table = TSE.third_unordered, fourth_table = TSE.fourth_unordered, 
-                              fifth_table = TSE.losers_unordered, colour_list = colours2)
+                              fifth_table = TSE.losers_unordered, colour_list = colours2,
+                              top = True, top_n = 20,
+                              bottom = False, bottom_n = 1)

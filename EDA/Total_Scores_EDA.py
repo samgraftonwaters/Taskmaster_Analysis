@@ -38,6 +38,8 @@ Total_per_series = EF.total_score_tables(table = Total_per_series, extra_columns
 Total_per_episode = EF.total_score_tables(table = Total_per_episode, extra_columns=['Series', 'Number of Episodes'])
 Total_per_task = EF.total_score_tables(table = Total_per_task, extra_columns=['Series', 'Number of Tasks'])
 
+EF.contestent_averages(average_table = Total_per_task , name_table = named_series_table)
+
 #Highest and lowest scores and averages per epsiodes or tasks for each seat
 total_highest_seat = EF.find_highest_seat(value_table = Total_per_series, name_table = named_series_table)
 total_lowest_seat = EF.find_lowest_seat(value_table = Total_per_series, name_table = named_series_table)
@@ -115,6 +117,7 @@ second_unordered  = EF.ordering_final_scores_seat(datafame = final_scores_player
 winners_unordered  = EF.ordering_final_scores_seat(datafame = final_scores_players, series_col = 'Series',
                                        name_col = 'First Place Name', score_col = 'First Place Score', 
                                        order = False)
+
 
 #Create Bump charts for all episode totals (and tasks) for each series: 
 #https://towardsdatascience.com/create-bump-charts-with-matplotlib-431b0e6fcb90/

@@ -89,9 +89,9 @@ def summed_total_scores(dataframe):
 
         else:
             plt.title('The Total Score per Number of Tasks for each seat in all 20 Series of Taskmaster', fontsize = 16)
-            plt.ylim(2.5, 2.7)
+            plt.ylim(2.5, 2.72)
             for i in range(5):
-                plt.text(i+1, dataframe.iloc[[score]].values[0][0:5][i] + 0.01, 
+                plt.text(i+1, dataframe.iloc[[score]].values[0][0:5][i] + 0.013, 
                         dataframe.iloc[[score]].values[0][0:5][i], ha='center', 
                         fontsize = 15, color = bar_colour)
 
@@ -128,12 +128,14 @@ def scores_over_series_single(total_series_table, total_episodes_table, total_ta
 
     for i, tables in enumerate([total_series_table, total_episodes_table, total_tasks_table]):
 
+        fig, axes = plt.subplots()
+        plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.08)
+
         for seat in tables.columns[:5]:
             plt.plot(tables['Series'], tables[seat], 'o-', 
                 lw = 3, label = f'{seat}')
         
         plt.xlabel('Series', fontsize = 20)
-        plt.ylabel('Score', fontsize = 20)
         plt.xticks(fontsize = 15)
         plt.yticks(fontsize = 15)
         plt.grid()
@@ -141,10 +143,13 @@ def scores_over_series_single(total_series_table, total_episodes_table, total_ta
         
         if i == 0:
             plt.title('The total scores for each seat over all 20 series', fontsize = 20)
+            plt.ylabel('Total Score', fontsize = 20)
         elif i == 1:
-            plt.title('The total scores per number of episodes for each seat over all 20 series', fontsize = 20)
+            plt.title('The average scores per number of episodes for each seat over all 20 series', fontsize = 20)
+            plt.ylabel('Average Score per Episodes', fontsize = 20)
         else:
-            plt.title('The total scores per number of tasks for each seat over all 20 series', fontsize = 20)
+            plt.title('The average scores per number of tasks for each seat over all 20 series', fontsize = 20)
+            plt.ylabel('Average Score per Tasks', fontsize = 20)
 
         plt.show()
 
@@ -173,7 +178,7 @@ def scores_over_series_panelled(total_series_table, total_episodes_table, total_
     for i, tables in enumerate([total_series_table, total_episodes_table, total_tasks_table]):
 
         fig, axes = plt.subplots(nrows = 2, ncols = 3, sharex = False, sharey = True)
-        plt.subplots_adjust(wspace=0, hspace=0)
+        plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.1)
 
         for ax, seat, colour in zip(axes.flatten(), tables[:5], colour_list[:5]):
 
@@ -262,9 +267,28 @@ def compare_total_avg_scores(total_series_table, total_episodes_table, total_tas
 
 #Highest scores for each seat and the winning contestent
 
-def highest_scores_each_seat(total_series_table, total_episodes_table, total_tasks_table, colour_list):
+def highest_scores_each_seat(highest_seat_series_table, highest_seat_episodes_table, 
+                             highest_seat_tasks_table, colour_list):
 
-    for t, tables in enumerate([total_series_table, total_episodes_table, total_tasks_table]):
+    """
+    Highest scores for each seat only
+
+    Parameters:
+    -----------
+        highest_seat_series_table (dataframe): dataframe with the highest scores for each seat seat
+        highest_seat_episodes_table (dataframe): dataframe with highest average total scores per number of episodes
+                                        for each seat
+        highest_seat_tasks_table (dataframe): dataframe with highest average total scores per number of tasks
+                                        for each seat
+        colour_list (list): list of colours for each seat
+    
+    Returns:
+    --------
+        Bar charts for the highest scores and average scores for each seat only. 
+    
+    """
+
+    for t, tables in enumerate([highest_seat_series_table, highest_seat_episodes_table, highest_seat_tasks_table]):
 
         fig, axes = plt.subplots()
         plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.2)
@@ -305,9 +329,29 @@ def highest_scores_each_seat(total_series_table, total_episodes_table, total_tas
 
 #Lowest scores for each seat and the winning contestent
 
-def lowest_scores_each_seat(total_series_table, total_episodes_table, total_tasks_table, colour_list):
+def lowest_scores_each_seat(lowest_seat_series_table, lowest_seat_episodes_table,
+                            lowest_seat_tasks_table, colour_list):
 
-    for t, tables in enumerate([total_series_table, total_episodes_table, total_tasks_table]):
+    """
+    Lowest scores for each seat only
+
+    Parameters:
+    -----------
+        lowest_seat_series_table (dataframe): dataframe with the lowest scores for each seat seat
+        lowest_seat_episodes_table (dataframe): dataframe with lowest average total scores per number of episodes
+                                        for each seat
+        lowest_seat_tasks_table (dataframe): dataframe with lowest average total scores per number of tasks
+                                        for each seat
+        colour_list (list): list of colours for each seat
+    
+    Returns:
+    --------
+        Bar charts for the lowest scores and average scores for each seat only. 
+    
+    """
+
+    for t, tables in enumerate([lowest_seat_series_table, lowest_seat_episodes_table,
+                                lowest_seat_tasks_table]):
 
         fig, axes = plt.subplots()
         plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.2)
@@ -348,35 +392,95 @@ def lowest_scores_each_seat(total_series_table, total_episodes_table, total_task
         plt.show()
 
 
-def final_score_seat_positions(first_table, second_table, third_table, fourth_table, fifth_table, colour_list):
+def final_score_seat_positions(first_table, second_table, third_table, fourth_table, 
+                               fifth_table, colour_list, top = True, top_n = 20, bottom = False, 
+                               bottom_n = 1):
 
+    """
+    Comparing the contetestents who finish in their respective positions over each series
+
+    Parameters:
+    -----------
+        first_table (dataframe): dataframe that contains all series winners
+        second_table (dataframe): dataframe that contains all series second places
+        third_table (dataframe): dataframe that contains all series third places
+        fourth_table (dataframe): dataframe that contains all series fourth places
+        fifth_table (dataframe): dataframe that contains all series losers
+        colour_list (list): list of colours for each contestent
+        top (boolean): If true, the top contestestents for each possition will be displayed. Use next
+                       parameter to set the number to show. Default = True
+        top_n (int): Number of "top" contestents to be displayed. Default = 20
+        bottom (boolean): If true, the bottom contestestents for each possition will be displayed. 
+                        Use next parameter to set the number to show. Default = False
+        bottom_n (int): Number of "bottom" contestents to be displayed. Default = 1
+    
+    Returns:
+    --------
+        Five different bar charts, one for each position, comparing all series contestents together,
+        either showing the top or bottom number
+    
+    """
+
+    if top == True:
+        first_table = first_table[20 - top_n : 21] 
+        second_table = second_table[20 - top_n : 21]
+        third_table = third_table[20 - top_n : 21]
+        fourth_table = fourth_table[20 - top_n : 21] 
+        fifth_table = fifth_table[20 - top_n : 21]
+        if top_n < 20:
+            title = f'(Top {top_n})'
+        else:
+            title = ''
+
+    if bottom == True:
+        first_table = first_table[0 : bottom_n] 
+        second_table = second_table[0 : bottom_n] 
+        third_table = third_table[0 : bottom_n] 
+        fourth_table = fourth_table[0 : bottom_n] 
+        fifth_table = fifth_table[0 : bottom_n] 
+        if bottom_n < 20:
+            title = f'(Bottom {bottom_n})'
+        else:
+            title = ''
+    
     for t, tables in enumerate([first_table, second_table, third_table, fourth_table, fifth_table]):
 
         fig, axes = plt.subplots()
         plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.2)
-
-        for i, score, name, series, colour in zip(range(1, 21), tables['Score'],
-                                        tables['Name'], 
-                                        tables['Series'],  colour_list):
-            plt.barh(y = name, width = score, color = colour, edgecolor = 'black')
-            plt.text(score + 1, i-1, str(score), va='center', fontsize = 15, color = colour)  
-            plt.text(5, i-1, str(series), va = 'center', fontsize = 12, color = 'white')
         
+        if top == True:
+
+            for i, score, name, series, colour in zip(range(1, 21), tables['Score'],
+                                            tables['Name'], 
+                                            tables['Series'],  colour_list):
+                plt.barh(y = name, width = score, color = colour, edgecolor = 'black')
+                plt.text(score + 1, i-1, str(score), va='center', fontsize = 15, color = colour)  
+                plt.text(5, i-1, str(series), va = 'center', fontsize = 12, color = 'white')
+        
+        if bottom == True:
+
+            for i, score, name, series, colour in zip(range(1, 21), tables['Score'],
+                                tables['Name'], 
+                                tables['Series'],  colour_list):
+                plt.barh(y = name, width = score, color = colour, edgecolor = 'black')
+                plt.text(score + 1, i-1, str(score), va='center', fontsize = 15, color = colour)  
+                plt.text(5, i-1, str(series), va = 'center', fontsize = 12, color = 'white')
+
         if t == 0:
             plt.xlim(0, 205)
-            plt.title('Final Scores of First Place per Series', fontsize = 20)        
+            plt.title(f'Final Scores of First Place per Series {title}', fontsize = 20)        
         elif t == 1:
             plt.xlim(0, 190)
-            plt.title('Final Scores of Second Place per Series', fontsize = 20)
+            plt.title(f'Final Scores of Second Place per Series {title}', fontsize = 20)
         elif t == 2:
             plt.xlim(0, 180)
-            plt.title('Final Scores of Third Place per Series', fontsize = 20)
+            plt.title(f'Final Scores of Third Place per Series {title}', fontsize = 20)
         elif t == 3:
             plt.xlim(0, 175)
-            plt.title('Final Scores of Fourth Place per Series', fontsize = 20)
+            plt.title(f'Final Scores of Fourth Place per Series {title}', fontsize = 20)
         else:
             plt.xlim(0, 162)
-            plt.title('Final Scores of Last Place per Series', fontsize = 20)
+            plt.title(f'Final Scores of Last Place per Series {title}', fontsize = 20)
 
         plt.xlabel('Total Score', fontsize = 18)
         plt.xticks(fontsize = 15)
