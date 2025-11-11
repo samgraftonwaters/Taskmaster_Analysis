@@ -66,3 +66,19 @@ VF.final_score_seat_positions(first_table = TSE.winners_unordered, second_table 
                               fifth_table = TSE.losers_unordered, colour_list = colours2,
                               top = True, top_n = 20,
                               bottom = False, bottom_n = 1)
+
+#Final contestent positions for each series - ordered based on average score per number of episodes
+
+VF.final_average_score_seat_positions(first_table = TSE.winners_ordered_eps, second_table = TSE.second_ordered_eps, 
+                                      third_table = TSE.third_ordered_eps, fourth_table = TSE.fourth_ordered_eps, 
+                               fifth_table = TSE.losers_ordered_eps, colour_list = colours2, 
+                               average_type = 'episode', top = True, top_n = 20, bottom = False, 
+                               bottom_n = 1)
+
+#Final contestent positions for each series - ordered based on average score per number of tasks
+
+VF.final_average_score_seat_positions(first_table = TSE.winners_ordered_tasks, second_table = TSE.second_ordered_tasks, 
+                                      third_table = TSE.third_ordered_tasks, fourth_table = TSE.fourth_ordered_tasks, 
+                               fifth_table = TSE.losers_ordered_tasks, colour_list = colours2, 
+                               average_type = 'task', top = True, top_n = 20, bottom = False, 
+                               bottom_n = 1)

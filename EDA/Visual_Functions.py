@@ -397,15 +397,16 @@ def final_score_seat_positions(first_table, second_table, third_table, fourth_ta
                                bottom_n = 1):
 
     """
-    Comparing the contetestents who finish in their respective positions over each series
+    Comparing the contestents who finish in their respective positions over each series based on total
+    scores.
 
     Parameters:
     -----------
-        first_table (dataframe): dataframe that contains all series winners
-        second_table (dataframe): dataframe that contains all series second places
-        third_table (dataframe): dataframe that contains all series third places
-        fourth_table (dataframe): dataframe that contains all series fourth places
-        fifth_table (dataframe): dataframe that contains all series losers
+        first_table (dataframe): dataframe that contains all series winners based on total score
+        second_table (dataframe): dataframe that contains all series second places based on total score
+        third_table (dataframe): dataframe that contains all series third places based on total score
+        fourth_table (dataframe): dataframe that contains all series fourth places based on total score
+        fifth_table (dataframe): dataframe that contains all series losers based on total score
         colour_list (list): list of colours for each contestent
         top (boolean): If true, the top contestestents for each possition will be displayed. Use next
                        parameter to set the number to show. Default = True
@@ -483,6 +484,126 @@ def final_score_seat_positions(first_table, second_table, third_table, fourth_ta
             plt.title(f'Final Scores of Last Place per Series {title}', fontsize = 20)
 
         plt.xlabel('Total Score', fontsize = 18)
+        plt.xticks(fontsize = 15)
+        plt.yticks(fontsize = 15)
+
+        plt.show()
+
+
+def final_average_score_seat_positions(first_table, second_table, third_table, fourth_table, 
+                               fifth_table, colour_list, average_type, top = True, top_n = 20, bottom = False, 
+                               bottom_n = 1):
+
+    """
+    Comparing the contetestents who finish in their respective positions over each series based on
+    their average scores per number of episodes or number of tasks.
+
+    Parameters:
+    -----------
+        first_table (dataframe): dataframe that contains all series winners based on average score
+        second_table (dataframe): dataframe that contains all series second places based on average score
+        third_table (dataframe): dataframe that contains all series third places based on average score
+        fourth_table (dataframe): dataframe that contains all series fourth places based on average score
+        fifth_table (dataframe): dataframe that contains all series losers based on average score
+        colour_list (list): list of colours for each contestent
+        average type (string): States the type of average being plotted. If average per task data is used
+                        this should be set to "task"; if average per episode data is used this should be
+                        set to "episode"
+        top (boolean): If true, the top contestestents for each possition will be displayed. Use next
+                       parameter to set the number to show. Default = True
+        top_n (int): Number of "top" contestents to be displayed. Default = 20
+        bottom (boolean): If true, the bottom contestestents for each possition will be displayed. 
+                        Use next parameter to set the number to show. Default = False
+        bottom_n (int): Number of "bottom" contestents to be displayed. Default = 1
+    
+    Returns:
+    --------
+        Five different bar charts, one for each position, comparing all series contestents together,
+        either showing the top or bottom number
+    
+    """
+
+    if top == True:
+        first_table = first_table[20 - top_n : 21] 
+        second_table = second_table[20 - top_n : 21]
+        third_table = third_table[20 - top_n : 21]
+        fourth_table = fourth_table[20 - top_n : 21] 
+        fifth_table = fifth_table[20 - top_n : 21]
+        if top_n < 20:
+            title = f'(Top {top_n})'
+        else:
+            title = ''
+
+    if bottom == True:
+        first_table = first_table[0 : bottom_n] 
+        second_table = second_table[0 : bottom_n] 
+        third_table = third_table[0 : bottom_n] 
+        fourth_table = fourth_table[0 : bottom_n] 
+        fifth_table = fifth_table[0 : bottom_n] 
+        if bottom_n < 20:
+            title = f'(Bottom {bottom_n})'
+        else:
+            title = ''
+    
+    for t, tables in enumerate([first_table, second_table, third_table, fourth_table, fifth_table]):
+
+        fig, axes = plt.subplots()
+        plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.2)
+        
+        if top == True:
+
+            for i, score, name, series, colour in zip(range(1, 21), tables['Score'],
+                                            tables['Name'], 
+                                            tables['Series'],  colour_list):
+                plt.barh(y = name, width = score, color = colour, edgecolor = 'black')
+                plt.text(score + 0.25, i-1, str(score), va='center', fontsize = 15, color = colour)  
+                plt.text(1, i-1, str(series), va = 'center', fontsize = 12, color = 'white')
+        
+        if bottom == True:
+
+            for i, score, name, series, colour in zip(range(1, 21), tables['Score'],
+                                tables['Name'], 
+                                tables['Series'],  colour_list):
+                plt.barh(y = name, width = score, color = colour, edgecolor = 'black')
+                plt.text(score + 0.25, i-1, str(score), va='center', fontsize = 15, color = colour)  
+                plt.text(1, i-1, str(series), va = 'center', fontsize = 12, color = 'white')
+        
+        if average_type == 'task':
+            plt.xlabel('Average Score per Number of Tasks', fontsize = 18)
+            if t == 0:
+                plt.title(f'Average Score per Number of Tasks for First Place per Series {title}', fontsize = 20)        
+                plt.xlim(0, 4)
+            elif t == 1:
+                plt.title(f'Average Score per Number of Tasks for Second Place per Series {title}', fontsize = 20)
+                plt.xlim(0, 3.6)
+            elif t == 2:
+                plt.title(f'Average Score per Number of Tasks for Third Place per Series {title}', fontsize = 20)
+                plt.xlim(0, 3.4)
+            elif t == 3:
+                plt.title(f'Average Score per Number of Tasks for Fourth Place per Series {title}', fontsize = 20)
+                plt.xlim(0, 3.3)
+            else:
+                plt.title(f'Average Score per Number of Tasks for Last Place per Series {title}', fontsize = 20)
+                plt.xlim(0, 3)
+
+        if average_type == 'episode':
+            plt.xlabel('Average Score per Number of Episodes', fontsize = 18)
+            if t == 0:
+                plt.title(f'Average Score per Number of Episodes for First Place per Series {title}', fontsize = 20)        
+                plt.xlim(0, 21)
+            elif t == 1:
+                plt.title(f'Average Score per Number of Episodes for Second Place per Series {title}', fontsize = 20)
+                plt.xlim(0, 20)
+            elif t == 2:
+                plt.title(f'Average Score per Number of Episodes for Third Place per Series {title}', fontsize = 20)
+                plt.xlim(0, 19)
+            elif t == 3:
+                plt.title(f'Average Score per Number of Episodes for Fourth Place per Series {title}', fontsize = 20)
+                plt.xlim(0, 18)
+            else:
+                plt.title(f'Average Score per Number of Episodes for Last Place per Series {title}', fontsize = 20)
+                plt.xlim(0, 17)
+        
         plt.xticks(fontsize = 15)
         plt.yticks(fontsize = 15)
 
