@@ -92,7 +92,7 @@ average_episodes_players = average_episodes_ordered_seats[['Series', 'Fifth Plac
                       'First Place Score']]
 
 
-EF.ordering_final_scores_all_positions(datafame = final_scores_players, 
+total_score_positions_ordered = EF.ordering_final_scores_all_positions(datafame = final_scores_players, 
                                        series_col = 'Series', 
                                        name_cols = ['Fifth Place Name', 'Fourth Place Name', 
                                                     'Third Place Name', 'Second Place Name', 'First Place Name'],
@@ -100,91 +100,50 @@ EF.ordering_final_scores_all_positions(datafame = final_scores_players,
                                                       'Third Place Score', 'Second Place Score', 'First Place Score'], 
                                         positions = [5, 4, 3, 2, 1], order_col = 'Score', order = True)
 
-#Final contestent positions for all series - ordered on the scores
-losers_ordered = EF.ordering_final_scores_positions(datafame = final_scores_players, series_col = 'Series',
-                                       name_col = 'Fifth Place Name', score_col = 'Fifth Place Score', 
-                                       position = 5, order = True)
+total_score_positions_unordered = EF.ordering_final_scores_all_positions(datafame = final_scores_players, 
+                                       series_col = 'Series', 
+                                       name_cols = ['Fifth Place Name', 'Fourth Place Name', 
+                                                    'Third Place Name', 'Second Place Name', 'First Place Name'],
+                                        score_cols = ['Fifth Place Score', 'Fourth Place Score', 
+                                                      'Third Place Score', 'Second Place Score', 'First Place Score'], 
+                                        positions = [5, 4, 3, 2, 1], order_col = 'Score', order = False)
 
-fourth_ordered  = EF.ordering_final_scores_positions(datafame = final_scores_players, series_col = 'Series',
-                                       name_col = 'Fourth Place Name', score_col = 'Fourth Place Score', 
-                                       position = 4, order = True)
 
-third_ordered  = EF.ordering_final_scores_positions(datafame = final_scores_players, series_col = 'Series',
-                                       name_col = 'Third Place Name', score_col = 'Third Place Score', 
-                                       position = 3, order = True)
+average_episode_positions_ordered = EF.ordering_final_scores_all_positions(datafame = average_episodes_players, 
+                                       series_col = 'Series', 
+                                       name_cols = ['Fifth Place Name', 'Fourth Place Name', 
+                                                    'Third Place Name', 'Second Place Name', 'First Place Name'],
+                                        score_cols = ['Fifth Place Score', 'Fourth Place Score', 
+                                                      'Third Place Score', 'Second Place Score', 'First Place Score'], 
+                                        positions = [5, 4, 3, 2, 1], order_col = 'Score', order = True)
 
-second_ordered  = EF.ordering_final_scores_positions(datafame = final_scores_players, series_col = 'Series',
-                                       name_col = 'Second Place Name', score_col = 'Second Place Score', 
-                                       position = 2, order = True)
+average_episode_positions_unordered = EF.ordering_final_scores_all_positions(datafame = average_episodes_players, 
+                                       series_col = 'Series', 
+                                       name_cols = ['Fifth Place Name', 'Fourth Place Name', 
+                                                    'Third Place Name', 'Second Place Name', 'First Place Name'],
+                                        score_cols = ['Fifth Place Score', 'Fourth Place Score', 
+                                                      'Third Place Score', 'Second Place Score', 'First Place Score'], 
+                                        positions = [5, 4, 3, 2, 1], order_col = 'Score', order = False)
 
-winners_ordered  = EF.ordering_final_scores_positions(datafame = final_scores_players, series_col = 'Series',
-                                       name_col = 'First Place Name', score_col = 'First Place Score', 
-                                       position = 1, order = True)
+average_tasks_positions_ordered = EF.ordering_final_scores_all_positions(datafame = average_tasks_players, 
+                                       series_col = 'Series', 
+                                       name_cols = ['Fifth Place Name', 'Fourth Place Name', 
+                                                    'Third Place Name', 'Second Place Name', 'First Place Name'],
+                                        score_cols = ['Fifth Place Score', 'Fourth Place Score', 
+                                                      'Third Place Score', 'Second Place Score', 'First Place Score'], 
+                                        positions = [5, 4, 3, 2, 1], order_col = 'Score', order = True)
 
-#Final contestent positions for all series - in order of Series number
-losers_unordered = EF.ordering_final_scores_positions(datafame = final_scores_players, series_col = 'Series',
-                                       name_col = 'Fifth Place Name', score_col = 'Fifth Place Score', 
-                                       position = 5, order = False)
 
-fourth_unordered  = EF.ordering_final_scores_positions(datafame = final_scores_players, series_col = 'Series',
-                                       name_col = 'Fourth Place Name', score_col = 'Fourth Place Score', 
-                                       position = 4, order = False)
+average_tasks_positions_unordered = EF.ordering_final_scores_all_positions(datafame = average_tasks_players, 
+                                       series_col = 'Series', 
+                                       name_cols = ['Fifth Place Name', 'Fourth Place Name', 
+                                                    'Third Place Name', 'Second Place Name', 'First Place Name'],
+                                        score_cols = ['Fifth Place Score', 'Fourth Place Score', 
+                                                      'Third Place Score', 'Second Place Score', 'First Place Score'], 
+                                        positions = [5, 4, 3, 2, 1], order_col = 'Score', order = False)
 
-third_unordered  = EF.ordering_final_scores_positions(datafame = final_scores_players, series_col = 'Series',
-                                       name_col = 'Third Place Name', score_col = 'Third Place Score', 
-                                       position = 3, order = False)
 
-second_unordered  = EF.ordering_final_scores_positions(datafame = final_scores_players, series_col = 'Series',
-                                       name_col = 'Second Place Name', score_col = 'Second Place Score', 
-                                       position = 2, order = False)
 
-winners_unordered  = EF.ordering_final_scores_positions(datafame = final_scores_players, series_col = 'Series',
-                                       name_col = 'First Place Name', score_col = 'First Place Score', 
-                                       position = 1, order = False)
-
-# Final positions - scores averaged per episodes
-
-losers_ordered_eps = EF.ordering_final_scores_positions(datafame = average_episodes_players, series_col = 'Series',
-                                       name_col = 'Fifth Place Name', score_col = 'Fifth Place Score', 
-                                       position = 5, order = True)
-
-fourth_ordered_eps  = EF.ordering_final_scores_positions(datafame = average_episodes_players, series_col = 'Series',
-                                       name_col = 'Fourth Place Name', score_col = 'Fourth Place Score', 
-                                       position = 4,  order = True)
-
-third_ordered_eps = EF.ordering_final_scores_positions(datafame = average_episodes_players, series_col = 'Series',
-                                       name_col = 'Third Place Name', score_col = 'Third Place Score', 
-                                       position = 3, order = True)
-
-second_ordered_eps  = EF.ordering_final_scores_positions(datafame = average_episodes_players, series_col = 'Series',
-                                       name_col = 'Second Place Name', score_col = 'Second Place Score', 
-                                       position = 2, order = True)
-
-winners_ordered_eps  = EF.ordering_final_scores_positions(datafame = average_episodes_players, series_col = 'Series',
-                                       name_col = 'First Place Name', score_col = 'First Place Score', 
-                                       position = 1, order = True)
-
-# Final positions - scores averaged per tasks
-
-losers_ordered_tasks = EF.ordering_final_scores_positions(datafame = average_tasks_players, series_col = 'Series',
-                                       name_col = 'Fifth Place Name', score_col = 'Fifth Place Score', 
-                                       position = 5, order = True)
-
-fourth_ordered_tasks  = EF.ordering_final_scores_positions(datafame = average_tasks_players, series_col = 'Series',
-                                       name_col = 'Fourth Place Name', score_col = 'Fourth Place Score', 
-                                       position = 4, order = True)
-
-third_ordered_tasks = EF.ordering_final_scores_positions(datafame = average_tasks_players, series_col = 'Series',
-                                       name_col = 'Third Place Name', score_col = 'Third Place Score', 
-                                       position = 3, order = True)
-
-second_ordered_tasks  = EF.ordering_final_scores_positions(datafame = average_tasks_players, series_col = 'Series',
-                                       name_col = 'Second Place Name', score_col = 'Second Place Score', 
-                                       position = 2, order = True)
-
-winners_ordered_tasks  = EF.ordering_final_scores_positions(datafame = average_tasks_players, series_col = 'Series',
-                                       name_col = 'First Place Name', score_col = 'First Place Score', 
-                                       position = 1, order = True)
 
 #Create Bump charts for all episode totals (and tasks) for each series: 
 #https://towardsdatascience.com/create-bump-charts-with-matplotlib-431b0e6fcb90/
