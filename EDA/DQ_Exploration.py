@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import DQ_Functions as DQF
+import Total_Scores_EDA as TSE
 
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
 
@@ -13,10 +14,16 @@ dq_table = DQF.count_DQ_all_contestents(file_path = file_path,
 
 print(dq_table.head())
 
-dq_sort = dq_table.sort_values(by = 'DQ', ascending=False)
+dq_sort = dq_table.sort_values(by = 'DQ', ascending=False).reset_index(drop = True)
 print(dq_sort.head())
 print(len(dq_sort))
 
+final_positions = TSE.total_score_positions_ordered
+
+print(final_positions)
+
+final_positions_dq_sort = pd.merge(dq_sort, final_positions, on = 'Name',  how = 'left')
+print(final_positions_dq_sort)
 # for i in range(8):
 #     print(i)
 #     print(dq_sort[dq_sort['DQ'] == i])

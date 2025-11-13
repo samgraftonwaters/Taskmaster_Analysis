@@ -54,31 +54,31 @@ VF.lowest_scores_each_seat(lowest_seat_series_table = TSE.total_lowest_seat,
                             colour_list = colours)
 
 # Final contestest positions for each series - ordered based on score
-VF.final_score_seat_positions(first_table = TSE.winners_ordered, second_table = TSE.second_ordered, 
-                              third_table = TSE.third_ordered, fourth_table = TSE.fourth_ordered, 
-                              fifth_table = TSE.losers_ordered, colour_list = colours2,
+VF.final_score_seat_positions(position_tables = TSE.total_score_positions_ordered, colour_list = colours2,
                               top = True, top_n = 20,
                               bottom = False, bottom_n = 1)
 
 # Final contestest positions for each series - ordered based on series
-VF.final_score_seat_positions(first_table = TSE.winners_unordered, second_table = TSE.second_unordered, 
-                              third_table = TSE.third_unordered, fourth_table = TSE.fourth_unordered, 
-                              fifth_table = TSE.losers_unordered, colour_list = colours2,
+VF.final_score_seat_positions(position_tables = TSE.total_score_positions_unordered, colour_list = colours2,
                               top = True, top_n = 20,
                               bottom = False, bottom_n = 1)
 
 #Final contestent positions for each series - ordered based on average score per number of episodes
 
-VF.final_average_score_seat_positions(first_table = TSE.winners_ordered_eps, second_table = TSE.second_ordered_eps, 
-                                      third_table = TSE.third_ordered_eps, fourth_table = TSE.fourth_ordered_eps, 
-                               fifth_table = TSE.losers_ordered_eps, colour_list = colours2, 
+VF.final_average_score_seat_positions(position_tables= TSE.average_episode_positions_ordered, colour_list = colours2, 
+                               average_type = 'episode', top = True, top_n = 20, bottom = False, 
+                               bottom_n = 1)
+
+VF.final_average_score_seat_positions(position_tables= TSE.average_episode_positions_unordered, colour_list = colours2, 
                                average_type = 'episode', top = True, top_n = 20, bottom = False, 
                                bottom_n = 1)
 
 #Final contestent positions for each series - ordered based on average score per number of tasks
 
-VF.final_average_score_seat_positions(first_table = TSE.winners_ordered_tasks, second_table = TSE.second_ordered_tasks, 
-                                      third_table = TSE.third_ordered_tasks, fourth_table = TSE.fourth_ordered_tasks, 
-                               fifth_table = TSE.losers_ordered_tasks, colour_list = colours2, 
+VF.final_average_score_seat_positions(position_tables = TSE.average_tasks_positions_ordered, colour_list = colours2, 
+                               average_type = 'task', top = True, top_n = 20, bottom = False, 
+                               bottom_n = 1)
+
+VF.final_average_score_seat_positions(position_tables = TSE.average_tasks_positions_unordered, colour_list = colours2, 
                                average_type = 'task', top = True, top_n = 20, bottom = False, 
                                bottom_n = 1)

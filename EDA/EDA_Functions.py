@@ -443,7 +443,7 @@ def ordering_final_scores_positions(datafame, series_col:str, name_col:str, scor
     Returns:
     --------
         dataframe with the above columns combined and ordered in ascending order (if set to True)
-        based on the score. The column names are updated to 'Series', 'Name', and 'Score'.
+        based on the score. The column names are updated to 'Series', 'Name', 'Score' and 'Posiion'.
     """
     
     final_position = pd.concat([datafame[series_col], datafame[name_col], datafame[score_col]], axis = 1)
@@ -464,8 +464,7 @@ def ordering_final_scores_all_positions(datafame, series_col:list, name_cols:lis
 
     """
     Combines the contestent name, total scores and series from the ordered table 
-    for each series (1st to 5th), to then be used for plotting the total scores for each winner, loser,
-    and those inbetween.
+    for each series (1st to 5th), before concatonating all position tables into one.
 
     Parameters:
     ----------
@@ -482,8 +481,8 @@ def ordering_final_scores_all_positions(datafame, series_col:list, name_cols:lis
 
     Returns:
     --------
-        dataframe with the above columns combined and ordered in ascending order (if set to True)
-        based on the score. The column names are updated to 'Series', 'Name', and 'Score'.
+        dataframe with the all position tables combined (each in ascending order - if set to True - not the
+        final table based on the score. The column names are updated to 'Series', 'Name', 'Score' and 'Position'.
     """
 
     positions_full_table = []
@@ -506,9 +505,6 @@ def ordering_final_scores_all_positions(datafame, series_col:list, name_cols:lis
     final_positions_full_table = pd.concat([positions_full_table[0], positions_full_table[1], 
                                            positions_full_table[2], positions_full_table[3],
                                            positions_full_table[4]], axis = 0)
-    
-    print(final_positions_full_table.head(25))
-    print(len(final_positions_full_table))
 
     return(final_positions_full_table)
     
