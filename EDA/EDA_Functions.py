@@ -492,7 +492,7 @@ def ordering_final_scores_all_positions(datafame, series_col:list, name_cols:lis
     for col in range(len(name_cols)):
         
         final_position = pd.concat([datafame[series_col], datafame[name_cols[col]], 
-                                   datafame[score_cols[col]]], datafame[seat_cols[col]], axis = 1)
+                                   datafame[score_cols[col]], datafame[seat_cols[col]]], axis = 1)
 
         final_position.columns = ['Series', 'Name', 'Score', 'Seat']
 
