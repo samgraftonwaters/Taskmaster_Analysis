@@ -634,7 +634,7 @@ def plot_contestent_scores(position_tables, colour_list, average_type, top = Tru
             plt.text(0.5, i-1, str(series), va = 'center', fontsize = 12, color = 'white')
             plt.text(1.6, i-1, str(seat), va = 'center', fontsize = 12, color = 'white')
         plt.xlabel('Average Score per Number of Tasks', fontsize = 18)
-        plt.title(f'Average Score per Number of Tasks of {title} Contestents Across all Series', fontsize = 20)        
+        plt.title(f'Average Score per Number of Tasks of {title} \n Contestents Across all Series', fontsize = 20)        
         plt.xlim(0, 4)
     if average_type == 'episode':
         for i, score, name, series, seat, colour in zip(range(1, 21), position_tables['Score'],
@@ -646,7 +646,7 @@ def plot_contestent_scores(position_tables, colour_list, average_type, top = Tru
             plt.text(2.5, i-1, str(series), va = 'center', fontsize = 12, color = 'white')
             plt.text(7.5, i-1, str(seat), va = 'center', fontsize = 12, color = 'white')
         plt.xlabel('Average Score per Number of Episodes', fontsize = 18)
-        plt.title(f'Average Score per Number of Episodes of {title} Contestents Across all Series', fontsize = 20)        
+        plt.title(f'Average Score per Number of Episodes of {title} \n Contestents Across all Series', fontsize = 20)        
         plt.xlim(0, 22)
 
     plt.xticks(fontsize = 15)
