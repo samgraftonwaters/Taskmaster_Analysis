@@ -96,8 +96,31 @@ plt.ylabel('Final Position', fontsize = 15)
 plt.legend(loc = 'lower right', ncol = 2, fontsize = 14)
 plt.show()
 
-for seat, series, pos_diff, colour in zip(final_positions_dq['Seat'], final_positions_dq['Series'],
-                                final_positions_dq['Position Difference'], colours):
-    print(seat)
+dq_change = final_positions_dq[final_positions_dq['DQ'] > 0]
+
+for series, name, pos_diff, in zip(dq_change['Series'], dq_change['Name'],
+                                dq_change['Position Difference']):
+    print(series)
     plt.plot(series, pos_diff, '-o')
+    plt.legend()
 plt.show()
+
+dq_change = final_positions_dq[final_positions_dq['Position Difference'] != 0]
+
+for series, name, pos_diff, in zip(dq_change['Series'], dq_change['Name'],
+                                dq_change['Position Difference']):
+    plt.plot(series, pos_diff, 'o', label = name)
+    plt.legend()
+plt.show()
+
+for series, name, orig_pos, new_pos, pos_diff, in zip(dq_change['Series'], dq_change['Name'],
+                                dq_change['Position'], dq_change['New Position'],
+                                dq_change['Position Difference']):
+    print(series)
+    plt.plot(series, orig_pos, 'o', label = name)
+    plt.plot(series, new_pos, 'x',label = name)
+    plt.legend()
+plt.show()
+
+print(dq_change.head(20))
+
