@@ -21,23 +21,25 @@ dq_sort = dq_table.sort_values(by = 'DQ', ascending=False).reset_index(drop = Tr
 print(dq_sort.head())
 print(len(dq_sort))
 
+#Merging Tables
 final_positions = TSE.total_score_positions_ordered
+average_scores = TSE.average_tasks_positions_ordered.drop(['Seat', 'Position', 'Series'], axis = 1)
+
+score_merged_table = pd.merge(final_positions, average_scores, on = 'Name', how = 'left')
+
+total_eps = TSE.Total_per_episode.drop(['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5'], axis = 1)
+total_tasks = TSE.Total_per_task.drop(['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5'], axis = 1)
+
+tasks_episodes = pd.merge(total_eps, total_tasks, on = 'Series', how = 'left')
+
+final_positions_dq_sort = pd.merge(dq_sort.drop('Series', axis = 1), score_merged_table, on = 'Name',  how = 'left')
+final_positions_dq_sort = pd.merge(final_positions_dq_sort, tasks_episodes, on = 'Series',  how = 'left')
+final_positions_dq_sort = final_positions_dq_sort.rename(columns = {'Score_x' : 'Total Score', 'Score_y' : 'Avg_Task_Score'})
 
 
+print(final_positions_dq_sort.head())
 
-# final_positions_dq_sort = pd.merge(dq_sort.drop('Series', axis = 1), final_positions, on = 'Name',  how = 'left')
-# final_positions_dq_sort = pd.merge(final_positions_dq_sort, TSE.Total_per_episode[['Series', 'Number of Episodes']], on = 'Series', how = 'left')
-# final_positions_dq_sort = pd.merge(final_positions_dq_sort, TSE.Total_per_task[['Series', 'Number of Tasks']], on = 'Series', how = 'left')
-# final_positions_dq_sort = pd.merge(final_positions_dq_sort, TSE.average_tasks_positions_ordered, on = 'Name', how = 'left')
-# final_positions_dq_sort = pd.merge(final_positions_dq_sort, TSE.Total_per_task[['Series', 'Number of Tasks']], on = 'Series', how = 'left')
-
-
-# print(final_positions_dq_sort)
-print(TSE.average_tasks_positions_ordered.head(1))
-print(TSE.total_score_positions_ordered.head(1))
-print(TSE.Total_per_episode.head(1))
-print(TSE.Total_per_task.head(1))
-sns.scatterplot(x = final_positions_dq_sort['DQ'], y = final_positions_dq_sort['Score'], 
+sns.scatterplot(x = final_positions_dq_sort['DQ'], y = final_positions_dq_sort['Total Score'], 
                 hue = final_positions_dq_sort['Position'], size = final_positions_dq_sort['Seat'])
 plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
@@ -47,7 +49,7 @@ plt.legend(loc = 'lower right', ncol = 2, fontsize = 14)
 plt.show()
 
 sns.scatterplot(x = final_positions_dq_sort['DQ'], y = final_positions_dq_sort['Position'], 
-                hue = final_positions_dq_sort['Score'], size = final_positions_dq_sort['Seat'])
+                hue = final_positions_dq_sort['Total Score'], size = final_positions_dq_sort['Seat'])
 plt.xticks(fontsize = 14)
 plt.yticks(ticks = [5, 4, 3, 2, 1], labels = ['5th', '4th', '3rd', '2nd', '1st'], fontsize = 14)
 plt.gca().invert_yaxis()
