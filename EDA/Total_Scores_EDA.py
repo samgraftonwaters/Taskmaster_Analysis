@@ -71,7 +71,6 @@ seat_losers = seat_losers.drop('Seat', axis = 1)
 final_scores_ordered_seats = EF.final_score_seat_positions(score_table = Total_per_series, 
                                                         name_table = named_series_table)
 
-print(final_scores_ordered_seats)
 final_scores_players = final_scores_ordered_seats
 # [['Series', 'Fifth Place Name', 'Fourth Place Name', 
 #                       'Third Place Name', 'Second Place Name', 'First Place Name', 'Fifth Place Score', 
