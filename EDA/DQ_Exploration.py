@@ -23,17 +23,36 @@ print(len(dq_sort))
 
 final_positions = TSE.total_score_positions_ordered
 
-print(final_positions)
 
-final_positions_dq_sort = pd.merge(dq_sort.drop('Series', axis = 1), final_positions, on = 'Name',  how = 'left')
-print(final_positions_dq_sort)
 
+# final_positions_dq_sort = pd.merge(dq_sort.drop('Series', axis = 1), final_positions, on = 'Name',  how = 'left')
+# final_positions_dq_sort = pd.merge(final_positions_dq_sort, TSE.Total_per_episode[['Series', 'Number of Episodes']], on = 'Series', how = 'left')
+# final_positions_dq_sort = pd.merge(final_positions_dq_sort, TSE.Total_per_task[['Series', 'Number of Tasks']], on = 'Series', how = 'left')
+# final_positions_dq_sort = pd.merge(final_positions_dq_sort, TSE.average_tasks_positions_ordered, on = 'Name', how = 'left')
+# final_positions_dq_sort = pd.merge(final_positions_dq_sort, TSE.Total_per_task[['Series', 'Number of Tasks']], on = 'Series', how = 'left')
+
+
+# print(final_positions_dq_sort)
+print(TSE.average_tasks_positions_ordered.head(1))
+print(TSE.total_score_positions_ordered.head(1))
+print(TSE.Total_per_episode.head(1))
+print(TSE.Total_per_task.head(1))
 sns.scatterplot(x = final_positions_dq_sort['DQ'], y = final_positions_dq_sort['Score'], 
                 hue = final_positions_dq_sort['Position'], size = final_positions_dq_sort['Seat'])
-
 plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
 plt.xlabel('Number of Disqualifications', fontsize = 15)
 plt.ylabel('Total Score', fontsize = 15)
 plt.legend(loc = 'lower right', ncol = 2, fontsize = 14)
 plt.show()
+
+sns.scatterplot(x = final_positions_dq_sort['DQ'], y = final_positions_dq_sort['Position'], 
+                hue = final_positions_dq_sort['Score'], size = final_positions_dq_sort['Seat'])
+plt.xticks(fontsize = 14)
+plt.yticks(ticks = [5, 4, 3, 2, 1], labels = ['5th', '4th', '3rd', '2nd', '1st'], fontsize = 14)
+plt.gca().invert_yaxis()
+plt.xlabel('Number of Disqualifications', fontsize = 15)
+plt.ylabel('Final Position', fontsize = 15)
+plt.legend(loc = 'lower right', ncol = 2, fontsize = 14)
+plt.show()
+
