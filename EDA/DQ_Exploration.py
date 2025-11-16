@@ -39,8 +39,6 @@ final_positions_dq = pd.merge(dq_table.drop('Series', axis = 1), score_merged_ta
 final_positions_dq = pd.merge(final_positions_dq, tasks_episodes, on = 'Series',  how = 'left')
 final_positions_dq = final_positions_dq.rename(columns = {'Score_x' : 'Total Score', 'Score_y' : 'Avg_Task_Score'})
 
-
-
 final_positions_dq['Missed Scores'] = final_positions_dq['Avg_Task_Score'] * final_positions_dq['DQ']
 final_positions_dq['Total Missed Scores'] = final_positions_dq['Missed Scores'] + final_positions_dq['Total Score']
 
@@ -61,12 +59,15 @@ for series in range(1, 21):
 
 new_positions = pd.DataFrame(np.vstack(new_positions), columns = ['Name', 'Series', 'Total Missed Scores', 'New Position'])
 
-print(new_positions)
-
 final_positions_dq = pd.merge(final_positions_dq, new_positions.drop(['Series', 'Total Missed Scores'], axis = 1), on = 'Name', how = 'left')
 
-final_positions_dq['Position Difference'] = final_positions_dq['New Position'] - final_positions_dq['Position']
+final_positions_dq['Position Difference'] = np.where(final_positions_dq['Total Score'] == final_positions_dq['Total Missed Scores'], 0,
+                                                     final_positions_dq['Position'] - final_positions_dq['New Position'])
+
 print(final_positions_dq.columns)
+
+# print(final_positions_dq[final_positions_dq['Series'] == 'S6'][['Name', 'DQ','Total Score', 'Position', 'Total Missed Scores', 'New Position',
+#        'Position Difference']].head(30))
 
 sns.scatterplot(x = final_positions_dq['Avg_Task_Score'], y = final_positions_dq['Total Score'], 
                 hue = final_positions_dq['Position'], size = final_positions_dq['Seat'])
@@ -96,16 +97,12 @@ plt.ylabel('Final Position', fontsize = 15)
 plt.legend(loc = 'lower right', ncol = 2, fontsize = 14)
 plt.show()
 
-dq_change = final_positions_dq[final_positions_dq['DQ'] > 0]
+dq_change = final_positions_dq[final_positions_dq['Position Difference'] != 0].reset_index(drop = True)
 
 for series, name, pos_diff, in zip(dq_change['Series'], dq_change['Name'],
                                 dq_change['Position Difference']):
-    print(series)
     plt.plot(series, pos_diff, '-o')
-    plt.legend()
 plt.show()
-
-dq_change = final_positions_dq[final_positions_dq['Position Difference'] != 0]
 
 for series, name, pos_diff, in zip(dq_change['Series'], dq_change['Name'],
                                 dq_change['Position Difference']):
@@ -116,11 +113,10 @@ plt.show()
 for series, name, orig_pos, new_pos, pos_diff, in zip(dq_change['Series'], dq_change['Name'],
                                 dq_change['Position'], dq_change['New Position'],
                                 dq_change['Position Difference']):
-    print(series)
     plt.plot(series, orig_pos, 'o', label = name)
     plt.plot(series, new_pos, 'x',label = name)
     plt.legend()
 plt.show()
 
-print(dq_change.head(20))
-
+print(dq_change[['Name', 'DQ','Total Score', 'Position', 'Total Missed Scores', 'New Position',
+       'Position Difference']].head(20))
