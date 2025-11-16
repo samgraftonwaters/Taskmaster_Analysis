@@ -105,8 +105,8 @@ dq_change = dq_change[~dq_change['Name'].isin(['Frank Skinner', 'Romesh Ranganat
 
 dq_change_plus = dq_change[dq_change['Position Difference'] == 1]
 dq_change_minus = dq_change[dq_change['Position Difference'] == -1]
-dq_change_minus['Total Score'] = dq_change_minus['Total Score'].copy() * -1
-dq_change_minus['Total Missed Scores'] = dq_change_minus['Total Missed Scores'].copy() * -1
+#dq_change_minus['Total Score'] = dq_change_minus['Total Score']#.copy() * -1
+#dq_change_minus['Total Missed Scores'] = dq_change_minus['Total Missed Scores']#.copy() * -1
 
 series = dq_change_plus['Series'].unique()
 y_values = np.arange(len(dq_change_plus['Series'].unique()))+1
@@ -121,33 +121,31 @@ ax2 = ax1.twiny()
 ax1.barh(y_values-0.2, dq_change_plus['Total Missed Scores'], height = 0.4, color = 'white', edgecolor = 'blue')
 ax1.barh(y_values+0.2, dq_change_plus['Total Score'], height = 0.4, color = 'white', edgecolor = 'green')
 
-ax1.barh(y_values-0.2, dq_change_minus['Total Missed Scores'], height = 0.4, color = 'white', edgecolor = 'red')
-ax1.barh(y_values+0.2, dq_change_minus['Total Score'], height = 0.4, color = 'white', edgecolor = 'darkorange')
+ax1.barh(y_values-0.2, -dq_change_minus['Total Missed Scores'], height = 0.4, color = 'white', edgecolor = 'red')
+ax1.barh(y_values+0.2, -dq_change_minus['Total Score'], height = 0.4, color = 'white', edgecolor = 'darkorange')
 
 
-ax1.vlines(x=dq_change_plus['Total Score'], ymin=y_values - 0, ymax=y_values +0.4, linewidth=3, color = 'blue')
-ax1.vlines(x=dq_change_plus['Total Missed Scores'], ymin=y_values - 0.4, ymax=y_values +0, linewidth=3, color = 'green')
+# ax1.vlines(x=dq_change_plus['Total Score'], ymin=y_values - 0, ymax=y_values +0.4, linewidth=3, color = 'blue')
+# ax1.vlines(x=dq_change_plus['Total Missed Scores'], ymin=y_values - 0.4, ymax=y_values +0, linewidth=3, color = 'green')
 
-ax1.vlines(x=dq_change_minus['Total Score'], ymin=y_values - 0, ymax=y_values +0.4, linewidth=3, color = 'red')
-ax1.vlines(x=dq_change_minus['Total Missed Scores'], ymin=y_values - 0.4, ymax=y_values +0, linewidth=3, color = 'darkorange')
+# ax1.vlines(x=dq_change_minus['Total Score'], ymin=y_values - 0, ymax=y_values +0.4, linewidth=3, color = 'red')
+# ax1.vlines(x=-dq_change_minus['Total Missed Scores'], ymin=y_values - 0.4, ymax=y_values +0, linewidth=3, color = 'darkorange')
 
 for (y, name_plus, score_plus, missed_score_plus, 
               name_minus, score_minus, missed_score_minus) in zip(y_values, dq_change_plus['Name'], dq_change_plus['Total Score'],
                                                                   dq_change_plus['Total Missed Scores'], dq_change_minus['Name'], 
                                                                   dq_change_minus['Total Score'], dq_change_minus['Total Missed Scores']):
-    print(name_plus)
-    print(name_minus)
     
 #     ax1.text(score_plus-100, y-0.2, name_plus, fontsize = 12, color = 'blue')
 #     ax1.text(score_minus+100, y-0.2, name_minus, fontsize = 12, color = 'red')
-    ax1.text(50, y-0.1, name_plus, fontsize = 14, color = 'blue')
-    ax1.text(-120, y-0.1, name_minus, fontsize = 14, color = 'red')
+    ax1.text(score_plus, y-0.1, name_plus, fontsize = 14, color = 'blue')
+    ax1.text(score_minus, y-0.1, name_minus, fontsize = 14, color = 'red')
 
     ax1.text(score_plus+2, y+0.15, str(round(score_plus,2)), fontsize = 14, color = 'blue')
     ax1.text(missed_score_plus+2, y-0.3, str(missed_score_plus), fontsize = 14, color = 'green')
 
-    ax1.text(score_minus-45, y+0.2, str(round(score_minus,2)), fontsize = 14, color = 'red')
-    ax1.text(missed_score_minus-45, y-0.3, str(missed_score_minus), fontsize = 14, color = 'darkorange')
+    ax1.text(-score_minus, y+0.2, str(round(score_minus,2)), fontsize = 14, color = 'red')
+    ax1.text(-missed_score_minus, y-0.3, str(missed_score_minus), fontsize = 14, color = 'darkorange')
 
 
 ax2.plot(dq_change_plus['Position Difference'], y_values, marker = 'o', markersize = 15, color = 'darkgreen', linestyle='')
@@ -157,8 +155,8 @@ ax2.plot(dq_change_minus['Position Difference'], y_values, marker = 'o', markers
 # ax2.invert_yaxis()
 
 ax1.tick_params(axis='x', labelsize=14)
-ax1.set_xticks([-200, -150, -100, -50, 0, 50, 100, 150, 200])
-ax1.set_xlim(-260, 260)
+# ax1.set_xticks([-200, -150, -100, -50, 0, 50, 100, 150, 200])
+# ax1.set_xlim(-260, 260)
 ax2.tick_params(axis='x', labelsize=14)
 ax2.set_xticks([-1, 1])
 ax1.set_xlabel('Total Score', fontsize = 20)
@@ -168,22 +166,39 @@ ax1.set_yticks(ticks = y_values, labels = dq_change_plus['Series'].unique(), fon
 plt.show()
 
 
-# for series, name, pos_diff, in zip(dq_change['Series'], dq_change['Name'],
-#                                 dq_change['Position Difference']):
-#     plt.plot(series, pos_diff, '-o')
-# plt.show()
+names = ["A", "B", "C", "D"]
+score_plus  = np.array([10, 20, 15, 25])   # bars to the right
+score_minus = np.array([5,  7,  9,  3])    # bars to the left visually
 
-# for series, name, pos_diff, in zip(dq_change['Series'], dq_change['Name'],
-#                                 dq_change['Position Difference']):
-#     plt.plot(series, pos_diff, 'o', label = name)
-#     plt.legend()
-# plt.show()
+y_positions = np.arange(len(names))
 
-# for series, name, orig_pos, new_pos, pos_diff, in zip(dq_change['Series'], dq_change['Name'],
-#                                 dq_change['Position'], dq_change['New Position'],
-#                                 dq_change['Position Difference']):
-#     plt.plot(series, orig_pos, 'o', label = name)
-#     plt.plot(series, new_pos, 'x',label = name)
-#     plt.legend()
-# plt.show()
+fig, ax = plt.subplots(figsize=(8, 5))
 
+# Bars to the right
+ax.barh(y_positions, score_plus, color='blue', alpha=0.7, label='Increase (+)')
+
+# Bars to the left using negative values, but we'll adjust the x-axis labels later
+ax.barh(y_positions, -score_minus, color='red', alpha=0.7, label='Decrease (–)')
+
+# Add labels next to bars
+for y, sp, sm, name in zip(y_positions, score_plus, score_minus, names):
+    ax.text(sp + 0.5, y, f'{sp}', va='center', ha='left', color='blue')
+    ax.text(-sm - 0.5, y, f'{sm}', va='center', ha='right', color='red')
+
+# Format the x-axis to show only positive numbers
+xticks = np.arange(-max(score_minus)-5, max(score_plus)+5, 5)
+ax.set_xticks(xticks)
+ax.set_xticklabels([abs(x) for x in xticks])
+
+# Y-axis labels
+ax.set_yticks(y_positions)
+ax.set_yticklabels(names)
+
+# Center line
+ax.axvline(0, color='black', linewidth=1)
+
+# Legend
+ax.legend()
+
+plt.tight_layout()
+plt.show()
