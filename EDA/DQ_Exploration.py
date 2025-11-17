@@ -111,8 +111,12 @@ dq_change_minus = dq_change[dq_change['Position Difference'] == -1]
 series = dq_change_plus['Series'].unique()
 y_values = np.arange(len(dq_change_plus['Series'].unique()))+1
 
-print(dq_change[['Name', 'DQ','Total Score', 'Position', 'Total Missed Scores', 'New Position',
+# print(dq_change[['Name', 'DQ','Total Score', 'Position', 'Total Missed Scores', 'New Position',
+#        'Position Difference']].head(20))
+
+print(dq_change_plus[['Name', 'DQ','Total Score', 'Position', 'Total Missed Scores', 'New Position',
        'Position Difference']].head(20))
+
 
 fig = plt.figure()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.15)
@@ -129,17 +133,13 @@ ax2_x_pos = [1, 2, 3, 4, 5]
 # # Create names on the x-axis
 # plt.xticks(x_pos, bars)
 
-ax1.barh(ax1_y_pos, dq_change['Total Missed Scores'], height = 0.3, color = 'blue', lw = 2, edgecolor = 'black')
-ax1.barh(ax1_y_pos, dq_change['Total Score'], height = 0.3, color = 'orange', lw = 2, edgecolor = 'black')
+ax1.barh(ax1_y_pos, dq_change['Total Missed Scores'], height = 0.35, color = 'blue', lw = 2, edgecolor = 'black')
+ax1.barh(ax1_y_pos, dq_change['Total Score'], height = 0.35, color = 'orange', lw = 2, edgecolor = 'black')
 
-ax2.plot(dq_change['Position'], ax1_y_pos, 'o', markersize = 12, color = 'blue')
-
-print(dq_change['Position'], dq_change['New Position'], dq_change['Position Difference'])
-
-x = dq_change[dq_change['Position Difference'] == 1]
-print(x.head())
-ax2.plot(dq_change[dq_change['Position Difference'] == 1]['New Position'], [0.7, 1.7, 2.7, 3.7, 4.7, 5.7, 6.7, 7.7], '^', markersize = 12, color = 'darkgreen')
-ax2.plot(dq_change[dq_change['Position Difference'] == -1]['New Position'], [0.3, 1.3, 2.3, 3.3, 4.3, 5.3, 6.3, 7.3], 'v', markersize = 12, color = 'darkred')
+ax2.plot(dq_change_plus['Position'], [0.7, 1.7, 2.7, 3.7, 4.7, 5.7, 6.7, 7.7], 'o', markersize = 12, color = 'blue')
+ax2.plot(dq_change_minus['Position'], [0.3, 1.3, 2.3, 3.3, 4.3, 5.3, 6.3, 7.3], 'o', markersize = 12, color = 'blue')
+ax2.plot(dq_change_plus['New Position'], [0.7, 1.7, 2.7, 3.7, 4.7, 5.7, 6.7, 7.7], '^', markersize = 12, color = 'darkgreen')
+ax2.plot(dq_change_minus['New Position'], [0.3, 1.3, 2.3, 3.3, 4.3, 5.3, 6.3, 7.3], 'v', markersize = 12, color = 'darkred')
 
 for y, value in zip(ax1_y_pos, dq_change['DQ']):
        ax1.text(-6.5, y-0.1, str(value), fontsize = 14)
