@@ -119,30 +119,43 @@ print(dq_change[['Name', 'DQ','Total Score', 'Position', 'Total Missed Scores', 
 
 
 ax1_y_pos = [0.3, 0.71, 1.3, 1.71, 2.3, 2.71, 3.3, 3.71, 4.3, 4.71, 5.3, 5.71, 6.3, 6.71]
-ax2_y_pos  = [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5]
+ax2_y_pos  = [0.74, 1.66, 2.58, 3.5, 4.44, 5.349, 6.26]
 ax2_x_pos = [1, 2, 3, 4, 5]
 
 fig = plt.figure()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.15)
 ax1 = fig.subplots()
-ax2 = ax1.twinx().twiny()
+ax2 = ax1.twinx()
+ax3 = ax1.twiny()
 
 ax1.barh(ax1_y_pos, dq_change['Total Missed Scores'], height = 0.35, color = 'blue', lw = 1.5, edgecolor = 'black', alpha=0.7)
 ax1.barh(ax1_y_pos, dq_change['Total Score'], height = 0.35, color = 'red', lw = 1.5, edgecolor = 'black', alpha=0.7)
 ax1.barh(ax1_y_pos, 50, color = 'white', height = 0.5)
-ax2.plot([dq_change['Position'], dq_change['New Position']], [ax1_y_pos, ax1_y_pos], '-', color = 'black', lw = 3)
+ax3.plot([dq_change['Position'], dq_change['New Position']], [ax1_y_pos, ax1_y_pos], '-', color = 'black', lw = 3)
 
+ax2.set_ylim(ax1.get_ylim())
+for y in ax2_y_pos:
+    ax2.hlines(y,
+               xmin=140,
+               xmax=250,
+               colors='lightgray',
+               linestyles='--',
+               linewidth=0.8)
+
+ax3.set_ylim(ax1.get_ylim()) 
 xmin, xmax = 1, 5
 xgrid = np.arange(xmin, xmax+0.1, 1) 
-ax2.vlines(xgrid, ymin=ax2.get_ylim()[0], ymax=ax2.get_ylim()[1],
-          colors='lightgray', linestyles='--', linewidth=0.7)
+ax3.vlines(xgrid, ymin=ax3.get_ylim()[0], ymax=ax3.get_ylim()[1],
+          colors='lightgray', linestyles='--', linewidth=0.8)
 
-ax2.plot(dq_change_plus['Position'], [0.7, 1.7, 2.7, 3.7, 4.7, 5.7, 6.7], 'o', markersize = 14, color = 'blue')
-ax2.plot(dq_change_minus['Position'], [0.3, 1.3, 2.3, 3.3, 4.3, 5.3, 6.3], 'o', markersize = 14, color = 'blue')
+ax3.plot(dq_change_plus['Position'], [0.7, 1.7, 2.7, 3.7, 4.7, 5.7, 6.7], 'o', markersize = 14, color = 'blue')
+ax3.plot(dq_change_minus['Position'], [0.3, 1.3, 2.3, 3.3, 4.3, 5.3, 6.3], 'o', markersize = 14, color = 'blue')
 
-ax2.plot(dq_change_plus['New Position'], [0.7, 1.7, 2.7, 3.7, 4.7, 5.7, 6.7], '^', markersize = 14, color = 'darkgreen')
-ax2.plot(dq_change_minus['New Position'], [0.3, 1.3, 2.3, 3.3, 4.3, 5.3, 6.3], 'v', markersize = 14, color = 'darkred')
+ax3.plot(dq_change_plus['New Position'], [0.7, 1.7, 2.7, 3.7, 4.7, 5.7, 6.7], '^', markersize = 14, color = 'darkgreen')
+ax3.plot(dq_change_minus['New Position'], [0.3, 1.3, 2.3, 3.3, 4.3, 5.3, 6.3], 'v', markersize = 14, color = 'darkred')
 
+ax1.text(43, 7.5, '# DQ', fontsize = 16)
+ax1.text(175, 7.5, 'Position:', fontsize = 16)
 # for x1, x2, y1 in zip(dq_change_plus['Position'], dq_change_minus['New Position'], ax1_y_pos):
 
 for y, value in zip(ax1_y_pos, dq_change['DQ']):
@@ -155,21 +168,22 @@ for y, score in zip(ax1_y_pos, dq_change['Total Score']):
      ax1.text(score-10,y-0.1, str(score), fontsize = 12, color = 'black')
 
 ax1.axvline(50, color='black', linewidth=1)
-ax1.set_xlim(40, 250)
+ax1.set_xlim(40, 230)
 ax1.set_xticks([60, 100, 140, 180])
 ax1.set_yticks(ticks = ax1_y_pos, labels = dq_change['Name'])
 
 ax1.tick_params(axis='both', labelsize=14)
 ax1.set_xlabel('Total Score', fontsize = 20)
 
-
-ax2.grid(axis = 'y')
-ax2.set_xlim(-25, 6)
-ax2.set_xticks(ax2_x_pos)
+# ax2.grid(axis = 'y')
 ax2.set_ylim(0, 7)
 ax2.set_yticks(ticks = ax2_y_pos, labels = dq_change['Series'].unique())
 ax2.tick_params(axis='both', labelsize=14)
 ax2.set_ylabel('Series', fontsize = 20)
+
+ax3.tick_params(axis='both', labelsize=14)
+ax3.set_xlim(-25, 6)
+ax3.set_xticks(ax2_x_pos)
 # ax2.set_xlabel('Position Difference', fontsize = 20)
 
 # ax1.barh(dq_change['Name'], dq_change['Total Missed Scores'], height = 0.4, color = 'white', edgecolor = 'red')
