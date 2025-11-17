@@ -133,6 +133,11 @@ ax2_x_pos = [1, 2, 3, 4, 5]
 # # Create names on the x-axis
 # plt.xticks(x_pos, bars)
 
+xmin, xmax = 1, 5
+xgrid = np.arange(xmin, xmax+0.1, 1) 
+ax2.vlines(xgrid, ymin=ax2.get_ylim()[0], ymax=ax2.get_ylim()[1],
+          colors='lightgray', linestyles='--', linewidth=0.7)
+
 ax1.barh(ax1_y_pos, dq_change['Total Missed Scores'], height = 0.35, color = 'blue', lw = 2, edgecolor = 'black')
 ax1.barh(ax1_y_pos, dq_change['Total Score'], height = 0.35, color = 'orange', lw = 2, edgecolor = 'black')
 
@@ -141,13 +146,18 @@ ax2.plot(dq_change_minus['Position'], [0.3, 1.3, 2.3, 3.3, 4.3, 5.3, 6.3, 7.3], 
 ax2.plot(dq_change_plus['New Position'], [0.7, 1.7, 2.7, 3.7, 4.7, 5.7, 6.7, 7.7], '^', markersize = 12, color = 'darkgreen')
 ax2.plot(dq_change_minus['New Position'], [0.3, 1.3, 2.3, 3.3, 4.3, 5.3, 6.3, 7.3], 'v', markersize = 12, color = 'darkred')
 
+for x1, x2, y1 in zip(dq_change_plus['Position'], dq_change_minus['New Position'], ax1_y_pos):
+    ax2.plot([y1, y1], [x1, x2], '--', color = 'black', lw = 2,)
+
 for y, value in zip(ax1_y_pos, dq_change['DQ']):
        ax1.text(-6.5, y-0.1, str(value), fontsize = 14)
+
+
 
 ax2.set_yticks(ticks = y_values, labels = dq_change['Series'].unique(), fontsize = 14)
 
 ax1.axvline(0, color='black', linewidth=1)
-ax1.set_xlim(-10, 220)
+ax1.set_xlim(-10, 240)
 ax1.set_yticks(ticks = ax1_y_pos, labels = dq_change['Name'])
 
 ax2.set_xlim(-25, 6)
