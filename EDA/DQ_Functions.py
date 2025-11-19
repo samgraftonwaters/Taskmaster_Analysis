@@ -4,7 +4,22 @@ import Total_Scores_EDA as TSE
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-def count_DQ_all_contestents(file_path:str, table_name:str, number_series:int):
+def count_DQ_all_contestents(file_path:str, table_name:str, number_series:int = 20):
+
+    """
+    Creates a datatable that contains the number of disqualifications per contestent over all series
+
+    Parameters:
+    -----------
+        file_path (str): filepath to the data folder
+        table_name (str): name of file that contains all series data
+        number_series (int): Number of series to iterate over. Default = 20
+
+    Returns:
+    --------
+        dataframe with four columns - Contestent names ('Name'), number of disqualifications ('DQ'),
+        series number ('Series') and seat number 'Seat'
+    """
     
     count_dq = []
 
@@ -36,11 +51,16 @@ def count_DQ_all_contestents(file_path:str, table_name:str, number_series:int):
 def dq_total_per_series(dataframe):
 
     """
-    Create bar plot for number of disqualifications in each series
+    Creates a datatable for number of disqualifications in each series
 
     Parameters:
     -----------
-        dataframe (dataframe): data table that 
+        dataframe (dataframe): data table that contains the number of disqualifications for each
+                                contestent and their respective series and seat
+
+    Returns:
+    --------
+        dataframe with two columns - Series number ('Series') and number of disqualifications ('Total DQ')
     """
 
     total_dq = []
@@ -58,7 +78,18 @@ def dq_total_per_series(dataframe):
 
 def dq_total_each_seat(dataframe):
 
-    # seat_dq = dataframe['DQ'].iloc[::5, :]
+    """
+    Creates a datatable for total number of disqualifications for each seat
+
+    Parameters:
+    -----------
+        dataframe (dataframe): data table that contains the number of disqualifications for each
+                                contestent and their respective series and seat
+
+    Returns:
+    --------
+        dataframe with two columns - Seat number ('Seat') and number of disqualifications ('DQ')
+    """
 
     seat_dq = dataframe.groupby(dataframe['DQ'] % 5).sum()
     
