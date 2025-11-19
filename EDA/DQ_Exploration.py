@@ -22,6 +22,7 @@ dq_table = DQF.count_DQ_all_contestents(file_path = file_path,
 
 print(dq_table.head(20))
 
+#Bar charts for number of DQ per series and seats
 dq_sort = dq_table.sort_values(by = 'DQ', ascending=False).reset_index(drop = True)
 
 total_dq_series = DQF.dq_total_per_series(dataframe = dq_table)

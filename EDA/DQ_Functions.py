@@ -35,6 +35,14 @@ def count_DQ_all_contestents(file_path:str, table_name:str, number_series:int):
 
 def dq_total_per_series(dataframe):
 
+    """
+    Create bar plot for number of disqualifications in each series
+
+    Parameters:
+    -----------
+        dataframe (dataframe): data table that 
+    """
+
     total_dq = []
     for series in range(1, 21):
 
@@ -61,6 +69,16 @@ def dq_total_each_seat(dataframe):
     return(dq_seat)
 
 def dq_series_bar(datatable):
+
+    """
+    Create bar plot for number of disqualifications in each series
+
+    Parameters:
+    -----------
+        datatable (dataframe): data table that contains the series and number of disqualification columns 
+
+    """
+
     fig = plt.figure()
     plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.1)
 
@@ -85,6 +103,16 @@ def dq_series_bar(datatable):
     plt.show()
 
 def dq_seat_bar(datatable):
+
+    """
+    Create bar plot for number of disqualifications in each seats
+
+    Parameters:
+    -----------
+        datatable (dataframe): data table that contains the seats and number of disqualification columns 
+
+    """
+
     fig = plt.figure()
     plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.05, top = 0.9, left = 0.1)
 
