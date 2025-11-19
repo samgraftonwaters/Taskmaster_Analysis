@@ -6,6 +6,8 @@ import Total_Scores_EDA as TSE
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+plt.rcParams['figure.figsize'] = (13, 7)
+
 colours = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2',
  '#7f7f7f', '#bcbd22', '#17becf']
 
@@ -20,21 +22,15 @@ dq_table = DQF.count_DQ_all_contestents(file_path = file_path,
 
 print(dq_table.head(20))
 
+dq_sort = dq_table.sort_values(by = 'DQ', ascending=False).reset_index(drop = True)
+
 total_dq_series = DQF.dq_total_per_series(dataframe = dq_table)
 
-##################
-# UPDATE THIS PLOT
-# #########
-plt.bar(total_dq_series['Series'], total_dq_series['Total DQ'])
-plt.show()
+total_seat_dq = DQF.dq_total_each_seat(dataframe = dq_table)
 
-#####
-#Total number of DQ per seat - plot bar chart
-#######
+DQF.dq_series_bar(datatable = total_dq_series)
 
-dq_sort = dq_table.sort_values(by = 'DQ', ascending=False).reset_index(drop = True)
-print(dq_sort.head())
-print(len(dq_sort))
+DQF.dq_seat_bar(datatable = total_seat_dq)
 
 #Merging Tables
 final_positions = TSE.total_score_positions_ordered
