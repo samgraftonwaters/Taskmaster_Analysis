@@ -419,7 +419,8 @@ def final_score_seat_positions(score_table, name_table, contain_summed_total = T
 
     return(result)
 
-def ordering_final_scores_seat(datafame, series_col:str, name_col:str, score_col:str, order:bool = True):
+def ordering_final_scores_positions(dataframe, series_col:str, name_col:str, score_col:str, seat_col:str,
+                               position:int, order:bool = True):
 
     """
     Combines the contestent name, total scores and series from the ordered table 
@@ -434,18 +435,23 @@ def ordering_final_scores_seat(datafame, series_col:str, name_col:str, score_col
         nam_col (string): column name that contains the names of all contestents finishing in the the
                         position of interest - e.g first place
         score_col (string): column name of the contestents final score
+        seat_col (string): column containing the seat of each contestent
+        position (integer): Position of contestent for their respective series. e.g. winner position = 1,
+                            loser, position = 5
         order (boolean): if true, this will order the score column in ascending order, else the scores
                         will be in order of Series number. Default = True.
 
     Returns:
     --------
         dataframe with the above columns combined and ordered in ascending order (if set to True)
-        based on the score. The column names are updated to 'Series', 'Name', and 'Score'.
+        based on the score. The column names are updated to 'Series', 'Name', 'Score' and 'Posiion'.
     """
     
-    final_position = pd.concat([datafame[series_col], datafame[name_col], datafame[score_col]], axis = 1)
+    final_position = pd.concat([dataframe[series_col], dataframe[name_col], dataframe[score_col], dataframe[seat_col]], axis = 1)
 
-    final_position.columns = ['Series', 'Name', 'Score']
+    final_position.columns = ['Series', 'Name', 'Score', 'Seat']
+
+    final_position['Position'] = position
 
     if order == True:
 
@@ -454,4 +460,54 @@ def ordering_final_scores_seat(datafame, series_col:str, name_col:str, score_col
     return(final_position)
     
 
+def ordering_final_scores_all_positions(datafame, series_col:list, name_cols:list, score_cols:list, 
+                               seat_cols:list, positions:int, order_col:str, order:bool = True):
+
+    """
+    Combines the contestent name, total scores and series from the ordered table 
+    for each series (1st to 5th), before concatonating all position tables into one.
+
+    Parameters:
+    ----------
+        dataframe (dataframe): dataframe created in function final_score_seat_orders(), which obtains 
+                             series' first to fifth places
+        series_cols (list): name of the column that contains the series
+        nam_cols (list): column name that contains the names of all contestents finishing in the the
+                        position of interest - e.g first place
+        score_cols (list): column name of the contestents final score
+        seat_cols (list): column name with all seat numbers
+        positions (integer): Position of contestent for their respective series. e.g. winner position = 1,
+                            loser, position = 5
+        order (boolean): if true, this will order the score column in ascending order, else the scores
+                        will be in order of Series number. Default = True.
+
+    Returns:
+    --------
+        dataframe with the all position tables combined (each in ascending order - if set to True - not the
+        final table based on the score. The column names are updated to 'Series', 'Name', 'Score' and 'Position'.
+    """
+
+    positions_full_table = []
+
+    for col in range(len(name_cols)):
+        
+        final_position = pd.concat([datafame[series_col], datafame[name_cols[col]], 
+                                   datafame[score_cols[col]], datafame[seat_cols[col]]], axis = 1)
+
+        final_position.columns = ['Series', 'Name', 'Score', 'Seat']
+
+        final_position['Position'] = positions[col]
+
+        if order == True:
+
+            final_position = final_position.sort_values(by = order_col, ascending = True).reset_index(drop = True)
+        
+        positions_full_table.append(final_position)
+
+    final_positions_full_table = pd.concat([positions_full_table[0], positions_full_table[1], 
+                                           positions_full_table[2], positions_full_table[3],
+                                           positions_full_table[4]], axis = 0)
+
+    return(final_positions_full_table)
     
+
