@@ -63,11 +63,9 @@ for series in range(1, 21):
     
     ###
 
-    team_tasks_summed = team_tasks[seats].sum(axis = 0)
+    team_tasks_summed = team_tasks[seats].sum(axis = 0).astype(int)
 
-    series = team_tasks['Series'].values
-
-    team_tasks_summed['Series'] = series
+    team_tasks_summed['Series'] = f'S{series}'
 
     team_task_totals.append(team_tasks_summed)
 
@@ -77,13 +75,12 @@ for series in range(1, 21):
 
     team_tasks_series.append(num_team_tasks)
 
+all_team_tasks = pd.DataFrame(np.vstack(all_team_tasks), columns = ['Task Number', 'Description', 'Seat 1', 'Seat 2', 'Seat 3', 'Seat 4',
+       'Seat 5', 'Tasknumber', 'Episode', 'Series', 'Team Task', 'Extra Part'])
+team_task_totals = pd.DataFrame(np.vstack(team_task_totals), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Series'])
+team_tasks_series = pd.DataFrame(np.vstack(team_tasks_series), columns = ['Number of Team Tasks'])
 
-
-
-all_team_tasks = pd.DataFrame(np.vstack(all_team_tasks))
-team_task_totals = pd.DataFrame(np.vstack(team_task_totals))
-team_tasks_series = pd.DataFrame(np.vstack(team_tasks_series))
+team_task_totals = pd.concat([team_task_totals, team_tasks_series, team_combinatins], axis = 1)
 
 print(all_team_tasks)
 print(team_task_totals)
-print(team_tasks_series)
