@@ -119,4 +119,17 @@ team_task_totals['Team_B_per_person_task'] = round(team_task_totals['Team_B_per_
 
 print(team_task_totals.head(10))
 
-team_task_totals.to_csv(file_path + 'Team_Scores.csv', sep = ',', index = False)
+# team_task_totals.to_csv(file_path + 'Team_Scores.csv', sep = ',', index = False)
+
+
+plt.bar(team_task_totals['Series'], team_task_totals['Team_A_per_person'])
+plt.bar(team_task_totals['Series'], team_task_totals['Team_B_per_person'])
+plt.show()
+
+plt.bar(team_task_totals['Series'], team_task_totals['Team_A_per_task'])
+plt.bar(team_task_totals['Series'], team_task_totals['Team_B_per_task'])
+plt.show()
+
+plt.bar(team_task_totals['Series'], team_task_totals['Team_A_per_person_task'])
+plt.bar(team_task_totals['Series'], team_task_totals['Team_B_per_person_task'])
+plt.show()
