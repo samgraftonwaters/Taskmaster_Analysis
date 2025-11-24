@@ -14,8 +14,8 @@ team_table = TTF.formatting_team_table(dataframe = team_table)
 
 TTF.plot_teams(dataframe = team_table)
 
-team_two = team_table[team_table['Team'] == 'A']
-team_three = team_table[team_table['Team'] == 'B']
+team_two = team_table[team_table['Team'] == 'A'].reset_index(drop = True)
+team_three = team_table[team_table['Team'] == 'B'].reset_index(drop = True)
 
 combo_table = {
     "Team_A" : [[1, 5], [3, 5], [4, 5], [1, 4], [3, 4], [2, 3], [2, 5], [1, 3], [2, 4], [1, 2]],
@@ -119,17 +119,40 @@ team_task_totals['Team_B_per_person_task'] = round(team_task_totals['Team_B_per_
 
 print(team_task_totals.head(10))
 
+print(team_table)
+print(team_two)
+
+team_A_names = []
+team_B_names = []
+
+for series in range(1, 21):
+
+    names_A = team_two[team_two['Series Number'] == series]['Name'].to_list()
+
+    names_B = team_three[team_three['Series Number'] == series]['Name'].to_list()
+
+    team_A_names.append([names_A])
+
+    team_B_names.append([names_B])
+
+team_task_totals = pd.concat([team_task_totals, pd.DataFrame(team_A_names, columns = ['Team A Names']), 
+                              pd.DataFrame(team_B_names, columns = ['Team B Names'])], axis = 1)
+
+
+
+
+
 # team_task_totals.to_csv(file_path + 'Team_Scores.csv', sep = ',', index = False)
 
 
-plt.bar(team_task_totals['Series'], team_task_totals['Team_A_per_person'])
-plt.bar(team_task_totals['Series'], team_task_totals['Team_B_per_person'])
-plt.show()
+# plt.bar(team_task_totals['Series'], team_task_totals['Team_A_per_person'])
+# plt.bar(team_task_totals['Series'], team_task_totals['Team_B_per_person'])
+# plt.show()
 
-plt.bar(team_task_totals['Series'], team_task_totals['Team_A_per_task'])
-plt.bar(team_task_totals['Series'], team_task_totals['Team_B_per_task'])
-plt.show()
+# plt.bar(team_task_totals['Series'], team_task_totals['Team_A_per_task'])
+# plt.bar(team_task_totals['Series'], team_task_totals['Team_B_per_task'])
+# plt.show()
 
-plt.bar(team_task_totals['Series'], team_task_totals['Team_A_per_person_task'])
-plt.bar(team_task_totals['Series'], team_task_totals['Team_B_per_person_task'])
-plt.show()
+# plt.bar(team_task_totals['Series'], team_task_totals['Team_A_per_person_task'])
+# plt.bar(team_task_totals['Series'], team_task_totals['Team_B_per_person_task'])
+# plt.show()
