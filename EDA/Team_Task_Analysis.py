@@ -84,3 +84,22 @@ team_task_totals = pd.concat([team_task_totals, team_tasks_series, team_combinat
 
 print(all_team_tasks)
 print(team_task_totals)
+
+team_A = team_task_totals['Team_A']
+
+print(team_A[0][0])
+
+for series in range(0, 20):
+
+    a1 = team_task_totals['Team_A'][series][0]
+    a2 = team_task_totals['Team_A'][series][0]
+
+    b1 = team_task_totals['Team_B'][series][0]
+    b2 = team_task_totals['Team_B'][series][1]
+    b3 = team_task_totals['Team_B'][series][2]
+
+    A_total = team_task_totals[f'Seat {a1}'] + team_task_totals[f'Seat {a2}']
+    B_total = team_task_totals[f'Seat {b1}'] + team_task_totals[f'Seat {b2}'] + team_task_totals[f'Seat {b3}']
+
+    print(A_total)
+    print(B_total)
