@@ -34,10 +34,10 @@ combo_table = {
     "Team_B" : [[2, 3, 4], [2, 3, 4], [2, 3, 4], [1, 2, 4], [1, 2, 4], [1, 2, 3], [1, 2, 3], [1, 2, 3], 
                 [1, 2, 3], [2, 3, 5], [2, 3, 5], [1, 2, 5], [1, 2, 5], [1, 4, 5], [1, 3, 4], [1, 3, 4], 
                 [2, 4, 5], [2, 4, 5], [1, 3, 5], [3, 4, 5]],
-    "Series" : [1, 10, 12, 2, 17, 3, 14, 16, 18, 4, 6, 5, 11, 7, 8, 19, 9, 13, 20, 15],
+    "Series Number" : [1, 10, 12, 2, 17, 3, 14, 16, 18, 4, 6, 5, 11, 7, 8, 19, 9, 13, 20, 15],
 }
 
-team_combinations = pd.DataFrame(combo_table).sort_values(by = 'Series').reset_index(drop = True)
+team_combinations = pd.DataFrame(combo_table).sort_values(by = 'Series Number').reset_index(drop = True)
 print(team_combinations.head(20))
 
 all_team_tasks = []
@@ -80,7 +80,7 @@ all_team_tasks = pd.DataFrame(np.vstack(all_team_tasks), columns = ['Task Number
 team_task_totals = pd.DataFrame(np.vstack(team_task_totals), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Series'])
 team_tasks_series = pd.DataFrame(np.vstack(team_tasks_series), columns = ['Number'])
 
-team_task_totals = pd.concat([team_task_totals, team_tasks_series, team_combinations.drop(['Series'], axis = 1)], axis = 1)
+team_task_totals = pd.concat([team_task_totals, team_tasks_series, team_combinations], axis = 1)
 
 print(all_team_tasks)
 print(team_task_totals)
@@ -119,9 +119,6 @@ team_task_totals['Team_B_per_person_task'] = round(team_task_totals['Team_B_per_
 
 print(team_task_totals.head(10))
 
-print(team_table)
-print(team_two)
-
 team_A_names = []
 team_B_names = []
 
@@ -139,20 +136,57 @@ team_task_totals = pd.concat([team_task_totals, pd.DataFrame(team_A_names, colum
                               pd.DataFrame(team_B_names, columns = ['Team B Names'])], axis = 1)
 
 
+print(team_task_totals.columns)
 
 
 
-# team_task_totals.to_csv(file_path + 'Team_Scores.csv', sep = ',', index = False)
+plt.figure()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
+
+plt.bar(team_task_totals['Series Number']-0.2, team_task_totals['Team_A_per_person'], 
+        width = 0.4, edgecolor = 'black', label = 'Team of Two')
+plt.bar(team_task_totals['Series Number']+0.2, team_task_totals['Team_B_per_person'], 
+        width = 0.4, edgecolor = 'black', label = 'Team of Three')
+plt.bar(team_task_totals['Series Number'][13]-0.2, team_task_totals['Team_A_per_person'][13], color = 'darkblue',
+        width = 0.4, edgecolor = 'black', label = 'Team of Two')
+plt.bar(team_task_totals['Series Number'][16]+0.2, team_task_totals['Team_B_per_person'][16], color = 'darkred', 
+        width = 0.4, edgecolor = 'black', label = 'Team of Three')
+plt.xlim(0.5, 20.5)
+plt.xticks(np.arange(1, 21, 1), fontsize = 16)
+plt.yticks(fontsize = 16)
+plt.xlabel('Series', fontsize = 20)
+plt.ylabel('Team Scores per Number of People', fontsize = 20)
+plt.legend(loc = 'upper left', fontsize = 16)
+plt.show()
+
+plt.figure()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
+
+plt.bar(team_task_totals['Series Number']-0.2, team_task_totals['Team_A_per_task'],
+        width = 0.4, edgecolor = 'black', label = 'Team of Two')
+plt.bar(team_task_totals['Series Number']+0.2, team_task_totals['Team_B_per_task'], 
+        width = 0.4, edgecolor = 'black', label = 'Team of Three')
+plt.xlim(0.5, 20.5)
+plt.xticks(np.arange(1, 21, 1), fontsize = 16)
+plt.yticks(fontsize = 16)
+plt.xlabel('Series', fontsize = 20)
+plt.ylabel('Team Scores per Number of Tasks', fontsize = 18)
+plt.legend(loc = 'upper left', fontsize = 16)
+plt.show()
+
+plt.figure()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
+
+plt.bar(team_task_totals['Series Number']-0.2, team_task_totals['Team_A_per_person_task'], 
+        width = 0.4, edgecolor = 'black', label = 'Team of Two')
+plt.bar(team_task_totals['Series Number']+0.2, team_task_totals['Team_B_per_person_task'], 
+        width = 0.4, edgecolor = 'black', label = 'Team of Three')
+plt.xlim(0.5, 20.5)
+plt.xticks(np.arange(1, 21, 1), fontsize = 16)
+plt.yticks(fontsize = 16)
+plt.xlabel('Series', fontsize = 20)
+plt.ylabel('Team Scores per Number of People and Tasks', fontsize = 18)
+plt.legend(loc = 'upper left', fontsize = 16)
+plt.show()
 
 
-# plt.bar(team_task_totals['Series'], team_task_totals['Team_A_per_person'])
-# plt.bar(team_task_totals['Series'], team_task_totals['Team_B_per_person'])
-# plt.show()
-
-# plt.bar(team_task_totals['Series'], team_task_totals['Team_A_per_task'])
-# plt.bar(team_task_totals['Series'], team_task_totals['Team_B_per_task'])
-# plt.show()
-
-# plt.bar(team_task_totals['Series'], team_task_totals['Team_A_per_person_task'])
-# plt.bar(team_task_totals['Series'], team_task_totals['Team_B_per_person_task'])
-# plt.show()
