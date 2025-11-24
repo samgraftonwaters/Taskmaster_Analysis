@@ -78,7 +78,7 @@ for series in range(1, 21):
 all_team_tasks = pd.DataFrame(np.vstack(all_team_tasks), columns = ['Task Number', 'Description', 'Seat 1', 'Seat 2', 'Seat 3', 'Seat 4',
        'Seat 5', 'Tasknumber', 'Episode', 'Series', 'Team Task', 'Extra Part'])
 team_task_totals = pd.DataFrame(np.vstack(team_task_totals), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Series'])
-team_tasks_series = pd.DataFrame(np.vstack(team_tasks_series), columns = ['Number of Team Tasks'])
+team_tasks_series = pd.DataFrame(np.vstack(team_tasks_series), columns = ['Number'])
 
 team_task_totals = pd.concat([team_task_totals, team_tasks_series, team_combinatins], axis = 1)
 
@@ -87,19 +87,31 @@ print(team_task_totals)
 
 team_A = team_task_totals['Team_A']
 
-print(team_A[0][0])
 
+A_total = []
+B_total = []
 for series in range(0, 20):
 
     a1 = team_task_totals['Team_A'][series][0]
-    a2 = team_task_totals['Team_A'][series][0]
+    a2 = team_task_totals['Team_A'][series][1]
 
     b1 = team_task_totals['Team_B'][series][0]
     b2 = team_task_totals['Team_B'][series][1]
     b3 = team_task_totals['Team_B'][series][2]
 
-    A_total = team_task_totals[f'Seat {a1}'] + team_task_totals[f'Seat {a2}']
-    B_total = team_task_totals[f'Seat {b1}'] + team_task_totals[f'Seat {b2}'] + team_task_totals[f'Seat {b3}']
+    a_total = team_task_totals[f'Seat {a1}'][series] + team_task_totals[f'Seat {a2}'][series]
+    b_total = team_task_totals[f'Seat {b1}'][series] + team_task_totals[f'Seat {b2}'][series] + team_task_totals[f'Seat {b3}'][series]
 
-    print(A_total)
-    print(B_total)
+    A_total.append(a_total)
+    B_total.append(b_total)
+
+print(A_total)
+print(B_total)
+
+team_task_totals = pd.concat([team_task_totals, pd.DataFrame(A_total, columns = ['Team A Total']), pd.DataFrame(B_total, columns = ['Team B Total'])], axis = 1)
+print(team_task_totals.head())
+
+team_task_totals['Team_A_per_task'] = team_task_totals['Team A Total'] / team_task_totals['Number']
+team_task_totals['Team_B_per_task'] = team_task_totals['Team B Total'] / team_task_totals['Number']
+
+print(team_task_totals.head())
