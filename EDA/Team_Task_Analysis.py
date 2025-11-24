@@ -37,8 +37,8 @@ combo_table = {
     "Series" : [1, 10, 12, 2, 17, 3, 14, 16, 18, 4, 6, 5, 11, 7, 8, 19, 9, 13, 20, 15],
 }
 
-team_combinatins = pd.DataFrame(combo_table).sort_values(by = 'Series').reset_index(drop = True)
-print(team_combinatins.head(20))
+team_combinations = pd.DataFrame(combo_table).sort_values(by = 'Series').reset_index(drop = True)
+print(team_combinations.head(20))
 
 all_team_tasks = []
 team_task_totals = []
@@ -80,12 +80,10 @@ all_team_tasks = pd.DataFrame(np.vstack(all_team_tasks), columns = ['Task Number
 team_task_totals = pd.DataFrame(np.vstack(team_task_totals), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Series'])
 team_tasks_series = pd.DataFrame(np.vstack(team_tasks_series), columns = ['Number'])
 
-team_task_totals = pd.concat([team_task_totals, team_tasks_series, team_combinatins], axis = 1)
+team_task_totals = pd.concat([team_task_totals, team_tasks_series, team_combinations.drop(['Series'], axis = 1)], axis = 1)
 
 print(all_team_tasks)
 print(team_task_totals)
-
-team_A = team_task_totals['Team_A']
 
 
 A_total = []
@@ -105,13 +103,20 @@ for series in range(0, 20):
     A_total.append(a_total)
     B_total.append(b_total)
 
-print(A_total)
-print(B_total)
+team_task_totals = pd.concat([team_task_totals, pd.DataFrame(A_total, columns = ['Team A Total']), 
+                              pd.DataFrame(B_total, columns = ['Team B Total'])], axis = 1)
 
-team_task_totals = pd.concat([team_task_totals, pd.DataFrame(A_total, columns = ['Team A Total']), pd.DataFrame(B_total, columns = ['Team B Total'])], axis = 1)
-print(team_task_totals.head())
-
-team_task_totals['Team_A_per_task'] = team_task_totals['Team A Total'] / team_task_totals['Number']
-team_task_totals['Team_B_per_task'] = team_task_totals['Team B Total'] / team_task_totals['Number']
+team_task_totals['Team_A_per_person'] = round(team_task_totals['Team A Total'] / 2, 1)
+team_task_totals['Team_B_per_person'] = round(team_task_totals['Team B Total'] / 3, 1)
 
 print(team_task_totals.head())
+
+team_task_totals['Team_A_per_task'] = round(team_task_totals['Team A Total'] / team_task_totals['Number'], 1)
+team_task_totals['Team_B_per_task'] = round(team_task_totals['Team B Total'] / team_task_totals['Number'], 1)
+
+team_task_totals['Team_A_per_person_task'] = round(team_task_totals['Team_A_per_person'] / team_task_totals['Number'], 1)
+team_task_totals['Team_B_per_person_task'] = round(team_task_totals['Team_B_per_person'] / team_task_totals['Number'], 1)
+
+print(team_task_totals.head(10))
+
+team_task_totals.to_csv(file_path + 'Team_Scores.csv', sep = ',', index = False)
