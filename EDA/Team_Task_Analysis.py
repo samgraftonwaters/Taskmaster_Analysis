@@ -197,13 +197,13 @@ plt.ylabel('Team Scores per Number of People and Tasks', fontsize = 18)
 plt.legend(loc = 'upper left', fontsize = 16)
 plt.show()
 
-team_A = team_task_totals['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Series', 'Number',
+team_A = team_task_totals[['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Series', 'Number',
        'Team_A', 'Series Number', 'Team A Total', 'Team_A_per_person', 'Team_A_per_task',
-       'Team_A_per_person_task', 'Team A Names']
+       'Team_A_per_person_task', 'Team A Names']]
 
-team_B = team_task_totals['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Series', 'Number',
+team_B = team_task_totals[['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Series', 'Number',
         'Team_B', 'Series Number', 'Team B Total', 'Team_B_per_person', 'Team_B_per_task',  
-        'Team_B_per_person_task', 'Team B Names']
+        'Team_B_per_person_task', 'Team B Names']]
 
 team_A_top = team_A.sort_values(by = 'Team_A_per_person_task', ascending = False)
 team_A_bottom = team_A.sort_values(by = 'Team_A_per_person_task', ascending = True)
@@ -211,7 +211,27 @@ team_A_bottom = team_A.sort_values(by = 'Team_A_per_person_task', ascending = Tr
 team_B_top = team_B.sort_values(by = 'Team_B_per_person_task', ascending = False)
 team_B_bottom = team_B.sort_values(by = 'Team_B_per_person_task', ascending = True)
 
-print(team_A_top.head())
-print(team_A_bottom.head())
-print(team_B_top.head())
-print(team_B_bottom.head())
+all_teams = team_task_totals[['Series', 'Number', 'Team A Total', 'Team B Total',
+       'Team_A_per_person', 'Team_B_per_person', 'Team_A_per_task',
+       'Team_B_per_task', 'Team_A_per_person_task', 'Team_B_per_person_task',
+       'Team A Names', 'Team B Names']]
+
+team_name_table = all_teams.melt(id_vars='Series', value_vars=['Team A Names', 'Team B Names'], value_name='Team Names').drop('variable', axis=1)
+
+team_person_task = all_teams.melt(id_vars='Series', value_vars=['Team_A_per_person_task', 'Team_B_per_person_task'], value_name='TeamScoresPersonTask').drop('variable', axis=1)
+
+team_name_scores = pd.concat([team_name_table, team_person_task.drop('Series', axis = 1)], axis = 1)
+
+team_name_scores_top = team_name_scores.sort_values(by = 'TeamScoresPersonTask', ascending = False).reset_index(drop = True)
+
+team_name_scores_bottom = team_name_scores.sort_values(by = 'TeamScoresPersonTask', ascending = True).reset_index(drop = True)
+
+
+print(team_name_scores_top.head(30))
+
+print(team_name_scores_bottom.head(30))
+
+# print(team_A_top.head())
+# print(team_A_bottom.head())
+# print(team_B_top.head())
+# print(team_B_bottom.head())
