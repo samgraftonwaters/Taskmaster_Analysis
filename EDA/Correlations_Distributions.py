@@ -35,3 +35,8 @@ plt.ylabel('Final Position', fontsize = 15)
 plt.legend(loc = 'lower right', ncol = 2, fontsize = 14)
 plt.show()
 
+
+######
+# plot distributions of total scores, team scores etc
+# plot correlation plots
+# Determine correlations and R_squared values for above plots

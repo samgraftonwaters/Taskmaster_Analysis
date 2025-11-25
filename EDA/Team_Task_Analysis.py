@@ -216,6 +216,17 @@ all_teams = team_task_totals[['Series', 'Number', 'Team A Total', 'Team B Total'
        'Team_B_per_task', 'Team_A_per_person_task', 'Team_B_per_person_task',
        'Team A Names', 'Team B Names']]
 
+plt.plot(all_teams['Number'], all_teams['Team_A_per_person_task'], 'o')
+plt.plot(all_teams['Number'], all_teams['Team_B_per_person_task'], 'o')
+plt.show()
+
+plt.plot(all_teams['Team_A_per_person_task'], all_teams['Team_B_per_person_task'], 'o')
+plt.grid()
+plt.show()
+
+print(all_teams['Team_A_per_person_task'], len(all_teams['Team_A_per_person_task']))
+print(all_teams['Team_B_per_person_task'], len(all_teams['Team_B_per_person_task']))
+
 team_name_table = all_teams.melt(id_vars='Series', value_vars=['Team A Names', 'Team B Names'], value_name='Team Names').drop('variable', axis=1)
 
 team_person_task = all_teams.melt(id_vars='Series', value_vars=['Team_A_per_person_task', 'Team_B_per_person_task'], value_name='TeamScoresPersonTask').drop('variable', axis=1)
@@ -227,9 +238,10 @@ team_name_scores_top = team_name_scores.sort_values(by = 'TeamScoresPersonTask',
 team_name_scores_bottom = team_name_scores.sort_values(by = 'TeamScoresPersonTask', ascending = True).reset_index(drop = True)
 
 
-print(team_name_scores_top.head(30))
+print(team_name_scores_top[0:10])
 
-print(team_name_scores_bottom.head(30))
+print(team_name_scores_bottom[0:10])
+print(len(team_name_scores_bottom))
 
 # print(team_A_top.head())
 # print(team_A_bottom.head())
