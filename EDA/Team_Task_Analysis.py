@@ -224,25 +224,46 @@ plt.plot(all_teams['Team_A_per_person_task'], all_teams['Team_B_per_person_task'
 plt.grid()
 plt.show()
 
-print(all_teams['Team_A_per_person_task'], len(all_teams['Team_A_per_person_task']))
-print(all_teams['Team_B_per_person_task'], len(all_teams['Team_B_per_person_task']))
+print(all_teams['Team_A_per_person_task'].unique(), len(all_teams['Team_A_per_person_task'].unique()))
+print(all_teams['Team_B_per_person_task'].unique(), len(all_teams['Team_B_per_person_task'].unique()))
 
-team_name_table = all_teams.melt(id_vars='Series', value_vars=['Team A Names', 'Team B Names'], value_name='Team Names').drop('variable', axis=1)
-
+team_name_table = all_teams.melt(id_vars='Series', value_vars=['Team A Names', 'Team B Names'], value_name='Team Names')#.drop('variable', axis=1)
+team_name_table = team_name_table.rename({'variable' : 'Team'}, axis = 1)
+team_name_table['Team'] = team_name_table['Team'].str.replace('Team ', '').str.replace(' Names', '')
 team_person_task = all_teams.melt(id_vars='Series', value_vars=['Team_A_per_person_task', 'Team_B_per_person_task'], value_name='TeamScoresPersonTask').drop('variable', axis=1)
 
 team_name_scores = pd.concat([team_name_table, team_person_task.drop('Series', axis = 1)], axis = 1)
+
+number_tasks = all_teams[['Series', 'Number']]
+
+team_name_scores = pd.merge(team_name_scores, number_tasks, how = 'left', on = 'Series')
+
+team_name_scores['Team Names'] = team_name_scores['Team Names'].apply(lambda x: ', '.join(map(str, x)))
 
 team_name_scores_top = team_name_scores.sort_values(by = 'TeamScoresPersonTask', ascending = False).reset_index(drop = True)
 
 team_name_scores_bottom = team_name_scores.sort_values(by = 'TeamScoresPersonTask', ascending = True).reset_index(drop = True)
 
+team_name_scores = team_name_scores.sort_values(by = 'TeamScoresPersonTask', ascending = False).reset_index(drop = True)
+
+plt.plot(team_name_scores['Number'], team_name_scores['TeamScoresPersonTask'], 'o')
+plt.grid()
+plt.show()
 
 print(team_name_scores_top[0:10])
-
+print(team_name_scores_top.info())
 print(team_name_scores_bottom[0:10])
 print(len(team_name_scores_bottom))
 
+
+plt.barh(team_name_scores_top['Team Names'][0:10], team_name_scores_top['TeamScoresPersonTask'][0:10])
+plt.show()
+plt.barh(team_name_scores_bottom['Team Names'][0:10], team_name_scores_bottom['TeamScoresPersonTask'][0:10])
+plt.show()
+plt.barh(team_name_scores['Team Names'][0:10], team_name_scores_bottom['TeamScoresPersonTask'][0:10])
+plt.show()
+plt.barh(team_name_scores['Team Names'][30:40], team_name_scores_bottom['TeamScoresPersonTask'][0:10])
+plt.show()
 # print(team_A_top.head())
 # print(team_A_bottom.head())
 # print(team_B_top.head())
