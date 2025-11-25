@@ -147,10 +147,10 @@ plt.bar(team_task_totals['Series Number']-0.2, team_task_totals['Team_A_per_pers
         width = 0.4, edgecolor = 'black', label = 'Team of Two')
 plt.bar(team_task_totals['Series Number']+0.2, team_task_totals['Team_B_per_person'], 
         width = 0.4, edgecolor = 'black', label = 'Team of Three')
-plt.bar(team_task_totals['Series Number'][13]-0.2, team_task_totals['Team_A_per_person'][13], color = 'darkblue',
-        width = 0.4, edgecolor = 'black', label = 'Team of Two')
-plt.bar(team_task_totals['Series Number'][16]+0.2, team_task_totals['Team_B_per_person'][16], color = 'darkred', 
-        width = 0.4, edgecolor = 'black', label = 'Team of Three')
+plt.bar(team_task_totals['Series Number'][team_task_totals['Team_A_per_person'].idxmax(axis = 0)]-0.2, team_task_totals['Team_A_per_person'][team_task_totals['Team_A_per_person'].idxmax(axis = 0)], color = 'darkblue',
+        width = 0.4, edgecolor = 'black', label = 'Highest Team of Two Score')
+plt.bar(team_task_totals['Series Number'][team_task_totals['Team_B_per_person'].idxmax(axis = 0)]+0.2, team_task_totals['Team_B_per_person'][team_task_totals['Team_B_per_person'].idxmax(axis = 0)], color = 'darkred', 
+        width = 0.4, edgecolor = 'black', label = 'Highest Team of Three Score')
 plt.xlim(0.5, 20.5)
 plt.xticks(np.arange(1, 21, 1), fontsize = 16)
 plt.yticks(fontsize = 16)
@@ -166,6 +166,10 @@ plt.bar(team_task_totals['Series Number']-0.2, team_task_totals['Team_A_per_task
         width = 0.4, edgecolor = 'black', label = 'Team of Two')
 plt.bar(team_task_totals['Series Number']+0.2, team_task_totals['Team_B_per_task'], 
         width = 0.4, edgecolor = 'black', label = 'Team of Three')
+plt.bar(team_task_totals['Series Number'][team_task_totals['Team_A_per_task'].idxmax(axis = 0)]-0.2, team_task_totals['Team_A_per_task'][team_task_totals['Team_A_per_task'].idxmax(axis = 0)], color = 'darkblue',
+        width = 0.4, edgecolor = 'black', label = 'Highest Team of Two Score')
+plt.bar(team_task_totals['Series Number'][team_task_totals['Team_B_per_task'].idxmax(axis = 0)]+0.2, team_task_totals['Team_B_per_task'][team_task_totals['Team_B_per_task'].idxmax(axis = 0)], color = 'darkred', 
+        width = 0.4, edgecolor = 'black', label = 'Highest Team of Three Score')
 plt.xlim(0.5, 20.5)
 plt.xticks(np.arange(1, 21, 1), fontsize = 16)
 plt.yticks(fontsize = 16)
@@ -181,6 +185,10 @@ plt.bar(team_task_totals['Series Number']-0.2, team_task_totals['Team_A_per_pers
         width = 0.4, edgecolor = 'black', label = 'Team of Two')
 plt.bar(team_task_totals['Series Number']+0.2, team_task_totals['Team_B_per_person_task'], 
         width = 0.4, edgecolor = 'black', label = 'Team of Three')
+plt.bar(team_task_totals['Series Number'][team_task_totals['Team_A_per_person_task'].idxmax(axis = 0)]-0.2, team_task_totals['Team_A_per_person_task'][team_task_totals['Team_A_per_person_task'].idxmax(axis = 0)], color = 'darkblue',
+        width = 0.4, edgecolor = 'black', label = 'Highest Team of Two Score')
+plt.bar(team_task_totals['Series Number'][team_task_totals['Team_B_per_person_task'].idxmax(axis = 0)]+0.2, team_task_totals['Team_B_per_person_task'][team_task_totals['Team_B_per_person_task'].idxmax(axis = 0)], color = 'darkred', 
+        width = 0.4, edgecolor = 'black', label = 'Highest Team of Three Score')
 plt.xlim(0.5, 20.5)
 plt.xticks(np.arange(1, 21, 1), fontsize = 16)
 plt.yticks(fontsize = 16)
@@ -189,4 +197,21 @@ plt.ylabel('Team Scores per Number of People and Tasks', fontsize = 18)
 plt.legend(loc = 'upper left', fontsize = 16)
 plt.show()
 
+team_A = team_task_totals['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Series', 'Number',
+       'Team_A', 'Series Number', 'Team A Total', 'Team_A_per_person', 'Team_A_per_task',
+       'Team_A_per_person_task', 'Team A Names']
 
+team_B = team_task_totals['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Series', 'Number',
+        'Team_B', 'Series Number', 'Team B Total', 'Team_B_per_person', 'Team_B_per_task',  
+        'Team_B_per_person_task', 'Team B Names']
+
+team_A_top = team_A.sort_values(by = 'Team_A_per_person_task', ascending = False)
+team_A_bottom = team_A.sort_values(by = 'Team_A_per_person_task', ascending = True)
+
+team_B_top = team_B.sort_values(by = 'Team_B_per_person_task', ascending = False)
+team_B_bottom = team_B.sort_values(by = 'Team_B_per_person_task', ascending = True)
+
+print(team_A_top.head())
+print(team_A_bottom.head())
+print(team_B_top.head())
+print(team_B_bottom.head())
