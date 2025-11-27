@@ -256,15 +256,86 @@ print(team_name_scores_bottom[0:10])
 print(len(team_name_scores_bottom))
 
 
-plt.barh(team_name_scores_top['Team Names'][0:10], team_name_scores_top['TeamScoresPersonTask'][0:10])
-plt.show()
-plt.barh(team_name_scores_bottom['Team Names'][0:10], team_name_scores_bottom['TeamScoresPersonTask'][0:10])
-plt.show()
-plt.barh(team_name_scores['Team Names'][0:10], team_name_scores_bottom['TeamScoresPersonTask'][0:10])
-plt.show()
-plt.barh(team_name_scores['Team Names'][30:40], team_name_scores_bottom['TeamScoresPersonTask'][0:10])
-plt.show()
+
+
+# y = np.arange(0, 10, 1)
+
+# fig, (ax1, ax2) = plt.subplots(ncols = 1, nrows = 2)
+# plt.subplots_adjust(wspace=0, hspace=0.05, bottom = 0.1, top = 0.94, left = 0.33, right = 0.99)
+
+# team_name_scores.sort_values('TeamScoresPersonTask')[30:40].plot.barh(y = 'TeamScoresPersonTask', 
+#                                                                       x = 'Team Names', ax = ax1,
+#                                                                       width = 0.9, 
+#                                                                       color = 'red', alpha = 0.8,
+#                                                                       edgecolor = 'black', label = 'Top Ten Teams')
+# ax1.set_xlim(0, 6)
+# ax1.set_xticks([],[])
+# ax1.legend(fontsize = 16)
+# team_name_scores.sort_values('TeamScoresPersonTask')[0:10].plot.barh(y = 'TeamScoresPersonTask',
+#                                                                      x = 'Team Names', ax = ax2,
+#                                                                      width = 0.9, 
+#                                                                      color = 'blue', alpha = 0.8,
+#                                                                      edgecolor = 'black', label = 'Bottom 10 Teams')
+# ax2.set_xlim(0, 6)
+# ax2.legend(fontsize = 16)
+# plt.xlabel('Score Per Number of Tasks and Per Number of Team Members', fontsize = 18)
+# plt.ylabel('Teams', fontsize = 18)
+# ax1.tick_params(axis='both', labelsize=12)
+# ax2.tick_params(axis='both', labelsize=12)
+
+# plt.show()
+
 # print(team_A_top.head())
 # print(team_A_bottom.head())
 # print(team_B_top.head())
 # print(team_B_bottom.head())
+
+fig, (ax1, ax2) = plt.subplots(ncols=1, nrows=2, figsize=(10, 10), sharex = True)
+plt.subplots_adjust(wspace=0, hspace=0.05,
+                    bottom=0.1, top=0.94,
+                    left=0.1, right=0.99)
+
+# ----- TOP 30–40 -----
+df_top = team_name_scores.sort_values('TeamScoresPersonTask')[30:40]
+
+df_top.plot.barh(y='TeamScoresPersonTask', x='Team Names', ax=ax1, color='red', alpha=0.8, 
+                 edgecolor='black', width=0.9, label='Top Ten Teams')
+
+ax1.set_xlim(-1, 6)
+ax1.set_yticks([])
+ax1.set_ylabel('Team', fontsize = 16)  # remove y-axis labels
+ax1.legend(fontsize=16)
+
+# Add team names inside bars
+for i, (score, team, series, tasks) in enumerate(zip(df_top['TeamScoresPersonTask'], df_top['Team Names'],
+                                              df_top['Series'], df_top['Number'])):
+    ax1.text(0.05, i, team, va='center', ha='left', fontsize=12, color='black')
+    ax1.text(-0.75, i, series, va='center', ha='left', fontsize=12, color='black')
+    ax1.text(3, i, tasks, va='center', ha='left', fontsize=12, color='black')
+    ax1.text(-0.3, i, score, va='center', ha='left', fontsize=12, color = 'red')
+# ----- BOTTOM 0–10 -----
+df_bottom = team_name_scores.sort_values('TeamScoresPersonTask')[0:10]
+
+df_bottom.plot.barh(y='TeamScoresPersonTask', x='Team Names', ax=ax2, color='lightblue', alpha=0.8, 
+                    edgecolor='black', width=0.9, label='Bottom 10 Teams')
+
+ax2.set_xlim(-1, 6)
+ax2.set_yticks([])  # remove y-axis labels
+ax2.legend(loc = 'best', fontsize=16)
+
+# Add team names inside bars
+for i, (score, team, series, tasks) in enumerate(zip(df_bottom['TeamScoresPersonTask'], df_bottom['Team Names'],
+                                                     df_top['Series'], df_top['Number'])):
+    ax2.text(0.05, i, team, va='center', ha='left',fontsize=12, color='black')
+    ax2.text(-0.75, i, series, va='center', ha='left', fontsize=12, color='black')
+    ax2.text(3, i, tasks, va='center', ha='left', fontsize=12, color='black')
+    ax2.text(-0.3, i, score, va='center', ha='left', fontsize=12, color = 'blue')
+
+# Shared labels
+plt.xlabel('Score Per Number of Tasks and Per Number of Team Members', fontsize=18)
+plt.ylabel('Teams', fontsize=18)
+
+ax1.tick_params(axis='x', labelsize=12)
+ax2.tick_params(axis='x', labelsize=12)
+
+plt.show()
