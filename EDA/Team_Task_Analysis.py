@@ -291,47 +291,44 @@ print(len(team_name_scores_bottom))
 # print(team_B_bottom.head())
 
 fig, (ax1, ax2) = plt.subplots(ncols=1, nrows=2, figsize=(10, 10), sharex = True)
-plt.subplots_adjust(wspace=0, hspace=0.05,
-                    bottom=0.1, top=0.94,
-                    left=0.02, right=0.98)
+plt.subplots_adjust(wspace=0, hspace=0.05, bottom=0.1, top=0.94, left=0.02, right=0.98)
 
-# ----- TOP 30–40 -----
 df_top = team_name_scores.sort_values('TeamScoresPersonTask')[30:40]
 
 df_top.plot.barh(y='TeamScoresPersonTask', x='Team Names', ax=ax1, color='red', alpha=0.8, 
-                 edgecolor='black', width=0.9, label='Top Ten Teams')
+                 edgecolor='white', width=0.9, label='Top Ten Teams')
+
+for i, (score, team, series, tasks) in enumerate(zip(df_top['TeamScoresPersonTask'], df_top['Team Names'],
+                                              df_top['Series'], df_top['Number'])):
+    ax1.text(0.05, i, team, va='center', ha='left', fontsize=12, color='white')
+    ax1.text(-0.85, i, series, va='center', ha='left', fontsize=12, color='black')
+    ax1.text(-0.5, i, tasks, va='center', ha='left', fontsize=12, color='black')
+    ax1.text(-0.2, i, score, va='center', ha='left', fontsize=12, color = 'red')
+    ax1.text(-0.95, 10, 'Series  Number  Score', fontsize = 11, color = 'black')
 
 ax1.set_xlim(-1, 6)
 ax1.set_yticks([])
 ax1.set_ylabel('')
 ax1.legend(fontsize=16)
 
-# Add team names inside bars
-for i, (score, team, series, tasks) in enumerate(zip(df_top['TeamScoresPersonTask'], df_top['Team Names'],
-                                              df_top['Series'], df_top['Number'])):
-    ax1.text(0.05, i, team, va='center', ha='left', fontsize=12, color='black')
-    ax1.text(-0.8, i, series, va='center', ha='left', fontsize=12, color='black')
-    ax1.text(-0.5, i, tasks, va='center', ha='left', fontsize=12, color='black')
-    ax1.text(-0.2, i, score, va='center', ha='left', fontsize=12, color = 'red')
-# ----- BOTTOM 0–10 -----
 df_bottom = team_name_scores.sort_values('TeamScoresPersonTask')[0:10]
 
-df_bottom.plot.barh(y='TeamScoresPersonTask', x='Team Names', ax=ax2, color='lightblue', alpha=0.8, 
-                    edgecolor='black', width=0.9, label='Bottom 10 Teams')
+df_bottom.plot.barh(y='TeamScoresPersonTask', x='Team Names', ax=ax2, color='dodgerblue', alpha=0.8, 
+                    edgecolor='white', width=0.9, label='Bottom 10 Teams')
 
-ax2.set_xlim(-1, 6)
-ax2.set_yticks([])  # remove y-axis labels
-ax2.legend(loc = 'best', fontsize=16)
-
-# Add team names inside bars
 for i, (score, team, series, tasks) in enumerate(zip(df_bottom['TeamScoresPersonTask'], df_bottom['Team Names'],
                                                      df_bottom['Series'], df_bottom['Number'])):
     ax2.text(0.05, i, team, va='center', ha='left',fontsize=12, color='black')
-    ax2.text(-0.8, i, series, va='center', ha='left', fontsize=12, color='black')
+    ax2.text(-0.85, i, series, va='center', ha='left', fontsize=12, color='black')
     ax2.text(-0.5, i, tasks, va='center', ha='left', fontsize=12, color='black')
     ax2.text(-0.2, i, score, va='center', ha='left', fontsize=12, color = 'blue')
 
-# Shared labels
+ax2.set_xlim(-1, 6)
+ax2.set_xticks([0, 1, 2, 3, 4, 5, 6])
+ax2.set_yticks([]) 
+ax2.legend(loc = 'best', fontsize=16)
+
+fig.suptitle("Top and Bottom 10 Teams Across all Series", fontsize = 20)
 plt.xlabel('Score Per Number of Tasks and Per Number of Team Members', fontsize=18)
 plt.ylabel('')
 ax1.tick_params(axis='x', labelsize=12)

@@ -38,6 +38,6 @@ plt.show()
 
 ######
 # plot distributions of total scores, team scores etc
-# plot total scores against vs team A and team B scores
+# plot total scores against vs team A and team B scores, and all player scores based on those from team tasks
 # plot correlation plots
 # Determine correlations and R_squared values for above plots
