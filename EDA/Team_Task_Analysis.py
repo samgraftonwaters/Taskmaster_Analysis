@@ -17,70 +17,12 @@ TTF.plot_teams(dataframe = team_table)
 team_two = team_table[team_table['Team'] == 'A'].reset_index(drop = True)
 team_three = team_table[team_table['Team'] == 'B'].reset_index(drop = True)
 
-combo_table = {
-    "Team_A" : [[1, 5], [3, 5], [4, 5], [1, 4], [3, 4], [2, 3], [2, 5], [1, 3], [2, 4], [1, 2]],
-    "Team_B" : [[2, 3, 4], [1, 2, 4], [1, 2, 3], [2, 3, 5], [1, 2, 5], [1, 4, 5], [1, 3, 4], [2, 4, 5], 
-                [1, 3, 5], [3, 4, 5]],
-    "Series" : [[1, 10, 12], [2, 17], [3, 14, 16, 18], [4, 6], [5, 11], [7], [8, 19], [9, 13], [20], [15]],
-    "Combos" : [3, 2, 4, 2, 2, 1, 2, 2, 1, 1]
-}
-
-team_combos = pd.DataFrame(combo_table)
-print(team_combos.head(10))
-
-combo_table = {
-    "Team_A" : [[1, 5], [1, 5], [1, 5], [3, 5], [3, 5], [4, 5], [4, 5], [4, 5], [4, 5], [1, 4], [1, 4],
-                [3, 4], [3, 4], [2, 3], [2, 5], [2, 5], [1, 3], [1, 3], [2, 4], [1, 2]],
-    "Team_B" : [[2, 3, 4], [2, 3, 4], [2, 3, 4], [1, 2, 4], [1, 2, 4], [1, 2, 3], [1, 2, 3], [1, 2, 3], 
-                [1, 2, 3], [2, 3, 5], [2, 3, 5], [1, 2, 5], [1, 2, 5], [1, 4, 5], [1, 3, 4], [1, 3, 4], 
-                [2, 4, 5], [2, 4, 5], [1, 3, 5], [3, 4, 5]],
-    "Series Number" : [1, 10, 12, 2, 17, 3, 14, 16, 18, 4, 6, 5, 11, 7, 8, 19, 9, 13, 20, 15],
-}
-
-team_combinations = pd.DataFrame(combo_table).sort_values(by = 'Series Number').reset_index(drop = True)
+team_combinations = TTF.team_combinations()
 print(team_combinations.head(20))
 
-all_team_tasks = []
-team_task_totals = []
-team_tasks_series = []
-
-for series in range(1, 21):
-
-    data = pd.read_excel(file_path + 'Taskmaster_Series_Scores_Cleaned.xlsx', sheet_name = f'Series_{series}')
-
-    
-    data.rename(columns = {data.columns[2] : 'Seat 1', data.columns[3] : 'Seat 2', 
-                                  data.columns[4] : 'Seat 3', data.columns[5] : 'Seat 4', 
-                                  data.columns[6] : 'Seat 5'}, inplace = True)
-    cols = data.columns
-    seats = cols[2:7]
-
-    team_tasks = data[data['Team Task'] == 1].reset_index(drop = True)
-
-    team_tasks = team_tasks.drop(['Prize Task', 'Live Task', 'Tie Break', 'Solo Task'], axis = 1)
-    
-    all_team_tasks.append(team_tasks)
-    
-    ###
-
-    team_tasks_summed = team_tasks[seats].sum(axis = 0).astype(int)
-
-    team_tasks_summed['Series'] = f'S{series}'
-
-    team_task_totals.append(team_tasks_summed)
-
-    ###
-    
-    num_team_tasks = len(team_tasks[team_tasks['Extra Part'] != 1])
-
-    team_tasks_series.append(num_team_tasks)
-
-all_team_tasks = pd.DataFrame(np.vstack(all_team_tasks), columns = ['Task Number', 'Description', 'Seat 1', 'Seat 2', 'Seat 3', 'Seat 4',
-       'Seat 5', 'Tasknumber', 'Episode', 'Series', 'Team Task', 'Extra Part'])
-team_task_totals = pd.DataFrame(np.vstack(team_task_totals), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Series'])
-team_tasks_series = pd.DataFrame(np.vstack(team_tasks_series), columns = ['Number'])
-
-team_task_totals = pd.concat([team_task_totals, team_tasks_series, team_combinations], axis = 1)
+team_task_totals, all_team_tasks = TTF.team_scores_per_seat(file_path = file_path, 
+                                                            file_name = 'Taskmaster_Series_Scores_Cleaned.xlsx', 
+                                                            combo_table = team_combinations)
 
 print(all_team_tasks)
 print(team_task_totals)
@@ -156,7 +98,7 @@ plt.xticks(np.arange(1, 21, 1), fontsize = 16)
 plt.yticks(fontsize = 16)
 plt.xlabel('Series', fontsize = 20)
 plt.ylabel('Team Scores per Number of People', fontsize = 20)
-plt.legend(loc = 'upper left', fontsize = 16)
+plt.legend(loc = 'upper left', fontsize = 16, ncol = 2)
 plt.show()
 
 plt.figure()
@@ -175,7 +117,7 @@ plt.xticks(np.arange(1, 21, 1), fontsize = 16)
 plt.yticks(fontsize = 16)
 plt.xlabel('Series', fontsize = 20)
 plt.ylabel('Team Scores per Number of Tasks', fontsize = 18)
-plt.legend(loc = 'upper left', fontsize = 16)
+plt.legend(loc = 'upper left', fontsize = 16, ncol = 2)
 plt.show()
 
 plt.figure()
@@ -194,7 +136,7 @@ plt.xticks(np.arange(1, 21, 1), fontsize = 16)
 plt.yticks(fontsize = 16)
 plt.xlabel('Series', fontsize = 20)
 plt.ylabel('Team Scores per Number of People and Tasks', fontsize = 18)
-plt.legend(loc = 'upper left', fontsize = 16)
+plt.legend(loc = 'upper left', fontsize = 16, ncol = 2)
 plt.show()
 
 team_A = team_task_totals[['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Series', 'Number',
@@ -215,6 +157,11 @@ all_teams = team_task_totals[['Series', 'Number', 'Team A Total', 'Team B Total'
        'Team_A_per_person', 'Team_B_per_person', 'Team_A_per_task',
        'Team_B_per_task', 'Team_A_per_person_task', 'Team_B_per_person_task',
        'Team A Names', 'Team B Names']]
+
+# team_A_corr = all_teams.corr('Number', 'Team_A_per_person_task')
+# team_B_corr = all_teams.corr('Number', 'Team_B_per_person_task')
+
+# print(team_A_corr, team_B_corr)
 
 plt.plot(all_teams['Number'], all_teams['Team_A_per_person_task'], 'o')
 plt.plot(all_teams['Number'], all_teams['Team_B_per_person_task'], 'o')
@@ -250,45 +197,7 @@ plt.plot(team_name_scores['Number'], team_name_scores['TeamScoresPersonTask'], '
 plt.grid()
 plt.show()
 
-print(team_name_scores_top[0:10])
-print(team_name_scores_top.info())
-print(team_name_scores_bottom[0:10])
-print(len(team_name_scores_bottom))
 
-
-
-
-# y = np.arange(0, 10, 1)
-
-# fig, (ax1, ax2) = plt.subplots(ncols = 1, nrows = 2)
-# plt.subplots_adjust(wspace=0, hspace=0.05, bottom = 0.1, top = 0.94, left = 0.33, right = 0.99)
-
-# team_name_scores.sort_values('TeamScoresPersonTask')[30:40].plot.barh(y = 'TeamScoresPersonTask', 
-#                                                                       x = 'Team Names', ax = ax1,
-#                                                                       width = 0.9, 
-#                                                                       color = 'red', alpha = 0.8,
-#                                                                       edgecolor = 'black', label = 'Top Ten Teams')
-# ax1.set_xlim(0, 6)
-# ax1.set_xticks([],[])
-# ax1.legend(fontsize = 16)
-# team_name_scores.sort_values('TeamScoresPersonTask')[0:10].plot.barh(y = 'TeamScoresPersonTask',
-#                                                                      x = 'Team Names', ax = ax2,
-#                                                                      width = 0.9, 
-#                                                                      color = 'blue', alpha = 0.8,
-#                                                                      edgecolor = 'black', label = 'Bottom 10 Teams')
-# ax2.set_xlim(0, 6)
-# ax2.legend(fontsize = 16)
-# plt.xlabel('Score Per Number of Tasks and Per Number of Team Members', fontsize = 18)
-# plt.ylabel('Teams', fontsize = 18)
-# ax1.tick_params(axis='both', labelsize=12)
-# ax2.tick_params(axis='both', labelsize=12)
-
-# plt.show()
-
-# print(team_A_top.head())
-# print(team_A_bottom.head())
-# print(team_B_top.head())
-# print(team_B_bottom.head())
 
 fig, (ax1, ax2) = plt.subplots(ncols=1, nrows=2, figsize=(10, 10), sharex = True)
 plt.subplots_adjust(wspace=0, hspace=0.05, bottom=0.1, top=0.94, left=0.02, right=0.98)
