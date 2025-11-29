@@ -136,3 +136,58 @@ def team_scores_per_seat(file_path, file_name, combo_table):
 
     return(team_task_totals, all_team_tasks)
 
+def total_team_scores(team_table):
+
+    A_total = []
+    B_total = []
+    for series in range(0, 20):
+
+        a1 = team_table['Team_A'][series][0]
+        a2 = team_table['Team_A'][series][1]
+
+        b1 = team_table['Team_B'][series][0]
+        b2 = team_table['Team_B'][series][1]
+        b3 = team_table['Team_B'][series][2]
+
+        a_total = team_table[f'Seat {a1}'][series] + team_table[f'Seat {a2}'][series]
+        b_total = team_table[f'Seat {b1}'][series] + team_table[f'Seat {b2}'][series] + team_table[f'Seat {b3}'][series]
+
+        A_total.append(a_total)
+        B_total.append(b_total)
+
+    team_table = pd.concat([team_table, pd.DataFrame(A_total, columns = ['Team A Total']), 
+                                pd.DataFrame(B_total, columns = ['Team B Total'])], axis = 1)
+
+    team_table['Team_A_per_person'] = round(team_table['Team A Total'] / 2, 1)
+    team_table['Team_B_per_person'] = round(team_table['Team B Total'] / 3, 1)
+
+    team_table['Team_A_per_task'] = round(team_table['Team A Total'] / team_table['Number'], 1)
+    team_table['Team_B_per_task'] = round(team_table['Team B Total'] / team_table['Number'], 1)
+
+    team_table['Team_A_per_person_task'] = round(team_table['Team_A_per_person'] / team_table['Number'], 1)
+    team_table['Team_B_per_person_task'] = round(team_table['Team_B_per_person'] / team_table['Number'], 1)
+
+    return(team_table)
+
+
+def include_team_names(team_score_table, team_two_table, team_three_table):
+
+    team_A_names = []
+    team_B_names = []
+
+    for series in range(1, 21):
+
+        names_A = team_two_table[team_two_table['Series Number'] == series]['Name'].to_list()
+
+        names_B = team_three_table[team_three_table['Series Number'] == series]['Name'].to_list()
+
+        team_A_names.append([names_A])
+
+        team_B_names.append([names_B])
+
+    print(team_B_names)
+    
+    team_task_totals = pd.concat([team_score_table, pd.DataFrame(team_A_names, columns = ['Team A Names']).reset_index(drop = True), 
+                                pd.DataFrame(team_B_names, columns = ['Team B Names']).reset_index(drop = True)], axis = 1)
+    
+    return(team_task_totals)

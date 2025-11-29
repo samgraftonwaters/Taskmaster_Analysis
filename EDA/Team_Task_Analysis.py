@@ -27,59 +27,12 @@ team_task_totals, all_team_tasks = TTF.team_scores_per_seat(file_path = file_pat
 print(all_team_tasks)
 print(team_task_totals)
 
-
-A_total = []
-B_total = []
-for series in range(0, 20):
-
-    a1 = team_task_totals['Team_A'][series][0]
-    a2 = team_task_totals['Team_A'][series][1]
-
-    b1 = team_task_totals['Team_B'][series][0]
-    b2 = team_task_totals['Team_B'][series][1]
-    b3 = team_task_totals['Team_B'][series][2]
-
-    a_total = team_task_totals[f'Seat {a1}'][series] + team_task_totals[f'Seat {a2}'][series]
-    b_total = team_task_totals[f'Seat {b1}'][series] + team_task_totals[f'Seat {b2}'][series] + team_task_totals[f'Seat {b3}'][series]
-
-    A_total.append(a_total)
-    B_total.append(b_total)
-
-team_task_totals = pd.concat([team_task_totals, pd.DataFrame(A_total, columns = ['Team A Total']), 
-                              pd.DataFrame(B_total, columns = ['Team B Total'])], axis = 1)
-
-team_task_totals['Team_A_per_person'] = round(team_task_totals['Team A Total'] / 2, 1)
-team_task_totals['Team_B_per_person'] = round(team_task_totals['Team B Total'] / 3, 1)
-
-print(team_task_totals.head())
-
-team_task_totals['Team_A_per_task'] = round(team_task_totals['Team A Total'] / team_task_totals['Number'], 1)
-team_task_totals['Team_B_per_task'] = round(team_task_totals['Team B Total'] / team_task_totals['Number'], 1)
-
-team_task_totals['Team_A_per_person_task'] = round(team_task_totals['Team_A_per_person'] / team_task_totals['Number'], 1)
-team_task_totals['Team_B_per_person_task'] = round(team_task_totals['Team_B_per_person'] / team_task_totals['Number'], 1)
+team_task_totals = TTF.total_team_scores(team_table = team_task_totals)
 
 print(team_task_totals.head(10))
 
-team_A_names = []
-team_B_names = []
-
-for series in range(1, 21):
-
-    names_A = team_two[team_two['Series Number'] == series]['Name'].to_list()
-
-    names_B = team_three[team_three['Series Number'] == series]['Name'].to_list()
-
-    team_A_names.append([names_A])
-
-    team_B_names.append([names_B])
-
-team_task_totals = pd.concat([team_task_totals, pd.DataFrame(team_A_names, columns = ['Team A Names']), 
-                              pd.DataFrame(team_B_names, columns = ['Team B Names'])], axis = 1)
-
-
-print(team_task_totals.columns)
-
+team_task_totals = TTF.include_team_names(team_score_table = team_task_totals, 
+                                           team_two_table = team_two, team_three_table = team_three)
 
 
 plt.figure()
