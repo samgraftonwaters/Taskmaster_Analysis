@@ -53,7 +53,7 @@ def plot_teams(dataframe):
     
     Returns:
     --------
-        Chart with Series along y-axis and seat position along x-axis. Each "data point" is the contestents name,
+        Chart with Seat Number along x-axis and Series along y-axis. Each "data point" is the contestents name,
         colour coded for their respective team - purple team of 2, green team of 3.
 
     """

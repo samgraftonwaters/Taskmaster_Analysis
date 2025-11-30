@@ -66,7 +66,42 @@ team_A_bottom = team_A.sort_values(by = 'Team_A_per_person_task', ascending = Tr
 team_B_top = team_B.sort_values(by = 'Team_B_per_person_task', ascending = False)
 team_B_bottom = team_B.sort_values(by = 'Team_B_per_person_task', ascending = True)
 
+#get top and bottom teams
 team_name_scores = TTF.get_best_worse_teams(team_table = all_teams)
+
+team_scores_top = team_name_scores.sort_values('TeamScoresPersonTask')[30:40]
+
+team_scores_bottom = team_name_scores.sort_values('TeamScoresPersonTask')[0:10]
+
+
+top_seat_pos = team_scores_top[['Series', 'Team', 'Team Names']]
+top_seat_pos['Series Number'] = top_seat_pos['Series'].str.replace('S', '').astype(int)
+top_seat_pos = pd.merge(left = top_seat_pos, right = team_combinations_all_series, on = 'Series Number', how = 'left')
+top_seat_pos['Team_A_tuple'] = top_seat_pos['Team_A'].apply(tuple)
+top_seat_pos['Team_B_tuple'] = top_seat_pos['Team_B'].apply(tuple)
+
+bottom_seat_pos = team_scores_bottom[['Series', 'Team', 'Team Names']]
+bottom_seat_pos['Series Number'] = bottom_seat_pos['Series'].str.replace('S', '').astype(int)
+bottom_seat_pos = pd.merge(left = bottom_seat_pos, right = team_combinations_all_series, on = 'Series Number', how = 'left')
+bottom_seat_pos['Team_A_tuple'] = bottom_seat_pos['Team_A'].apply(tuple)
+bottom_seat_pos['Team_B_tuple'] = bottom_seat_pos['Team_B'].apply(tuple)
+
+
+
+
+print(top_seat_pos['Team_A_tuple'].value_counts().reset_index())
+print(top_seat_pos['Team_B_tuple'].value_counts().reset_index())
+
+
+print(bottom_seat_pos['Team_A_tuple'].value_counts().reset_index())
+print(bottom_seat_pos['Team_B_tuple'].value_counts().reset_index())
+#####
+## Winning/Best combination for top 10, and worst combination for bottom 10
+######
+
+
+
+
 
 
 #########
@@ -190,16 +225,14 @@ plt.show()
 
 #Top and Bottom 10 teams for all series
 
-fig, (ax1, ax2) = plt.subplots(ncols=1, nrows=2, figsize=(10, 10), sharex = True)
+fig, (ax1, ax2) = plt.subplots(ncols=1, nrows=2, sharex = True)
 plt.subplots_adjust(wspace=0, hspace=0.05, bottom=0.1, top=0.94, left=0.02, right=0.98)
 
-df_top = team_name_scores.sort_values('TeamScoresPersonTask')[30:40]
-
-df_top.plot.barh(y='TeamScoresPersonTask', x='Team Names', ax=ax1, color='red', alpha=0.8, 
+team_scores_top.plot.barh(y='TeamScoresPersonTask', x='Team Names', ax=ax1, color='red', alpha=0.8, 
                  edgecolor='white', width=0.9, label='Top Ten Teams')
 
-for i, (score, team, series, tasks) in enumerate(zip(df_top['TeamScoresPersonTask'], df_top['Team Names'],
-                                              df_top['Series'], df_top['Number'])):
+for i, (score, team, series, tasks) in enumerate(zip(team_scores_top['TeamScoresPersonTask'], team_scores_top['Team Names'],
+                                              team_scores_top['Series'], team_scores_top['Number'])):
     ax1.text(0.05, i, team, va='center', ha='left', fontsize=12, color='white')
     ax1.text(-0.85, i, series, va='center', ha='left', fontsize=12, color='black')
     ax1.text(-0.5, i, tasks, va='center', ha='left', fontsize=12, color='black')
@@ -211,13 +244,11 @@ ax1.set_yticks([])
 ax1.set_ylabel('')
 ax1.legend(fontsize=16)
 
-df_bottom = team_name_scores.sort_values('TeamScoresPersonTask')[0:10]
-
-df_bottom.plot.barh(y='TeamScoresPersonTask', x='Team Names', ax=ax2, color='dodgerblue', alpha=0.8, 
+team_scores_bottom.plot.barh(y='TeamScoresPersonTask', x='Team Names', ax=ax2, color='dodgerblue', alpha=0.8, 
                     edgecolor='white', width=0.9, label='Bottom 10 Teams')
 
-for i, (score, team, series, tasks) in enumerate(zip(df_bottom['TeamScoresPersonTask'], df_bottom['Team Names'],
-                                                     df_bottom['Series'], df_bottom['Number'])):
+for i, (score, team, series, tasks) in enumerate(zip(team_scores_bottom['TeamScoresPersonTask'], team_scores_bottom['Team Names'],
+                                                     team_scores_bottom['Series'], team_scores_bottom['Number'])):
     ax2.text(0.05, i, team, va='center', ha='left',fontsize=12, color='black')
     ax2.text(-0.85, i, series, va='center', ha='left', fontsize=12, color='black')
     ax2.text(-0.5, i, tasks, va='center', ha='left', fontsize=12, color='black')
