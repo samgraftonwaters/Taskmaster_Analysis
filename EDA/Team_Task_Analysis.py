@@ -73,36 +73,16 @@ team_scores_top = team_name_scores.sort_values('TeamScoresPersonTask')[30:40]
 
 team_scores_bottom = team_name_scores.sort_values('TeamScoresPersonTask')[0:10]
 
+top_seat_pos = TTF.top_bottom_team_combinations(scores_table = team_scores_top, combination_table = team_combinations_all_series)
+bottom_seat_pos = TTF.top_bottom_team_combinations(scores_table = team_scores_bottom, combination_table = team_combinations_all_series)
 
-top_seat_pos = team_scores_top[['Series', 'Team', 'Team Names']]
-top_seat_pos['Series Number'] = top_seat_pos['Series'].str.replace('S', '').astype(int)
-top_seat_pos = pd.merge(left = top_seat_pos, right = team_combinations_all_series, on = 'Series Number', how = 'left')
-top_seat_pos['Team_A_tuple'] = top_seat_pos['Team_A'].apply(tuple)
-top_seat_pos['Team_B_tuple'] = top_seat_pos['Team_B'].apply(tuple)
+count_configs_top = top_seat_pos.value_counts(subset = ['Team_A_tuple', 'Team_B_tuple', 'Team'])
+print(count_configs_top)
 
-bottom_seat_pos = team_scores_bottom[['Series', 'Team', 'Team Names']]
-bottom_seat_pos['Series Number'] = bottom_seat_pos['Series'].str.replace('S', '').astype(int)
-bottom_seat_pos = pd.merge(left = bottom_seat_pos, right = team_combinations_all_series, on = 'Series Number', how = 'left')
-bottom_seat_pos['Team_A_tuple'] = bottom_seat_pos['Team_A'].apply(tuple)
-bottom_seat_pos['Team_B_tuple'] = bottom_seat_pos['Team_B'].apply(tuple)
+count_configs_bottom = bottom_seat_pos.value_counts(subset = ['Team_A_tuple', 'Team_B_tuple', 'Team'])
+print(count_configs_bottom)
 
-
-
-
-print(top_seat_pos['Team_A_tuple'].value_counts().reset_index())
-print(top_seat_pos['Team_B_tuple'].value_counts().reset_index())
-
-
-print(bottom_seat_pos['Team_A_tuple'].value_counts().reset_index())
-print(bottom_seat_pos['Team_B_tuple'].value_counts().reset_index())
-#####
-## Winning/Best combination for top 10, and worst combination for bottom 10
-######
-
-
-
-
-
+print(team_combinations_grouped)
 
 #########
 #PLOTS

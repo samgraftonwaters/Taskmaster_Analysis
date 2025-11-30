@@ -270,3 +270,12 @@ def get_best_worse_teams(team_table):
 
     return(team_name_scores)
 
+def top_bottom_team_combinations(scores_table, combination_table):
+    
+    seat_pos = scores_table[['Series', 'Team', 'Team Names']].copy()
+    seat_pos['Series Number'] = seat_pos['Series'].str.replace('S', '').astype(int)
+    seat_pos = pd.merge(left = seat_pos, right = combination_table, on = 'Series Number', how = 'left')
+    seat_pos['Team_A_tuple'] = seat_pos['Team_A'].apply(tuple)
+    seat_pos['Team_B_tuple'] = seat_pos['Team_B'].apply(tuple)
+
+    return(seat_pos)
