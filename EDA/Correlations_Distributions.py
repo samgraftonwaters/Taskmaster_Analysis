@@ -41,3 +41,18 @@ plt.show()
 # plot total scores against vs team A and team B scores, and all player scores based on those from team tasks
 # plot correlation plots
 # Determine correlations and R_squared values for above plots
+
+
+### TEAM CORRELATION PLOTS
+
+# plt.plot(all_teams['Number'], all_teams['Team_A_per_person_task'], 'o')
+# plt.plot(all_teams['Number'], all_teams['Team_B_per_person_task'], 'o')
+# plt.show()
+
+# plt.plot(all_teams['Team_A_per_person_task'], all_teams['Team_B_per_person_task'], 'o')
+# plt.grid()
+# plt.show()
+
+# plt.plot(team_name_scores['Number'], team_name_scores['TeamScoresPersonTask'], 'o')
+# plt.grid()
+# plt.show()

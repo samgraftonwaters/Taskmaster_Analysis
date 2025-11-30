@@ -184,8 +184,6 @@ def include_team_names(team_score_table, team_two_table, team_three_table):
         team_A_names.append([names_A])
 
         team_B_names.append([names_B])
-
-    print(team_B_names)
     
     team_task_totals = pd.concat([team_score_table, pd.DataFrame(team_A_names, columns = ['Team A Names']).reset_index(drop = True), 
                                 pd.DataFrame(team_B_names, columns = ['Team B Names']).reset_index(drop = True)], axis = 1)
@@ -202,3 +200,24 @@ def percent_diff(score_team_A, score_team_B):
     percent = abs(frac) * 100
 
     return(percent)
+
+def get_best_worse_teams(team_table): 
+
+    team_name_table = team_table.melt(id_vars='Series', value_vars=['Team A Names', 'Team B Names'], value_name='Team Names')
+    team_name_table = team_name_table.rename({'variable' : 'Team'}, axis = 1)
+    team_name_table['Team'] = team_name_table['Team'].str.replace('Team ', '').str.replace(' Names', '')
+    
+    team_person_task = team_table.melt(id_vars='Series', value_vars=['Team_A_per_person_task', 'Team_B_per_person_task'], value_name='TeamScoresPersonTask').drop('variable', axis=1)
+
+    team_name_scores = pd.concat([team_name_table, team_person_task.drop('Series', axis = 1)], axis = 1)
+
+    number_tasks = team_table[['Series', 'Number']]
+
+    team_name_scores = pd.merge(team_name_scores, number_tasks, how = 'left', on = 'Series')
+
+    team_name_scores['Team Names'] = team_name_scores['Team Names'].apply(lambda x: ', '.join(map(str, x)))
+
+    team_name_scores = team_name_scores.sort_values(by = 'TeamScoresPersonTask', ascending = False).reset_index(drop = True)
+
+    return(team_name_scores)
+

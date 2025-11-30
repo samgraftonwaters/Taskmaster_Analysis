@@ -14,28 +14,23 @@ team_table = TTF.formatting_team_table(dataframe = team_table)
 
 TTF.plot_teams(dataframe = team_table)
 
+#Split team tables based off group of 2 (A) or group of three (B)
 team_two = team_table[team_table['Team'] == 'A'].reset_index(drop = True)
 team_three = team_table[team_table['Team'] == 'B'].reset_index(drop = True)
 
 team_combinations = TTF.team_combinations()
-print(team_combinations.head(20))
 
 team_task_totals, all_team_tasks = TTF.team_scores_per_seat(file_path = file_path, 
                                                             file_name = 'Taskmaster_Series_Scores_Cleaned.xlsx', 
                                                             combo_table = team_combinations)
 
-print(all_team_tasks)
-print(team_task_totals)
-
 team_task_totals = TTF.total_team_scores(team_table = team_task_totals)
-
-print(team_task_totals.head(10))
 
 team_task_totals = TTF.include_team_names(team_score_table = team_task_totals, 
                                            team_two_table = team_two, team_three_table = team_three)
 
 
-
+# Determine percentage differences between Team A and Team B in each series
 total_per_diff = TTF.percent_diff(score_team_A = team_task_totals['Team A Total'],
                               score_team_B = team_task_totals['Team B Total'])
 
@@ -48,7 +43,36 @@ total_task_diff = TTF.percent_diff(score_team_A = team_task_totals['Team_A_per_t
 total_person_task_diff = TTF.percent_diff(score_team_A = team_task_totals['Team_A_per_person_task'],
                               score_team_B = team_task_totals['Team_B_per_person_task'])
 
+# Take the full team table and keep only wanted columns. e.g. remove Seat columns
+all_teams = team_task_totals[['Series', 'Number', 'Team A Total', 'Team B Total',
+       'Team_A_per_person', 'Team_B_per_person', 'Team_A_per_task',
+       'Team_B_per_task', 'Team_A_per_person_task', 'Team_B_per_person_task',
+       'Team A Names', 'Team B Names']]
 
+#Get full Team A and Team B tables including all score method columns and names
+team_A = team_task_totals[['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Series', 'Number',
+       'Team_A', 'Series Number', 'Team A Total', 'Team_A_per_person', 'Team_A_per_task',
+       'Team_A_per_person_task', 'Team A Names']]
+
+team_B = team_task_totals[['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Series', 'Number',
+        'Team_B', 'Series Number', 'Team B Total', 'Team_B_per_person', 'Team_B_per_task',  
+        'Team_B_per_person_task', 'Team B Names']]
+
+# Sort Team A and Team B tables based on the total per person per task column.
+team_A_top = team_A.sort_values(by = 'Team_A_per_person_task', ascending = False)
+team_A_bottom = team_A.sort_values(by = 'Team_A_per_person_task', ascending = True)
+
+team_B_top = team_B.sort_values(by = 'Team_B_per_person_task', ascending = False)
+team_B_bottom = team_B.sort_values(by = 'Team_B_per_person_task', ascending = True)
+
+team_name_scores = TTF.get_best_worse_teams(team_table = all_teams)
+
+
+#########
+#PLOTS
+#########
+
+#Percentage differnce bar charts for four team score methods
 plt.figure()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.08, right = 0.96)
 
@@ -70,6 +94,16 @@ plt.title('Absolute Percentage Differences between Team of Three and Team \n of 
 plt.legend(loc = 'upper right', fontsize = 16, ncol = 2)
 plt.show()
     
+
+# Next four plots show bar charts for the team scores from four different methods:
+# 1. Sum Contestent scores for each team task to give total team score
+# 2. Total team score per person (divide team total by number of team members)
+# 3. Total team score per task (divide team total by number of tasks)
+# 4. Total team score per person per tasks (divide team total by number of people and number of tasks
+
+# Option 4 is the one to be carried out in further analysis because it averages the scores more fairly than
+# options 2 or 3.
+
 plt.figure()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
 
@@ -88,12 +122,13 @@ plt.xticks(np.arange(1, 21, 1), fontsize = 16)
 plt.yticks(fontsize = 16)
 plt.xlabel('Series', fontsize = 20)
 plt.ylabel('Team Scores Total', fontsize = 20)
+plt.title('Total Team Scores for Each Series', fontsize = 18)
 plt.legend(loc = 'upper left', fontsize = 16, ncol = 2)
 plt.show()
 
 
 plt.figure()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.08, right = 0.96)
 
 plt.bar(team_task_totals['Series Number']-0.2, team_task_totals['Team_A_per_person'], 
         width = 0.4, edgecolor = 'black', label = 'Team of Two')
@@ -108,11 +143,12 @@ plt.xticks(np.arange(1, 21, 1), fontsize = 16)
 plt.yticks(fontsize = 16)
 plt.xlabel('Series', fontsize = 20)
 plt.ylabel('Team Scores per Number of People', fontsize = 20)
+plt.title('Total Team Scores per Number of Team Members for Each Series', fontsize = 18)
 plt.legend(loc = 'upper left', fontsize = 16, ncol = 2)
 plt.show()
 
 plt.figure()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.08, right = 0.96)
 
 plt.bar(team_task_totals['Series Number']-0.2, team_task_totals['Team_A_per_task'],
         width = 0.4, edgecolor = 'black', label = 'Team of Two')
@@ -127,11 +163,12 @@ plt.xticks(np.arange(1, 21, 1), fontsize = 16)
 plt.yticks(fontsize = 16)
 plt.xlabel('Series', fontsize = 20)
 plt.ylabel('Team Scores per Number of Tasks', fontsize = 18)
+plt.title('Total Team Scores per Number of Tasks for Each Series', fontsize = 18)
 plt.legend(loc = 'upper left', fontsize = 16, ncol = 2)
 plt.show()
 
 plt.figure()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.08, right = 0.96)
 
 plt.bar(team_task_totals['Series Number']-0.2, team_task_totals['Team_A_per_person_task'], 
         width = 0.4, edgecolor = 'black', label = 'Team of Two')
@@ -146,68 +183,11 @@ plt.xticks(np.arange(1, 21, 1), fontsize = 16)
 plt.yticks(fontsize = 16)
 plt.xlabel('Series', fontsize = 20)
 plt.ylabel('Team Scores per Number of People and Tasks', fontsize = 18)
+plt.title('Total Team Scores per Number of Team Members and \n Number of Tasks for Each Series', fontsize = 18)
 plt.legend(loc = 'upper left', fontsize = 16, ncol = 2)
 plt.show()
 
-team_A = team_task_totals[['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Series', 'Number',
-       'Team_A', 'Series Number', 'Team A Total', 'Team_A_per_person', 'Team_A_per_task',
-       'Team_A_per_person_task', 'Team A Names']]
-
-team_B = team_task_totals[['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Series', 'Number',
-        'Team_B', 'Series Number', 'Team B Total', 'Team_B_per_person', 'Team_B_per_task',  
-        'Team_B_per_person_task', 'Team B Names']]
-
-team_A_top = team_A.sort_values(by = 'Team_A_per_person_task', ascending = False)
-team_A_bottom = team_A.sort_values(by = 'Team_A_per_person_task', ascending = True)
-
-team_B_top = team_B.sort_values(by = 'Team_B_per_person_task', ascending = False)
-team_B_bottom = team_B.sort_values(by = 'Team_B_per_person_task', ascending = True)
-
-all_teams = team_task_totals[['Series', 'Number', 'Team A Total', 'Team B Total',
-       'Team_A_per_person', 'Team_B_per_person', 'Team_A_per_task',
-       'Team_B_per_task', 'Team_A_per_person_task', 'Team_B_per_person_task',
-       'Team A Names', 'Team B Names']]
-
-# team_A_corr = all_teams.corr('Number', 'Team_A_per_person_task')
-# team_B_corr = all_teams.corr('Number', 'Team_B_per_person_task')
-
-# print(team_A_corr, team_B_corr)
-
-plt.plot(all_teams['Number'], all_teams['Team_A_per_person_task'], 'o')
-plt.plot(all_teams['Number'], all_teams['Team_B_per_person_task'], 'o')
-plt.show()
-
-plt.plot(all_teams['Team_A_per_person_task'], all_teams['Team_B_per_person_task'], 'o')
-plt.grid()
-plt.show()
-
-print(all_teams['Team_A_per_person_task'].unique(), len(all_teams['Team_A_per_person_task'].unique()))
-print(all_teams['Team_B_per_person_task'].unique(), len(all_teams['Team_B_per_person_task'].unique()))
-
-team_name_table = all_teams.melt(id_vars='Series', value_vars=['Team A Names', 'Team B Names'], value_name='Team Names')#.drop('variable', axis=1)
-team_name_table = team_name_table.rename({'variable' : 'Team'}, axis = 1)
-team_name_table['Team'] = team_name_table['Team'].str.replace('Team ', '').str.replace(' Names', '')
-team_person_task = all_teams.melt(id_vars='Series', value_vars=['Team_A_per_person_task', 'Team_B_per_person_task'], value_name='TeamScoresPersonTask').drop('variable', axis=1)
-
-team_name_scores = pd.concat([team_name_table, team_person_task.drop('Series', axis = 1)], axis = 1)
-
-number_tasks = all_teams[['Series', 'Number']]
-
-team_name_scores = pd.merge(team_name_scores, number_tasks, how = 'left', on = 'Series')
-
-team_name_scores['Team Names'] = team_name_scores['Team Names'].apply(lambda x: ', '.join(map(str, x)))
-
-team_name_scores_top = team_name_scores.sort_values(by = 'TeamScoresPersonTask', ascending = False).reset_index(drop = True)
-
-team_name_scores_bottom = team_name_scores.sort_values(by = 'TeamScoresPersonTask', ascending = True).reset_index(drop = True)
-
-team_name_scores = team_name_scores.sort_values(by = 'TeamScoresPersonTask', ascending = False).reset_index(drop = True)
-
-plt.plot(team_name_scores['Number'], team_name_scores['TeamScoresPersonTask'], 'o')
-plt.grid()
-plt.show()
-
-
+#Top and Bottom 10 teams for all series
 
 fig, (ax1, ax2) = plt.subplots(ncols=1, nrows=2, figsize=(10, 10), sharex = True)
 plt.subplots_adjust(wspace=0, hspace=0.05, bottom=0.1, top=0.94, left=0.02, right=0.98)
