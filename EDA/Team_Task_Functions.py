@@ -191,3 +191,14 @@ def include_team_names(team_score_table, team_two_table, team_three_table):
                                 pd.DataFrame(team_B_names, columns = ['Team B Names']).reset_index(drop = True)], axis = 1)
     
     return(team_task_totals)
+
+
+def percent_diff(score_team_A, score_team_B):
+    
+    diff = score_team_B - score_team_A
+
+    frac = diff / score_team_B
+
+    percent = abs(frac) * 100
+
+    return(percent)

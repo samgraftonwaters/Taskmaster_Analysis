@@ -35,6 +35,63 @@ team_task_totals = TTF.include_team_names(team_score_table = team_task_totals,
                                            team_two_table = team_two, team_three_table = team_three)
 
 
+
+total_per_diff = TTF.percent_diff(score_team_A = team_task_totals['Team A Total'],
+                              score_team_B = team_task_totals['Team B Total'])
+
+total_person_diff = TTF.percent_diff(score_team_A = team_task_totals['Team_A_per_person'],
+                              score_team_B = team_task_totals['Team_B_per_person'])
+
+total_task_diff = TTF.percent_diff(score_team_A = team_task_totals['Team_A_per_task'],
+                              score_team_B = team_task_totals['Team_B_per_task'])
+
+total_person_task_diff = TTF.percent_diff(score_team_A = team_task_totals['Team_A_per_person_task'],
+                              score_team_B = team_task_totals['Team_B_per_person_task'])
+
+
+plt.figure()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.08, right = 0.96)
+
+plt.bar(team_task_totals['Series Number']-0.3, total_per_diff, 
+        width = 0.2, edgecolor = 'black', label = 'Total Team Score')
+plt.bar(team_task_totals['Series Number']-0.1, total_person_diff, 
+        width = 0.2, edgecolor = 'black', label = 'Team Score per Person')
+plt.bar(team_task_totals['Series Number']+0.1, total_task_diff, 
+        width = 0.2, edgecolor = 'black', label = 'Team Score per Task')
+plt.bar(team_task_totals['Series Number']+0.3, total_person_task_diff, 
+        width = 0.2, edgecolor = 'black', label = 'Score per Person per Task')
+plt.xlim(0.5, 20.5)
+plt.xticks(np.arange(1, 21, 1), fontsize = 16)
+plt.yticks(fontsize = 16)
+plt.xlabel('Series', fontsize = 20)
+plt.ylabel('Absolute Percentage Differences', fontsize = 20)
+plt.title('Absolute Percentage Differences between Team of Three and Team \n of Two for Four Different Team Score Methods',
+          fontsize = 18)
+plt.legend(loc = 'upper right', fontsize = 16, ncol = 2)
+plt.show()
+    
+plt.figure()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
+
+plt.bar(team_task_totals['Series Number']-0.2, team_task_totals['Team A Total'], 
+        width = 0.4, edgecolor = 'black', label = 'Team of Two')
+plt.bar(team_task_totals['Series Number']+0.2, team_task_totals['Team B Total'], 
+        width = 0.4, edgecolor = 'black', label = 'Team of Three')
+plt.bar(team_task_totals['Series Number'][team_task_totals['Team A Total'].idxmax(axis = 0)]-0.2, 
+        team_task_totals['Team A Total'][team_task_totals['Team A Total'].idxmax(axis = 0)], color = 'darkblue',
+        width = 0.4, edgecolor = 'black', label = 'Highest Team of Two Score')
+plt.bar(team_task_totals['Series Number'][team_task_totals['Team B Total'].idxmax(axis = 0)]+0.2, 
+        team_task_totals['Team B Total'][team_task_totals['Team B Total'].idxmax(axis = 0)], color = 'darkred', 
+        width = 0.4, edgecolor = 'black', label = 'Highest Team of Three Score')
+plt.xlim(0.5, 20.5)
+plt.xticks(np.arange(1, 21, 1), fontsize = 16)
+plt.yticks(fontsize = 16)
+plt.xlabel('Series', fontsize = 20)
+plt.ylabel('Team Scores Total', fontsize = 20)
+plt.legend(loc = 'upper left', fontsize = 16, ncol = 2)
+plt.show()
+
+
 plt.figure()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
 
