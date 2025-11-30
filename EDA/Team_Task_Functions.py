@@ -3,6 +3,24 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def formatting_team_table(dataframe):
+
+    """
+    Reformats the raw team data file into a dataframe that can be used for this analysis.
+    First it unpivots the dataframe using "pd.melt()", using the "Series" column as the key column, 
+    before creating a "Seat Number" column. After assigning either "Name" or "Team" to a "Type" column,
+    the function then repivots the dataframe based on the above changes. New columns are then added and the
+    index is reset to give the final, reformatted team table.
+
+    Parameters:
+    -----------
+        dataframe (dataframe): raw input data table that contains the seats, names and teams for each contestent
+
+    Returns:
+    --------
+        dataframe with the following columns: "Name", "Team", "Seat Number", "Series", "Series Number"
+    
+    """
+
     long_team_table = dataframe.melt(id_vars=["Series"], var_name="Column", value_name="Value")
 
     # Seat number from the end of the column name
@@ -10,7 +28,6 @@ def formatting_team_table(dataframe):
 
     # Determine whether it's a Name or Team column
     long_team_table["Type"] = long_team_table["Column"].str.startswith("Seat").map({True: "Name", False: "Team"})
-
 
     # Pivot so each seat has one Name and one Team
     final_team_table = long_team_table.pivot_table(index=["Series", "Seat Number"], columns="Type",
@@ -26,6 +43,20 @@ def formatting_team_table(dataframe):
 
 
 def plot_teams(dataframe):
+
+    """
+    Function to plot and distriguish who is in which team (A = team of two, B = team of three) for each series.
+
+    Parameters:
+    -----------
+        dataframe (dataframe): newly formatted data table using the above function
+    
+    Returns:
+    --------
+        Chart with Series along y-axis and seat position along x-axis. Each "data point" is the contestents name,
+        colour coded for their respective team - purple team of 2, green team of 3.
+
+    """
     team_colors = {"A": "#3A0CA3", "B": "#004400"}
 
     plt.figure()
@@ -61,6 +92,24 @@ def plot_teams(dataframe):
     plt.show()
 
 def team_combinations(series_grouped = False):
+
+    """
+    Manually combines the different seat combinations for each team in two ways.
+    1. Groups the series for each combination, and gives the number of times that combination has occured
+    2. Gives combination for each series separately
+
+    Parameters:
+    -----------
+        series_grouped (boolean): determines if the series are grouped based on the different combinations (option 1)
+                                  or if they are separated out for each series. Default = False.
+
+                                  If series_grouped == True, option 1 is chosen
+                                  If serirs_grouped == False (default), option 2 is chosen
+
+    Returns:
+    --------
+        dataframe with differnt seat combinations that make up the teams each series     
+    """
 
     if series_grouped == True:
 
