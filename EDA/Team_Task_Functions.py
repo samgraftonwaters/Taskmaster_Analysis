@@ -241,6 +241,19 @@ def include_team_names(team_score_table, team_two_table, team_three_table):
 
 
 def percent_diff(score_team_A, score_team_B):
+
+    """
+    Measures the absolute percentage difference between Team A and Team B for each series
+
+    Parameters:
+    -----------
+        score_team_A (dataframe): table with team A (team of two) scores and names
+        score_team_B (dataframe): table with team B (team of three) scores and names
+
+    Returns:
+    --------
+        Absolute percentage differences between Team A and Team B as a Series.
+    """
     
     diff = score_team_B - score_team_A
 
@@ -271,6 +284,21 @@ def get_best_worse_teams(team_table):
     return(team_name_scores)
 
 def top_bottom_team_combinations(scores_table, combination_table):
+
+    """
+    Funtion to comine the top and bottom teams with with respective seat combinations
+    
+    Parameters:
+    -----------
+        scores_table (dataframe): The table that contains the team scores and names for all series. Prefered
+                                  to be in ascending or descending order for top or bottom teams
+        combination_table (dataframe): table with different team seat combinations for each series separately
+
+    Returns:
+    --------
+        data table with the following columns: "Series", "Team", "Team Names", "Series Number", 
+        "Team_A", "Team_B", "Team_A_tuple", "Team_B_tuple"
+    """
     
     seat_pos = scores_table[['Series', 'Team', 'Team Names']].copy()
     seat_pos['Series Number'] = seat_pos['Series'].str.replace('S', '').astype(int)
