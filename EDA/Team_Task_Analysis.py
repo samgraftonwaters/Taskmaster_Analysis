@@ -21,8 +21,8 @@ team_three = team_table[team_table['Team'] == 'B'].reset_index(drop = True)
 team_combinations_all_series = TTF.team_combinations(series_grouped = False)
 team_combinations_grouped = TTF.team_combinations(series_grouped = True)
 
-team_task_totals, all_team_tasks = TTF.team_scores_per_seat(file_path = file_path, 
-                                                            file_name = 'Taskmaster_Series_Scores_Cleaned.xlsx', 
+team_task_totals, all_team_tasks = TTF.team_scores_per_seat(filepath = file_path, 
+                                                            filename = 'Taskmaster_Series_Scores_Cleaned.xlsx', 
                                                             combo_table = team_combinations_all_series)
 
 team_task_totals = TTF.total_team_scores(team_table = team_task_totals)

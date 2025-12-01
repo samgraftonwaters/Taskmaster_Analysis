@@ -140,7 +140,25 @@ def team_combinations(series_grouped = False):
 
         return(team_combos)
 
-def team_scores_per_seat(file_path, file_name, combo_table):
+def team_scores_per_seat(filepath:str, filename:str, combo_table):
+
+    """
+    Determine the total scores for each seat based on team tasks only. i.e. only scores obtained from team tasks
+    are summed for each seat and for each series
+
+    Parameters:
+    -----------
+        filepath (string): path to the directory where the data is saved
+        filename (string): name of the file that contains the data
+        combo_table (dataframe): table with different team seat combinations for each series separately
+
+    Returns:
+        team_task_totals (dataframe): contains seat scores for all team tasks per series summed as well as the 
+                                      seat combinations for each team.
+        all_team_tasks (dataframe): filtered cleaned table that only includes team tasks. Contains, for example,
+                                    task descriptions, seat scores per task, episodes, series, etc
+
+    """
 
     all_team_tasks = []
     team_task_totals = []
@@ -148,7 +166,7 @@ def team_scores_per_seat(file_path, file_name, combo_table):
 
     for series in range(1, 21):
 
-        data = pd.read_excel(file_path + file_name, sheet_name = f'Series_{series}')
+        data = pd.read_excel(filepath + filename, sheet_name = f'Series_{series}')
         
         data.rename(columns = {data.columns[2] : 'Seat 1', data.columns[3] : 'Seat 2', 
                                     data.columns[4] : 'Seat 3', data.columns[5] : 'Seat 4', 
@@ -186,6 +204,21 @@ def team_scores_per_seat(file_path, file_name, combo_table):
     return(team_task_totals, all_team_tasks)
 
 def total_team_scores(team_table):
+
+    """
+    Calculates the total scores, scores per number of tasks, scores per number of people per team and scores per
+    number of people and number of tasks for each team, and puts them into columns of the same input dataframe.
+
+    Parameters:
+    -----------
+        team_table (dataframe): dataframe that contains the total scores for each seat from team tasks only.
+                                table obtained from the team_scores_per_seat() function above.
+    
+    Returns:
+    --------
+    Input table with new columns that contain Total scores and ratios based off number of tasks and people per team
+    
+    """
 
     A_total = []
     B_total = []
@@ -264,6 +297,11 @@ def percent_diff(score_team_A, score_team_B):
     return(percent)
 
 def get_best_worse_teams(team_table): 
+
+    """
+    
+    
+    """
 
     team_name_table = team_table.melt(id_vars='Series', value_vars=['Team A Names', 'Team B Names'], value_name='Team Names')
     team_name_table = team_name_table.rename({'variable' : 'Team'}, axis = 1)
