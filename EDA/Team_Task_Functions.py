@@ -254,6 +254,21 @@ def total_team_scores(team_table):
 
 def include_team_names(team_score_table, team_two_table, team_three_table):
 
+    """
+    Obtains the names from the team of two and team of three separately, before merging the values with the
+    table containing the scores for each team.
+
+    Parameters:
+    -----------
+        team_score_table (dataframe): table that contains the total team scores for each series
+        team_two_table (dataframe): table that contains only team of two members to obtain the names
+        team_three_table (dataframe): table that contains only team of three members to obtain the names
+
+    Returns:
+    --------
+        merged dataframe that contains total team scores and the contestent names for each team.
+    """
+
     team_A_names = []
     team_B_names = []
 
@@ -299,7 +314,18 @@ def percent_diff(score_team_A, score_team_B):
 def get_best_worse_teams(team_table): 
 
     """
-    
+    First it unpivots the dataframe using "pd.melt()" to get the teams, series and team names in individual columns.
+    Then this function obtains the scores per number of people and tasks as well as the number of tasks per series.
+    The above tables and then merged together and then ordered based on the team score.
+
+    Parameters:
+    -----------
+        team_table (dataframe): data table containing all team's data
+
+    Returns:
+    --------
+        dataframe containing the following columns: "Series", "Team", "Team Names", "TeamScoresPersonTask", "Number"
+        table to be used for determining the top and bottom teams.
     
     """
 
@@ -312,11 +338,9 @@ def get_best_worse_teams(team_table):
     team_name_scores = pd.concat([team_name_table, team_person_task.drop('Series', axis = 1)], axis = 1)
 
     number_tasks = team_table[['Series', 'Number']]
-
     team_name_scores = pd.merge(team_name_scores, number_tasks, how = 'left', on = 'Series')
 
     team_name_scores['Team Names'] = team_name_scores['Team Names'].apply(lambda x: ', '.join(map(str, x)))
-
     team_name_scores = team_name_scores.sort_values(by = 'TeamScoresPersonTask', ascending = False).reset_index(drop = True)
 
     return(team_name_scores)
