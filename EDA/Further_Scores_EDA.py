@@ -28,6 +28,6 @@ for series in range(1, 21):
 score_diff = pd.DataFrame(score_diff, columns = ['Difference', 'Series'])
 print(score_diff)
 
-plt.bar(x = score_diff['Series'], height = score_diff['Difference'])
+plt.bar(x = score_diff['Series'], height = score_diff['Difference'], color = 'blue')
 plt.show()
 
