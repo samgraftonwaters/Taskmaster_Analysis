@@ -26,7 +26,6 @@ for series in range(1, 21):
     score_diff.append([diff_scores.values[0], f'S{series}'])
 
 score_diff = pd.DataFrame(score_diff, columns = ['Difference', 'Series'])
-print(score_diff)
 
 plt.bar(x = score_diff['Series'], height = score_diff['Difference'], width = 0.8,
         color = 'blue', alpha = 0.7, edgecolor = 'black')
@@ -72,15 +71,26 @@ for series in range(1, 21):
 
     count_five.append(count_scores)
 
-print(count_five)
 count_five = pd.DataFrame(np.vstack(count_five), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5'])
 series = []
 for i in range(20):
     series.append(f'S{count_five.index.values[i] + 1}')
 count_five['Series'] = series
-print(count_five)
 
+most_fives = []
+least_fives = []
 for seat in range(1, 6):
-    most_fives = count_five[['Series', f'Seat {seat}']]
-    most_fives = most_fives[f'Seat {seat}'].max(axis = 0)
-    print(most_fives)
+    fives = count_five[['Series', f'Seat {seat}']]
+    mostfives = fives[fives[f'Seat {seat}'] == fives[f'Seat {seat}'].max(axis = 0)].reset_index(drop = True)
+    mostfives['Seat'] = f'Seat {seat}'
+    most_fives.append(mostfives)
+    
+    leastfives = fives[fives[f'Seat {seat}'] == fives[f'Seat {seat}'].min(axis = 0)].reset_index(drop = True)
+    leastfives['Seat'] = f'Seat {seat}'
+    least_fives.append(leastfives)
+
+most_fives = pd.DataFrame(np.vstack(most_fives), columns = ['Series', 'Number 5s', 'Seat'])
+least_fives = pd.DataFrame(np.vstack(least_fives), columns = ['Series', 'Number 5s', 'Seat'])
+print(most_fives)
+print(least_fives)
+    
