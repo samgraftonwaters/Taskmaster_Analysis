@@ -52,8 +52,10 @@ plt.legend(fontsize = 16)
 plt.show()
 
 
-
+#Number of times contestents got 1 or 5 points.
+#Then finds the most and least for each points category for each seat
 count_five = []
+count_one = []
 
 for series in range(1, 21):
 
@@ -67,20 +69,41 @@ for series in range(1, 21):
 
     scores = scores[contestents]
 
-    count_scores = scores[scores == 5].count(axis = 0)
+    count_scores_one = scores[scores == 1].count(axis = 0)
+    count_scores_five = scores[scores == 5].count(axis = 0)
 
-    count_five.append(count_scores)
+    count_one.append(count_scores_one)
+    count_five.append(count_scores_five)
 
+count_one = pd.DataFrame(np.vstack(count_one), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5'])
 count_five = pd.DataFrame(np.vstack(count_five), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5'])
+
+print(count_one)
+print(count_five)
+
 series = []
 for i in range(20):
     series.append(f'S{count_five.index.values[i] + 1}')
+count_one['Series'] = series
 count_five['Series'] = series
+
+most_ones = []
+least_ones = []
 
 most_fives = []
 least_fives = []
 for seat in range(1, 6):
+    ones = count_one[['Series', f'Seat {seat}']]
     fives = count_five[['Series', f'Seat {seat}']]
+
+    mostones = ones[ones[f'Seat {seat}'] == ones[f'Seat {seat}'].max(axis = 0)].reset_index(drop = True)
+    mostones['Seat'] = f'Seat {seat}'
+    most_ones.append(mostones)
+    
+    leastones = ones[ones[f'Seat {seat}'] == ones[f'Seat {seat}'].min(axis = 0)].reset_index(drop = True)
+    leastones['Seat'] = f'Seat {seat}'
+    least_ones.append(leastones)
+
     mostfives = fives[fives[f'Seat {seat}'] == fives[f'Seat {seat}'].max(axis = 0)].reset_index(drop = True)
     mostfives['Seat'] = f'Seat {seat}'
     most_fives.append(mostfives)
@@ -88,6 +111,11 @@ for seat in range(1, 6):
     leastfives = fives[fives[f'Seat {seat}'] == fives[f'Seat {seat}'].min(axis = 0)].reset_index(drop = True)
     leastfives['Seat'] = f'Seat {seat}'
     least_fives.append(leastfives)
+
+most_ones = pd.DataFrame(np.vstack(most_ones), columns = ['Series', 'Number 1s', 'Seat'])
+least_ones = pd.DataFrame(np.vstack(least_ones), columns = ['Series', 'Number 1s', 'Seat'])
+print(most_ones)
+print(least_ones)
 
 most_fives = pd.DataFrame(np.vstack(most_fives), columns = ['Series', 'Number 5s', 'Seat'])
 least_fives = pd.DataFrame(np.vstack(least_fives), columns = ['Series', 'Number 5s', 'Seat'])
