@@ -70,7 +70,17 @@ for series in range(1, 21):
 
     count_scores = scores[scores == 5].count(axis = 0)
 
-    count_five.append([count_scores, f'S{series}'])
+    count_five.append(count_scores)
 
-count_five = pd.DataFrame(count_five)
 print(count_five)
+count_five = pd.DataFrame(np.vstack(count_five), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5'])
+series = []
+for i in range(20):
+    series.append(f'S{count_five.index.values[i] + 1}')
+count_five['Series'] = series
+print(count_five)
+
+for seat in range(1, 6):
+    most_fives = count_five[['Series', f'Seat {seat}']]
+    most_fives = most_fives[f'Seat {seat}'].max(axis = 0)
+    print(most_fives)
