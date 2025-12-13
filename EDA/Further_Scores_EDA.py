@@ -28,9 +28,16 @@ for series in range(1, 21):
 score_diff = pd.DataFrame(score_diff, columns = ['Difference', 'Series'])
 print(score_diff)
 
-plt.bar(x = score_diff['Series'], height = score_diff['Difference'], color = 'blue', alpha = 0.7,
-         edgecolor = 'black')
+plt.bar(x = score_diff['Series'], height = score_diff['Difference'], width = 0.8,
+        color = 'blue', alpha = 0.7, edgecolor = 'black')
 
+plt.bar(score_diff['Series'][score_diff['Difference'].idxmax(axis = 0)], 
+        score_diff['Difference'][score_diff['Difference'].idxmax(axis = 0)], color = 'darkorange',
+        edgecolor = 'black', label = 'Biggest Difference')
+
+plt.bar(score_diff['Series'][score_diff['Difference'].idxmin(axis = 0)], 
+        score_diff['Difference'][score_diff['Difference'].idxmin(axis = 0)], color = 'yellow',
+        edgecolor = 'black', label = 'Smallest Difference')
 
 for i in range(0, 20):
     plt.text(i, score_diff['Difference'][i]+0.5, 
@@ -42,5 +49,28 @@ plt.xlim(-0.6, 19.6)
 plt.xlabel('Series', fontsize = 18)
 plt.ylabel('Difference in Scores', fontsize = 18)
 plt.title('Difference in Scores between Winner and Loser per Series', fontsize = 20)
+plt.legend(fontsize = 16)
 plt.show()
 
+
+
+count_five = []
+
+for series in range(1, 21):
+
+    data = pd.read_excel(scores_series_table, sheet_name = f'Series_{series}')
+
+    cols = data.columns
+
+    contestents = cols[2:7]
+
+    scores = data[data['Task Number'] != f'Series {series} Grand Total'].reset_index(drop = True)
+
+    scores = scores[contestents]
+
+    count_scores = scores[scores == 5].count(axis = 0)
+
+    count_five.append([count_scores, f'S{series}'])
+
+count_five = pd.DataFrame(count_five)
+print(count_five)
