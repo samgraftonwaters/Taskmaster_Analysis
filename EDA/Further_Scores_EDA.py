@@ -121,4 +121,28 @@ most_fives = pd.DataFrame(np.vstack(most_fives), columns = ['Series', 'Number 5s
 least_fives = pd.DataFrame(np.vstack(least_fives), columns = ['Series', 'Number 5s', 'Seat'])
 print(most_fives)
 print(least_fives)
+
+
+episode_scores = []
+
+for series in range(1, 21):
+
+    data = pd.read_excel(scores_series_table, sheet_name = f'Series_{series}')
+
+    cols = data.columns
+
+    contestents = cols[1:7]
+
+    episodes = data[data['Task Number'].str.contains(r'Ep', na = False)].reset_index(drop = True)
+
+    episodes['Description'] = episodes['Description'].str.replace(" Total", "", regex=False)
+
+    episodes = episodes[contestents]
     
+    episodes['Series'] = series
+
+    episode_scores.append(episodes)
+
+episode_scores = pd.DataFrame(np.vstack(episode_scores), columns = ['Episode', 'Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Series'])
+
+print(episode_scores)
