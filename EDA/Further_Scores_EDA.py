@@ -190,12 +190,12 @@ lowest_ep_scores = pd.DataFrame(np.vstack(lowest_ep_scores), columns = ['Series'
 
 
 highest_ep_scores = pd.merge(left = highest_ep_scores, right = named_series_table_reformatted, 
-                             on = ['Series', 'Seat'], how = 'left')
+                             on = ['Series', 'Seat'], how = 'left').sort_values('Score').reset_index(drop = True)
 
 highest_ep_scores['index'] = highest_ep_scores.index.values + 1
 
 lowest_ep_scores = pd.merge(left = lowest_ep_scores, right = named_series_table_reformatted, 
-                             on = ['Series', 'Seat'], how = 'left')
+                             on = ['Series', 'Seat'], how = 'left').sort_values('Score', ascending = False).reset_index(drop = True)
 
 lowest_ep_scores['index'] = lowest_ep_scores.index.values + 1
 
