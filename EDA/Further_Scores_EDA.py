@@ -52,6 +52,12 @@ plt.legend(fontsize = 16)
 plt.show()
 
 
+#Reformating contestents table to merge with the next methods below:
+
+named_series_table_reformatted = named_series_table.melt(id_vars= 'Series', var_name = 'Seat', value_name = 'Name')
+named_series_table_reformatted['Seat'] = named_series_table_reformatted['Seat'].str.replace(' Name', "")
+
+
 #Number of times contestents got 1 or 5 points.
 #Then finds the most and least for each points category for each seat
 count_five = []
@@ -112,13 +118,25 @@ for seat in range(1, 6):
     leastfives['Seat'] = f'Seat {seat}'
     least_fives.append(leastfives)
 
-most_ones = pd.DataFrame(np.vstack(most_ones), columns = ['Series', 'Number 1s', 'Seat'])
-least_ones = pd.DataFrame(np.vstack(least_ones), columns = ['Series', 'Number 1s', 'Seat'])
+most_ones = pd.DataFrame(np.vstack(most_ones), columns = ['Series', 'Most 1s', 'Seat'])
+least_ones = pd.DataFrame(np.vstack(least_ones), columns = ['Series', 'Least 1s', 'Seat'])
+
+most_ones = pd.merge(left = most_ones, right = named_series_table_reformatted, 
+                             on = ['Series', 'Seat'], how = 'left')
+least_ones = pd.merge(left = least_ones, right = named_series_table_reformatted, 
+                             on = ['Series', 'Seat'], how = 'left')
+
+most_fives = pd.DataFrame(np.vstack(most_fives), columns = ['Series', 'Most 5s', 'Seat'])
+least_fives = pd.DataFrame(np.vstack(least_fives), columns = ['Series', 'Least 5s', 'Seat'])
+
+most_fives = pd.merge(left = most_fives, right = named_series_table_reformatted, 
+                             on = ['Series', 'Seat'], how = 'left')
+least_fives = pd.merge(left = least_fives, right = named_series_table_reformatted, 
+                             on = ['Series', 'Seat'], how = 'left')
+
 print(most_ones)
 print(least_ones)
 
-most_fives = pd.DataFrame(np.vstack(most_fives), columns = ['Series', 'Number 5s', 'Seat'])
-least_fives = pd.DataFrame(np.vstack(least_fives), columns = ['Series', 'Number 5s', 'Seat'])
 print(most_fives)
 print(least_fives)
 
@@ -165,12 +183,6 @@ for seat in range(1, 6):
 highest_ep_scores = pd.DataFrame(np.vstack(highest_ep_scores) , columns = ['Series', 'Episodes', 'Score', 'Seat']).reset_index(drop = True)
 lowest_ep_scores = pd.DataFrame(np.vstack(lowest_ep_scores), columns = ['Series', 'Episodes', 'Score', 'Seat']).reset_index(drop = True)
 
-print(highest_ep_scores)
-print(lowest_ep_scores)
-
-named_series_table_reformatted = named_series_table.melt(id_vars= 'Series', var_name = 'Seat', value_name = 'Name')
-named_series_table_reformatted['Seat'] = named_series_table_reformatted['Seat'].str.replace(' Name', "")
-print(named_series_table_reformatted.head())
 
 highest_ep_scores = pd.merge(left = highest_ep_scores, right = named_series_table_reformatted, 
                              on = ['Series', 'Seat'], how = 'left')
@@ -178,4 +190,5 @@ highest_ep_scores = pd.merge(left = highest_ep_scores, right = named_series_tabl
 lowest_ep_scores = pd.merge(left = lowest_ep_scores, right = named_series_table_reformatted, 
                              on = ['Series', 'Seat'], how = 'left')
 
-print(highest_ep_scores.head())
+print(highest_ep_scores)
+print(lowest_ep_scores)
