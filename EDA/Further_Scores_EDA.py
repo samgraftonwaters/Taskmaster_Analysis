@@ -141,7 +141,7 @@ for series in range(1, 21):
 
     episodes = episodes[contestents]
     
-    episodes['Series'] = series
+    episodes['Series'] = f'S{series}'
 
     episode_scores.append(episodes)
 
@@ -168,9 +168,14 @@ lowest_ep_scores = pd.DataFrame(np.vstack(lowest_ep_scores), columns = ['Series'
 print(highest_ep_scores)
 print(lowest_ep_scores)
 
-print(named_series_table.head())
-
 named_series_table_reformatted = named_series_table.melt(id_vars= 'Series', var_name = 'Seat', value_name = 'Name')
 named_series_table_reformatted['Seat'] = named_series_table_reformatted['Seat'].str.replace(' Name', "")
-
 print(named_series_table_reformatted.head())
+
+highest_ep_scores = pd.merge(left = highest_ep_scores, right = named_series_table_reformatted, 
+                             on = ['Series', 'Seat'], how = 'left')
+
+lowest_ep_scores = pd.merge(left = lowest_ep_scores, right = named_series_table_reformatted, 
+                             on = ['Series', 'Seat'], how = 'left')
+
+print(highest_ep_scores.head())
