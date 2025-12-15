@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
+plt.rcParams['figure.figsize'] = (13, 7)
+
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
 
 named_series_table = pd.read_csv(file_path + 'seat_contestent_series_table.csv')
@@ -187,8 +189,33 @@ lowest_ep_scores = pd.DataFrame(np.vstack(lowest_ep_scores), columns = ['Series'
 highest_ep_scores = pd.merge(left = highest_ep_scores, right = named_series_table_reformatted, 
                              on = ['Series', 'Seat'], how = 'left')
 
+highest_ep_scores['index'] = highest_ep_scores.index.values + 1
+
 lowest_ep_scores = pd.merge(left = lowest_ep_scores, right = named_series_table_reformatted, 
                              on = ['Series', 'Seat'], how = 'left')
 
+lowest_ep_scores['index'] = lowest_ep_scores.index.values + 1
+
+
 print(highest_ep_scores)
 print(lowest_ep_scores)
+
+
+
+plt.barh(highest_ep_scores['index'], highest_ep_scores['Score'], color='red', alpha=0.8, 
+                 edgecolor='white', label='Top Ten Teams')
+
+for i, (score, name, series, episode, seat) in enumerate(zip(highest_ep_scores['Score'], highest_ep_scores['Name'],
+                                              highest_ep_scores['Series'], highest_ep_scores['Episodes'],
+                                              highest_ep_scores['Seat'])):
+    plt.text(1, i + 1, name, va='center', ha='left', fontsize=12, color='white')
+    plt.text(12, i + 1, series, va='center', ha='left', fontsize=12, color='white')
+    plt.text(15, i + 1, episode, va='center', ha='left', fontsize=12, color='white')
+    plt.text(18, i + 1, seat, va='center', ha='left', fontsize=12, color = 'white')
+    plt.text(score+0.1, i + 1, score, fontsize = 11, color = 'red')
+
+
+plt.yticks(highest_ep_scores['index'], highest_ep_scores['Series'], fontsize = 14)
+plt.xlim(0, highest_ep_scores['Score'].max() + 2)
+
+plt.show()
