@@ -123,6 +123,8 @@ print(most_fives)
 print(least_fives)
 
 
+#Highest and lowest episode scores per seat
+
 episode_scores = []
 
 for series in range(1, 21):
@@ -146,3 +148,28 @@ for series in range(1, 21):
 episode_scores = pd.DataFrame(np.vstack(episode_scores), columns = ['Episode', 'Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Series'])
 
 print(episode_scores)
+
+highest_ep_scores = []
+lowest_ep_scores = []
+for seat in range(1, 6):
+    seat_ep_score = episode_scores[['Series', 'Episode', f'Seat {seat}']]
+
+    highest_ep = seat_ep_score[seat_ep_score[f'Seat {seat}'] == seat_ep_score[f'Seat {seat}'].max(axis = 0)].reset_index(drop = True)
+    highest_ep['Seat'] = f'Seat {seat}'
+    highest_ep_scores.append(highest_ep)
+
+    lowest_ep = seat_ep_score[seat_ep_score[f'Seat {seat}'] == seat_ep_score[f'Seat {seat}'].min(axis = 0)].reset_index(drop = True)
+    lowest_ep['Seat'] = f'Seat {seat}'
+    lowest_ep_scores.append(lowest_ep)
+
+highest_ep_scores = pd.DataFrame(np.vstack(highest_ep_scores) , columns = ['Series', 'Episodes', 'Score', 'Seat']).reset_index(drop = True)
+lowest_ep_scores = pd.DataFrame(np.vstack(lowest_ep_scores), columns = ['Series', 'Episodes', 'Score', 'Seat']).reset_index(drop = True)
+
+print(highest_ep_scores)
+print(lowest_ep_scores)
+
+print(named_series_table.head())
+
+named_series_table_reformatted = named_series_table.melt(id_vars= 'Series', var_name = 'Seat', value_name = 'Name')
+
+print(named_series_table_reformatted.head())
