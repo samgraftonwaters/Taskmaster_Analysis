@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 plt.rcParams['figure.figsize'] = (13, 7)
 
@@ -190,12 +191,12 @@ lowest_ep_scores = pd.DataFrame(np.vstack(lowest_ep_scores), columns = ['Series'
 
 
 highest_ep_scores = pd.merge(left = highest_ep_scores, right = named_series_table_reformatted, 
-                             on = ['Series', 'Seat'], how = 'left').sort_values('Score').reset_index(drop = True)
+                             on = ['Series', 'Seat'], how = 'left').sort_values('Score', ascending = False).reset_index(drop = True)
 
 highest_ep_scores['index'] = highest_ep_scores.index.values + 1
 
 lowest_ep_scores = pd.merge(left = lowest_ep_scores, right = named_series_table_reformatted, 
-                             on = ['Series', 'Seat'], how = 'left').sort_values('Score', ascending = False).reset_index(drop = True)
+                             on = ['Series', 'Seat'], how = 'left').sort_values('Score', ascending = True).reset_index(drop = True)
 
 lowest_ep_scores['index'] = lowest_ep_scores.index.values + 1
 
@@ -205,48 +206,62 @@ print(lowest_ep_scores)
 
 
 plt.figure()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.05, right = 0.96)
 
-plt.barh(highest_ep_scores['index'], highest_ep_scores['Score'], color='red', alpha=0.8, 
-                 edgecolor='white', label='Top Ten Teams')
+# plt.barh(highest_ep_scores['index'], highest_ep_scores['Score'], color='red', alpha=0.8, 
+#                  edgecolor='white', label='Top Ten Teams')
+
+sns.barplot(highest_ep_scores, x="Score", y="index", orient="y", hue = 'Seat', legend = False)
 
 for i, (score, name, series, episode, seat) in enumerate(zip(highest_ep_scores['Score'], highest_ep_scores['Name'],
                                               highest_ep_scores['Series'], highest_ep_scores['Episodes'],
                                               highest_ep_scores['Seat'])):
-    plt.text(1, i + 1, name, va='center', ha='left', fontsize=15, color='white')
-    plt.text(12, i + 1, series, va='center', ha='left', fontsize=15, color='white')
-    plt.text(15, i + 1, episode, va='center', ha='left', fontsize=15, color='white')
-    plt.text(18, i + 1, seat, va='center', ha='left', fontsize=15, color = 'white')
-    plt.text(score+0.1, i + 1, score, fontsize = 15, color = 'red')
+    plt.text(1, i, name, va='center', ha='left', fontsize=15, color='white')
+    plt.text(12, i, series, va='center', ha='left', fontsize=15, color='white')
+    plt.text(15, i, episode, va='center', ha='left', fontsize=15, color='white')
+    plt.text(18, i, seat, va='center', ha='left', fontsize=15, color = 'white')
+    plt.text(score+0.1, i, score, fontsize = 15, color = 'black')
 
 
-plt.yticks(highest_ep_scores['index'], highest_ep_scores['Series'], fontsize = 14)
+# plt.yticks(highest_ep_scores['index']-1, highest_ep_scores['Series'], fontsize = 14)
+plt.yticks([],[])
+
 plt.xticks(fontsize = 14)
-plt.xlim(0, highest_ep_scores['Score'].max() + 2)
+plt.xlim(0, highest_ep_scores['Score'].max() + 1)
 plt.xlabel('Episode Score', fontsize = 18)
+# plt.ylabel('Series', fontsize = 18)
+plt.ylabel('', fontsize = 18)
+
+plt.title('Highest Total Scores in an Episode per Seat', fontsize = 20)
 
 plt.show()
 
 plt.figure()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.05, right = 0.96)
 
-plt.barh(lowest_ep_scores['index'], lowest_ep_scores['Score'], color='dodgerblue', alpha=0.8, 
-                 edgecolor='white', label='Top Ten Teams')
+# plt.barh(lowest_ep_scores['index'], lowest_ep_scores['Score'], color='dodgerblue', alpha=0.8, 
+#                  edgecolor='white', label='Top Ten Teams')
+
+sns.barplot(lowest_ep_scores, x="Score", y="index", orient="y", hue = 'Seat', legend = False)
 
 for i, (score, name, series, episode, seat) in enumerate(zip(lowest_ep_scores['Score'], lowest_ep_scores['Name'],
                                               lowest_ep_scores['Series'], lowest_ep_scores['Episodes'],
                                               lowest_ep_scores['Seat'])):
-    plt.text(0.25, i + 1, name, va='center', ha='left', fontsize=15, color='white')
-    plt.text(1.5, i + 1, series, va='center', ha='left', fontsize=15, color='white')
-    plt.text(2, i + 1, episode, va='center', ha='left', fontsize=15, color='white')
-    plt.text(2.4, i + 1, seat, va='center', ha='left', fontsize=15, color = 'white')
-    plt.text(score+0.1, i + 1, score, fontsize = 15, color = 'blue')
+    plt.text(0.25, i, name, va='center', ha='left', fontsize=15, color='white')
+    plt.text(1.5, i, series, va='center', ha='left', fontsize=15, color='white')
+    plt.text(2, i, episode, va='center', ha='left', fontsize=15, color='white')
+    plt.text(2.4, i, seat, va='center', ha='left', fontsize=15, color = 'white')
+    plt.text(score+0.1, i, score, fontsize = 15, color = 'black')
 
 
-plt.yticks(lowest_ep_scores['index'], lowest_ep_scores['Series'], fontsize = 14)
+# plt.yticks(lowest_ep_scores['index'] - 1, lowest_ep_scores['Series'], fontsize = 14)
+plt.yticks([],[])
 plt.xticks(fontsize = 14)
-plt.xlim(0, lowest_ep_scores['Score'].max() + 0.5)
+plt.xlim(0, lowest_ep_scores['Score'].max() + 0.25)
 plt.xlabel('Episode Score', fontsize = 18)
+plt.ylabel('', fontsize = 18)
+# plt.ylabel('Series', fontsize = 18)
 
+plt.title('Lowest Total Scores in an Episode per Seat', fontsize = 20)
 
 plt.show()
