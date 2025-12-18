@@ -128,24 +128,102 @@ most_ones = pd.DataFrame(np.vstack(most_ones), columns = ['Series', 'Most 1s', '
 least_ones = pd.DataFrame(np.vstack(least_ones), columns = ['Series', 'Least 1s', 'Seat'])
 
 most_ones = pd.merge(left = most_ones, right = named_series_table_reformatted, 
-                             on = ['Series', 'Seat'], how = 'left')
+                             on = ['Series', 'Seat'], how = 'left').sort_values('Most 1s', ascending = False).reset_index(drop = True)
+
+most_ones['index'] = most_ones.index.values + 1
+
 least_ones = pd.merge(left = least_ones, right = named_series_table_reformatted, 
-                             on = ['Series', 'Seat'], how = 'left')
+                             on = ['Series', 'Seat'], how = 'left').sort_values('Least 1s', ascending = False).reset_index(drop = True)
+
+least_ones['index'] = least_ones.index.values + 1
 
 most_fives = pd.DataFrame(np.vstack(most_fives), columns = ['Series', 'Most 5s', 'Seat'])
 least_fives = pd.DataFrame(np.vstack(least_fives), columns = ['Series', 'Least 5s', 'Seat'])
 
 most_fives = pd.merge(left = most_fives, right = named_series_table_reformatted, 
-                             on = ['Series', 'Seat'], how = 'left')
+                             on = ['Series', 'Seat'], how = 'left').sort_values('Most 5s', ascending = False).reset_index(drop = True)
+
+most_fives['index'] = most_fives.index.values + 1
+
 least_fives = pd.merge(left = least_fives, right = named_series_table_reformatted, 
-                             on = ['Series', 'Seat'], how = 'left')
+                             on = ['Series', 'Seat'], how = 'left').sort_values('Least 5s', ascending = False).reset_index(drop = True)
+
+least_fives['index'] = least_fives.index.values + 1
 
 print(most_ones)
 print(least_ones)
 
+fig, (ax1, ax2) = plt.subplots(ncols = 1, nrows = 2, sharex = True)
+plt.subplots_adjust(wspace=0, hspace=0.05, bottom = 0.1, top = 0.94, left = 0.05, right = 0.96)
+
+sns.barplot(most_ones, x="Most 1s", y="index", orient="y", hue = 'Seat', legend = False, ax = ax1)
+
+for i, (score, name, series, seat) in enumerate(zip(most_ones['Most 1s'], most_ones['Name'],
+                                              most_ones['Series'], most_ones['Seat'])):
+    ax1.text(4.2, i, name, va='center', ha='left', fontsize=15, color='white')
+    ax1.text(8.1, i, series, va='center', ha='left', fontsize=15, color='white')
+    ax1.text(9, i, seat, va='center', ha='left', fontsize=15, color = 'white')
+    ax1.text(score+0.1, i, score, fontsize = 15, color = 'black')
+    
+
+sns.barplot(least_ones, x="Least 1s", y="index", orient="y", hue = 'Seat', legend = False, ax = ax2)
+
+for i, (score, name, series, seat) in enumerate(zip(least_ones['Least 1s'], least_ones['Name'],
+                                              least_ones['Series'], least_ones['Seat'])):
+    ax2.text(5, i, name, va='center', ha='left', fontsize=15, color='black')
+    ax2.text(8, i, series, va='center', ha='left', fontsize=15, color='black')
+    ax2.text(9, i, seat, va='center', ha='left', fontsize=15, color = 'black')
+    ax2.text(score+0.1, i, score, fontsize = 15, color = 'black')
+
+ax1.text(16, 5, 'Most 1s', fontsize = 20, color = 'black')
+ax2.text(16, 5, 'Least 1s', fontsize = 20, color = 'black')
+
+ax1.set_yticks([],[])
+ax2.set_yticks([],[])
+ax1.set_xticks([0, 2, 4, 6, 8, 10, 12, 14, 16, 18])
+ax2.set_xticks([0, 2, 4, 6, 8, 10, 12, 14, 16, 18])
+ax2.tick_params(axis = 'x', labelsize = 14)
+ax1.set_ylabel('')
+ax2.set_ylabel('')
+ax2.set_xlabel('')
+plt.show()
+
 print(most_fives)
 print(least_fives)
 
+fig, (ax1, ax2) = plt.subplots(ncols = 1, nrows = 2, sharex = True)
+plt.subplots_adjust(wspace=0, hspace=0.05, bottom = 0.1, top = 0.94, left = 0.05, right = 0.96)
+
+sns.barplot(most_fives, x="Most 5s", y="index", orient="y", hue = 'Seat', legend = False, ax = ax1)
+
+for i, (score, name, series, seat) in enumerate(zip(most_fives['Most 5s'], most_fives['Name'],
+                                              most_fives['Series'], most_fives['Seat'])):
+    ax1.text(5, i, name, va='center', ha='left', fontsize=15, color='white')
+    ax1.text(9, i, series, va='center', ha='left', fontsize=15, color='white')
+    ax1.text(10.5, i, seat, va='center', ha='left', fontsize=15, color = 'white')
+    ax1.text(score+0.1, i, score, fontsize = 15, color = 'black')
+
+sns.barplot(least_fives, x="Least 5s", y="index", orient="y", hue = 'Seat', legend = False, ax = ax2)
+
+for i, (score, name, series, seat) in enumerate(zip(least_fives['Least 5s'], least_fives['Name'],
+                                              least_fives['Series'], least_fives['Seat'])):
+    ax2.text(5, i, name, va='center', ha='left', fontsize=15, color='black')
+    ax2.text(9, i, series, va='center', ha='left', fontsize=15, color='black')
+    ax2.text(10.5, i, seat, va='center', ha='left', fontsize=15, color = 'black')
+    ax2.text(score+0.1, i, score, fontsize = 15, color = 'black')
+
+ax1.text(18.5, 4, 'Most 5s', fontsize = 20, color = 'black')
+ax2.text(18.5, 5, 'Least 5s', fontsize = 20, color = 'black')
+
+ax1.set_yticks([],[])
+ax2.set_yticks([],[])
+ax1.set_xticks([0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20])
+ax2.set_xticks([0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20])
+ax2.tick_params(axis = 'x', labelsize = 14)
+ax1.set_ylabel('')
+ax2.set_ylabel('')
+ax2.set_xlabel('')
+plt.show()
 
 #Highest and lowest episode scores per seat
 
