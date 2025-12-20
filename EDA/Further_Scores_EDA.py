@@ -243,21 +243,42 @@ for series in range(1, 21):
 
     tie_breaks = data[data['Task Number'] == 'T'].reset_index(drop = True)
 
+    bonus = data[data['Task Number'] == 'S'].reset_index(drop = True)
 
     episodes = episodes[contestents]
     tie_breaks  = tie_breaks[contestents]
+    bonus = bonus[contestents]
 
     episodes['Episode'] = episodes['Episode'].str.replace(" Total", "", regex=False)
-    episodes = episodes.drop('Tasknumber', axis = 1)
-    tie_breaks = tie_breaks.drop('Tasknumber', axis = 1)
+    episodes = episodes.drop('Tasknumber', axis = 1).reset_index(drop = True)
+    tie_breaks = tie_breaks.drop('Tasknumber', axis = 1).reset_index(drop = True)
+    bonus = bonus.drop('Tasknumber', axis = 1).reset_index(drop = True)
+
+    print(len(tie_breaks))
+    print(len(bonus))
 
     episodes[episodes.columns[0:5]] = (
     episodes.set_index("Episode")[episodes.columns[0:5]]
     .add(
         tie_breaks.set_index("Episode")[tie_breaks.columns[0:5]],
         fill_value=0
-    )
-    .values)
+    ).values)
+
+    print(len(episodes))
+    print('a')
+    print(len(episodes.columns), episodes.shape[0])
+    print(len(bonus.columns), bonus.shape[0])
+    
+    episodes[episodes.columns[0:5]] = (
+    episodes.set_index("Episode")[episodes.columns[0:5]]
+    .add(
+        bonus.set_index("Episode")[bonus.columns[0:5]],
+        fill_value=0
+    ).values)
+
+    print('b')
+    print(len(episodes.columns), episodes.shape[0])
+    print(len(episodes))
 
     episodes['Series'] = f'S{series}'
 
