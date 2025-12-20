@@ -268,6 +268,29 @@ for series in range(1, 21):
     print('a')
     print(len(episodes.columns), episodes.shape[0])
     print(len(bonus.columns), bonus.shape[0])
+
+    score_cols = (
+    episodes.columns
+    .intersection(tie_breaks.columns)
+    .difference(["Episode"])
+)
+    
+    tie_breaks_ep = (
+    tie_breaks
+    .groupby("Episode", as_index=True)[score_cols]
+    .sum()
+)
+
+    episodes_idx = episodes.set_index("Episode")
+
+    episodes_idx[score_cols] = (
+        episodes_idx[score_cols]
+        .add(tie_breaks_ep, fill_value=0)
+    )
+
+    episodes = episodes_idx.reset_index()
+
+
     
     episodes[episodes.columns[0:5]] = (
     episodes.set_index("Episode")[episodes.columns[0:5]]
