@@ -358,6 +358,51 @@ plt.show()
 
 print(episode_scores.head(20))
 
-for series in range(1,21):
+#Number of times each contestent (seat) has one or lost an episode in each series
 
-    most_ep_wins = episode_scores[episode_scores['Series'] == f'S{series}']
+# for series in range(1,21):
+
+    # most_ep_wins = episode_scores[episode_scores['Series'] == f'S{series}']
+
+seat_cols = [c for c in episode_scores.columns if c.startswith("Seat")]
+
+episode_win_lose = episode_scores.melt(
+    id_vars=["Episode", "Series"],
+    value_vars=seat_cols,
+    var_name="Seat",
+    value_name="Score"
+)
+
+episode_win_lose["max_score"] = episode_win_lose.groupby(["Series", "Episode"])["Score"].transform("max")
+episode_win_lose["min_score"] = episode_win_lose.groupby(["Series", "Episode"])["Score"].transform("min")
+
+episode_win_lose["Win"]  = episode_win_lose["Score"] == episode_win_lose["max_score"]
+episode_win_lose["Loss"] = episode_win_lose["Score"] == episode_win_lose["min_score"]
+
+episode_win_lose["Number_Episodes"] = episode_win_lose.groupby("Series")["Episode"].transform("count")
+
+episode_win_lose_results = (
+    episode_win_lose.groupby(["Series", "Seat"])
+    .agg(
+        Wins=("Win", "sum"),
+        Losses=("Loss", "sum"),
+        Number_Episodes=("Episode", "nunique")
+    )
+    .reset_index()
+)
+
+print(episode_win_lose_results.head())
+episode_win_lose_results["Series_num"] = episode_win_lose_results["Series"].str.extract(r"(\d+)").astype(int)
+
+episode_win_lose_results = episode_win_lose_results.sort_values("Series_num").drop(columns="Series_num")
+
+episode_win_lose_results = pd.merge(left = episode_win_lose_results, right = named_series_table_reformatted,
+                                    on = ['Series', 'Seat'], how = 'left')
+
+most_eps_won = episode_win_lose_results[['Series', 'Seat', "Wins", 'Number_Episodes', 'Name']].sort_values(by = 'Wins', ascending = False)
+
+most_eps_lost = episode_win_lose_results[['Series', 'Seat', "Losses", 'Number_Episodes', 'Name']].sort_values(by = 'Losses', ascending = False)
+
+
+print(most_eps_won.head(10))
+print(most_eps_lost.head(10))
