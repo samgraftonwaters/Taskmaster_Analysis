@@ -310,7 +310,7 @@ for i, (score, name, series, episode, seat) in enumerate(zip(highest_ep_scores['
     plt.text(12, i, series, va='center', ha='left', fontsize=15, color='white')
     plt.text(15, i, episode, va='center', ha='left', fontsize=15, color='white')
     plt.text(18, i, seat, va='center', ha='left', fontsize=15, color = 'white')
-    plt.text(score+0.1, i, score, fontsize = 15, color = 'black')
+    plt.text(score+0.1, i, int(score), fontsize = 15, color = 'black')
 
 
 # plt.yticks(highest_ep_scores['index']-1, highest_ep_scores['Series'], fontsize = 14)
@@ -341,7 +341,7 @@ for i, (score, name, series, episode, seat) in enumerate(zip(lowest_ep_scores['S
     plt.text(1.5, i, series, va='center', ha='left', fontsize=15, color='white')
     plt.text(2, i, episode, va='center', ha='left', fontsize=15, color='white')
     plt.text(2.4, i, seat, va='center', ha='left', fontsize=15, color = 'white')
-    plt.text(score+0.1, i, score, fontsize = 15, color = 'black')
+    plt.text(score+0.1, i, int(score), fontsize = 15, color = 'black')
 
 
 # plt.yticks(lowest_ep_scores['index'] - 1, lowest_ep_scores['Series'], fontsize = 14)
@@ -399,10 +399,19 @@ episode_win_lose_results = episode_win_lose_results.sort_values("Series_num").dr
 episode_win_lose_results = pd.merge(left = episode_win_lose_results, right = named_series_table_reformatted,
                                     on = ['Series', 'Seat'], how = 'left')
 
-most_eps_won = episode_win_lose_results[['Series', 'Seat', "Wins", 'Number_Episodes', 'Name']].sort_values(by = 'Wins', ascending = False)
+episode_win_lose_results['Percentage_Won'] = round((episode_win_lose_results ['Wins'] / episode_win_lose_results ['Number_Episodes']), 2)
+episode_win_lose_results['Percentage_Lost'] = round((episode_win_lose_results ['Losses'] / episode_win_lose_results ['Number_Episodes']), 2)
 
-most_eps_lost = episode_win_lose_results[['Series', 'Seat', "Losses", 'Number_Episodes', 'Name']].sort_values(by = 'Losses', ascending = False)
+most_eps_won_num = episode_win_lose_results[['Series', 'Seat', "Wins", 'Percentage_Won', 'Number_Episodes', 'Name']].sort_values(by = 'Wins', ascending = False).reset_index(drop = True)
 
+most_eps_lost_num = episode_win_lose_results[['Series', 'Seat', "Losses", 'Percentage_Lost', 'Number_Episodes', 'Name']].sort_values(by = 'Losses', ascending = False).reset_index(drop = True)
 
-print(most_eps_won.head(10))
-print(most_eps_lost.head(10))
+most_eps_won_percent = episode_win_lose_results[['Series', 'Seat', "Wins", 'Percentage_Won', 'Number_Episodes', 'Name']].sort_values(by = 'Percentage_Won', ascending = False).reset_index(drop = True)
+
+most_eps_lost_percent = episode_win_lose_results[['Series', 'Seat', "Losses", 'Percentage_Lost', 'Number_Episodes', 'Name']].sort_values(by = 'Percentage_Lost', ascending = False).reset_index(drop = True)
+
+print(most_eps_won_num.head(10))
+print(most_eps_lost_num.head(10))
+
+print(most_eps_won_percent.head(10))
+print(most_eps_lost_percent.head(10))
