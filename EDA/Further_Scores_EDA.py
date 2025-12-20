@@ -243,19 +243,12 @@ for series in range(1, 21):
 
     tie_breaks = data[data['Task Number'] == 'T'].reset_index(drop = True)
 
-    bonus = data[data['Task Number'] == 'S'].reset_index(drop = True)
-
     episodes = episodes[contestents]
     tie_breaks  = tie_breaks[contestents]
-    bonus = bonus[contestents]
 
     episodes['Episode'] = episodes['Episode'].str.replace(" Total", "", regex=False)
     episodes = episodes.drop('Tasknumber', axis = 1).reset_index(drop = True)
     tie_breaks = tie_breaks.drop('Tasknumber', axis = 1).reset_index(drop = True)
-    bonus = bonus.drop('Tasknumber', axis = 1).reset_index(drop = True)
-
-    print(len(tie_breaks))
-    print(len(bonus))
 
     episodes[episodes.columns[0:5]] = (
     episodes.set_index("Episode")[episodes.columns[0:5]]
@@ -264,49 +257,9 @@ for series in range(1, 21):
         fill_value=0
     ).values)
 
-    print(len(episodes))
-    print('a')
-    print(len(episodes.columns), episodes.shape[0])
-    print(len(bonus.columns), bonus.shape[0])
-
-    score_cols = (
-    episodes.columns
-    .intersection(tie_breaks.columns)
-    .difference(["Episode"])
-)
-    
-    tie_breaks_ep = (
-    tie_breaks
-    .groupby("Episode", as_index=True)[score_cols]
-    .sum()
-)
-
-    episodes_idx = episodes.set_index("Episode")
-
-    episodes_idx[score_cols] = (
-        episodes_idx[score_cols]
-        .add(tie_breaks_ep, fill_value=0)
-    )
-
-    episodes = episodes_idx.reset_index()
-
-
-    
-    episodes[episodes.columns[0:5]] = (
-    episodes.set_index("Episode")[episodes.columns[0:5]]
-    .add(
-        bonus.set_index("Episode")[bonus.columns[0:5]],
-        fill_value=0
-    ).values)
-
-    print('b')
-    print(len(episodes.columns), episodes.shape[0])
-    print(len(episodes))
-
     episodes['Series'] = f'S{series}'
 
     episode_scores.append(episodes)
-
 
 episode_scores = pd.DataFrame(np.vstack(episode_scores), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Episode', 'Series'])
 
@@ -364,7 +317,7 @@ for i, (score, name, series, episode, seat) in enumerate(zip(highest_ep_scores['
 plt.yticks([],[])
 
 plt.xticks(fontsize = 14)
-plt.xlim(0, highest_ep_scores['Score'].max() + 1)
+plt.xlim(0, highest_ep_scores['Score'].max() + 2)
 plt.xlabel('Episode Score', fontsize = 18)
 # plt.ylabel('Series', fontsize = 18)
 plt.ylabel('', fontsize = 18)
@@ -394,7 +347,7 @@ for i, (score, name, series, episode, seat) in enumerate(zip(lowest_ep_scores['S
 # plt.yticks(lowest_ep_scores['index'] - 1, lowest_ep_scores['Series'], fontsize = 14)
 plt.yticks([],[])
 plt.xticks(fontsize = 14)
-plt.xlim(0, lowest_ep_scores['Score'].max() + 1)
+plt.xlim(0, lowest_ep_scores['Score'].max() + 0.5)
 plt.xlabel('Episode Score', fontsize = 18)
 plt.ylabel('', fontsize = 18)
 # plt.ylabel('Series', fontsize = 18)

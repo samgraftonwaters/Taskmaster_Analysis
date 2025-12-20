@@ -70,7 +70,7 @@ def total_scores(dataframe, total:bool = True, per_number_eps:bool = False,
 
     tie_breaks = dataframe[dataframe['Task Number'] == 'T'].reset_index(drop = True)
 
-    bonus = dataframe[dataframe['Task Number'] == 'S'].reset_index(drop = True)
+    # bonus = dataframe[dataframe['Task Number'] == 'S'].reset_index(drop = True)
 
     if total == True:
 
@@ -80,10 +80,10 @@ def total_scores(dataframe, total:bool = True, per_number_eps:bool = False,
 
         tie_break_totals = tie_breaks[tie_breaks.columns].sum()
 
-        bonus_totals = bonus[bonus.columns].sum()
+        # bonus_totals = bonus[bonus.columns].sum()
 
         total[total.columns] = total[total.columns].add(tie_break_totals, axis="columns")  
-        total[total.columns] = total[total.columns].add(bonus_totals, axis="columns") 
+        # total[total.columns] = total[total.columns].add(bonus_totals, axis="columns") 
 
         total['Series'] = series
 
