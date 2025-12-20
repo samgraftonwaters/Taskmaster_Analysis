@@ -409,12 +409,19 @@ most_eps_lost_percent = episode_win_lose_results[['Series', 'Seat', "Losses", 'P
 most_eps_won_percent_top = most_eps_won_percent[0:10].sort_values(by = 'Percentage_Won', ascending = True).reset_index(drop = True)
 most_eps_lost_percent_top = most_eps_lost_percent[0:10].sort_values(by = 'Percentage_Lost', ascending = True).reset_index(drop = True)
 
+
+never_won = most_eps_won_percent.sort_values(by = 'Percentage_Won', ascending = True).reset_index(drop = True)
+never_lost = most_eps_lost_percent.sort_values(by = 'Percentage_Lost', ascending = True).reset_index(drop = True)
+
 print(most_eps_won_num.head(10))
 print(most_eps_lost_num.head(10))
 
 print(most_eps_won_percent.head(10))
 print(most_eps_lost_percent.head(10))
 
+# Contestents who never won or never lost an episode
+print(never_won.head(10))
+print(never_lost.head(30))
 
 fig, (ax1, ax2) = plt.subplots(ncols=1, nrows=2, sharex = True)
 plt.subplots_adjust(wspace=0, hspace=0.05, bottom=0.1, top=0.94, left=0.02, right=0.98)
