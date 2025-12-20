@@ -360,10 +360,6 @@ print(episode_scores.head(20))
 
 #Number of times each contestent (seat) has one or lost an episode in each series
 
-# for series in range(1,21):
-
-    # most_ep_wins = episode_scores[episode_scores['Series'] == f'S{series}']
-
 seat_cols = [c for c in episode_scores.columns if c.startswith("Seat")]
 
 episode_win_lose = episode_scores.melt(
@@ -410,8 +406,70 @@ most_eps_won_percent = episode_win_lose_results[['Series', 'Seat', "Wins", 'Perc
 
 most_eps_lost_percent = episode_win_lose_results[['Series', 'Seat', "Losses", 'Percentage_Lost', 'Number_Episodes', 'Name']].sort_values(by = 'Percentage_Lost', ascending = False).reset_index(drop = True)
 
+most_eps_won_percent_top = most_eps_won_percent[0:10].sort_values(by = 'Percentage_Won', ascending = True).reset_index(drop = True)
+most_eps_lost_percent_top = most_eps_lost_percent[0:10].sort_values(by = 'Percentage_Lost', ascending = True).reset_index(drop = True)
+
 print(most_eps_won_num.head(10))
 print(most_eps_lost_num.head(10))
 
 print(most_eps_won_percent.head(10))
 print(most_eps_lost_percent.head(10))
+
+
+fig, (ax1, ax2) = plt.subplots(ncols=1, nrows=2, sharex = True)
+plt.subplots_adjust(wspace=0, hspace=0.05, bottom=0.1, top=0.94, left=0.02, right=0.98)
+
+most_eps_won_percent_top.plot.barh(y='Percentage_Won', x='Name', ax=ax1, color='red', alpha=0.8, 
+                 edgecolor='white', width=0.9, label='Most Episodes Won')
+
+for i, (wins, percent, number, name, series, seat) in enumerate(zip(most_eps_won_percent_top['Wins'], 
+                                                                    most_eps_won_percent_top['Percentage_Won'],
+                                            most_eps_won_percent_top['Number_Episodes'], 
+                                              most_eps_won_percent_top['Name'],
+                                              most_eps_won_percent_top['Series'],
+                                              most_eps_won_percent_top['Seat'])):
+    
+    
+    ax1.text(-0.29, i, series, va='center', ha='left', fontsize=12, color='black')
+    ax1.text(-0.2, i, wins, va='center', ha='left', fontsize=12, color='black')
+    ax1.text(-0.15, i, number, va='center', ha='left', fontsize=12, color='black')
+    ax1.text(-0.08, i, seat, va='center', ha='left', fontsize=12, color = 'black')
+    ax1.text(0.05, i, name, va='center', ha='left', fontsize=12, color = 'white')
+    ax1.text(percent + 0.02, i, percent, va='center', ha='left', fontsize=12, color = 'red')
+    ax1.text(-0.29, 10, 'Series  Number  Episodes', fontsize = 12, color = 'black')
+
+ax1.set_xlim(-0.30, 0.85)
+ax1.set_yticks([])
+ax1.set_ylabel('')
+ax1.legend(fontsize=15)
+
+most_eps_lost_percent_top.plot.barh(y='Percentage_Lost', x='Name', ax=ax2, color='dodgerblue', alpha=0.7,
+                 edgecolor='white', width=0.9, label='Most Episodes Lost')
+
+for i, (losses, percent, number, name, series, seat) in enumerate(zip(most_eps_lost_percent_top['Losses'], most_eps_lost_percent_top['Percentage_Lost'],
+                                              most_eps_lost_percent_top['Number_Episodes'], 
+                                              most_eps_lost_percent_top['Name'],
+                                              most_eps_lost_percent_top['Series'],
+                                              most_eps_lost_percent_top['Seat'])):
+
+    ax2.text(-0.29, i, series, va='center', ha='left', fontsize=12, color='black')
+    ax2.text(-0.2, i, wins, va='center', ha='left', fontsize=12, color='black')
+    ax2.text(-0.15, i, number, va='center', ha='left', fontsize=12, color='black')
+    ax2.text(-0.08, i, seat, va='center', ha='left', fontsize=12, color = 'black')
+    ax2.text(0.05, i, name, va='center', ha='left', fontsize=12, color = 'black')
+    ax2.text(percent + 0.02, i, percent, va='center', ha='left', fontsize=12, color = 'blue')
+    # ax2.text(-0.29, 10, 'Series  Number  Episodes  Seat', fontsize = 11, color = 'black')
+
+ax2.set_xlim(-0.30, 0.85)
+ax2.set_xticks([0, 0.2, 0.4, 0.6, 0.8])
+ax2.set_yticks([])
+ax2.set_ylabel('')
+ax2.legend(fontsize=15)
+
+fig.suptitle("Proportion of Times Contestents Won or Lost each Episode", fontsize = 18)
+plt.xlabel('Proportion', fontsize=18)
+plt.ylabel('')
+ax1.tick_params(axis='x', labelsize=12)
+ax2.tick_params(axis='x', labelsize=14)
+
+plt.show()
