@@ -24,7 +24,7 @@ for series in range(1, 21):
 
     final_scores = final_scores[contestents]
 
-    diff_scores = final_scores.max(axis=1) - final_scores.min(axis = 1)
+    diff_scores = (final_scores.max(axis=1) - final_scores.min(axis = 1)).astype(int)
 
     score_diff.append([diff_scores.values[0], f'S{series}'])
 
@@ -90,8 +90,8 @@ for series in range(1, 21):
 count_one = pd.DataFrame(np.vstack(count_one), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5'])
 count_five = pd.DataFrame(np.vstack(count_five), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5'])
 
-print(count_one)
-print(count_five)
+# print(count_one)
+# print(count_five)
 
 series = []
 for i in range(20):
@@ -150,8 +150,8 @@ least_fives = pd.merge(left = least_fives, right = named_series_table_reformatte
 
 least_fives['index'] = least_fives.index.values + 1
 
-print(most_ones)
-print(least_ones)
+# print(most_ones)
+# print(least_ones)
 
 fig, (ax1, ax2) = plt.subplots(ncols = 1, nrows = 2, sharex = True)
 plt.subplots_adjust(wspace=0, hspace=0.05, bottom = 0.1, top = 0.94, left = 0.05, right = 0.96)
@@ -186,10 +186,11 @@ ax2.tick_params(axis = 'x', labelsize = 14)
 ax1.set_ylabel('')
 ax2.set_ylabel('')
 ax2.set_xlabel('')
+plt.suptitle('Most and Least Number of 1s Scored Per Seat', fontsize = 20)
 plt.show()
 
-print(most_fives)
-print(least_fives)
+# print(most_fives)
+# print(least_fives)
 
 fig, (ax1, ax2) = plt.subplots(ncols = 1, nrows = 2, sharex = True)
 plt.subplots_adjust(wspace=0, hspace=0.05, bottom = 0.1, top = 0.94, left = 0.05, right = 0.96)
@@ -223,6 +224,7 @@ ax2.tick_params(axis = 'x', labelsize = 14)
 ax1.set_ylabel('')
 ax2.set_ylabel('')
 ax2.set_xlabel('')
+plt.suptitle('Most and Least Number of 5s Scored Per Seat', fontsize = 20)
 plt.show()
 
 #Highest and lowest episode scores per seat
@@ -235,21 +237,33 @@ for series in range(1, 21):
 
     cols = data.columns
 
-    contestents = cols[1:7]
+    contestents = cols[2:7]
+    cols = cols[1:7]
 
     episodes = data[data['Task Number'].str.contains(r'Ep', na = False)].reset_index(drop = True)
 
-    episodes['Description'] = episodes['Description'].str.replace(" Total", "", regex=False)
+    tie_breaks = data[data['Task Number'] == 'T'].reset_index(drop = True)
 
-    episodes = episodes[contestents]
+    print(tie_breaks)
+
+    episodes['Episode'] = episodes['Description'].str.replace(" Total", "", regex=False)
+
+    # print(episodes.head())
+
+    # episodes = episodes.drop(['Description'], axis = 1)
+
+    episodes = episodes[cols]
+    tie_breaks  = tie_breaks[contestents]
+
+    print(tie_breaks)
+
+    episodes = episodes + tie_breaks
     
     episodes['Series'] = f'S{series}'
 
     episode_scores.append(episodes)
 
 episode_scores = pd.DataFrame(np.vstack(episode_scores), columns = ['Episode', 'Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Series'])
-
-print(episode_scores)
 
 highest_ep_scores = []
 lowest_ep_scores = []
@@ -279,8 +293,8 @@ lowest_ep_scores = pd.merge(left = lowest_ep_scores, right = named_series_table_
 lowest_ep_scores['index'] = lowest_ep_scores.index.values + 1
 
 
-print(highest_ep_scores)
-print(lowest_ep_scores)
+# print(highest_ep_scores)
+# print(lowest_ep_scores)
 
 
 plt.figure()
@@ -343,3 +357,12 @@ plt.ylabel('', fontsize = 18)
 plt.title('Lowest Total Scores in an Episode per Seat', fontsize = 20)
 
 plt.show()
+
+
+
+
+print(episode_scores.head(20))
+
+for series in range(1,21):
+
+    most_ep_wins = episode_scores[episode_scores['Series'] == f'S{series}']
