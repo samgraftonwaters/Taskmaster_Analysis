@@ -237,33 +237,34 @@ for series in range(1, 21):
 
     cols = data.columns
 
-    contestents = cols[2:7]
-    cols = cols[1:7]
+    contestents = cols[2:9]
 
     episodes = data[data['Task Number'].str.contains(r'Ep', na = False)].reset_index(drop = True)
 
     tie_breaks = data[data['Task Number'] == 'T'].reset_index(drop = True)
 
-    print(tie_breaks)
 
-    episodes['Episode'] = episodes['Description'].str.replace(" Total", "", regex=False)
-
-    # print(episodes.head())
-
-    # episodes = episodes.drop(['Description'], axis = 1)
-
-    episodes = episodes[cols]
+    episodes = episodes[contestents]
     tie_breaks  = tie_breaks[contestents]
 
-    print(tie_breaks)
+    episodes['Episode'] = episodes['Episode'].str.replace(" Total", "", regex=False)
+    episodes = episodes.drop('Tasknumber', axis = 1)
+    tie_breaks = tie_breaks.drop('Tasknumber', axis = 1)
 
-    episodes = episodes + tie_breaks
-    
+    episodes[episodes.columns[0:5]] = (
+    episodes.set_index("Episode")[episodes.columns[0:5]]
+    .add(
+        tie_breaks.set_index("Episode")[tie_breaks.columns[0:5]],
+        fill_value=0
+    )
+    .values)
+
     episodes['Series'] = f'S{series}'
 
     episode_scores.append(episodes)
 
-episode_scores = pd.DataFrame(np.vstack(episode_scores), columns = ['Episode', 'Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Series'])
+
+episode_scores = pd.DataFrame(np.vstack(episode_scores), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Episode', 'Series'])
 
 highest_ep_scores = []
 lowest_ep_scores = []
@@ -349,7 +350,7 @@ for i, (score, name, series, episode, seat) in enumerate(zip(lowest_ep_scores['S
 # plt.yticks(lowest_ep_scores['index'] - 1, lowest_ep_scores['Series'], fontsize = 14)
 plt.yticks([],[])
 plt.xticks(fontsize = 14)
-plt.xlim(0, lowest_ep_scores['Score'].max() + 0.25)
+plt.xlim(0, lowest_ep_scores['Score'].max() + 1)
 plt.xlabel('Episode Score', fontsize = 18)
 plt.ylabel('', fontsize = 18)
 # plt.ylabel('Series', fontsize = 18)
@@ -357,9 +358,6 @@ plt.ylabel('', fontsize = 18)
 plt.title('Lowest Total Scores in an Episode per Seat', fontsize = 20)
 
 plt.show()
-
-
-
 
 print(episode_scores.head(20))
 
