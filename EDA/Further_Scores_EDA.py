@@ -231,6 +231,7 @@ plt.show()
 
 episode_scores = []
 tie_break_scores = []
+before_tie_total = []
 
 for series in range(1, 21):
 
@@ -250,6 +251,7 @@ for series in range(1, 21):
     episodes['Episode'] = episodes['Episode'].str.replace(" Total", "", regex=False)
     episodes = episodes.drop('Tasknumber', axis = 1).reset_index(drop = True)
     tie_breaks = tie_breaks.drop('Tasknumber', axis = 1).reset_index(drop = True)
+    episodes_with_tie = episodes.copy()
 
     episodes[episodes.columns[0:5]] = (
     episodes.set_index("Episode")[episodes.columns[0:5]]
@@ -260,9 +262,11 @@ for series in range(1, 21):
 
     episodes['Series'] = f'S{series}'
     tie_breaks['Series'] = f'S{series}'
+    episodes_with_tie['Series'] = f'S{series}'
 
     episode_scores.append(episodes)
     tie_break_scores.append(tie_breaks)
+    before_tie_total.append(episodes_with_tie)
 
 episode_scores = pd.DataFrame(np.vstack(episode_scores), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Episode', 'Series'])
 tie_break_scores = pd.DataFrame(np.vstack(tie_break_scores), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Episode', 'Series'])
@@ -493,14 +497,29 @@ plt.show()
 
 ## Tie Breaks
 
-print(tie_break_scores.head())
+print(tie_break_scores.head(20))
 
+before_tie_total = pd.DataFrame(np.vstack(before_tie_total), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Episode', 'Series'])
+
+print(before_tie_total.head(20))
+
+print(named_series_table_reformatted.head(20))
+      
 tie_break_scores = tie_break_scores.melt(
     id_vars=["Episode", "Series"],
     value_vars=seat_cols,
     var_name="Seat",
     value_name="Score"
 )
+
+before_tie_total = before_tie_total.melt(
+    id_vars=["Episode", "Series"],
+    value_vars=seat_cols,
+    var_name="Seat",
+    value_name="Score"
+)
+
+print(before_tie_total.head(20))
 
 print('')
 print('here')
