@@ -230,6 +230,7 @@ plt.show()
 #Highest and lowest episode scores per seat
 
 episode_scores = []
+tie_break_scores = []
 
 for series in range(1, 21):
 
@@ -258,10 +259,18 @@ for series in range(1, 21):
     ).values)
 
     episodes['Series'] = f'S{series}'
+    tie_breaks['Series'] = f'S{series}'
 
     episode_scores.append(episodes)
+    tie_break_scores.append(tie_breaks)
 
 episode_scores = pd.DataFrame(np.vstack(episode_scores), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Episode', 'Series'])
+tie_break_scores = pd.DataFrame(np.vstack(tie_break_scores), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Episode', 'Series'])
+
+print('hello')
+print(episode_scores.head())
+print()
+print()
 
 highest_ep_scores = []
 lowest_ep_scores = []
@@ -421,7 +430,7 @@ print(most_eps_lost_percent.head(10))
 
 # Contestents who never won or never lost an episode
 print(never_won.head(10))
-print(never_lost.head(30))
+print(never_lost.head(20))
 
 fig, (ax1, ax2) = plt.subplots(ncols=1, nrows=2, sharex = True)
 plt.subplots_adjust(wspace=0, hspace=0.05, bottom=0.1, top=0.94, left=0.02, right=0.98)
@@ -480,3 +489,326 @@ ax1.tick_params(axis='x', labelsize=12)
 ax2.tick_params(axis='x', labelsize=14)
 
 plt.show()
+
+
+## Tie Breaks
+
+print(tie_break_scores.head())
+
+tie_break_scores = tie_break_scores.melt(
+    id_vars=["Episode", "Series"],
+    value_vars=seat_cols,
+    var_name="Seat",
+    value_name="Score"
+)
+
+print('')
+print('here')
+print()
+
+tie_break_scores["max_score"] = tie_break_scores.groupby(["Series", "Episode"])["Score"].transform("max")
+tie_break_scores["min_score"] = tie_break_scores.groupby(["Series", "Episode"])["Score"].transform("min")
+
+print(tie_break_scores.head(10))
+
+tie_break_scores["Win"]  = tie_break_scores["Score"] == tie_break_scores["max_score"]
+tie_break_scores["Loss"] = tie_break_scores["Score"] == tie_break_scores["min_score"]
+
+print(tie_break_scores.head(10))
+
+tie_break_scores["Number_Episodes"] = tie_break_scores.groupby("Series")["Episode"].transform("count")
+
+print(tie_break_scores.head(10))
+
+tie_break_scores_results = (
+    tie_break_scores.groupby(["Series", "Seat", 'Episode'])
+    .agg(
+        Wins=("Win", "sum"),
+        Losses=("Loss", "sum"),
+        Number_Episodes=("Episode", "nunique"),
+    )
+    .reset_index()
+)
+
+tie_break_scores_results = pd.merge(left = tie_break_scores_results, right = named_series_table_reformatted,
+                                    on = ['Series', 'Seat'], how = 'left')
+
+# tie_break_scores_results["Series_num"] = tie_break_scores_results["Series"].str.extract(r"(\d+)").astype(int)
+# tie_break_scores_results["Episode_num"] = tie_break_scores_results["Episode"].str.extract(r"(\d+)").astype(int)
+
+# tie_break_scores_results = tie_break_scores_results.sort_values(by = ["Series_num"]).drop(columns="Series_num").reset_index(drop = True) #drop(columns="Episode_num")
+
+print(tie_break_scores_results.head(10))
+
+
+import pandas as pd
+
+# ---------------------------
+# INPUT DATA
+# ---------------------------
+
+# Seat participation (one-hot)
+df_part = pd.DataFrame({
+    "Seat 1":[1,0,0,1,0],
+    "Seat 2":[0,1,1,0,1],
+    "Seat 3":[0,0,0,0,0],
+    "Seat 4":[0,0,0,0,0],
+    "Seat 5":[0,0,0,0,0],
+    "Episode":["Ep1","Ep3","Ep3","Ep5","Ep7"],
+    "Series":["S1","S1","S4","S4","S4"]
+})
+
+# Seat scores
+df_scores = pd.DataFrame({
+    "Seat 1":[19.9],
+    "Seat 2":[19.9],
+    "Seat 3":[7.0],
+    "Seat 4":[13.0],
+    "Seat 5":[17.0],
+    "Episode":["Ep1"],
+    "Series":["S1"]
+})
+
+# Seat → Name mapping
+df_names = pd.DataFrame({
+    "Seat":["Seat 1","Seat 2","Seat 3","Seat 4","Seat 5"],
+    "Name":["Alice","Bob","Carol","Dave","Eve"]
+})
+
+# ---------------------------
+# TRANSFORM
+# ---------------------------
+
+seat_cols = [c for c in df_part.columns if c.startswith("Seat")]
+
+# Long format for participation
+part_long = (
+    df_part
+    .melt(id_vars=["Series","Episode"],
+          value_vars=seat_cols,
+          var_name="Seat",
+          value_name="active")
+    .query("active == 1")
+    .drop(columns="active")
+)
+
+# Long format for scores
+scores_long = (
+    df_scores
+    .melt(id_vars=["Series","Episode"],
+          value_vars=seat_cols,
+          var_name="Seat",
+          value_name="Score")
+)
+
+# Merge participation + scores
+merged = part_long.merge(
+    scores_long,
+    on=["Series","Episode","Seat"],
+    how="left"
+)
+
+# ---------------------------
+# FIND TIEBREAKS
+# ---------------------------
+
+merged["max_score"] = merged.groupby(
+    ["Series","Episode"]
+)["Score"].transform("max")
+
+# Keep only top-scoring seats
+ties = merged[merged["Score"] == merged["max_score"]]
+
+# Only episodes with more than one top scorer = tiebreak
+ties = ties.groupby(
+    ["Series","Episode"]
+).filter(lambda x: len(x) > 1)
+
+# Rank winner / loser (deterministic order)
+ties = ties.sort_values(["Series","Episode","Seat"])
+ties["rank"] = ties.groupby(
+    ["Series","Episode"]
+)["Score"].rank(method="first", ascending=False)
+
+ties["Result"] = ties["rank"].map({1: "Winner", 2: "Loser"})
+
+# ---------------------------
+# ADD NAMES
+# ---------------------------
+
+ties = ties.merge(df_names, on="Seat", how="left")
+
+# ---------------------------
+# PIVOT TO FINAL SHAPE
+# ---------------------------
+
+final = (
+    ties
+    .pivot(index=["Series","Episode"],
+           columns="Result",
+           values=["Name","Seat"])
+)
+
+final.columns = [
+    "Winner name","Loser name",
+    "Winner seat","Loser seat"
+]
+
+final = final.reset_index()
+
+# ---------------------------
+# COUNT TIEBREAKS PER SERIES
+# ---------------------------
+
+tiebreak_counts = (
+    final.groupby("Series")["Episode"]
+    .nunique()
+    .rename("Tiebreaks in series")
+)
+
+final = final.merge(
+    tiebreak_counts,
+    on="Series",
+    how="left"
+)
+
+print(final)
+
+
+
+#three way ties:
+
+import pandas as pd
+
+# ---------------------------
+# INPUT DATA
+# ---------------------------
+
+df_part = pd.DataFrame({
+    "Seat 1":[1,0,0,1,0],
+    "Seat 2":[0,1,1,0,1],
+    "Seat 3":[0,0,0,0,0],
+    "Seat 4":[0,0,0,0,0],
+    "Seat 5":[0,0,0,0,0],
+    "Episode":["Ep1","Ep3","Ep3","Ep5","Ep7"],
+    "Series":["S1","S1","S4","S4","S4"]
+})
+
+df_scores = pd.DataFrame({
+    "Seat 1":[19.9],
+    "Seat 2":[19.9],
+    "Seat 3":[19.9],
+    "Seat 4":[13.0],
+    "Seat 5":[17.0],
+    "Episode":["Ep1"],
+    "Series":["S1"]
+})
+
+df_names = pd.DataFrame({
+    "Seat":["Seat 1","Seat 2","Seat 3","Seat 4","Seat 5"],
+    "Name":["Alice","Bob","Carol","Dave","Eve"]
+})
+
+# ---------------------------
+# NORMALIZE DATA
+# ---------------------------
+
+seat_cols = [c for c in df_part.columns if c.startswith("Seat")]
+
+# Participation → long
+part_long = (
+    df_part
+    .melt(id_vars=["Series","Episode"],
+          value_vars=seat_cols,
+          var_name="Seat",
+          value_name="active")
+    .query("active == 1")
+    .drop(columns="active")
+)
+
+# Scores → long
+scores_long = (
+    df_scores
+    .melt(id_vars=["Series","Episode"],
+          value_vars=seat_cols,
+          var_name="Seat",
+          value_name="Score")
+)
+
+# Merge
+merged = part_long.merge(
+    scores_long,
+    on=["Series","Episode","Seat"],
+    how="left"
+)
+
+# ---------------------------
+# DETECT MULTI-WAY TIES
+# ---------------------------
+
+merged["max_score"] = merged.groupby(
+    ["Series","Episode"]
+)["Score"].transform("max")
+
+# Keep only seats tied for top score
+ties = merged[merged["Score"] == merged["max_score"]]
+
+# Keep only episodes with 2+ tied seats
+ties = ties.groupby(
+    ["Series","Episode"]
+).filter(lambda x: len(x) > 1)
+
+# ---------------------------
+# RANK WITHIN TIE (DETERMINISTIC)
+# ---------------------------
+
+ties = ties.sort_values(["Series","Episode","Seat"])
+
+ties["Tie position"] = ties.groupby(
+    ["Series","Episode"]
+).cumcount() + 1
+
+ties["Result"] = ties["Tie position"].eq(1).map(
+    {True: "Winner", False: "Loser"}
+)
+
+# ---------------------------
+# ADD NAMES
+# ---------------------------
+
+ties = ties.merge(df_names, on="Seat", how="left")
+
+# ---------------------------
+# TIEBREAK COUNT PER SERIES
+# ---------------------------
+
+tiebreak_counts = (
+    ties[["Series","Episode"]]
+    .drop_duplicates()
+    .groupby("Series")
+    .size()
+    .rename("Tiebreaks in series")
+)
+
+ties = ties.merge(
+    tiebreak_counts,
+    on="Series",
+    how="left"
+)
+
+# ---------------------------
+# FINAL OUTPUT
+# ---------------------------
+
+final = ties[[
+    "Series",
+    "Episode",
+    "Name",
+    "Seat",
+    "Score",
+    "Result",
+    "Tie position",
+    "Tiebreaks in series"
+]]
+
+print(final)
