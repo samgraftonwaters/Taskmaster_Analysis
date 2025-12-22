@@ -606,8 +606,8 @@ count_winners_losers = (
 
 count_winners_losers = count_winners_losers.replace(np.nan, 0)
 
-count_winners['Percentage Wins'] = count_winners["Wins"] / count_winners['Tie break Wins per Person']
-count_losers['Percentage Losses'] = count_losers["Losses"] / count_losers['Tie break Losses per Person']
+count_winners['Percentage Wins'] = round((count_winners["Wins"] / count_winners['Tie break Wins per Person']),2)
+count_losers['Percentage Losses'] = round((count_losers["Losses"] / count_losers['Tie break Losses per Person']),2)
 
 top_count_winners = count_winners.sort_values(by = ['Percentage Wins', 'Wins'], ascending = False).reset_index(drop = True)
 top_count_losers = count_losers.sort_values(by = ['Percentage Losses', 'Losses'], ascending = False).reset_index(drop = True)
