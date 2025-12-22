@@ -569,20 +569,34 @@ tie_break_scores_names["Tie breaks per series"] = (
     .transform("nunique")
 )
 
+tie_break_scores_names["Tie break Wins per Person"] = (
+    tie_break_scores_names.groupby("Series")["Seat Winner Name"]
+    .transform("count")
+)
+
+tie_break_scores_names["Tie break Losses per Person"] = (
+    tie_break_scores_names.groupby("Series")["Seat Loser Name"]
+    .transform("count")
+)
+
 tie_break_scores_names= tie_break_scores_names[["Series", "Episode", "Seat Winner",
-        "Seat Winner Name", "Seat Loser", "Seat Loser Name", "Tie breaks per series"]]
+        "Seat Winner Name", "Seat Loser", "Seat Loser Name", "Tie break Wins per Person", 
+        'Tie break Losses per Person', "Tie breaks per series"]]
 
 print(tie_break_scores_names.head(20))
 
-count_winners = (tie_break_scores_names[["Series","Seat Winner Name", "Tie breaks per series"]]
+count_winners = (tie_break_scores_names[["Series","Seat Winner Name", "Tie break Wins per Person",
+                                        "Tie breaks per series"]]
       .rename(columns={"Seat Winner Name": "Name"})
       .assign(Wins=1)
-      .groupby(["Series", "Name", "Tie breaks per series"], as_index=False)["Wins"].sum())
+      .groupby(["Series", "Name", "Tie breaks per series", "Tie break Wins per Person"], 
+               as_index=False)["Wins"].sum())
 
-count_losers = (tie_break_scores_names[["Series", "Seat Loser Name", "Tie breaks per series"]]
+count_losers = (tie_break_scores_names[["Series", "Seat Loser Name", 'Tie break Losses per Person',
+                                        "Tie breaks per series"]]
       .rename(columns={"Seat Loser Name": "Name"})
       .assign(Losses=1)
-      .groupby(["Series", "Name", "Tie breaks per series"],as_index=False)["Losses"].sum())
+      .groupby(["Series", "Name", "Tie breaks per series", 'Tie break Losses per Person'],as_index=False)["Losses"].sum())
 
 count_winners_losers = (
     pd.concat([
@@ -590,6 +604,17 @@ count_winners_losers = (
         count_losers.rename(columns={"Losses": "Count"}).assign(Result="Loss")
     ]).sort_values(["Series", "Name"]).reset_index(drop=True))
 
+count_winners_losers = count_winners_losers.replace(np.nan, 0)
+
+count_winners['Percentage Wins'] = count_winners["Wins"] / count_winners['Tie break Wins per Person']
+count_losers['Percentage Losses'] = count_losers["Losses"] / count_losers['Tie break Losses per Person']
+
+top_count_winners = count_winners.sort_values(by = ['Percentage Wins', 'Wins'], ascending = False).reset_index(drop = True)
+top_count_losers = count_losers.sort_values(by = ['Percentage Losses', 'Losses'], ascending = False).reset_index(drop = True)
+
 print(count_winners.head(20))
 print(count_losers.head(20))
 print(count_winners_losers.head(20))
+
+print(top_count_winners.head(20))
+print(top_count_losers.head(20))
