@@ -572,12 +572,12 @@ tie_break_scores_names["Tie breaks per series"] = (
 )
 
 tie_break_scores_names["Tie break Wins per Person"] = (
-    tie_break_scores_names.groupby("Series")["Seat Winner Name"]
+    tie_break_scores_names.groupby("Series", "Episode")["Seat Winner Name"]
     .transform("count")
 )
 
 tie_break_scores_names["Tie break Losses per Person"] = (
-    tie_break_scores_names.groupby("Series")["Seat Loser Name"]
+    tie_break_scores_names.groupby("Series", "Episode")["Seat Loser Name"]
     .transform("count")
 )
 
@@ -615,9 +615,9 @@ tie_break_count_losers['Percentage Losses'] = round((tie_break_count_losers["Los
 top_tie_break_count_winners = tie_break_count_winners.sort_values(by = ['Percentage Wins', 'Wins'], ascending = False).reset_index(drop = True)
 top_tie_break_count_losers = tie_break_count_losers.sort_values(by = ['Percentage Losses', 'Losses'], ascending = False).reset_index(drop = True)
 
-print(tie_break_count_winners.head(20))
-print(tie_break_count_losers.head(20))
-print(tie_break_count_winners_losers.head(20))
+# print(tie_break_count_winners.head(20))
+# print(tie_break_count_losers.head(20))
+print(tie_break_count_winners_losers.head(30))
 
 print(top_tie_break_count_winners.head(20))
 print(top_tie_break_count_losers.head(20))
@@ -650,9 +650,41 @@ for i, (wins, percent, tie_person, tie_series, name, series, seat) in enumerate(
     plt.text(-0.3, 20, 'Series  Wins Tie (person) Tie (series)', fontsize = 12, color = 'black')
 
 plt.xlim(-0.35, 1.1)
-plt.xticks([0, 0.2, 0.4, 0.6, 0.8], fontsize = 18)
+plt.xticks([0, 0.2, 0.4, 0.6, 0.8, 1], fontsize = 18)
 plt.yticks([])
 plt.ylabel('')
 plt.legend(fontsize=15)
 plt.show()
 
+
+
+plt.figure()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
+
+plt.barh(width=top_tie_break_count_losers['Percentage Losses'], y=top_tie_break_count_losers['Name'],
+    color='dodgerblue', alpha=0.8, edgecolor='white', label='Most Tie Breaks Lost')
+
+for i, (wins, percent, tie_person, tie_series, name, series, seat) in enumerate(zip(top_tie_break_count_losers['Losses'], 
+                                                                    top_tie_break_count_losers['Percentage Losses'],
+                                            top_tie_break_count_losers['Tie break Losses per Person'],
+                                            top_tie_break_count_losers['Tie breaks per series'],
+                                            top_tie_break_count_losers['Name'],
+                                            top_tie_break_count_losers['Series'],
+                                            top_tie_break_count_losers['Seat'])):
+    
+    
+    plt.text(-0.32, i, series, va='center', ha='left', fontsize=12, color='black')
+    plt.text(-0.25, i, wins, va='center', ha='left', fontsize=12, color='black')
+    plt.text(-0.2, i, tie_person, va='center', ha='left', fontsize=12, color='black')
+    plt.text(-0.15, i, tie_series, va='center', ha='left', fontsize=12, color='black')
+    plt.text(-0.08, i, seat, va='center', ha='left', fontsize=12, color = 'black')
+    plt.text(0.05, i, name, va='center', ha='left', fontsize=12, color = 'white')
+    plt.text(percent + 0.02, i, percent, va='center', ha='left', fontsize=12, color = 'blue')
+    plt.text(-0.3, 20, 'Series  Losses Tie (person) Tie (series)', fontsize = 12, color = 'black')
+
+plt.xlim(-0.35, 1.1)
+plt.xticks([0, 0.2, 0.4, 0.6, 0.8, 1], fontsize = 18)
+plt.yticks([])
+plt.ylabel('')
+plt.legend(fontsize=15)
+plt.show()
