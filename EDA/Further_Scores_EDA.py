@@ -508,8 +508,6 @@ tie_break_scores = tie_break_scores.merge(
     suffixes=("_tb", "_score")
 )
 
-print(tie_break_scores)
-print()
 seat_cols = [f"Seat {i}" for i in range(1, 6)]
 
 rows = []
@@ -526,10 +524,6 @@ for _, row in tie_break_scores.iterrows():
     score_counts = pd.Series(scores).value_counts()
     tied_scores = score_counts[score_counts >= 1].index 
 
-    # print(score_counts)
-    # print(tied_scores)
-    # print()
-
     for tied_score in tied_scores:
         tied_seats = [seat for seat, tie in scores.items() if tie == tied_score]
 
@@ -540,13 +534,6 @@ for _, row in tie_break_scores.iterrows():
             double_losers = 1
         else:
             double_losers = 0
-
-        # print(tied_seats)
-        # print(winners)
-        # print(losers)
-        # print('double_losers:')
-        # print(double_losers)
-        # print()
 
         # create all winner–loser combinations
         for win in winners:
@@ -561,8 +548,6 @@ for _, row in tie_break_scores.iterrows():
 
 tie_break_scores = pd.DataFrame(rows)
 
-print(tie_break_scores)
-
 tie_break_scores_names = (
     tie_break_scores
     .merge(
@@ -574,8 +559,6 @@ tie_break_scores_names = (
     .rename(columns={"Name": "Seat Winner Name"})
     .drop(columns="Seat")
 )
-
-print(tie_break_scores_names)
 
 tie_break_scores_names = (
     tie_break_scores_names
@@ -589,52 +572,50 @@ tie_break_scores_names = (
     .drop(columns="Seat")
 )
 
-print(tie_break_scores_names)
-
 tie_break_scores_names["Tie breaks per series"] = (
     tie_break_scores_names.groupby("Series")["Episode"]
     .transform("count")
 )
 
-tie_break_scores_names["Tie break Wins per Person"] = (
-    tie_break_scores_names.groupby(["Series"])["Seat Winner Name"]
-    .transform("count")
-)
+# tie_break_scores_names["Tie break Wins per Person"] = (
+#     tie_break_scores_names.groupby(["Series"])["Seat Winner Name"]
+#     .transform("count")
+# )
 
-tie_break_scores_names["Tie break Losses per Person"] = (
-    tie_break_scores_names.groupby(["Series"])["Seat Loser Name"]
-    .transform("count")
-)
+# tie_break_scores_names["Tie break Losses per Person"] = (
+#     tie_break_scores_names.groupby(["Series"])["Seat Loser Name"]
+#     .transform("count")
+# )
 
 tie_break_scores_names = tie_break_scores_names[["Series", "Episode", "Seat Winner",
-        "Seat Winner Name", "Seat Loser", "Seat Loser Name", "Tie break Wins per Person", 
-        'Tie break Losses per Person', "Tie breaks per series", "Double Losers"]]
+        "Seat Winner Name", "Seat Loser", "Seat Loser Name", 
+        "Tie breaks per series", "Double Losers"]]
 
+count_names = pd.DataFrame(pd.concat([tie_break_scores_names['Seat Winner Name'], tie_break_scores_names['Seat Loser Name']], axis = 0), columns = ['Name'])
+count_names_counts = count_names.value_counts().reset_index()
+count_names_counts.columns = ["Name", "Tie Breaks per Person"]
 
-tie_break_scores_names["Tie breaks per series"] = tie_break_scores_names["Tie breaks per series"] - tie_break_scores_names["Double Losers"]
-tie_break_scores_names["Tie break Wins per Person"] = tie_break_scores_names["Tie break Wins per Person"] - tie_break_scores_names["Double Losers"]
-tie_break_scores_names["Tie break Losses per Person"] = tie_break_scores_names["Tie break Losses per Person"] - tie_break_scores_names["Double Losers"]
-
-
-print(tie_break_scores_names.head(20))
+# print(tie_break_scores_names.head(20))
 
 tie_break_count_winners = (tie_break_scores_names[["Series", "Seat Winner Name", "Seat Winner", 
-                                                   "Tie break Wins per Person", "Tie breaks per series", 
-                                                   "Double Losers"]]
+                                                   "Tie breaks per series", "Double Losers"]]
       .rename(columns={"Seat Winner Name": "Name", "Seat Winner" : "Seat"})
       .assign(Wins=1)
-      .groupby(["Series", "Name", "Seat", "Tie breaks per series", "Tie break Wins per Person", 
-                "Double Losers"], 
+      .groupby(["Series", "Name", "Seat", "Tie breaks per series", "Double Losers"], 
                as_index=False)["Wins"].sum())
 
+tie_break_count_winners = pd.merge(left = tie_break_count_winners, right = count_names_counts, on = 'Name',
+                                   how = 'left')
+
 tie_break_count_losers = (tie_break_scores_names[["Series", "Seat Loser Name", "Seat Loser",
-                                                  'Tie break Losses per Person', "Tie breaks per series", 
-                                                  "Double Losers"]]
+                                                  "Tie breaks per series", "Double Losers"]]
       .rename(columns={"Seat Loser Name": "Name", "Seat Loser" : "Seat"})
       .assign(Losses=1)
-      .groupby(["Series", "Name", "Seat", "Tie breaks per series",'Tie break Losses per Person', 
-                "Double Losers"],
+      .groupby(["Series", "Name", "Seat", "Tie breaks per series", "Double Losers"],
                as_index=False)["Losses"].sum())
+
+tie_break_count_losers = pd.merge(left = tie_break_count_losers, right = count_names_counts, on = 'Name',
+                                   how = 'left')
 
 tie_break_count_winners_losers = (
     pd.concat([
@@ -644,11 +625,13 @@ tie_break_count_winners_losers = (
 
 tie_break_count_winners_losers = tie_break_count_winners_losers.replace(np.nan, 0)
 
-count_names = pd.DataFrame(pd.concat([tie_break_count_winners['Name'], tie_break_count_losers['Name']], axis = 0), columns = ['Name'])
-count_names_counts = count_names['Name'].value_counts().reset_index()
-count_names_counts.columns = ["Name", "Tie Breaks per Person"]
-print(count_names_counts)
-print('')
+print(tie_break_scores_names.head(20))
+
+tie_break_count_winners["Tie breaks per series"] = tie_break_count_winners["Tie breaks per series"] - tie_break_count_winners["Double Losers"]
+# tie_break_count_winners["Tie Breaks per Person"] = tie_break_count_winners["Tie Breaks per Person"] - tie_break_count_winners["Double Losers"]
+
+tie_break_count_losers["Tie breaks per series"] = tie_break_count_losers["Tie breaks per series"] - tie_break_count_losers["Double Losers"]
+# tie_break_count_losers["Tie Breaks per Person"] = tie_break_count_losers["Tie Breaks per Person"] - tie_break_count_losers["Double Losers"]
 
 tie_break_count_winners['Wins'] = round((tie_break_count_winners["Wins"] - tie_break_count_winners["Double Losers"]),2)
 tie_break_count_losers['Losses'] = round((tie_break_count_losers["Losses"] - tie_break_count_losers["Double Losers"]),2)
@@ -656,18 +639,18 @@ tie_break_count_losers['Losses'] = round((tie_break_count_losers["Losses"] - tie
 tie_break_count_winners['Percentage Wins Series'] = round((tie_break_count_winners["Wins"] / tie_break_count_winners['Tie breaks per series']),2)
 tie_break_count_losers['Percentage Losses Series'] = round((tie_break_count_losers["Losses"] / tie_break_count_losers['Tie breaks per series']),2)
 
-tie_break_count_winners['Percentage Wins'] = round((tie_break_count_winners["Wins"] / tie_break_count_winners['Tie break Wins per Person']),2)
-tie_break_count_losers['Percentage Losses'] = round((tie_break_count_losers["Losses"] / tie_break_count_losers['Tie break Losses per Person']),2)
+tie_break_count_winners['Percentage Wins Person'] = round((tie_break_count_winners["Wins"] / tie_break_count_winners['Tie Breaks per Person']),2)
+tie_break_count_losers['Percentage Losses Person'] = round((tie_break_count_losers["Losses"] / tie_break_count_losers['Tie Breaks per Person']),2)
 
-top_tie_break_count_winners = tie_break_count_winners.sort_values(by = ['Percentage Wins', 'Wins'], ascending = False).reset_index(drop = True)
-top_tie_break_count_losers = tie_break_count_losers.sort_values(by = ['Percentage Losses', 'Losses'], ascending = False).reset_index(drop = True)
+top_tie_break_count_winners = tie_break_count_winners.sort_values(by = ['Percentage Wins Person', 'Wins'], ascending = False).reset_index(drop = True)
+top_tie_break_count_losers = tie_break_count_losers.sort_values(by = ['Percentage Losses Person', 'Losses'], ascending = False).reset_index(drop = True)
 
 # print(tie_break_count_winners.head(20))
 # print(tie_break_count_losers.head(20))
 # print(tie_break_count_winners_losers.head(30))
 
-# print(top_tie_break_count_winners.head(50))
-# print(top_tie_break_count_losers.head(50))
+print(top_tie_break_count_winners.head(50))
+print(top_tie_break_count_losers.head(50))
 
 top_tie_break_count_winners = top_tie_break_count_winners[0:19].sort_values(by = ['Percentage Wins', 'Wins'], ascending = True).reset_index(drop = True)
 top_tie_break_count_losers = top_tie_break_count_losers[0:19].sort_values(by = ['Percentage Losses', 'Losses'], ascending = True).reset_index(drop = True)
@@ -675,12 +658,12 @@ top_tie_break_count_losers = top_tie_break_count_losers[0:19].sort_values(by = [
 plt.figure()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
 
-plt.barh(width=top_tie_break_count_winners['Percentage Wins'], y=top_tie_break_count_winners['Name'],
+plt.barh(width=top_tie_break_count_winners['Percentage Wins Person'], y=top_tie_break_count_winners['Name'],
     color='red', alpha=0.8, edgecolor='white', label='Most Tie Breaks Won')
 
 for i, (wins, percent, tie_person, tie_series, name, series, seat) in enumerate(zip(top_tie_break_count_winners['Wins'], 
                                                                     top_tie_break_count_winners['Percentage Wins'],
-                                            top_tie_break_count_winners['Tie break Wins per Person'],
+                                            top_tie_break_count_winners['Tie Breaks per Person'],
                                             top_tie_break_count_winners['Tie breaks per series'],
                                             top_tie_break_count_winners['Name'],
                                             top_tie_break_count_winners['Series'],
@@ -708,12 +691,12 @@ plt.show()
 plt.figure()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
 
-plt.barh(width=top_tie_break_count_losers['Percentage Losses'], y=top_tie_break_count_losers['Name'],
+plt.barh(width=top_tie_break_count_losers['Percentage Losses Person'], y=top_tie_break_count_losers['Name'],
     color='dodgerblue', alpha=0.8, edgecolor='white', label='Most Tie Breaks Lost')
 
 for i, (wins, percent, tie_person, tie_series, name, series, seat) in enumerate(zip(top_tie_break_count_losers['Losses'], 
                                                                     top_tie_break_count_losers['Percentage Losses'],
-                                            top_tie_break_count_losers['Tie break Losses per Person'],
+                                            top_tie_break_count_losers['Tie Breaks per Person'],
                                             top_tie_break_count_losers['Tie breaks per series'],
                                             top_tie_break_count_losers['Name'],
                                             top_tie_break_count_losers['Series'],
