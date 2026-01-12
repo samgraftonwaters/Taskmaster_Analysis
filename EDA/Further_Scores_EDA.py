@@ -628,10 +628,8 @@ tie_break_count_winners_losers = tie_break_count_winners_losers.replace(np.nan, 
 print(tie_break_scores_names.head(20))
 
 tie_break_count_winners["Tie breaks per series"] = tie_break_count_winners["Tie breaks per series"] - tie_break_count_winners["Double Losers"]
-# tie_break_count_winners["Tie Breaks per Person"] = tie_break_count_winners["Tie Breaks per Person"] - tie_break_count_winners["Double Losers"]
 
 tie_break_count_losers["Tie breaks per series"] = tie_break_count_losers["Tie breaks per series"] - tie_break_count_losers["Double Losers"]
-# tie_break_count_losers["Tie Breaks per Person"] = tie_break_count_losers["Tie Breaks per Person"] - tie_break_count_losers["Double Losers"]
 
 tie_break_count_winners['Wins'] = round((tie_break_count_winners["Wins"] - tie_break_count_winners["Double Losers"]),2)
 tie_break_count_losers['Losses'] = round((tie_break_count_losers["Losses"] - tie_break_count_losers["Double Losers"]),2)
@@ -645,6 +643,12 @@ tie_break_count_losers['Percentage Losses Person'] = round((tie_break_count_lose
 top_tie_break_count_winners = tie_break_count_winners.sort_values(by = ['Percentage Wins Person', 'Wins'], ascending = False).reset_index(drop = True)
 top_tie_break_count_losers = tie_break_count_losers.sort_values(by = ['Percentage Losses Person', 'Losses'], ascending = False).reset_index(drop = True)
 
+top_tie_break_count_winners.to_csv('Tie_Break_Winners.csv', sep = ',', index = False)
+top_tie_break_count_losers.to_csv('Tie_Break_Losers.csv', sep = ',', index = False)
+
+
+seat_winners = top_tie_break_count_winners[['Seat', 'Wins', 'Tie breaks per series']]
+seat_losers = top_tie_break_count_losers[['Seat', 'Losses', 'Tie breaks per series']]
 # print(tie_break_count_winners.head(20))
 # print(tie_break_count_losers.head(20))
 # print(tie_break_count_winners_losers.head(30))
@@ -782,3 +786,10 @@ plt.yticks([])
 plt.ylabel('')
 plt.title('Tie Break Percentage Loses per Number in each Series', fontsize = 22)
 plt.show()
+
+
+seat_winners_totals = seat_winners.groupby('Seat')[['Wins', 'Tie breaks per series']].sum()
+seat_losers_totals = seat_losers.groupby('Seat')[['Losses', 'Tie breaks per series']].sum()
+
+print(seat_winners_totals)
+print(seat_losers_totals)
