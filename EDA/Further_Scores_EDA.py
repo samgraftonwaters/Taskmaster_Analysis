@@ -643,10 +643,6 @@ tie_break_count_losers['Percentage Losses Person'] = round((tie_break_count_lose
 top_tie_break_count_winners = tie_break_count_winners.sort_values(by = ['Percentage Wins Person', 'Wins'], ascending = False).reset_index(drop = True)
 top_tie_break_count_losers = tie_break_count_losers.sort_values(by = ['Percentage Losses Person', 'Losses'], ascending = False).reset_index(drop = True)
 
-top_tie_break_count_winners.to_csv('Tie_Break_Winners.csv', sep = ',', index = False)
-top_tie_break_count_losers.to_csv('Tie_Break_Losers.csv', sep = ',', index = False)
-
-
 seat_winners = top_tie_break_count_winners[['Seat', 'Wins', 'Tie breaks per series']]
 seat_losers = top_tie_break_count_losers[['Seat', 'Losses', 'Tie breaks per series']]
 # print(tie_break_count_winners.head(20))
@@ -788,8 +784,11 @@ plt.title('Tie Break Percentage Loses per Number in each Series', fontsize = 22)
 plt.show()
 
 
-seat_winners_totals = seat_winners.groupby('Seat')[['Wins', 'Tie breaks per series']].sum()
-seat_losers_totals = seat_losers.groupby('Seat')[['Losses', 'Tie breaks per series']].sum()
+seat_winners_totals = seat_winners.groupby('Seat')[['Wins', 'Tie breaks per series']].sum().reset_index()
+seat_losers_totals = seat_losers.groupby('Seat')[['Losses', 'Tie breaks per series']].sum().reset_index()
+
+seat_winners_totals['Percentage Wins per Seat'] = seat_winners_totals['Wins']/seat_winners_totals['Tie breaks per series']
+seat_losers_totals['Percentage Wins per Seat'] = seat_losers_totals['Losses']/seat_losers_totals['Tie breaks per series']
 
 print(seat_winners_totals)
 print(seat_losers_totals)
