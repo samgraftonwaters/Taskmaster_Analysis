@@ -787,8 +787,55 @@ plt.show()
 seat_winners_totals = seat_winners.groupby('Seat')[['Wins', 'Tie breaks per series']].sum().reset_index()
 seat_losers_totals = seat_losers.groupby('Seat')[['Losses', 'Tie breaks per series']].sum().reset_index()
 
-seat_winners_totals['Percentage Wins per Seat'] = seat_winners_totals['Wins']/seat_winners_totals['Tie breaks per series']
-seat_losers_totals['Percentage Wins per Seat'] = seat_losers_totals['Losses']/seat_losers_totals['Tie breaks per series']
+seat_winners_totals['Percentage Wins per Seat'] = round((seat_winners_totals['Wins']/seat_winners_totals['Tie breaks per series']),2)
+seat_losers_totals['Percentage Losses per Seat'] = round((seat_losers_totals['Losses']/seat_losers_totals['Tie breaks per series']),2)
+
+seat_winners_totals['Numbers'] = range(1, 6)
+seat_losers_totals['Numbers'] = range(1, 6)
 
 print(seat_winners_totals)
 print(seat_losers_totals)
+
+fig, ax1 = plt.subplots()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.1)
+
+ax1.bar(x = seat_winners_totals['Numbers']-0.2, height = seat_winners_totals['Percentage Wins per Seat']*100, 
+        label = 'Percentage Tie Break Wins', width = 0.40, color = 'blue', alpha = 0.6, edgecolor ='black')
+ax1.bar(x = seat_losers_totals['Numbers']+0.2, height = seat_losers_totals['Percentage Losses per Seat']*100, 
+        label = 'Percentage Tie Break Losses', width = 0.40, color = 'green', alpha = 0.6, edgecolor ='black')
+
+
+for i in range(len(seat_winners_totals)):
+    win_per = seat_winners_totals['Percentage Wins per Seat'][i] * 100
+    los_per = seat_winners_totals['Percentage Wins per Seat'][i] * 100
+    ax1.text(i+0.8, win_per + 2, f"{win_per:.1f}", ha='center', fontsize=15, color='blue')
+    ax1.text(i+1.2, los_per + 2, f"{win_per:.1f}", ha='center', fontsize=15, color='green')
+
+ax1.set_ylabel('Percentage', fontsize = 20)
+ax1.tick_params(axis='y', labelsize=16)
+ax1.set_ylim(0, 70)
+
+ax2 = ax1.twinx()
+
+ax2.plot(seat_winners_totals['Numbers'], seat_winners_totals['Wins'], 'o-', lw = 4,
+         color = 'darkblue', label = 'Number of Wins')
+ax2.plot(seat_losers_totals['Numbers'], seat_losers_totals['Losses'], 'o-.', lw = 4,
+         color = 'darkgreen', label = 'Number of Losses')
+
+for i in range(len(seat_winners_totals)):
+    ax2.text(i+0.8, seat_winners_totals['Wins'][i]+0.02, 
+            seat_winners_totals['Wins'][i], ha='center', fontsize = 15, color = 'blue')
+    ax2.text(i+1.2, seat_losers_totals['Losses'][i]+0.02, 
+            seat_losers_totals['Losses'][i], ha='center', fontsize = 15, color = 'green')
+
+
+ax2.set_ylabel('Count', fontsize = 20)
+ax2.tick_params(axis='y', labelsize=16)
+ax2.set_ylim(0, 10)
+
+plt.xticks(fontsize = 16)
+plt.xlabel('Seat Number', fontsize = 20)
+plt.title('Percentage Win or Lose Rate for each Seat when it comes to Tie Breakers', fontsize = 16)
+
+plt.legend(loc = 'best', fontsize = 15)
+plt.show()
