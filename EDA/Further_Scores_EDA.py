@@ -90,9 +90,6 @@ for series in range(1, 21):
 count_one = pd.DataFrame(np.vstack(count_one), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5'])
 count_five = pd.DataFrame(np.vstack(count_five), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5'])
 
-# print(count_one)
-# print(count_five)
-
 series = []
 for i in range(20):
     series.append(f'S{count_five.index.values[i] + 1}')
@@ -150,9 +147,6 @@ least_fives = pd.merge(left = least_fives, right = named_series_table_reformatte
 
 least_fives['index'] = least_fives.index.values + 1
 
-# print(most_ones)
-# print(least_ones)
-
 fig, (ax1, ax2) = plt.subplots(ncols = 1, nrows = 2, sharex = True)
 plt.subplots_adjust(wspace=0, hspace=0.05, bottom = 0.1, top = 0.94, left = 0.05, right = 0.96)
 
@@ -188,9 +182,6 @@ ax2.set_ylabel('')
 ax2.set_xlabel('')
 plt.suptitle('Most and Least Number of 1s Scored Per Seat', fontsize = 20)
 plt.show()
-
-# print(most_fives)
-# print(least_fives)
 
 fig, (ax1, ax2) = plt.subplots(ncols = 1, nrows = 2, sharex = True)
 plt.subplots_adjust(wspace=0, hspace=0.05, bottom = 0.1, top = 0.94, left = 0.05, right = 0.96)
@@ -273,10 +264,7 @@ for series in range(1, 21):
 episode_scores = pd.DataFrame(np.vstack(episode_scores), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Episode', 'Series'])
 tie_break_scores = pd.DataFrame(np.vstack(tie_break_scores), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Episode', 'Series'])
 
-print('hello')
 print(episode_scores.head())
-print()
-print()
 
 highest_ep_scores = []
 lowest_ep_scores = []
@@ -305,16 +293,8 @@ lowest_ep_scores = pd.merge(left = lowest_ep_scores, right = named_series_table_
 
 lowest_ep_scores['index'] = lowest_ep_scores.index.values + 1
 
-
-# print(highest_ep_scores)
-# print(lowest_ep_scores)
-
-
 plt.figure()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.05, right = 0.96)
-
-# plt.barh(highest_ep_scores['index'], highest_ep_scores['Score'], color='red', alpha=0.8, 
-#                  edgecolor='white', label='Top Ten Teams')
 
 sns.barplot(highest_ep_scores, x="Score", y="index", orient="y", hue = 'Seat', legend = False)
 
@@ -327,14 +307,11 @@ for i, (score, name, series, episode, seat) in enumerate(zip(highest_ep_scores['
     plt.text(18, i, seat, va='center', ha='left', fontsize=15, color = 'white')
     plt.text(score+0.1, i, int(score), fontsize = 15, color = 'black')
 
-
-# plt.yticks(highest_ep_scores['index']-1, highest_ep_scores['Series'], fontsize = 14)
 plt.yticks([],[])
 
 plt.xticks(fontsize = 14)
 plt.xlim(0, highest_ep_scores['Score'].max() + 2)
 plt.xlabel('Episode Score', fontsize = 18)
-# plt.ylabel('Series', fontsize = 18)
 plt.ylabel('', fontsize = 18)
 
 plt.title('Highest Total Scores in an Episode per Seat', fontsize = 20)
@@ -344,8 +321,6 @@ plt.show()
 plt.figure()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.05, right = 0.96)
 
-# plt.barh(lowest_ep_scores['index'], lowest_ep_scores['Score'], color='dodgerblue', alpha=0.8, 
-#                  edgecolor='white', label='Top Ten Teams')
 
 sns.barplot(lowest_ep_scores, x="Score", y="index", orient="y", hue = 'Seat', legend = False)
 
@@ -358,14 +333,11 @@ for i, (score, name, series, episode, seat) in enumerate(zip(lowest_ep_scores['S
     plt.text(2.4, i, seat, va='center', ha='left', fontsize=15, color = 'white')
     plt.text(score+0.1, i, int(score), fontsize = 15, color = 'black')
 
-
-# plt.yticks(lowest_ep_scores['index'] - 1, lowest_ep_scores['Series'], fontsize = 14)
 plt.yticks([],[])
 plt.xticks(fontsize = 14)
 plt.xlim(0, lowest_ep_scores['Score'].max() + 0.5)
 plt.xlabel('Episode Score', fontsize = 18)
 plt.ylabel('', fontsize = 18)
-# plt.ylabel('Series', fontsize = 18)
 
 plt.title('Lowest Total Scores in an Episode per Seat', fontsize = 20)
 
@@ -480,7 +452,6 @@ for i, (losses, percent, number, name, series, seat) in enumerate(zip(most_eps_l
     ax2.text(-0.08, i, seat, va='center', ha='left', fontsize=12, color = 'black')
     ax2.text(0.05, i, name, va='center', ha='left', fontsize=12, color = 'black')
     ax2.text(percent + 0.02, i, percent, va='center', ha='left', fontsize=12, color = 'blue')
-    # ax2.text(-0.29, 10, 'Series  Number  Episodes  Seat', fontsize = 11, color = 'black')
 
 ax2.set_xlim(-0.30, 0.85)
 ax2.set_xticks([0, 0.2, 0.4, 0.6, 0.8])
@@ -515,7 +486,6 @@ rows = []
 for _, row in tie_break_scores.iterrows():
     series = row["Series"]
     episode = row["Episode"]
-    # seat = row["Seat"]
 
     # scores per seat
     scores = {seat: row[f"{seat}_score"] for seat in seat_cols}
@@ -542,7 +512,6 @@ for _, row in tie_break_scores.iterrows():
                     "Series": series,
                     "Episode": episode,
                     "Double Losers" : double_losers,
-                    # "Seat" : seat,
                     "Seat Winner": win,
                     "Seat Loser": lost})
 
@@ -576,16 +545,6 @@ tie_break_scores_names["Tie breaks per series"] = (
     tie_break_scores_names.groupby("Series")["Episode"]
     .transform("count")
 )
-
-# tie_break_scores_names["Tie break Wins per Person"] = (
-#     tie_break_scores_names.groupby(["Series"])["Seat Winner Name"]
-#     .transform("count")
-# )
-
-# tie_break_scores_names["Tie break Losses per Person"] = (
-#     tie_break_scores_names.groupby(["Series"])["Seat Loser Name"]
-#     .transform("count")
-# )
 
 tie_break_scores_names = tie_break_scores_names[["Series", "Episode", "Seat Winner",
         "Seat Winner Name", "Seat Loser", "Seat Loser Name", 
@@ -645,9 +604,6 @@ top_tie_break_count_losers = tie_break_count_losers.sort_values(by = ['Percentag
 
 seat_winners = top_tie_break_count_winners[['Seat', 'Wins', 'Tie breaks per series']]
 seat_losers = top_tie_break_count_losers[['Seat', 'Losses', 'Tie breaks per series']]
-# print(tie_break_count_winners.head(20))
-# print(tie_break_count_losers.head(20))
-# print(tie_break_count_winners_losers.head(30))
 
 print(top_tie_break_count_winners.head(50))
 print(top_tie_break_count_losers.head(50))
@@ -782,7 +738,6 @@ plt.yticks([])
 plt.ylabel('')
 plt.title('Tie Break Percentage Loses per Number in each Series', fontsize = 22)
 plt.show()
-
 
 seat_winners_totals = seat_winners.groupby('Seat')[['Wins', 'Tie breaks per series']].sum().reset_index()
 seat_losers_totals = seat_losers.groupby('Seat')[['Losses', 'Tie breaks per series']].sum().reset_index()
