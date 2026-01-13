@@ -656,7 +656,7 @@ top_tie_break_count_winners = top_tie_break_count_winners[0:19].sort_values(by =
 top_tie_break_count_losers = top_tie_break_count_losers[0:19].sort_values(by = ['Percentage Losses Person', 'Losses'], ascending = True).reset_index(drop = True)
 
 plt.figure()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.05, right = 0.98)
 
 plt.barh(width=top_tie_break_count_winners['Percentage Wins Person'], y=top_tie_break_count_winners['Name'],
     color='red', alpha=0.8, edgecolor='white', label='Most Tie Breaks Won')
@@ -687,7 +687,7 @@ plt.title('Tie Break Percentage Wins per Number for each Person', fontsize = 22)
 plt.show()
 
 plt.figure()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.05, right = 0.98)
 
 plt.barh(width=top_tie_break_count_losers['Percentage Losses Person'], y=top_tie_break_count_losers['Name'],
     color='dodgerblue', alpha=0.8, edgecolor='white', label='Most Tie Breaks Lost')
@@ -722,7 +722,7 @@ top_tie_break_count_winners = top_tie_break_count_winners[0:19].sort_values(by =
 top_tie_break_count_losers = top_tie_break_count_losers[0:19].sort_values(by = ['Percentage Losses Series', 'Losses'], ascending = True).reset_index(drop = True)
 
 plt.figure()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.05, right = 0.98)
 
 plt.barh(width=top_tie_break_count_winners['Percentage Wins Series'], y=top_tie_break_count_winners['Name'],
     color='red', alpha=0.8, edgecolor='white', label='Most Tie Breaks Won')
@@ -753,7 +753,7 @@ plt.title('Tie Break Percentage Wins per Number in each Series', fontsize = 22)
 plt.show()
 
 plt.figure()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.05, right = 0.98)
 
 plt.barh(width=top_tie_break_count_losers['Percentage Losses Series'], y=top_tie_break_count_losers['Name'],
     color='dodgerblue', alpha=0.8, edgecolor='white', label='Most Tie Breaks Lost')
@@ -787,8 +787,8 @@ plt.show()
 seat_winners_totals = seat_winners.groupby('Seat')[['Wins', 'Tie breaks per series']].sum().reset_index()
 seat_losers_totals = seat_losers.groupby('Seat')[['Losses', 'Tie breaks per series']].sum().reset_index()
 
-seat_winners_totals['Percentage Wins per Seat'] = round((seat_winners_totals['Wins']/seat_winners_totals['Tie breaks per series']),2)
-seat_losers_totals['Percentage Losses per Seat'] = round((seat_losers_totals['Losses']/seat_losers_totals['Tie breaks per series']),2)
+seat_winners_totals['Percentage Wins per Seat'] = seat_winners_totals['Wins']/seat_winners_totals['Tie breaks per series']
+seat_losers_totals['Percentage Losses per Seat'] = seat_losers_totals['Losses']/seat_losers_totals['Tie breaks per series']
 
 seat_winners_totals['Numbers'] = range(1, 6)
 seat_losers_totals['Numbers'] = range(1, 6)
@@ -797,7 +797,7 @@ print(seat_winners_totals)
 print(seat_losers_totals)
 
 fig = plt.subplots()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.1)
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.1, right = 0.95)
 
 plt.bar(x = seat_winners_totals['Numbers']-0.2, height = seat_winners_totals['Percentage Wins per Seat']*100, 
         label = 'Percentage Tie Break Wins', width = 0.40, color = 'blue', alpha = 0.6, edgecolor ='black')
@@ -817,6 +817,32 @@ plt.ylim(0, 70)
 plt.xticks(fontsize = 16)
 plt.xlabel('Seat Number', fontsize = 20)
 plt.title('Percentage Win or Lose Rate for each Seat when it comes to Tie Breakers', fontsize = 18)
+
+plt.legend(loc = 'best', fontsize = 15)
+plt.show()
+
+
+fig = plt.subplots()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.1, right = 0.95)
+
+plt.bar(x = seat_winners_totals['Numbers']-0.2, height = seat_winners_totals['Wins'], 
+        label = 'Number Tie Break Wins', width = 0.40, color = 'blue', alpha = 0.6, edgecolor ='black')
+plt.bar(x = seat_losers_totals['Numbers']+0.2, height = seat_losers_totals['Losses'], 
+        label = 'Number Tie Break Losses', width = 0.40, color = 'green', alpha = 0.6, edgecolor ='black')
+
+for i in range(len(seat_winners_totals)):
+    plt.text(i+0.8, seat_winners_totals['Wins'][i] + 0.75, seat_winners_totals['Wins'][i], ha='center', fontsize=16, color='blue')
+    plt.text(i+1.2, seat_losers_totals['Losses'][i] + 0.75, seat_losers_totals['Losses'][i], ha='center', fontsize=16, color='green')
+
+    plt.text(i+0.8, seat_winners_totals['Wins'][i] - 1, seat_winners_totals['Tie breaks per series'][i], ha='center', fontsize=16, color='white')
+    plt.text(i+1.2, seat_losers_totals['Losses'][i] - 1, seat_losers_totals['Tie breaks per series'][i], ha='center', fontsize=16, color='white')
+
+plt.ylabel('Count', fontsize = 20)
+plt.yticks(fontsize = 16)
+plt.ylim(0, 12)
+plt.xticks(fontsize = 16)
+plt.xlabel('Seat Number', fontsize = 20)
+plt.title('Number of Wins or Losses for each Seat when it comes to Tie Breakers', fontsize = 20)
 
 plt.legend(loc = 'best', fontsize = 15)
 plt.show()
