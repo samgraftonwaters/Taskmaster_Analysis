@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-def most_least_scores(count_scores, named_table, size : str):
+def most_least_scores(count_scores, named_table, value : str, size : str):
 
     """
     Finds the contestents with the most and least number of ones and fives per series. Function merges the 
@@ -43,6 +43,8 @@ def most_least_scores(count_scores, named_table, size : str):
                                     on = ['Series', 'Seat'], how = 'left').sort_values('Most 1s', ascending = False).reset_index(drop = True)
 
         most['index'] = most.index.values + 1
+
+        print(most)
 
         return(most)
     
