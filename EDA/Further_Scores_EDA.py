@@ -3,32 +3,67 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+import Further_Scores_Functions as FSF
+
 plt.rcParams['figure.figsize'] = (13, 7)
 
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
 
-named_series_table = pd.read_csv(file_path + 'seat_contestent_series_table.csv')
 scores_series_table = file_path + 'Taskmaster_Series_Scores_Cleaned.xlsx'
 
+named_series_table = pd.read_csv(file_path + 'seat_contestent_series_table.csv')
+
+named_series_table_reformatted = named_series_table.melt(id_vars= 'Series', var_name = 'Seat', value_name = 'Name')
+named_series_table_reformatted['Seat'] = named_series_table_reformatted['Seat'].str.replace(' Name', "")
+
+
 score_diff = []
+count_five = []
+count_one = []
 
 for series in range(1, 21):
 
     data = pd.read_excel(scores_series_table, sheet_name = f'Series_{series}')
-
     cols = data.columns
-
     contestents = cols[2:7]
 
+    #Finding difference between max and min scores
     final_scores = data[data['Task Number'] == f'Series {series} Grand Total'].reset_index(drop = True)
-
     final_scores = final_scores[contestents]
-
     diff_scores = (final_scores.max(axis=1) - final_scores.min(axis = 1)).astype(int)
-
     score_diff.append([diff_scores.values[0], f'S{series}'])
 
+    #Counting number of times contestnts scored a score of 1 or 5 in each task
+    scores = data[data['Task Number'] != f'Series {series} Grand Total'].reset_index(drop = True)
+    scores = scores[contestents]
+    count_scores_one = scores[scores == 1].count(axis = 0)
+    count_scores_five = scores[scores == 5].count(axis = 0)
+    count_one.append(count_scores_one)
+    count_five.append(count_scores_five)
+
 score_diff = pd.DataFrame(score_diff, columns = ['Difference', 'Series'])
+
+count_one = pd.DataFrame(np.vstack(count_one), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5'])
+count_five = pd.DataFrame(np.vstack(count_five), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5'])
+
+series = []
+for i in range(20):
+    series.append(f'S{count_five.index.values[i] + 1}')
+count_one['Series'] = series
+count_five['Series'] = series
+
+#Number of times contestents got 1 or 5 points.
+#Then finds the most and least for each points category for each seat
+
+most_ones = FSF.most_least_scores(count_scores = count_one, named_table = named_series_table_reformatted, size = 'most')
+least_ones = FSF.most_least_scores(count_scores = count_one, named_table = named_series_table_reformatted, size = 'least')
+
+most_fives = FSF.most_least_scores(count_scores = count_five, named_table = named_series_table_reformatted, size = 'most')
+least_fives = FSF.most_least_scores(count_scores = count_five, named_table = named_series_table_reformatted, size = 'least')
+
+
+
+
 
 plt.figure()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
@@ -57,95 +92,6 @@ plt.title('Difference in Scores between Winner and Loser per Series', fontsize =
 plt.legend(fontsize = 16)
 plt.show()
 
-
-#Reformating contestents table to merge with the next methods below:
-
-named_series_table_reformatted = named_series_table.melt(id_vars= 'Series', var_name = 'Seat', value_name = 'Name')
-named_series_table_reformatted['Seat'] = named_series_table_reformatted['Seat'].str.replace(' Name', "")
-
-
-#Number of times contestents got 1 or 5 points.
-#Then finds the most and least for each points category for each seat
-count_five = []
-count_one = []
-
-for series in range(1, 21):
-
-    data = pd.read_excel(scores_series_table, sheet_name = f'Series_{series}')
-
-    cols = data.columns
-
-    contestents = cols[2:7]
-
-    scores = data[data['Task Number'] != f'Series {series} Grand Total'].reset_index(drop = True)
-
-    scores = scores[contestents]
-
-    count_scores_one = scores[scores == 1].count(axis = 0)
-    count_scores_five = scores[scores == 5].count(axis = 0)
-
-    count_one.append(count_scores_one)
-    count_five.append(count_scores_five)
-
-count_one = pd.DataFrame(np.vstack(count_one), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5'])
-count_five = pd.DataFrame(np.vstack(count_five), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5'])
-
-series = []
-for i in range(20):
-    series.append(f'S{count_five.index.values[i] + 1}')
-count_one['Series'] = series
-count_five['Series'] = series
-
-most_ones = []
-least_ones = []
-
-most_fives = []
-least_fives = []
-for seat in range(1, 6):
-    ones = count_one[['Series', f'Seat {seat}']]
-    fives = count_five[['Series', f'Seat {seat}']]
-
-    mostones = ones[ones[f'Seat {seat}'] == ones[f'Seat {seat}'].max(axis = 0)].reset_index(drop = True)
-    mostones['Seat'] = f'Seat {seat}'
-    most_ones.append(mostones)
-    
-    leastones = ones[ones[f'Seat {seat}'] == ones[f'Seat {seat}'].min(axis = 0)].reset_index(drop = True)
-    leastones['Seat'] = f'Seat {seat}'
-    least_ones.append(leastones)
-
-    mostfives = fives[fives[f'Seat {seat}'] == fives[f'Seat {seat}'].max(axis = 0)].reset_index(drop = True)
-    mostfives['Seat'] = f'Seat {seat}'
-    most_fives.append(mostfives)
-    
-    leastfives = fives[fives[f'Seat {seat}'] == fives[f'Seat {seat}'].min(axis = 0)].reset_index(drop = True)
-    leastfives['Seat'] = f'Seat {seat}'
-    least_fives.append(leastfives)
-
-most_ones = pd.DataFrame(np.vstack(most_ones), columns = ['Series', 'Most 1s', 'Seat'])
-least_ones = pd.DataFrame(np.vstack(least_ones), columns = ['Series', 'Least 1s', 'Seat'])
-
-most_ones = pd.merge(left = most_ones, right = named_series_table_reformatted, 
-                             on = ['Series', 'Seat'], how = 'left').sort_values('Most 1s', ascending = False).reset_index(drop = True)
-
-most_ones['index'] = most_ones.index.values + 1
-
-least_ones = pd.merge(left = least_ones, right = named_series_table_reformatted, 
-                             on = ['Series', 'Seat'], how = 'left').sort_values('Least 1s', ascending = False).reset_index(drop = True)
-
-least_ones['index'] = least_ones.index.values + 1
-
-most_fives = pd.DataFrame(np.vstack(most_fives), columns = ['Series', 'Most 5s', 'Seat'])
-least_fives = pd.DataFrame(np.vstack(least_fives), columns = ['Series', 'Least 5s', 'Seat'])
-
-most_fives = pd.merge(left = most_fives, right = named_series_table_reformatted, 
-                             on = ['Series', 'Seat'], how = 'left').sort_values('Most 5s', ascending = False).reset_index(drop = True)
-
-most_fives['index'] = most_fives.index.values + 1
-
-least_fives = pd.merge(left = least_fives, right = named_series_table_reformatted, 
-                             on = ['Series', 'Seat'], how = 'left').sort_values('Least 5s', ascending = False).reset_index(drop = True)
-
-least_fives['index'] = least_fives.index.values + 1
 
 fig, (ax1, ax2) = plt.subplots(ncols = 1, nrows = 2, sharex = True)
 plt.subplots_adjust(wspace=0, hspace=0.05, bottom = 0.1, top = 0.94, left = 0.05, right = 0.96)
