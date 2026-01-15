@@ -52,13 +52,6 @@ least_fives = FSF.most_least_scores(count_scores = count_five, named_table = nam
                                     score = 5, size = 'least')
 
 
-print(most_fives)
-print(least_fives)
-print()
-print()
-
-
-
 
 plt.figure()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
@@ -207,32 +200,11 @@ tie_break_scores = pd.DataFrame(np.vstack(tie_break_scores), columns = ['Seat 1'
 
 print(episode_scores.head())
 
-highest_ep_scores = []
-lowest_ep_scores = []
-for seat in range(1, 6):
-    seat_ep_score = episode_scores[['Series', 'Episode', f'Seat {seat}']]
+lowest_ep_scores = FSF.high_low_ep_scores(data_table = episode_scores, named_table = named_series_table_reformatted, 
+                       direction = 'lowest')
 
-    highest_ep = seat_ep_score[seat_ep_score[f'Seat {seat}'] == seat_ep_score[f'Seat {seat}'].max(axis = 0)].reset_index(drop = True)
-    highest_ep['Seat'] = f'Seat {seat}'
-    highest_ep_scores.append(highest_ep)
-
-    lowest_ep = seat_ep_score[seat_ep_score[f'Seat {seat}'] == seat_ep_score[f'Seat {seat}'].min(axis = 0)].reset_index(drop = True)
-    lowest_ep['Seat'] = f'Seat {seat}'
-    lowest_ep_scores.append(lowest_ep)
-
-highest_ep_scores = pd.DataFrame(np.vstack(highest_ep_scores) , columns = ['Series', 'Episodes', 'Score', 'Seat']).reset_index(drop = True)
-lowest_ep_scores = pd.DataFrame(np.vstack(lowest_ep_scores), columns = ['Series', 'Episodes', 'Score', 'Seat']).reset_index(drop = True)
-
-
-highest_ep_scores = pd.merge(left = highest_ep_scores, right = named_series_table_reformatted, 
-                             on = ['Series', 'Seat'], how = 'left').sort_values('Score', ascending = False).reset_index(drop = True)
-
-highest_ep_scores['index'] = highest_ep_scores.index.values + 1
-
-lowest_ep_scores = pd.merge(left = lowest_ep_scores, right = named_series_table_reformatted, 
-                             on = ['Series', 'Seat'], how = 'left').sort_values('Score', ascending = True).reset_index(drop = True)
-
-lowest_ep_scores['index'] = lowest_ep_scores.index.values + 1
+highest_ep_scores = FSF.high_low_ep_scores(data_table = episode_scores, named_table = named_series_table_reformatted, 
+                       direction = 'highest')
 
 plt.figure()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.05, right = 0.96)

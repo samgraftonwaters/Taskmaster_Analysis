@@ -65,9 +65,6 @@ def most_least_scores(count_scores, named_table, score : int, size : str):
         leastcounts['Seat'] = f'Seat {seat}'
         least.append(leastcounts)
 
-    print(most)
-    print(least)
-
     if size == 'most':
         most = pd.DataFrame(np.vstack(most), columns = ['Series', f'Most {str(score)}s', 'Seat'])
 
@@ -88,60 +85,41 @@ def most_least_scores(count_scores, named_table, score : int, size : str):
 
         least['index'] = least.index.values + 1
 
-        print(least)
-
         return(least)
+
+
+def high_low_ep_scores(data_table, named_table, direction):
+
+    highest_ep_scores = []
+    lowest_ep_scores = []
+    for seat in range(1, 6):
+        seat_ep_score = data_table[['Series', 'Episode', f'Seat {seat}']]
+
+        highest_ep = seat_ep_score[seat_ep_score[f'Seat {seat}'] == seat_ep_score[f'Seat {seat}'].max(axis = 0)].reset_index(drop = True)
+        highest_ep['Seat'] = f'Seat {seat}'
+        highest_ep_scores.append(highest_ep)
+
+        lowest_ep = seat_ep_score[seat_ep_score[f'Seat {seat}'] == seat_ep_score[f'Seat {seat}'].min(axis = 0)].reset_index(drop = True)
+        lowest_ep['Seat'] = f'Seat {seat}'
+        lowest_ep_scores.append(lowest_ep)
+
+    if direction == 'highest':
+        highest_ep_scores = pd.DataFrame(np.vstack(highest_ep_scores) , columns = ['Series', 'Episodes', 'Score', 'Seat']).reset_index(drop = True)
     
+        highest_ep_scores = pd.merge(left = highest_ep_scores, right = named_table, 
+                                    on = ['Series', 'Seat'], how = 'left').sort_values('Score', ascending = False).reset_index(drop = True)
 
+        highest_ep_scores['index'] = highest_ep_scores.index.values + 1
 
-    # most_ones = []
-    # least_ones = []
+        return(highest_ep_scores)
 
-    # most_fives = []
-    # least_fives = []
+    if direction == 'lowest':
+        lowest_ep_scores = pd.DataFrame(np.vstack(lowest_ep_scores), columns = ['Series', 'Episodes', 'Score', 'Seat']).reset_index(drop = True)
 
-    # for seat in range(1, 6):
-    #     ones = count_one[['Series', f'Seat {seat}']]
-    #     fives = count_five[['Series', f'Seat {seat}']]
+        lowest_ep_scores = pd.merge(left = lowest_ep_scores, right = named_table, 
+                                    on = ['Series', 'Seat'], how = 'left').sort_values('Score', ascending = True).reset_index(drop = True)
 
-    #     mostones = ones[ones[f'Seat {seat}'] == ones[f'Seat {seat}'].max(axis = 0)].reset_index(drop = True)
-    #     mostones['Seat'] = f'Seat {seat}'
-    #     most_ones.append(mostones)
-        
-    #     leastones = ones[ones[f'Seat {seat}'] == ones[f'Seat {seat}'].min(axis = 0)].reset_index(drop = True)
-    #     leastones['Seat'] = f'Seat {seat}'
-    #     least_ones.append(leastones)
+        lowest_ep_scores['index'] = lowest_ep_scores.index.values + 1
 
-    #     mostfives = fives[fives[f'Seat {seat}'] == fives[f'Seat {seat}'].max(axis = 0)].reset_index(drop = True)
-    #     mostfives['Seat'] = f'Seat {seat}'
-    #     most_fives.append(mostfives)
-        
-    #     leastfives = fives[fives[f'Seat {seat}'] == fives[f'Seat {seat}'].min(axis = 0)].reset_index(drop = True)
-    #     leastfives['Seat'] = f'Seat {seat}'
-    #     least_fives.append(leastfives)
-
-    # most_ones = pd.DataFrame(np.vstack(most_ones), columns = ['Series', 'Most 1s', 'Seat'])
-    # least_ones = pd.DataFrame(np.vstack(least_ones), columns = ['Series', 'Least 1s', 'Seat'])
-
-    # most_ones = pd.merge(left = most_ones, right = named_series_table_reformatted, 
-    #                             on = ['Series', 'Seat'], how = 'left').sort_values('Most 1s', ascending = False).reset_index(drop = True)
-
-    # most_ones['index'] = most_ones.index.values + 1
-
-    # least_ones = pd.merge(left = least_ones, right = named_series_table_reformatted, 
-    #                             on = ['Series', 'Seat'], how = 'left').sort_values('Least 1s', ascending = False).reset_index(drop = True)
-
-    # least_ones['index'] = least_ones.index.values + 1
-
-    # most_fives = pd.DataFrame(np.vstack(most_fives), columns = ['Series', 'Most 5s', 'Seat'])
-    # least_fives = pd.DataFrame(np.vstack(least_fives), columns = ['Series', 'Least 5s', 'Seat'])
-
-    # most_fives = pd.merge(left = most_fives, right = named_series_table_reformatted, 
-    #                             on = ['Series', 'Seat'], how = 'left').sort_values('Most 5s', ascending = False).reset_index(drop = True)
-
-    # most_fives['index'] = most_fives.index.values + 1
-
-    # least_fives = pd.merge(left = least_fives, right = named_series_table_reformatted, 
-    #                             on = ['Series', 'Seat'], how = 'left').sort_values('Least 5s', ascending = False).reset_index(drop = True)
-
-    # least_fives['index'] = least_fives.index.values + 1
+        return(lowest_ep_scores)
+    
