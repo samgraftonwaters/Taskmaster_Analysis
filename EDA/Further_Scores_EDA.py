@@ -18,8 +18,6 @@ named_series_table_reformatted['Seat'] = named_series_table_reformatted['Seat'].
 
 
 score_diff = []
-count_five = []
-count_one = []
 
 for series in range(1, 21):
 
@@ -33,34 +31,31 @@ for series in range(1, 21):
     diff_scores = (final_scores.max(axis=1) - final_scores.min(axis = 1)).astype(int)
     score_diff.append([diff_scores.values[0], f'S{series}'])
 
-    #Counting number of times contestnts scored a score of 1 or 5 in each task
-    scores = data[data['Task Number'] != f'Series {series} Grand Total'].reset_index(drop = True)
-    scores = scores[contestents]
-    count_scores_one = scores[scores == 1].count(axis = 0)
-    count_scores_five = scores[scores == 5].count(axis = 0)
-    count_one.append(count_scores_one)
-    count_five.append(count_scores_five)
-
 score_diff = pd.DataFrame(score_diff, columns = ['Difference', 'Series'])
 
-count_one = pd.DataFrame(np.vstack(count_one), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5'])
-count_five = pd.DataFrame(np.vstack(count_five), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5'])
 
-series = []
-for i in range(20):
-    series.append(f'S{count_five.index.values[i] + 1}')
-count_one['Series'] = series
-count_five['Series'] = series
 
-#Number of times contestents got 1 or 5 points.
+#Number of times contestents got e.g. 1 or 5 points.
 #Then finds the most and least for each points category for each seat
 
-most_ones = FSF.most_least_scores(count_scores = count_one, named_table = named_series_table_reformatted, size = 'most')
-least_ones = FSF.most_least_scores(count_scores = count_one, named_table = named_series_table_reformatted, size = 'least')
+count_one = FSF.count_scores(dataframe = scores_series_table, score = 1)
+count_five = FSF.count_scores(dataframe = scores_series_table, score = 5)
 
-most_fives = FSF.most_least_scores(count_scores = count_five, named_table = named_series_table_reformatted, size = 'most')
-least_fives = FSF.most_least_scores(count_scores = count_five, named_table = named_series_table_reformatted, size = 'least')
+most_ones = FSF.most_least_scores(count_scores = count_one, named_table = named_series_table_reformatted, 
+                                  score = 1, size = 'most')
+least_ones = FSF.most_least_scores(count_scores = count_one, named_table = named_series_table_reformatted, 
+                                   score = 1, size = 'least')
 
+most_fives = FSF.most_least_scores(count_scores = count_five, named_table = named_series_table_reformatted, 
+                                   score = 5, size = 'most')
+least_fives = FSF.most_least_scores(count_scores = count_five, named_table = named_series_table_reformatted, 
+                                    score = 5, size = 'least')
+
+
+print(most_fives)
+print(least_fives)
+print()
+print()
 
 
 
