@@ -4,7 +4,21 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-def count_scores(dataframe, score):
+def count_scores(dataframe, score : int):
+
+    """
+    Counts the number of times each score (1 - 5) was given for each seat in each series.
+
+    Parameters:
+    -----------
+        dataframe (DataFrame): dataframe with all scores per episode and task in all series
+        score (int): Number of the score value to be counted
+
+    Returns:
+    --------
+        DataFrame that has the score count for each seat during all episodes of each series
+    
+    """
 
     count_score = []
 
@@ -65,7 +79,7 @@ def most_least_scores(count_scores, named_table, score : int, size : str):
         leastcounts['Seat'] = f'Seat {seat}'
         least.append(leastcounts)
 
-    if size == 'most':
+    if size.lower() == 'most':
         most = pd.DataFrame(np.vstack(most), columns = ['Series', f'Most {str(score)}s', 'Seat'])
 
         most = pd.merge(left = most, right = named_table, 
@@ -73,11 +87,9 @@ def most_least_scores(count_scores, named_table, score : int, size : str):
 
         most['index'] = most.index.values + 1
 
-        print(most)
-
         return(most)
     
-    if size == 'least':
+    if size.lower() == 'least':
         least = pd.DataFrame(np.vstack(least), columns = ['Series', f'Least {str(score)}s', 'Seat'])
 
         least = pd.merge(left = least, right = named_table, 
@@ -88,7 +100,22 @@ def most_least_scores(count_scores, named_table, score : int, size : str):
         return(least)
 
 
-def high_low_ep_scores(data_table, named_table, direction):
+def high_low_ep_scores(data_table, named_table, direction : str):
+
+    """
+    Finds the contestents with the highest or lowest episode scores in each series
+
+    Parameters:
+    ----------
+        data_tabe (DataFrame): table with total scores for each episode.
+        name_table (DataFrame): contestent name table
+        directon (str): to select if the highest or lowest episode scores are returned. Two options - "highest"
+                        or "lowest".
+    
+    Returns:
+    --------
+        dataframe with either the highest or lowest episode scores per contestent in all series. 
+    """
 
     highest_ep_scores = []
     lowest_ep_scores = []
@@ -103,7 +130,7 @@ def high_low_ep_scores(data_table, named_table, direction):
         lowest_ep['Seat'] = f'Seat {seat}'
         lowest_ep_scores.append(lowest_ep)
 
-    if direction == 'highest':
+    if direction.lower() == 'highest':
         highest_ep_scores = pd.DataFrame(np.vstack(highest_ep_scores) , columns = ['Series', 'Episodes', 'Score', 'Seat']).reset_index(drop = True)
     
         highest_ep_scores = pd.merge(left = highest_ep_scores, right = named_table, 
@@ -113,7 +140,7 @@ def high_low_ep_scores(data_table, named_table, direction):
 
         return(highest_ep_scores)
 
-    if direction == 'lowest':
+    if direction.lower() == 'lowest':
         lowest_ep_scores = pd.DataFrame(np.vstack(lowest_ep_scores), columns = ['Series', 'Episodes', 'Score', 'Seat']).reset_index(drop = True)
 
         lowest_ep_scores = pd.merge(left = lowest_ep_scores, right = named_table, 
