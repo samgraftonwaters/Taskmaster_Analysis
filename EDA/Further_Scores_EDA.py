@@ -132,21 +132,9 @@ print('Tie Break Analysis\n\n\n')
                                                                                                       named_table = named_series_table_reformatted)
 print(tie_break_scores_names.head(20))
 
-tie_break_count_winners["Tie breaks per series"] = tie_break_count_winners["Tie breaks per series"] - tie_break_count_winners["Double Losers"]
-
-tie_break_count_losers["Tie breaks per series"] = tie_break_count_losers["Tie breaks per series"] - tie_break_count_losers["Double Losers"]
-
-tie_break_count_winners['Wins'] = round((tie_break_count_winners["Wins"] - tie_break_count_winners["Double Losers"]),2)
-tie_break_count_losers['Losses'] = round((tie_break_count_losers["Losses"] - tie_break_count_losers["Double Losers"]),2)
-
-tie_break_count_winners['Percentage Wins Series'] = round((tie_break_count_winners["Wins"] / tie_break_count_winners['Tie breaks per series']),2)
-tie_break_count_losers['Percentage Losses Series'] = round((tie_break_count_losers["Losses"] / tie_break_count_losers['Tie breaks per series']),2)
-
-tie_break_count_winners['Percentage Wins Person'] = round((tie_break_count_winners["Wins"] / tie_break_count_winners['Tie Breaks per Person']),2)
-tie_break_count_losers['Percentage Losses Person'] = round((tie_break_count_losers["Losses"] / tie_break_count_losers['Tie Breaks per Person']),2)
-
-top_tie_break_count_winners = tie_break_count_winners.sort_values(by = ['Percentage Wins Person', 'Wins'], ascending = False).reset_index(drop = True)
-top_tie_break_count_losers = tie_break_count_losers.sort_values(by = ['Percentage Losses Person', 'Losses'], ascending = False).reset_index(drop = True)
+(top_tie_break_count_winners, 
+ top_tie_break_count_losers) = FSF.tie_break_counts_win_lose(tie_break_count_winners_table = tie_break_count_winners,
+                                                             tie_break_count_losers_table = tie_break_count_losers)
 
 seat_winners = top_tie_break_count_winners[['Seat', 'Wins', 'Tie breaks per series']]
 seat_losers = top_tie_break_count_losers[['Seat', 'Losses', 'Tie breaks per series']]

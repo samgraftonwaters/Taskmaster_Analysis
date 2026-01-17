@@ -221,7 +221,7 @@ def episode_tie_scores(data_table):
 def tie_break_calcs(tie_break_scores_table, before_tie_total_table, named_table):
 
 
-    
+
 
     tie_break_scores = tie_break_scores_table.merge(
     before_tie_total_table,
@@ -334,3 +334,26 @@ def tie_break_calcs(tie_break_scores_table, before_tie_total_table, named_table)
 
     return(tie_break_count_winners, tie_break_count_losers, 
            tie_break_count_winners_losers, tie_break_scores_names)
+
+def tie_break_counts_win_lose(tie_break_count_winners_table, tie_break_count_losers_table):
+
+    tie_break_count_winners = tie_break_count_winners_table.copy()
+    tie_break_count_losers = tie_break_count_losers_table.copy()
+
+    tie_break_count_winners["Tie breaks per series"] = tie_break_count_winners["Tie breaks per series"] - tie_break_count_winners["Double Losers"]
+
+    tie_break_count_losers["Tie breaks per series"] = tie_break_count_losers["Tie breaks per series"] - tie_break_count_losers["Double Losers"]
+
+    tie_break_count_winners['Wins'] = round((tie_break_count_winners["Wins"] - tie_break_count_winners["Double Losers"]),2)
+    tie_break_count_losers['Losses'] = round((tie_break_count_losers["Losses"] - tie_break_count_losers["Double Losers"]),2)
+
+    tie_break_count_winners['Percentage Wins Series'] = round((tie_break_count_winners["Wins"] / tie_break_count_winners['Tie breaks per series']),2)
+    tie_break_count_losers['Percentage Losses Series'] = round((tie_break_count_losers["Losses"] / tie_break_count_losers['Tie breaks per series']),2)
+
+    tie_break_count_winners['Percentage Wins Person'] = round((tie_break_count_winners["Wins"] / tie_break_count_winners['Tie Breaks per Person']),2)
+    tie_break_count_losers['Percentage Losses Person'] = round((tie_break_count_losers["Losses"] / tie_break_count_losers['Tie Breaks per Person']),2)
+
+    top_tie_break_count_winners = tie_break_count_winners.sort_values(by = ['Percentage Wins Person', 'Wins'], ascending = False).reset_index(drop = True)
+    top_tie_break_count_losers = tie_break_count_losers.sort_values(by = ['Percentage Losses Person', 'Losses'], ascending = False).reset_index(drop = True)
+
+    return(top_tie_break_count_winners, top_tie_break_count_losers)
