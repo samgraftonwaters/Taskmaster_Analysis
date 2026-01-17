@@ -62,42 +62,8 @@ highest_ep_scores = FSF.high_low_ep_scores(data_table = episode_scores, named_ta
 
 #Number of times each contestent (seat) has one or lost an episode in each series
 
-seat_cols = [c for c in episode_scores.columns if c.startswith("Seat")]
-
-episode_win_lose = episode_scores.melt(
-    id_vars=["Episode", "Series"],
-    value_vars=seat_cols,
-    var_name="Seat",
-    value_name="Score"
-)
-
-episode_win_lose["max_score"] = episode_win_lose.groupby(["Series", "Episode"])["Score"].transform("max")
-episode_win_lose["min_score"] = episode_win_lose.groupby(["Series", "Episode"])["Score"].transform("min")
-
-episode_win_lose["Win"]  = episode_win_lose["Score"] == episode_win_lose["max_score"]
-episode_win_lose["Loss"] = episode_win_lose["Score"] == episode_win_lose["min_score"]
-
-episode_win_lose["Number_Episodes"] = episode_win_lose.groupby("Series")["Episode"].transform("count")
-
-episode_win_lose_results = (
-    episode_win_lose.groupby(["Series", "Seat"])
-    .agg(
-        Wins=("Win", "sum"),
-        Losses=("Loss", "sum"),
-        Number_Episodes=("Episode", "nunique")
-    )
-    .reset_index()
-)
-
-episode_win_lose_results["Series_num"] = episode_win_lose_results["Series"].str.extract(r"(\d+)").astype(int)
-
-episode_win_lose_results = episode_win_lose_results.sort_values("Series_num").drop(columns="Series_num")
-
-episode_win_lose_results = pd.merge(left = episode_win_lose_results, right = named_series_table_reformatted,
-                                    on = ['Series', 'Seat'], how = 'left')
-
-episode_win_lose_results['Percentage_Won'] = round((episode_win_lose_results ['Wins'] / episode_win_lose_results ['Number_Episodes']), 2)
-episode_win_lose_results['Percentage_Lost'] = round((episode_win_lose_results ['Losses'] / episode_win_lose_results ['Number_Episodes']), 2)
+episode_win_lose_results = FSF.episodes_win_lose(episode_scores_table = episode_scores,
+                                                 named_table = named_series_table_reformatted)
 
 most_eps_won_num = episode_win_lose_results[['Series', 'Seat', "Wins", 'Percentage_Won', 'Number_Episodes', 'Name']].sort_values(by = 'Wins', ascending = False).reset_index(drop = True)
 
@@ -144,11 +110,11 @@ print(top_tie_break_count_losers.head(50))
 
 #Tie break count number of winners and losers
 
-top_tie_break_count_winners = top_tie_break_count_winners[0:19].sort_values(by = ['Percentage Wins Person', 'Wins'], ascending = True).reset_index(drop = True)
-top_tie_break_count_losers = top_tie_break_count_losers[0:19].sort_values(by = ['Percentage Losses Person', 'Losses'], ascending = True).reset_index(drop = True)
+top_tie_break_count_winners_person = top_tie_break_count_winners[0:19].sort_values(by = ['Percentage Wins Person', 'Wins'], ascending = True).reset_index(drop = True)
+top_tie_break_count_losers_person = top_tie_break_count_losers[0:19].sort_values(by = ['Percentage Losses Person', 'Losses'], ascending = True).reset_index(drop = True)
 
-top_tie_break_count_winners = top_tie_break_count_winners[0:19].sort_values(by = ['Percentage Wins Series', 'Wins'], ascending = True).reset_index(drop = True)
-top_tie_break_count_losers = top_tie_break_count_losers[0:19].sort_values(by = ['Percentage Losses Series', 'Losses'], ascending = True).reset_index(drop = True)
+top_tie_break_count_winners_series = top_tie_break_count_winners[0:19].sort_values(by = ['Percentage Wins Series', 'Wins'], ascending = True).reset_index(drop = True)
+top_tie_break_count_losers_series = top_tie_break_count_losers[0:19].sort_values(by = ['Percentage Losses Series', 'Losses'], ascending = True).reset_index(drop = True)
 
 seat_winners_totals = seat_winners.groupby('Seat')[['Wins', 'Tie breaks per series']].sum().reset_index()
 seat_losers_totals = seat_losers.groupby('Seat')[['Losses', 'Tie breaks per series']].sum().reset_index()
@@ -371,129 +337,30 @@ ax2.tick_params(axis='x', labelsize=14)
 plt.show()
 
 
-plt.figure()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.05, right = 0.98)
+FSF.tie_break_person_series_plots(data_table = top_tie_break_count_winners_person, win_lose = 'win', 
+                            plot_title = 'Tie Break Percentage Wins per Number for each Person', 
+                            bar_label = 'Most Tie Breaks Won', wins_lose_column = 'Wins',
+                            percent_column = 'Percentage Wins Person', ties_series_person_column = 'Tie Breaks per Person',
+                            name_column = 'Name', series_column = 'Series', seat_column = 'Seat', n_series = 20)
 
-plt.barh(width=top_tie_break_count_winners['Percentage Wins Person'], y=top_tie_break_count_winners['Name'],
-    color='red', alpha=0.8, edgecolor='white', label='Most Tie Breaks Won')
+FSF.tie_break_person_series_plots(data_table = top_tie_break_count_losers_person, win_lose = 'loss', 
+                            plot_title = 'Tie Break Percentage Losses per Number for each Person', 
+                            bar_label = 'Most Tie Breaks Lost', wins_lose_column = 'Losses',
+                            percent_column = 'Percentage Losses Person', ties_series_person_column = 'Tie Breaks per Person',
+                            name_column = 'Name', series_column = 'Series', seat_column = 'Seat', n_series = 20)
 
-for i, (wins, percent, tie_person, name, series, seat) in enumerate(zip(top_tie_break_count_winners['Wins'], 
-                                                                    top_tie_break_count_winners['Percentage Wins Person'],
-                                            top_tie_break_count_winners['Tie Breaks per Person'],
-                                            top_tie_break_count_winners['Name'],
-                                            top_tie_break_count_winners['Series'],
-                                            top_tie_break_count_winners['Seat'])):
-    
-    plt.text(-0.32, i, series, va='center', ha='left', fontsize=12, color='black')
-    plt.text(-0.22, i, wins, va='center', ha='left', fontsize=12, color='red')
-    plt.text(-0.14, i, tie_person, va='center', ha='left', fontsize=12, color='black')
-    plt.text(-0.08, i, seat, va='center', ha='left', fontsize=12, color = 'black')
-    plt.text(0.05, i, name, va='center', ha='left', fontsize=12, color = 'white')
-    plt.text(percent + 0.02, i, percent, va='center', ha='left', fontsize=12, color = 'red')
-    plt.text(-0.32, 19, 'Series', fontsize = 12, color = 'black')
-    plt.text(-0.24, 19, 'Wins', fontsize = 12, color = 'red')
-    plt.text(-0.17, 19, '# Ties', fontsize = 12, color = 'black')
+FSF.tie_break_person_series_plots(data_table = top_tie_break_count_winners_series, win_lose = 'win', 
+                            plot_title = 'Tie Break Percentage Wins per Number in each Series', 
+                            bar_label = 'Most Tie Breaks Won', wins_lose_column = 'Wins',
+                            percent_column = 'Percentage Wins Series', ties_series_person_column = 'Tie breaks per series',
+                            name_column = 'Name', series_column = 'Series', seat_column = 'Seat', n_series = 20)
 
-plt.xlim(-0.35, 1.1)
-plt.ylim(-1, 20)
-plt.xticks([0, 0.2, 0.4, 0.6, 0.8, 1], fontsize = 18)
-plt.yticks([])
-plt.ylabel('')
-plt.title('Tie Break Percentage Wins per Number for each Person', fontsize = 22)
-plt.show()
+FSF.tie_break_person_series_plots(data_table = top_tie_break_count_losers_series, win_lose = 'lose', 
+                            plot_title = 'Tie Break Percentage Losses per Number in each Series', 
+                            bar_label = 'Most Tie Breaks Lost', wins_lose_column = 'Losses',
+                            percent_column = 'Percentage Losses Series', ties_series_person_column = 'Tie breaks per series',
+                            name_column = 'Name', series_column = 'Series', seat_column = 'Seat', n_series = 20)
 
-plt.figure()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.05, right = 0.98)
-
-plt.barh(width=top_tie_break_count_losers['Percentage Losses Person'], y=top_tie_break_count_losers['Name'],
-    color='dodgerblue', alpha=0.8, edgecolor='white', label='Most Tie Breaks Lost')
-
-for i, (wins, percent, tie_person, name, series, seat) in enumerate(zip(top_tie_break_count_losers['Losses'], 
-                                                                    top_tie_break_count_losers['Percentage Losses Person'],
-                                            top_tie_break_count_losers['Tie Breaks per Person'],
-                                            top_tie_break_count_losers['Name'],
-                                            top_tie_break_count_losers['Series'],
-                                            top_tie_break_count_losers['Seat'])):
-    
-    plt.text(-0.32, i, series, va='center', ha='left', fontsize=12, color='black')
-    plt.text(-0.22, i, wins, va='center', ha='left', fontsize=12, color='blue')
-    plt.text(-0.14, i, tie_person, va='center', ha='left', fontsize=12, color='black')
-    plt.text(-0.08, i, seat, va='center', ha='left', fontsize=12, color = 'black')
-    plt.text(0.05, i, name, va='center', ha='left', fontsize=12, color = 'white')
-    plt.text(percent + 0.02, i, percent, va='center', ha='left', fontsize=12, color = 'blue')
-    plt.text(-0.32, 19, 'Series', fontsize = 12, color = 'black')
-    plt.text(-0.24, 19, 'Loses', fontsize = 12, color = 'blue')
-    plt.text(-0.17, 19, '# Ties', fontsize = 12, color = 'black')
-
-plt.xlim(-0.35, 1.1)
-plt.ylim(-1, 20)
-plt.xticks([0, 0.2, 0.4, 0.6, 0.8, 1], fontsize = 18)
-plt.yticks([])
-plt.ylabel('')
-plt.title('Tie Break Percentage Losses per Number for each Person', fontsize = 22)
-plt.show()
-
-plt.figure()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.05, right = 0.98)
-
-plt.barh(width=top_tie_break_count_winners['Percentage Wins Series'], y=top_tie_break_count_winners['Name'],
-    color='red', alpha=0.8, edgecolor='white', label='Most Tie Breaks Won')
-
-for i, (wins, percent, tie_series, name, series, seat) in enumerate(zip(top_tie_break_count_winners['Wins'], 
-                                                                    top_tie_break_count_winners['Percentage Wins Series'],
-                                            top_tie_break_count_winners['Tie breaks per series'],
-                                            top_tie_break_count_winners['Name'],
-                                            top_tie_break_count_winners['Series'],
-                                            top_tie_break_count_winners['Seat'])):
-    
-    plt.text(-0.32, i, series, va='center', ha='left', fontsize=12, color='black')
-    plt.text(-0.22, i, wins, va='center', ha='left', fontsize=12, color='red')
-    plt.text(-0.14, i, tie_series, va='center', ha='left', fontsize=12, color='black')
-    plt.text(-0.08, i, seat, va='center', ha='left', fontsize=12, color = 'black')
-    plt.text(0.05, i, name, va='center', ha='left', fontsize=12, color = 'white')
-    plt.text(percent + 0.02, i, percent, va='center', ha='left', fontsize=12, color = 'red')
-    plt.text(-0.32, 19, 'Series', fontsize = 12, color = 'black')
-    plt.text(-0.24, 19, 'Wins', fontsize = 12, color = 'red')
-    plt.text(-0.17, 19, '# Ties', fontsize = 12, color = 'black')
-
-plt.xlim(-0.35, 1.1)
-plt.ylim(-1, 20)
-plt.xticks([0, 0.2, 0.4, 0.6, 0.8, 1], fontsize = 18)
-plt.yticks([])
-plt.ylabel('')
-plt.title('Tie Break Percentage Wins per Number in each Series', fontsize = 22)
-plt.show()
-
-plt.figure()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.05, right = 0.98)
-
-plt.barh(width=top_tie_break_count_losers['Percentage Losses Series'], y=top_tie_break_count_losers['Name'],
-    color='dodgerblue', alpha=0.8, edgecolor='white', label='Most Tie Breaks Lost')
-
-for i, (wins, percent, tie_series, name, series, seat) in enumerate(zip(top_tie_break_count_losers['Losses'], 
-                                                                    top_tie_break_count_losers['Percentage Losses Series'],
-                                            top_tie_break_count_losers['Tie breaks per series'],
-                                            top_tie_break_count_losers['Name'],
-                                            top_tie_break_count_losers['Series'],
-                                            top_tie_break_count_losers['Seat'])):
-    
-    plt.text(-0.32, i, series, va='center', ha='left', fontsize=12, color='black')
-    plt.text(-0.22, i, wins, va='center', ha='left', fontsize=12, color='blue')
-    plt.text(-0.14, i, tie_series, va='center', ha='left', fontsize=12, color='black')
-    plt.text(-0.08, i, seat, va='center', ha='left', fontsize=12, color = 'black')
-    plt.text(0.05, i, name, va='center', ha='left', fontsize=12, color = 'white')
-    plt.text(percent + 0.02, i, percent, va='center', ha='left', fontsize=12, color = 'blue')
-    plt.text(-0.32, 19, 'Series', fontsize = 12, color = 'black')
-    plt.text(-0.24, 19, 'Loses', fontsize = 12, color = 'blue')
-    plt.text(-0.17, 19, '# Ties', fontsize = 12, color = 'black')
-
-plt.xlim(-0.35, 1.1)
-plt.ylim(-1, 20)
-plt.xticks([0, 0.2, 0.4, 0.6, 0.8, 1], fontsize = 18)
-plt.yticks([])
-plt.ylabel('')
-plt.title('Tie Break Percentage Loses per Number in each Series', fontsize = 22)
-plt.show()
 
 
 fig = plt.subplots()

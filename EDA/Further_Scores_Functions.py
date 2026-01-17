@@ -149,6 +149,49 @@ def high_low_ep_scores(data_table, named_table, direction : str):
         lowest_ep_scores['index'] = lowest_ep_scores.index.values + 1
 
         return(lowest_ep_scores)
+    
+
+def episodes_win_lose(episode_scores_table, named_table):
+
+
+    seat_cols = [c for c in episode_scores_table.columns if c.startswith("Seat")]
+
+    episode_win_lose = episode_scores_table.melt(
+        id_vars=["Episode", "Series"],
+        value_vars=seat_cols,
+        var_name="Seat",
+        value_name="Score"
+    )
+
+    episode_win_lose["max_score"] = episode_win_lose.groupby(["Series", "Episode"])["Score"].transform("max")
+    episode_win_lose["min_score"] = episode_win_lose.groupby(["Series", "Episode"])["Score"].transform("min")
+
+    episode_win_lose["Win"]  = episode_win_lose["Score"] == episode_win_lose["max_score"]
+    episode_win_lose["Loss"] = episode_win_lose["Score"] == episode_win_lose["min_score"]
+
+    episode_win_lose["Number_Episodes"] = episode_win_lose.groupby("Series")["Episode"].transform("count")
+
+    episode_win_lose_results = (
+        episode_win_lose.groupby(["Series", "Seat"])
+        .agg(
+            Wins=("Win", "sum"),
+            Losses=("Loss", "sum"),
+            Number_Episodes=("Episode", "nunique")
+        )
+        .reset_index()
+    )
+
+    episode_win_lose_results["Series_num"] = episode_win_lose_results["Series"].str.extract(r"(\d+)").astype(int)
+
+    episode_win_lose_results = episode_win_lose_results.sort_values("Series_num").drop(columns="Series_num")
+
+    episode_win_lose_results = pd.merge(left = episode_win_lose_results, right = named_table,
+                                        on = ['Series', 'Seat'], how = 'left')
+
+    episode_win_lose_results['Percentage_Won'] = round((episode_win_lose_results ['Wins'] / episode_win_lose_results ['Number_Episodes']), 2)
+    episode_win_lose_results['Percentage_Lost'] = round((episode_win_lose_results ['Losses'] / episode_win_lose_results ['Number_Episodes']), 2)
+
+    return(episode_win_lose_results)
 
 
 def episode_tie_scores(data_table):
@@ -203,7 +246,6 @@ def episode_tie_scores(data_table):
         episodes['Series'] = f'S{series}'
         tie_breaks['Series'] = f'S{series}'
         episodes_with_tie['Series'] = f'S{series}'
-        print(episodes_with_tie)
 
         episode_scores.append(episodes)
         tie_break_scores.append(tie_breaks)
@@ -357,3 +399,55 @@ def tie_break_counts_win_lose(tie_break_count_winners_table, tie_break_count_los
     top_tie_break_count_losers = tie_break_count_losers.sort_values(by = ['Percentage Losses Person', 'Losses'], ascending = False).reset_index(drop = True)
 
     return(top_tie_break_count_winners, top_tie_break_count_losers)
+
+
+def tie_break_person_series_plots(data_table, win_lose : str, plot_title : str, bar_label : str,
+                                  wins_lose_column : str, percent_column: str, ties_series_person_column : str,
+                                  name_column : str, series_column : 'str', seat_column : str, n_series : int):
+
+
+    plt.figure()
+    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.05, right = 0.98)
+
+    if win_lose.lower() == 'win':
+    
+        plt.barh(width=data_table[percent_column], y=data_table[name_column],
+            color='red', alpha=0.8, edgecolor='white', label=bar_label)
+    
+    if win_lose.lower() == 'lose':
+
+        plt.barh(width=data_table[percent_column], y=data_table[name_column],
+            color='dodgerblue', alpha=0.8, edgecolor='white', label=bar_label)
+
+    for i, (wins, percent, tie_person, name, series, seat) in enumerate(zip(data_table[wins_lose_column], 
+                                                                        data_table[percent_column],
+                                                data_table[ties_series_person_column],
+                                                data_table[name_column],
+                                                data_table[series_column],
+                                                data_table[seat_column])):
+        
+        plt.text(-0.32, i, series, va='center', ha='left', fontsize=12, color='black')
+        plt.text(-0.14, i, tie_person, va='center', ha='left', fontsize=12, color='black')
+        plt.text(-0.08, i, seat, va='center', ha='left', fontsize=12, color = 'black')
+        plt.text(0.05, i, name, va='center', ha='left', fontsize=12, color = 'white')
+        plt.text(-0.32, 19, 'Series', fontsize = 12, color = 'black')
+        plt.text(-0.17, 19, '# Ties', fontsize = 12, color = 'black')
+
+        if win_lose.lower() == 'win':
+            plt.text(-0.24, 19, 'Wins', fontsize = 12, color = 'red')
+            plt.text(-0.22, i, wins, va='center', ha='left', fontsize=12, color='red')
+            plt.text(percent + 0.02, i, percent, va='center', ha='left', fontsize=12, color = 'red')
+        if win_lose.lower() == 'lose':
+            plt.text(-0.24, 19, 'Loses', fontsize = 12, color = 'blue')   
+            plt.text(-0.22, i, wins, va='center', ha='left', fontsize=12, color='blue')
+            plt.text(percent + 0.02, i, percent, va='center', ha='left', fontsize=12, color = 'blue')     
+
+    plt.xlim(-0.35, 1.1)
+    plt.ylim(-1, n_series)
+    plt.xticks([0, 0.2, 0.4, 0.6, 0.8, 1], fontsize = 18)
+    plt.yticks([])
+    plt.ylabel('')
+    plt.title(plot_title, fontsize = 22)
+    plt.show()
+
+
