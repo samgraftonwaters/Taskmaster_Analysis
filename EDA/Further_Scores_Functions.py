@@ -218,4 +218,119 @@ def episode_tie_scores(data_table):
     return(episode_scores, tie_break_scores, before_tie_total)
             
 
+def tie_break_calcs(tie_break_scores_table, before_tie_total_table, named_table):
+
+
     
+
+    tie_break_scores = tie_break_scores_table.merge(
+    before_tie_total_table,
+    on=["Series", "Episode"],
+    suffixes=("_tb", "_score")
+    )
+
+    seat_cols = [f"Seat {i}" for i in range(1, 6)]
+
+    rows = []
+
+    for _, row in tie_break_scores.iterrows():
+        series = row["Series"]
+        episode = row["Episode"]
+
+        # scores per seat
+        scores = {seat: row[f"{seat}_score"] for seat in seat_cols}
+
+        # find tied scores (appearing more than once)
+        score_counts = pd.Series(scores).value_counts()
+        tied_scores = score_counts[score_counts >= 1].index 
+
+        for tied_score in tied_scores:
+            tied_seats = [seat for seat, tie in scores.items() if tie == tied_score]
+
+            winners = [seat for seat in tied_seats if row[f"{seat}_tb"] == 1]
+            losers  = [seat for seat in tied_seats if row[f"{seat}_tb"] == 0]
+            
+            if len(losers) > 1:
+                double_losers = 1
+            else:
+                double_losers = 0
+
+            # create all winner–loser combinations
+            for win in winners:
+                for lost in losers:
+                    rows.append({
+                        "Series": series,
+                        "Episode": episode,
+                        "Double Losers" : double_losers,
+                        "Seat Winner": win,
+                        "Seat Loser": lost})
+
+    tie_break_scores = pd.DataFrame(rows)
+
+    tie_break_scores_names = (
+        tie_break_scores
+        .merge(
+        named_table,
+            left_on=["Series", "Seat Winner"],
+            right_on=["Series", "Seat"],
+            how="left"
+        )
+        .rename(columns={"Name": "Seat Winner Name"})
+        .drop(columns="Seat")
+    )
+
+    tie_break_scores_names = (
+        tie_break_scores_names
+        .merge(
+            named_table,
+            left_on=["Series", "Seat Loser"],
+            right_on=["Series", "Seat"],
+            how="left"
+        )
+        .rename(columns={"Name": "Seat Loser Name"})
+        .drop(columns="Seat")
+    )
+
+    tie_break_scores_names["Tie breaks per series"] = (
+        tie_break_scores_names.groupby("Series")["Episode"]
+        .transform("count")
+    )
+
+    tie_break_scores_names = tie_break_scores_names[["Series", "Episode", "Seat Winner",
+            "Seat Winner Name", "Seat Loser", "Seat Loser Name", 
+            "Tie breaks per series", "Double Losers"]]
+
+    count_names = pd.DataFrame(pd.concat([tie_break_scores_names['Seat Winner Name'], tie_break_scores_names['Seat Loser Name']], axis = 0), columns = ['Name'])
+    count_names_counts = count_names.value_counts().reset_index()
+    count_names_counts.columns = ["Name", "Tie Breaks per Person"]
+
+    tie_break_count_winners = (tie_break_scores_names[["Series", "Seat Winner Name", "Seat Winner", 
+                                                    "Tie breaks per series", "Double Losers"]]
+        .rename(columns={"Seat Winner Name": "Name", "Seat Winner" : "Seat"})
+        .assign(Wins=1)
+        .groupby(["Series", "Name", "Seat", "Tie breaks per series", "Double Losers"], 
+                as_index=False)["Wins"].sum())
+
+    tie_break_count_winners = pd.merge(left = tie_break_count_winners, right = count_names_counts, on = 'Name',
+                                    how = 'left')
+
+    tie_break_count_losers = (tie_break_scores_names[["Series", "Seat Loser Name", "Seat Loser",
+                                                    "Tie breaks per series", "Double Losers"]]
+        .rename(columns={"Seat Loser Name": "Name", "Seat Loser" : "Seat"})
+        .assign(Losses=1)
+        .groupby(["Series", "Name", "Seat", "Tie breaks per series", "Double Losers"],
+                as_index=False)["Losses"].sum())
+
+    tie_break_count_losers = pd.merge(left = tie_break_count_losers, right = count_names_counts, on = 'Name',
+                                    how = 'left')
+
+    tie_break_count_winners_losers = (
+        pd.concat([
+            tie_break_count_winners.rename(columns={"Wins": "Count"}).assign(Result="Win"),
+            tie_break_count_losers.rename(columns={"Losses": "Count"}).assign(Result="Loss")
+        ]).sort_values(["Series", "Name"]).reset_index(drop=True))
+
+    tie_break_count_winners_losers = tie_break_count_winners_losers.replace(np.nan, 0)
+
+    return(tie_break_count_winners, tie_break_count_losers, 
+           tie_break_count_winners_losers, tie_break_scores_names)
