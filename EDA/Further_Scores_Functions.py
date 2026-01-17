@@ -151,7 +151,23 @@ def high_low_ep_scores(data_table, named_table, direction : str):
         return(lowest_ep_scores)
 
 
-def episode_tie_scores(data_table, ep_tie_score : str, ep_before_ties : bool = False):
+def episode_tie_scores(data_table):
+
+    """
+    Function to determine final episode scores and to account for tie breaks in each series. 
+    
+    Parameter:
+    ---------
+        data_table (DataFrame): dataframe with all scores per episode and task in all series
+
+    Returns:
+    --------
+        episode_scores (DataFrame): dataframe that contains all final episode scores for each series (takes into
+                                    account tie break score - e.g. +1 to winner)
+        tie_break_scores (DataFrame): dataframe that contains all tie break tasks for all series
+        before_tie_total (DataFrame): dataframe that contains total episode scores before tie breaks were considered
+
+    """
 
     episode_scores = []
     tie_break_scores = []
@@ -193,21 +209,13 @@ def episode_tie_scores(data_table, ep_tie_score : str, ep_before_ties : bool = F
         tie_break_scores.append(tie_breaks)
         before_tie_total.append(episodes_with_tie)
 
-    if ep_tie_score == 'episode':
+    episode_scores = pd.DataFrame(np.vstack(episode_scores), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Episode', 'Series'])
+    
+    before_tie_total = pd.DataFrame(np.vstack(before_tie_total), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Episode', 'Series'])
 
-        if ep_before_ties == False:
-            episode_scores = pd.DataFrame(np.vstack(episode_scores), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Episode', 'Series'])
-            return(episode_scores)
-        
-        if ep_before_ties == True:
-            before_tie_total = pd.DataFrame(np.vstack(before_tie_total), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Episode', 'Series'])
-            return(before_tie_total)
+    tie_break_scores = pd.DataFrame(np.vstack(tie_break_scores), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Episode', 'Series'])
 
-    if ep_tie_score == 'tie':
-
-        tie_break_scores = pd.DataFrame(np.vstack(tie_break_scores), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Episode', 'Series'])
-
-        return(tie_break_scores)
+    return(episode_scores, tie_break_scores, before_tie_total)
             
 
     

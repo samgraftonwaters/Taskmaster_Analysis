@@ -154,14 +154,7 @@ plt.show()
 
 #Highest and lowest episode scores per seat
 
-episode_scores = FSF.episode_tie_scores(data_table = scores_series_table, ep_tie_score = 'episode', 
-                                        ep_before_ties = False)
-
-tie_break_scores = FSF.episode_tie_scores(data_table = scores_series_table, ep_tie_score = 'tie', 
-                                        ep_before_ties = False)                                      
-
-before_tie_total = FSF.episode_tie_scores(data_table = scores_series_table, ep_tie_score = 'episode', 
-                                        ep_before_ties = True)
+episode_scores, tie_break_scores, before_tie_total = FSF.episode_tie_scores(data_table = scores_series_table)
 
 print(episode_scores.head())
 
