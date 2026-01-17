@@ -154,49 +154,14 @@ plt.show()
 
 #Highest and lowest episode scores per seat
 
-episode_scores = []
-tie_break_scores = []
-before_tie_total = []
+episode_scores = FSF.episode_tie_scores(data_table = scores_series_table, ep_tie_score = 'episode', 
+                                        ep_before_ties = False)
 
-for series in range(1, 21):
+tie_break_scores = FSF.episode_tie_scores(data_table = scores_series_table, ep_tie_score = 'tie', 
+                                        ep_before_ties = False)                                      
 
-    data = pd.read_excel(scores_series_table, sheet_name = f'Series_{series}')
-
-    cols = data.columns
-
-    contestents = cols[2:9]
-
-    episodes = data[data['Task Number'].str.contains(r'Ep', na = False)].reset_index(drop = True)
-
-    tie_breaks = data[data['Task Number'] == 'T'].reset_index(drop = True)
-
-    episodes = episodes[contestents]
-    tie_breaks  = tie_breaks[contestents]
-
-    episodes['Episode'] = episodes['Episode'].str.replace(" Total", "", regex=False)
-    episodes = episodes.drop('Tasknumber', axis = 1).reset_index(drop = True)
-    tie_breaks = tie_breaks.drop('Tasknumber', axis = 1).reset_index(drop = True)
-    episodes_with_tie = episodes.copy()
-
-
-    episodes[episodes.columns[0:5]] = (
-    episodes.set_index("Episode")[episodes.columns[0:5]]
-    .add(
-        tie_breaks.set_index("Episode")[tie_breaks.columns[0:5]],
-        fill_value=0
-    ).values)
-
-    episodes['Series'] = f'S{series}'
-    tie_breaks['Series'] = f'S{series}'
-    episodes_with_tie['Series'] = f'S{series}'
-    print(episodes_with_tie)
-
-    episode_scores.append(episodes)
-    tie_break_scores.append(tie_breaks)
-    before_tie_total.append(episodes_with_tie)
-
-episode_scores = pd.DataFrame(np.vstack(episode_scores), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Episode', 'Series'])
-tie_break_scores = pd.DataFrame(np.vstack(tie_break_scores), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Episode', 'Series'])
+before_tie_total = FSF.episode_tie_scores(data_table = scores_series_table, ep_tie_score = 'episode', 
+                                        ep_before_ties = True)
 
 print(episode_scores.head())
 
@@ -384,7 +349,7 @@ plt.show()
 ## Tie Breaks
 print('Tie Break Analysis\n\n\n')
 
-before_tie_total = pd.DataFrame(np.vstack(before_tie_total), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Episode', 'Series'])
+
 
 tie_break_scores = tie_break_scores.merge(
     before_tie_total,
