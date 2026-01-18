@@ -149,49 +149,6 @@ def high_low_ep_scores(data_table, named_table, direction : str):
         lowest_ep_scores['index'] = lowest_ep_scores.index.values + 1
 
         return(lowest_ep_scores)
-    
-
-def episodes_win_lose(episode_scores_table, named_table):
-
-
-    seat_cols = [c for c in episode_scores_table.columns if c.startswith("Seat")]
-
-    episode_win_lose = episode_scores_table.melt(
-        id_vars=["Episode", "Series"],
-        value_vars=seat_cols,
-        var_name="Seat",
-        value_name="Score"
-    )
-
-    episode_win_lose["max_score"] = episode_win_lose.groupby(["Series", "Episode"])["Score"].transform("max")
-    episode_win_lose["min_score"] = episode_win_lose.groupby(["Series", "Episode"])["Score"].transform("min")
-
-    episode_win_lose["Win"]  = episode_win_lose["Score"] == episode_win_lose["max_score"]
-    episode_win_lose["Loss"] = episode_win_lose["Score"] == episode_win_lose["min_score"]
-
-    episode_win_lose["Number_Episodes"] = episode_win_lose.groupby("Series")["Episode"].transform("count")
-
-    episode_win_lose_results = (
-        episode_win_lose.groupby(["Series", "Seat"])
-        .agg(
-            Wins=("Win", "sum"),
-            Losses=("Loss", "sum"),
-            Number_Episodes=("Episode", "nunique")
-        )
-        .reset_index()
-    )
-
-    episode_win_lose_results["Series_num"] = episode_win_lose_results["Series"].str.extract(r"(\d+)").astype(int)
-
-    episode_win_lose_results = episode_win_lose_results.sort_values("Series_num").drop(columns="Series_num")
-
-    episode_win_lose_results = pd.merge(left = episode_win_lose_results, right = named_table,
-                                        on = ['Series', 'Seat'], how = 'left')
-
-    episode_win_lose_results['Percentage_Won'] = round((episode_win_lose_results ['Wins'] / episode_win_lose_results ['Number_Episodes']), 2)
-    episode_win_lose_results['Percentage_Lost'] = round((episode_win_lose_results ['Losses'] / episode_win_lose_results ['Number_Episodes']), 2)
-
-    return(episode_win_lose_results)
 
 
 def episode_tie_scores(data_table):
@@ -258,6 +215,66 @@ def episode_tie_scores(data_table):
     tie_break_scores = pd.DataFrame(np.vstack(tie_break_scores), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Episode', 'Series'])
 
     return(episode_scores, tie_break_scores, before_tie_total)
+
+
+def episodes_win_lose(episode_scores_table, named_table):
+
+    """
+    To find how many times each contestent one or lost an episode in each series
+
+    Parameters:
+    -----------
+        episode_scores (DataFrame): dataframe that contains all final episode scores for each series (takes into
+                                    account tie break score - e.g. +1 to winner)
+        name_table (DataFrame): contestent name table
+    
+    Returns
+    -------
+        Final dataframe with each contestents number of episode wins and losses, as well as the percentages per
+        number of series episodes
+    """
+
+
+    seat_cols = [c for c in episode_scores_table.columns if c.startswith("Seat")]
+
+    episode_win_lose = episode_scores_table.melt(
+        id_vars=["Episode", "Series"],
+        value_vars=seat_cols,
+        var_name="Seat",
+        value_name="Score"
+    )
+
+    episode_win_lose["max_score"] = episode_win_lose.groupby(["Series", "Episode"])["Score"].transform("max")
+    episode_win_lose["min_score"] = episode_win_lose.groupby(["Series", "Episode"])["Score"].transform("min")
+
+    episode_win_lose["Win"]  = episode_win_lose["Score"] == episode_win_lose["max_score"]
+    episode_win_lose["Loss"] = episode_win_lose["Score"] == episode_win_lose["min_score"]
+
+    episode_win_lose["Number_Episodes"] = episode_win_lose.groupby("Series")["Episode"].transform("count")
+
+    episode_win_lose_results = (
+        episode_win_lose.groupby(["Series", "Seat"])
+        .agg(
+            Wins=("Win", "sum"),
+            Losses=("Loss", "sum"),
+            Number_Episodes=("Episode", "nunique")
+        )
+        .reset_index()
+    )
+
+    episode_win_lose_results["Series_num"] = episode_win_lose_results["Series"].str.extract(r"(\d+)").astype(int)
+
+    episode_win_lose_results = episode_win_lose_results.sort_values("Series_num").drop(columns="Series_num")
+
+    episode_win_lose_results = pd.merge(left = episode_win_lose_results, right = named_table,
+                                        on = ['Series', 'Seat'], how = 'left')
+
+    episode_win_lose_results['Percentage_Won'] = round((episode_win_lose_results ['Wins'] / episode_win_lose_results ['Number_Episodes']), 2)
+    episode_win_lose_results['Percentage_Lost'] = round((episode_win_lose_results ['Losses'] / episode_win_lose_results ['Number_Episodes']), 2)
+
+    print(episode_win_lose_results)
+
+    return(episode_win_lose_results)
             
 
 def tie_break_calcs(tie_break_scores_table, before_tie_total_table, named_table):
@@ -403,8 +420,34 @@ def tie_break_counts_win_lose(tie_break_count_winners_table, tie_break_count_los
 
 def tie_break_person_series_plots(data_table, win_lose : str, plot_title : str, bar_label : str,
                                   wins_lose_column : str, percent_column: str, ties_series_person_column : str,
-                                  name_column : str, series_column : 'str', seat_column : str, n_series : int):
+                                  name_column : str, series_column : str, seat_column : str, n_series : int):
 
+    """
+    Plots a bar chart for the most tie break wins depending on number of tie breaks in an episode, or number for
+    each contestent.
+
+    Parameters:
+    ----------
+        data_table (DataFrame): dataframe with the data to plot
+        win_lose (str): To set whether the plot should display the winnners ('win') or losers ('lose').
+                        Options here are 'win' or 'lose' only.
+        plot_title (str): Title of the plot
+        bar_label (str) : label for the bar chart panel - e.g. 'Most Tie Breaks Won'
+        Wins_lose_column (str): column that contains the number of wins or losses for tie breaks
+        percent_column (str): column that contains the percentage of wins or losses - e.g. 'Percentage Wins Person'
+        ties_series_person_column (str): column that contains the number of series ties or ties per person -
+                                        e.g. 'Tie Breaks per Person'
+        name_column (str): column that contains contestent names
+        series_column (str): column that contains the series numbers
+        seat_column (str): column that contains each seat
+        n_series (int): number of series in data table (e.g. 20)
+
+    Returns:
+    --------
+        Bar chart to display percentage of wins for each contestent (in the top 20) either per number of tie breaks
+        in each series or number of tie breaks for each contestent.
+
+    """
 
     plt.figure()
     plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.05, right = 0.98)
@@ -453,6 +496,19 @@ def tie_break_person_series_plots(data_table, win_lose : str, plot_title : str, 
 
 def least_most_points(data_table_most, data_table_least, series_column : str, seat_column : str,
                       name_column : str, most_column : str, least_column : str, plot_title : str):
+    
+    """
+    data_table_most (DataFrame):
+    data_table_least
+    name_column (str): column that contains contestent names
+    series_column (str): column that contains the series numbers
+    seat_column (str): column that contains each seat
+    most_column (str)
+    least_column (str)
+    plot_title (str): Title of the plot
+    
+    
+    """
 
     fig, (ax1, ax2) = plt.subplots(ncols = 1, nrows = 2, sharex = True)
     plt.subplots_adjust(wspace=0, hspace=0.05, bottom = 0.1, top = 0.94, left = 0.05, right = 0.96)
