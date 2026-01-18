@@ -438,7 +438,7 @@ def tie_break_person_series_plots(data_table, win_lose : str, plot_title : str, 
             plt.text(-0.22, i, wins, va='center', ha='left', fontsize=12, color='red')
             plt.text(percent + 0.02, i, percent, va='center', ha='left', fontsize=12, color = 'red')
         if win_lose.lower() == 'lose':
-            plt.text(-0.24, 19, 'Loses', fontsize = 12, color = 'blue')   
+            plt.text(-0.24, 19, 'Losses', fontsize = 12, color = 'blue')   
             plt.text(-0.22, i, wins, va='center', ha='left', fontsize=12, color='blue')
             plt.text(percent + 0.02, i, percent, va='center', ha='left', fontsize=12, color = 'blue')     
 
@@ -451,3 +451,42 @@ def tie_break_person_series_plots(data_table, win_lose : str, plot_title : str, 
     plt.show()
 
 
+def least_most_points(data_table_most, data_table_least, series_column : str, seat_column : str,
+                      name_column : str, most_column : str, least_column : str, plot_title : str):
+
+    fig, (ax1, ax2) = plt.subplots(ncols = 1, nrows = 2, sharex = True)
+    plt.subplots_adjust(wspace=0, hspace=0.05, bottom = 0.1, top = 0.94, left = 0.05, right = 0.96)
+
+    sns.barplot(data_table_most, x=most_column, y='index', orient="y", hue = seat_column, legend = False, ax = ax1)
+
+    for i, (score, name, series, seat) in enumerate(zip(data_table_most[most_column], data_table_most[name_column],
+                                                data_table_most[series_column], data_table_most[seat_column])):
+        ax1.text(4.2, i, name, va='center', ha='left', fontsize=15, color='white')
+        ax1.text(8.1, i, series, va='center', ha='left', fontsize=15, color='white')
+        ax1.text(9, i, seat, va='center', ha='left', fontsize=15, color = 'white')
+        ax1.text(score+0.1, i, score, fontsize = 15, color = 'black')
+        
+    sns.barplot(data_table_least, x=least_column, y="index", orient="y", hue = seat_column, legend = False, ax = ax2)
+
+    for i, (score, name, series, seat) in enumerate(zip(data_table_least[least_column], data_table_least[name_column],
+                                                data_table_least[series_column], data_table_least[seat_column])):
+        ax2.text(5, i, name, va='center', ha='left', fontsize=15, color='black')
+        ax2.text(8, i, series, va='center', ha='left', fontsize=15, color='black')
+        ax2.text(9, i, seat, va='center', ha='left', fontsize=15, color = 'black')
+        ax2.text(score+0.1, i, score, fontsize = 15, color = 'black')
+
+    ax1.text(18, 4, most_column, fontsize = 20, color = 'black')
+    ax2.text(18, 4, least_column, fontsize = 20, color = 'black')
+
+    ax1.set_yticks([],[])
+    ax2.set_yticks([],[])
+    ax1.set_xticks([0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20])
+    ax2.set_xticks([0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20])
+    ax2.tick_params(axis = 'x', labelsize = 14)
+    ax1.set_ylabel('')
+    ax2.set_ylabel('')
+    ax2.set_xlabel('')
+    ax1.set_xlim(0, 21)
+    ax2.set_xlim(0, 21)
+    plt.suptitle(plot_title, fontsize = 20)
+    plt.show()

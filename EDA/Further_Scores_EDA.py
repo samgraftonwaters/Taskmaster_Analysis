@@ -159,75 +159,13 @@ plt.legend(fontsize = 16)
 plt.show()
 
 
-fig, (ax1, ax2) = plt.subplots(ncols = 1, nrows = 2, sharex = True)
-plt.subplots_adjust(wspace=0, hspace=0.05, bottom = 0.1, top = 0.94, left = 0.05, right = 0.96)
+FSF.least_most_points(data_table_most = most_ones, data_table_least = least_ones, series_column = 'Series', 
+                seat_column = 'Seat', name_column = 'Name', most_column = 'Most 1s',
+                least_column = 'Least 1s', plot_title = 'Most and Least Number of 1s Scored Per Seat')
 
-sns.barplot(most_ones, x="Most 1s", y="index", orient="y", hue = 'Seat', legend = False, ax = ax1)
-
-for i, (score, name, series, seat) in enumerate(zip(most_ones['Most 1s'], most_ones['Name'],
-                                              most_ones['Series'], most_ones['Seat'])):
-    ax1.text(4.2, i, name, va='center', ha='left', fontsize=15, color='white')
-    ax1.text(8.1, i, series, va='center', ha='left', fontsize=15, color='white')
-    ax1.text(9, i, seat, va='center', ha='left', fontsize=15, color = 'white')
-    ax1.text(score+0.1, i, score, fontsize = 15, color = 'black')
-    
-sns.barplot(least_ones, x="Least 1s", y="index", orient="y", hue = 'Seat', legend = False, ax = ax2)
-
-for i, (score, name, series, seat) in enumerate(zip(least_ones['Least 1s'], least_ones['Name'],
-                                              least_ones['Series'], least_ones['Seat'])):
-    ax2.text(5, i, name, va='center', ha='left', fontsize=15, color='black')
-    ax2.text(8, i, series, va='center', ha='left', fontsize=15, color='black')
-    ax2.text(9, i, seat, va='center', ha='left', fontsize=15, color = 'black')
-    ax2.text(score+0.1, i, score, fontsize = 15, color = 'black')
-
-ax1.text(16, 5, 'Most 1s', fontsize = 20, color = 'black')
-ax2.text(16, 5, 'Least 1s', fontsize = 20, color = 'black')
-
-ax1.set_yticks([],[])
-ax2.set_yticks([],[])
-ax1.set_xticks([0, 2, 4, 6, 8, 10, 12, 14, 16, 18])
-ax2.set_xticks([0, 2, 4, 6, 8, 10, 12, 14, 16, 18])
-ax2.tick_params(axis = 'x', labelsize = 14)
-ax1.set_ylabel('')
-ax2.set_ylabel('')
-ax2.set_xlabel('')
-plt.suptitle('Most and Least Number of 1s Scored Per Seat', fontsize = 20)
-plt.show()
-
-fig, (ax1, ax2) = plt.subplots(ncols = 1, nrows = 2, sharex = True)
-plt.subplots_adjust(wspace=0, hspace=0.05, bottom = 0.1, top = 0.94, left = 0.05, right = 0.96)
-
-sns.barplot(most_fives, x="Most 5s", y="index", orient="y", hue = 'Seat', legend = False, ax = ax1)
-
-for i, (score, name, series, seat) in enumerate(zip(most_fives['Most 5s'], most_fives['Name'],
-                                              most_fives['Series'], most_fives['Seat'])):
-    ax1.text(5, i, name, va='center', ha='left', fontsize=15, color='white')
-    ax1.text(9, i, series, va='center', ha='left', fontsize=15, color='white')
-    ax1.text(10.5, i, seat, va='center', ha='left', fontsize=15, color = 'white')
-    ax1.text(score+0.1, i, score, fontsize = 15, color = 'black')
-
-sns.barplot(least_fives, x="Least 5s", y="index", orient="y", hue = 'Seat', legend = False, ax = ax2)
-
-for i, (score, name, series, seat) in enumerate(zip(least_fives['Least 5s'], least_fives['Name'],
-                                              least_fives['Series'], least_fives['Seat'])):
-    ax2.text(5, i, name, va='center', ha='left', fontsize=15, color='black')
-    ax2.text(9, i, series, va='center', ha='left', fontsize=15, color='black')
-    ax2.text(10.5, i, seat, va='center', ha='left', fontsize=15, color = 'black')
-    ax2.text(score+0.1, i, score, fontsize = 15, color = 'black')
-
-ax1.text(18.5, 4, 'Most 5s', fontsize = 20, color = 'black')
-ax2.text(18.5, 5, 'Least 5s', fontsize = 20, color = 'black')
-
-ax1.set_yticks([],[])
-ax2.set_yticks([],[])
-ax1.set_xticks([0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20])
-ax2.set_xticks([0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20])
-ax2.tick_params(axis = 'x', labelsize = 14)
-ax1.set_ylabel('')
-ax2.set_ylabel('')
-ax2.set_xlabel('')
-plt.suptitle('Most and Least Number of 5s Scored Per Seat', fontsize = 20)
-plt.show()
+FSF.least_most_points(data_table_most = most_fives, data_table_least = least_fives, series_column = 'Series', 
+                seat_column = 'Seat', name_column = 'Name', most_column = 'Most 5s',
+                least_column = 'Least 5s', plot_title = 'Most and Least Number of 5s Scored Per Seat')
 
 plt.figure()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.05, right = 0.96)
@@ -278,7 +216,6 @@ plt.title('Lowest Total Scores in an Episode per Seat', fontsize = 20)
 
 plt.show()
 
-print(episode_scores.head(20))
 
 fig, (ax1, ax2) = plt.subplots(ncols=1, nrows=2, sharex = True)
 plt.subplots_adjust(wspace=0, hspace=0.05, bottom=0.1, top=0.94, left=0.02, right=0.98)
@@ -343,7 +280,7 @@ FSF.tie_break_person_series_plots(data_table = top_tie_break_count_winners_perso
                             percent_column = 'Percentage Wins Person', ties_series_person_column = 'Tie Breaks per Person',
                             name_column = 'Name', series_column = 'Series', seat_column = 'Seat', n_series = 20)
 
-FSF.tie_break_person_series_plots(data_table = top_tie_break_count_losers_person, win_lose = 'loss', 
+FSF.tie_break_person_series_plots(data_table = top_tie_break_count_losers_person, win_lose = 'lose', 
                             plot_title = 'Tie Break Percentage Losses per Number for each Person', 
                             bar_label = 'Most Tie Breaks Lost', wins_lose_column = 'Losses',
                             percent_column = 'Percentage Losses Person', ties_series_person_column = 'Tie Breaks per Person',
