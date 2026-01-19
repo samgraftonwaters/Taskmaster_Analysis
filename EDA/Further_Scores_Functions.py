@@ -280,7 +280,8 @@ def episodes_win_lose(episode_scores_table, named_table):
 def tie_break_score_calcs(tie_break_scores_table, before_tie_total_table):
 
     """
-    
+    Calculate the scores for each tie break for all series
+
     Parameters:
     -----------
         tie_break_scores_table (DataFrame): dataframe with all tie breaks and number of wins/losses for each 
@@ -290,10 +291,8 @@ def tie_break_score_calcs(tie_break_scores_table, before_tie_total_table):
 
     Returns:
     ---------
-    
+        DataFrame with the tie break scores for each seat for all episodes where they occur. 
     """
-
-
 
     tie_break_scores = tie_break_scores_table.merge(
     before_tie_total_table,
@@ -344,11 +343,16 @@ def tie_break_score_calcs(tie_break_scores_table, before_tie_total_table):
 def merged_tie_scores_names(tie_break_scores, named_table):
 
     """
-    
+    Merge the tie break scores table with the named table to get contestent names
+
     Parameters:
     ----------
-
+        tie_break_scores (DataFrame): tablt that contains the tie break scores for each seat
         named_table (DataFrame): contestent name table
+
+    Returns:
+    --------
+        Merged dataframe that contains the tie break scores for each contestent who featured in a tie break
     
     """
 
@@ -390,6 +394,20 @@ def merged_tie_scores_names(tie_break_scores, named_table):
 
 def tie_break_winners(tie_break_scores_names):
 
+    """
+    Determine who won their respective tie breaks in all series
+
+    Parameters:
+    -----------
+        tie_break_scores_names (DataFrame): Merged dataframe that contains the tie break scores for each 
+                                            contestent who featured in a tie break
+
+    Returns:
+    --------
+        Dataframe with all winners for each tie break
+    
+    """
+
     count_names = pd.DataFrame(pd.concat([tie_break_scores_names['Seat Winner Name'], tie_break_scores_names['Seat Loser Name']], axis = 0), columns = ['Name'])
     count_names_counts = count_names.value_counts().reset_index()
     count_names_counts.columns = ["Name", "Tie Breaks per Person"]
@@ -407,6 +425,20 @@ def tie_break_winners(tie_break_scores_names):
     return(tie_break_count_winners)
 
 def tie_break_losers(tie_break_scores_names):
+
+    """
+    Determine who lost their respective tie breaks in all series
+
+    Parameters:
+    -----------
+        tie_break_scores_names (DataFrame): Merged dataframe that contains the tie break scores for each 
+                                            contestent who featured in a tie break
+
+    Returns:
+    --------
+        Dataframe with all losers for each tie break
+    
+    """
 
     count_names = pd.DataFrame(pd.concat([tie_break_scores_names['Seat Winner Name'], tie_break_scores_names['Seat Loser Name']], axis = 0), columns = ['Name'])
     count_names_counts = count_names.value_counts().reset_index()
@@ -427,6 +459,20 @@ def tie_break_losers(tie_break_scores_names):
 
 def tie_break_winners_losers(tie_break_count_winners, tie_break_count_losers):
 
+    """
+    Combined table of both winners and losers for tie break tasks
+
+    Parameters:
+    -----------
+        tie_break_count_winners (DataFrame): Dataframe with all winners for each tie break
+        tie_break_count_losers (DataFrame): Dataframe with all losers for each tie break
+
+    Returns:
+    --------
+        Combined table with all contestesnts who featured in a tie break with how many times they won or lost them
+    
+    """
+
     tie_break_count_winners_losers = (
         pd.concat([
             tie_break_count_winners.rename(columns={"Wins": "Count"}).assign(Result="Win"),
@@ -438,6 +484,22 @@ def tie_break_winners_losers(tie_break_count_winners, tie_break_count_losers):
     return(tie_break_count_winners_losers)
 
 def tie_break_counts_win_lose(tie_break_count_winners_table, tie_break_count_losers_table):
+
+    """
+    Updates the tie break winners and losers tables by calculating percentage wins/losses for each contestent.
+    
+    Parameters:
+    -----------
+        tie_break_count_winners_table (DataFrame): Dataframe with all winners for each tie break
+        tie_break_count_losers_table (DataFrame): Dataframe with all losers for each tie break
+    
+    Returns:
+    -------
+        top_tie_break_count_winners (DataFrame): Updated winners dataframe with percentage wins per series or number
+                                                of times each contested played a tie break task
+        top_tie_break_count_losers (DataFrame): Updated winners dataframe with percentage losses per series or number
+                                                of times each contested played a tie break task
+    """
 
     tie_break_count_winners = tie_break_count_winners_table.copy()
     tie_break_count_losers = tie_break_count_losers_table.copy()
