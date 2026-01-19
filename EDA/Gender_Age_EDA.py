@@ -11,3 +11,11 @@ file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
 
 gender_age_table = pd.read_csv(file_path + 'Contestent_Gender_Age.csv')
 
+print(gender_age_table.head())
+
+gender_count = gender_age_table['Gender'].value_counts().reset_index()
+
+gender_count.columns = ['Gender', 'Count']
+
+gender_count['Percent'] = (gender_count['Count'] / gender_count['Count'].sum() ) * 100
+print(gender_count)
