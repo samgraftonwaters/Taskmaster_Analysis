@@ -12,9 +12,9 @@ file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
 
 gender_age_table = pd.read_csv(file_path + 'Contestent_Gender_Age.csv')
 gender_age_table['Series Number'] = gender_age_table['Series'].str.replace('S', '').astype(int)
-
-
+print(gender_age_table.columns)
 
 gender_count = gaf.gender_count_percent(gender_age_table)
 gender_series = gaf.gender_count_series(gender_age_table)
 gaf.gender_count_series_bar(gender_age_table)
+
