@@ -26,5 +26,14 @@ age_bins = [20, 30, 40, 50, 60, 70]
 age_labels = ['20 - 29', '30 - 39', '40 - 49', '50 - 59', '60 - 69']
 
 age_table['Age_Ranges'] = pd.cut(age_table['Age_at_First_Air'], bins = age_bins, labels = age_labels, right = False)
-print(age_table)
+
+age_ranges_count = age_table['Age_Ranges'].value_counts().reset_index()
+age_ranges_count.columns = ['Age_Ranges', 'Count']
+age_ranges_count['Percentage'] = (age_ranges_count['Count'] / age_ranges_count['Count'].sum()) * 100
+print(age_ranges_count)
+
+age_series = age_table.groupby('Series Number')['Age_Ranges'].value_counts().reset_index()
+age_series = age_series.sort_values('Series Number', ascending = True)
+print(age_series)
+
 
