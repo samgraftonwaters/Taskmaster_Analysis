@@ -18,3 +18,13 @@ gender_count = gaf.gender_count_percent(gender_age_table)
 gender_series = gaf.gender_count_series(gender_age_table)
 gaf.gender_count_series_bar(gender_age_table)
 
+age_table = gender_age_table[['Name', 'Series Number', 'Age_at_First_Air']]
+
+age_table = age_table.copy()
+
+age_bins = [20, 30, 40, 50, 60, 70]
+age_labels = ['20 - 29', '30 - 39', '40 - 49', '50 - 59', '60 - 69']
+
+age_table['Age_Ranges'] = pd.cut(age_table['Age_at_First_Air'], bins = age_bins, labels = age_labels, right = False)
+print(age_table)
+
