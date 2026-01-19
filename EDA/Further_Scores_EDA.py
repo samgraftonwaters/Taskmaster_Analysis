@@ -92,10 +92,17 @@ print(never_lost.head(20))
 ## Tie Breaks
 print('Tie Break Analysis\n\n\n')
 
-(tie_break_count_winners, tie_break_count_losers, 
- tie_break_count_winners_losers, tie_break_scores_names) = FSF.tie_break_calcs(tie_break_scores_table = tie_break_scores, 
-                                                                                                      before_tie_total_table = before_tie_total, 
-                                                                                                      named_table = named_series_table_reformatted)
+tie_break_scores = FSF.tie_break_score_calcs(tie_break_scores_table = tie_break_scores, before_tie_total_table = before_tie_total)
+print('good')
+tie_break_scores_names = FSF.merged_tie_scores_names(tie_break_scores = tie_break_scores , named_table = named_series_table_reformatted)
+print('great')
+tie_break_count_winners = FSF.tie_break_winners(tie_break_scores_names = tie_break_scores_names)
+print('awesome')
+tie_break_count_losers = FSF.tie_break_losers(tie_break_scores_names = tie_break_scores_names)
+print('execelent')
+tie_break_count_winners_losers = FSF.tie_break_winners_losers(tie_break_count_winners = tie_break_count_winners,
+                                                              tie_break_count_losers = tie_break_count_losers)
+print('perfect')
 print(tie_break_scores_names.head(20))
 
 (top_tie_break_count_winners, 

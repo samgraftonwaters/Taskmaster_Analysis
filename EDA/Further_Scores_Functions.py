@@ -277,8 +277,21 @@ def episodes_win_lose(episode_scores_table, named_table):
     return(episode_win_lose_results)
             
 
-def tie_break_calcs(tie_break_scores_table, before_tie_total_table, named_table):
+def tie_break_score_calcs(tie_break_scores_table, before_tie_total_table):
 
+    """
+    
+    Parameters:
+    -----------
+        tie_break_scores_table (DataFrame): dataframe with all tie breaks and number of wins/losses for each 
+                                            contestent
+        before_tie_total_table (DataFrame): dataframe with the episode scores before the tiebreak point is added
+                                            to the winner's total
+
+    Returns:
+    ---------
+    
+    """
 
 
 
@@ -326,6 +339,19 @@ def tie_break_calcs(tie_break_scores_table, before_tie_total_table, named_table)
 
     tie_break_scores = pd.DataFrame(rows)
 
+    return(tie_break_scores)
+
+def merged_tie_scores_names(tie_break_scores, named_table):
+
+    """
+    
+    Parameters:
+    ----------
+
+        named_table (DataFrame): contestent name table
+    
+    """
+
     tie_break_scores_names = (
         tie_break_scores
         .merge(
@@ -359,6 +385,11 @@ def tie_break_calcs(tie_break_scores_table, before_tie_total_table, named_table)
             "Seat Winner Name", "Seat Loser", "Seat Loser Name", 
             "Tie breaks per series", "Double Losers"]]
 
+    return(tie_break_scores_names)
+
+
+def tie_break_winners(tie_break_scores_names):
+
     count_names = pd.DataFrame(pd.concat([tie_break_scores_names['Seat Winner Name'], tie_break_scores_names['Seat Loser Name']], axis = 0), columns = ['Name'])
     count_names_counts = count_names.value_counts().reset_index()
     count_names_counts.columns = ["Name", "Tie Breaks per Person"]
@@ -372,6 +403,14 @@ def tie_break_calcs(tie_break_scores_table, before_tie_total_table, named_table)
 
     tie_break_count_winners = pd.merge(left = tie_break_count_winners, right = count_names_counts, on = 'Name',
                                     how = 'left')
+    
+    return(tie_break_count_winners)
+
+def tie_break_losers(tie_break_scores_names):
+
+    count_names = pd.DataFrame(pd.concat([tie_break_scores_names['Seat Winner Name'], tie_break_scores_names['Seat Loser Name']], axis = 0), columns = ['Name'])
+    count_names_counts = count_names.value_counts().reset_index()
+    count_names_counts.columns = ["Name", "Tie Breaks per Person"]
 
     tie_break_count_losers = (tie_break_scores_names[["Series", "Seat Loser Name", "Seat Loser",
                                                     "Tie breaks per series", "Double Losers"]]
@@ -383,6 +422,11 @@ def tie_break_calcs(tie_break_scores_table, before_tie_total_table, named_table)
     tie_break_count_losers = pd.merge(left = tie_break_count_losers, right = count_names_counts, on = 'Name',
                                     how = 'left')
 
+    return(tie_break_count_losers)
+
+
+def tie_break_winners_losers(tie_break_count_winners, tie_break_count_losers):
+
     tie_break_count_winners_losers = (
         pd.concat([
             tie_break_count_winners.rename(columns={"Wins": "Count"}).assign(Result="Win"),
@@ -391,8 +435,7 @@ def tie_break_calcs(tie_break_scores_table, before_tie_total_table, named_table)
 
     tie_break_count_winners_losers = tie_break_count_winners_losers.replace(np.nan, 0)
 
-    return(tie_break_count_winners, tie_break_count_losers, 
-           tie_break_count_winners_losers, tie_break_scores_names)
+    return(tie_break_count_winners_losers)
 
 def tie_break_counts_win_lose(tie_break_count_winners_table, tie_break_count_losers_table):
 
@@ -435,7 +478,7 @@ def tie_break_person_series_plots(data_table, win_lose : str, plot_title : str, 
         bar_label (str) : label for the bar chart panel - e.g. 'Most Tie Breaks Won'
         Wins_lose_column (str): column that contains the number of wins or losses for tie breaks
         percent_column (str): column that contains the percentage of wins or losses - e.g. 'Percentage Wins Person'
-        ties_series_person_column (str): column that contains the number of series ties or ties per person -
+        ties_series_person_column (str):å column that contains the number of series ties or ties per person -
                                         e.g. 'Tie Breaks per Person'
         name_column (str): column that contains contestent names
         series_column (str): column that contains the series numbers
@@ -498,15 +541,23 @@ def least_most_points(data_table_most, data_table_least, series_column : str, se
                       name_column : str, most_column : str, least_column : str, plot_title : str):
     
     """
-    data_table_most (DataFrame):
-    data_table_least
-    name_column (str): column that contains contestent names
-    series_column (str): column that contains the series numbers
-    seat_column (str): column that contains each seat
-    most_column (str)
-    least_column (str)
-    plot_title (str): Title of the plot
+    Bar chart to display the most and least number of times each person scrored a particular point for all tasks
+
+    Parameters:
+    -----------
+        data_table_most (DataFrame): data table that contains the most number of counts for a certain score (e.g. most 5s)
+        data_table_least (DataFrame): data table that contains the least number of counts for a certain score (e.g. least 1s)
+        name_column (str): column that contains contestent names
+        series_column (str): column that contains the series numbers
+        seat_column (str): column that contains each seat
+        most_column (str): column that contains the count for the most number of teams each point was given (e.g. most 1s)
+        least_column (str): column that contains the count for the least number of teams each point was given (e.g. least 5s)
+        plot_title (str): Title of the plot
     
+    Returns:
+    -------
+        split panel bar charts to show the most and least number of times each point (e.g. 1s or 5s) was awarded
+        to each contested for each task.
     
     """
 
