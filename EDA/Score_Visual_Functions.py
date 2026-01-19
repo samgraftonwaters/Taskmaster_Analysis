@@ -27,7 +27,7 @@ def bar_number_seat_wins_loses(seat_number_winner, seat_number_losers, count_win
     plt.bar(x = seat_number_winner-0.2, height = count_winners, 
             label = 'Number of Wins', width = 0.40, color = 'blue', alpha = 0.6, edgecolor ='black')
     plt.bar(x = seat_number_losers+0.2, height = count_losers, 
-            label = 'Number of Loses', width = 0.40, color = 'green', alpha = 0.6, edgecolor ='black')
+            label = 'Number of Losses', width = 0.40, color = 'green', alpha = 0.6, edgecolor ='black')
 
     for i in range(5):
         plt.text(i+0.8, count_winners[i]+0.05, 

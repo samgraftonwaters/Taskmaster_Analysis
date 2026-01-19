@@ -88,6 +88,33 @@ print(team_combinations_grouped)
 #PLOTS
 #########
 
+#Number of Team tasks per series
+plt.figure()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.08, right = 0.96)
+
+plt.bar(team_task_totals['Series Number'], team_task_totals['Number'], width = 0.8, edgecolor = 'black',
+        color = 'dodgerblue', alpha = 0.8)
+
+plt.hlines(team_task_totals['Number'].mean(), 0, 21, linestyles='--', color = 'black', lw = 4)
+
+plt.text(1, 4.6, team_task_totals['Number'].mean(), fontsize = 18, color = 'black')
+
+for series, number in zip(team_task_totals['Series Number'], team_task_totals['Number']):
+    
+    plt.text(series-0.1, number + 0.2, number, color = 'blue', fontsize = 18, va='center', ha='left')
+
+plt.xlim(0.5, 20.5)
+plt.ylim(0, 6.5)
+plt.xticks(np.arange(1, 21, 1), fontsize = 16)
+plt.yticks(fontsize = 16)
+plt.xlabel('Series', fontsize = 20)
+plt.ylabel('Number of Team Tasks', fontsize = 10)
+plt.title('Number of Team Tasks per Series', fontsize = 22)
+
+plt.show()
+
+
+
 #Percentage differnce bar charts for four team score methods
 plt.figure()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.08, right = 0.96)
@@ -224,7 +251,7 @@ ax1.set_yticks([])
 ax1.set_ylabel('')
 ax1.legend(fontsize=16)
 
-team_scores_bottom.plot.barh(y='TeamScoresPersonTask', x='Team Names', ax=ax2, color='dodgerblue', alpha=0.8, 
+team_scores_bottom.plot.barh(y='TeamScoresPersonTask', x='Team Names', ax=ax2, color='dodgerblue', alpha=0.7, 
                     edgecolor='white', width=0.9, label='Bottom 10 Teams')
 
 for i, (score, team, series, tasks) in enumerate(zip(team_scores_bottom['TeamScoresPersonTask'], team_scores_bottom['Team Names'],
