@@ -37,6 +37,9 @@ plt.show()
 gender_series_plot = gender_age_table.groupby(['Series Number', 'Gender']).size().unstack(fill_value=0)
 print(gender_series_plot)
 
+nb_row = gender_series_plot[gender_series_plot['Non-Binary'] == 1]
+print(nb_row)
+
 series = gender_series_plot.index
 genders = gender_series_plot.columns
 x = np.arange(len(series))  # the label locations
@@ -47,6 +50,14 @@ fig, ax = plt.subplots(figsize=(6,4))
 # Plot Male and Female bars side by side
 ax.bar(x - width/2, gender_series_plot['Male'], width, label='Male', color='skyblue')
 ax.bar(x + width/2, gender_series_plot['Female'], width, label='Female', color='lightpink')
+ax.scatter(
+    x[gender_series_plot['Non-Binary'] == 1],
+    gender_series_plot.loc[gender_series_plot['Non-Binary'] == 1, 'Non-Binary'],
+    color='red',
+    marker='D',
+    s=100,
+    label='Non-Binary (present)'
+)
 
 # Labels, title, ticks
 ax.set_xlabel('Series')
