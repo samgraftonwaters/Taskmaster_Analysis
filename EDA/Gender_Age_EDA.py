@@ -47,23 +47,60 @@ age_series_plot = age_series.pivot_table(index="Series Number", columns="Age_Ran
 print(age_series_plot)
 
 
-x_pos = [-2, -1, 0, 1, 2]
+x_pos = [-1.5, -0.75, 0, 0.75, 1.5]
 colours = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd']
 
 plt.figure()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.08, right = 0.96)
 for i, (bins, pos, colour) in enumerate(zip(age_labels, x_pos, colours)):
     
-    age = age_series[age_series['Age_Ranges'] == bins].reset_index(drop = True)
-    plt.bar(age['Series Number'] + pos, age['count'], width = 0.1, edgecolor = 'black', color = colour, label = bins)
+#     age = age_series[age_series['Age_Ranges'] == bins].reset_index(drop = True)
+#     plt.bar(age['Series Number'] + pos, age['count'], width = 0.1, edgecolor = 'black', color = colour, label = bins)
+    plt.bar(age_series_plot['Series Number'] + pos, age_series_plot[bins], width = 0.1, edgecolor = 'black', color = colour, label = bins)
 
 plt.xlim(0, 21)
 plt.xticks(fontsize = 16)
 plt.yticks(fontsize = 16)
 plt.legend()
 plt.show()
+
+fig, ax = plt.subplots()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.08, right = 0.96) 
+ax = age_series_plot.plot(x='Series Number', kind='bar', stacked=True, width = 0.8, ax = ax)
+
+ax.tick_params(axis='x', labelrotation=0)
+
+for c in ax.containers:
+    labels = [f"{int(v.get_height())}"
+        if np.isfinite(v.get_height()) and v.get_height() > 0 else '' for v in c]
     
-    
+    ax.bar_label(c, labels=labels, label_type='center', color = 'white', fontsize = 12)
+
+plt.xlabel("Series", fontsize = 20)
+plt.ylabel("Count", fontsize = 20)
+plt.xticks(fontsize = 18)
+plt.yticks(fontsize = 18)
+plt.legend(fontsize = 15)
+plt.title('Number of Age Ranges for each Contestent per Series', fontsize = 22)
+plt.show()
+
+x = age_series_plot['Series Number'] 
+
+plt.figure()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.08, right = 0.96)
+plt.bar(x, age_series_plot['20 - 29'], color = colours[0], label = age_labels[0])
+plt.bar(x, age_series_plot['30 - 39'], bottom = age_series_plot['20 - 29'], color = colours[1], label = age_labels[1])
+plt.bar(x, age_series_plot['40 - 49'], bottom=age_series_plot['20 - 29']+age_series_plot['30 - 39'], color = colours[2], label = age_labels[2])
+plt.bar(x, age_series_plot['50 - 59'], bottom=age_series_plot['20 - 29']+age_series_plot['30 - 39']+age_series_plot['40 - 49'], color = colours[3], label = age_labels[3])
+plt.bar(x, age_series_plot['60 - 69'], bottom=age_series_plot['20 - 29']+age_series_plot['30 - 39']+age_series_plot['40 - 49']+age_series_plot['50 - 59'], color = colours[4], label = age_labels[4])
+plt.xlabel("Series", fontsize = 18)
+plt.ylabel("Count", fontsize = 18)
+plt.xlim(0.5, 20.5)
+plt.xticks(fontsize = 15)
+plt.yticks(fontsize = 15)
+plt.legend(fontsize = 12)
+plt.title("Scores by Teams in 4 Rounds")
+
     
 
 age_series_plot = age_series.groupby(['Series Number', 'Age_Ranges']).size().unstack(fill_value=0)
