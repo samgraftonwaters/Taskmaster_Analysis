@@ -3,7 +3,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-import gender_age_functions as gaf
+import gender_age_functions as GAF
+import Total_Scores_EDA as TSA
 
 
 plt.rcParams['figure.figsize'] = (13, 7)
@@ -14,9 +15,9 @@ gender_age_table = pd.read_csv(file_path + 'Contestent_Gender_Age.csv')
 gender_age_table['Series Number'] = gender_age_table['Series'].str.replace('S', '').astype(int)
 print(gender_age_table.columns)
 
-gender_count = gaf.gender_count_percent(gender_age_table)
-gender_series = gaf.gender_count_series(gender_age_table)
-gaf.gender_count_series_bar(gender_age_table)
+gender_count = GAF.gender_count_percent(gender_age_table)
+gender_series = GAF.gender_count_series(gender_age_table)
+GAF.gender_count_series_bar(gender_age_table)
 
 age_table = gender_age_table[['Name', 'Series Number', 'Age_at_First_Air']]
 
@@ -36,4 +37,4 @@ age_series = age_table.groupby('Series Number')['Age_Ranges'].value_counts().res
 age_series = age_series.sort_values('Series Number', ascending = True)
 print(age_series)
 
-
+print(TSA.total_score_positions_ordered)
