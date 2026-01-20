@@ -65,7 +65,7 @@ plt.legend()
 plt.show()
 
 fig, ax = plt.subplots()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.08, right = 0.96) 
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.08, right = 0.85) 
 ax = age_series_plot.plot(x='Series Number', kind='bar', stacked=True, width = 0.8, ax = ax)
 
 ax.tick_params(axis='x', labelrotation=0)
@@ -80,52 +80,34 @@ plt.xlabel("Series", fontsize = 20)
 plt.ylabel("Count", fontsize = 20)
 plt.xticks(fontsize = 18)
 plt.yticks(fontsize = 18)
-plt.legend(fontsize = 15)
+ax.legend(title="Age Range", bbox_to_anchor=(1.02, 0.5), loc="center left",
+    fontsize=12, title_fontsize=13, frameon=False)
 plt.title('Number of Age Ranges for each Contestent per Series', fontsize = 22)
 plt.show()
 
-x = age_series_plot['Series Number'] 
+ax.legend(
+    title="Age Range",
+    loc="upper center",
+    bbox_to_anchor=(0.5, 1.12),
+    ncol=5,
+    fontsize=12,
+    title_fontsize=13,
+    frameon=False
+)
+fig.subplots_adjust(top=0.82)
 
-plt.figure()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.08, right = 0.96)
-plt.bar(x, age_series_plot['20 - 29'], color = colours[0], label = age_labels[0])
-plt.bar(x, age_series_plot['30 - 39'], bottom = age_series_plot['20 - 29'], color = colours[1], label = age_labels[1])
-plt.bar(x, age_series_plot['40 - 49'], bottom=age_series_plot['20 - 29']+age_series_plot['30 - 39'], color = colours[2], label = age_labels[2])
-plt.bar(x, age_series_plot['50 - 59'], bottom=age_series_plot['20 - 29']+age_series_plot['30 - 39']+age_series_plot['40 - 49'], color = colours[3], label = age_labels[3])
-plt.bar(x, age_series_plot['60 - 69'], bottom=age_series_plot['20 - 29']+age_series_plot['30 - 39']+age_series_plot['40 - 49']+age_series_plot['50 - 59'], color = colours[4], label = age_labels[4])
-plt.xlabel("Series", fontsize = 18)
-plt.ylabel("Count", fontsize = 18)
-plt.xlim(0.5, 20.5)
-plt.xticks(fontsize = 15)
-plt.yticks(fontsize = 15)
-plt.legend(fontsize = 12)
-plt.title("Scores by Teams in 4 Rounds")
+ax.legend(
+    loc="upper left",
+    bbox_to_anchor=(0.01, 0.99),
+    fontsize=12,
+    frameon=True
+)
 
-    
+ax.legend(
+    title="Age Range",
+    bbox_to_anchor=(1.02, 0.5),
+    loc="center left",
+    frameon=False
+)
 
-age_series_plot = age_series.groupby(['Series Number', 'Age_Ranges']).size().unstack(fill_value=0)
-# print(age_series_plot)
-series = age_series_plot.index
-x = np.arange(len(series))+1 
-#Percentage differnce bar charts for four team score methods
-plt.figure()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.08, right = 0.96)
-
-plt.bar(x-0.3, age_series_plot['20 - 29'], 
-        width = 0.2, edgecolor = 'black', label = 'Total Team Score')
-plt.bar(x-0.1, age_series_plot['30 - 39'], 
-        width = 0.2, edgecolor = 'black', label = 'Team Score per Person')
-plt.bar(x+0.1, age_series_plot['40 - 49'], 
-        width = 0.2, edgecolor = 'black', label = 'Team Score per Task')
-plt.bar(x+0.3, age_series_plot['50 - 59'], 
-        width = 0.2, edgecolor = 'black', label = 'Score per Person per Task')
-plt.xlim(0.5, 20.5)
-plt.ylim(0, 5)
-plt.xticks(np.arange(1, 21, 1), fontsize = 16)
-plt.yticks(fontsize = 16)
-plt.xlabel('Series', fontsize = 20)
-plt.ylabel('Absolute Percentage Differences', fontsize = 20)
-plt.title('Absolute Percentage Differences between Team of Three and Team \n of Two for Four Different Team Score Methods',
-          fontsize = 18)
-plt.legend(loc = 'upper right', fontsize = 16, ncol = 2)
-# plt.show()
+fig.subplots_adjust(right=0.8)
