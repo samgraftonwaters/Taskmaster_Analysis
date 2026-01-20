@@ -46,68 +46,24 @@ age_series_plot = age_series.pivot_table(index="Series Number", columns="Age_Ran
 
 print(age_series_plot)
 
-
-x_pos = [-1.5, -0.75, 0, 0.75, 1.5]
-colours = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd']
-
-plt.figure()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.08, right = 0.96)
-for i, (bins, pos, colour) in enumerate(zip(age_labels, x_pos, colours)):
-    
-#     age = age_series[age_series['Age_Ranges'] == bins].reset_index(drop = True)
-#     plt.bar(age['Series Number'] + pos, age['count'], width = 0.1, edgecolor = 'black', color = colour, label = bins)
-    plt.bar(age_series_plot['Series Number'] + pos, age_series_plot[bins], width = 0.1, edgecolor = 'black', color = colour, label = bins)
-
-plt.xlim(0, 21)
-plt.xticks(fontsize = 16)
-plt.yticks(fontsize = 16)
-plt.legend()
-plt.show()
-
 fig, ax = plt.subplots()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.08, right = 0.85) 
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.88, left = 0.08, right = 0.96) 
 ax = age_series_plot.plot(x='Series Number', kind='bar', stacked=True, width = 0.8, ax = ax)
 
-ax.tick_params(axis='x', labelrotation=0)
+plt.text(0.05, 5.33, 'Age Ranges:', fontsize = 14)
 
 for c in ax.containers:
     labels = [f"{int(v.get_height())}"
         if np.isfinite(v.get_height()) and v.get_height() > 0 else '' for v in c]
     
-    ax.bar_label(c, labels=labels, label_type='center', color = 'white', fontsize = 12)
+    ax.bar_label(c, labels=labels, label_type='center', color = 'white', fontsize = 14)
 
+ax.tick_params(axis='x', labelrotation=0)
 plt.xlabel("Series", fontsize = 20)
 plt.ylabel("Count", fontsize = 20)
 plt.xticks(fontsize = 18)
 plt.yticks(fontsize = 18)
-ax.legend(title="Age Range", bbox_to_anchor=(1.02, 0.5), loc="center left",
-    fontsize=12, title_fontsize=13, frameon=False)
-plt.title('Number of Age Ranges for each Contestent per Series', fontsize = 22)
+
+ax.legend(loc="upper center", bbox_to_anchor=(0.5, 1.07), ncol=5, fontsize=14, frameon=False)
+plt.title('Number of Age Ranges for each Contestent per Series', pad=30, fontsize = 24)
 plt.show()
-
-ax.legend(
-    title="Age Range",
-    loc="upper center",
-    bbox_to_anchor=(0.5, 1.12),
-    ncol=5,
-    fontsize=12,
-    title_fontsize=13,
-    frameon=False
-)
-fig.subplots_adjust(top=0.82)
-
-ax.legend(
-    loc="upper left",
-    bbox_to_anchor=(0.01, 0.99),
-    fontsize=12,
-    frameon=True
-)
-
-ax.legend(
-    title="Age Range",
-    bbox_to_anchor=(1.02, 0.5),
-    loc="center left",
-    frameon=False
-)
-
-fig.subplots_adjust(right=0.8)
