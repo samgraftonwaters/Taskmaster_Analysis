@@ -11,6 +11,12 @@ plt.rcParams['figure.figsize'] = (13, 7)
 
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
 
+episode_scores = pd.read_csv(file_path + 'Episode Wins and Losses.csv')
+final_scores = pd.read_csv(file_path + 'Total Final Scores and Positions.csv')
+
+print(episode_scores.head())
+print(final_scores.head())
+
 gender_age_table = pd.read_csv(file_path + 'Contestent_Gender_Age.csv')
 gender_age_table['Series Number'] = gender_age_table['Series'].str.replace('S', '').astype(int)
 print(gender_age_table.columns)

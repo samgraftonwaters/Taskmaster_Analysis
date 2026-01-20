@@ -59,13 +59,15 @@ lowest_ep_scores = FSF.high_low_ep_scores(data_table = episode_scores, named_tab
 highest_ep_scores = FSF.high_low_ep_scores(data_table = episode_scores, named_table = named_series_table_reformatted, 
                        direction = 'highest')
 
-print(episode_scores)
-episode_scores.to_csv(file_path + 'Episode Wins and Losses.csv', sep = ',', index = False)
+
+
 
 #Number of times each contestent (seat) has one or lost an episode in each series
 
 episode_win_lose_results = FSF.episodes_win_lose(episode_scores_table = episode_scores,
                                                  named_table = named_series_table_reformatted)
+
+episode_win_lose_results.to_csv(file_path + 'Episode Wins and Losses.csv', sep = ',', index = False)
 
 most_eps_won_num = episode_win_lose_results[['Series', 'Seat', "Wins", 'Percentage_Won', 'Number_Episodes', 'Name']].sort_values(by = 'Wins', ascending = False).reset_index(drop = True)
 
