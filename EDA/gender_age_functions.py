@@ -23,8 +23,8 @@ def gender_count_series_bar(gender_age_table):
     nb_row = gender_series_plot[gender_series_plot['Non-Binary'] == 1]
     print(nb_row)
     series = gender_series_plot.index
-    x = np.arange(len(series))+1  # the label locations
-    width = 0.4  # width of the bars
+    x = np.arange(len(series))+1
+    width = 0.4
 
     plt.figure()
     plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
@@ -43,7 +43,6 @@ def gender_count_series_bar(gender_age_table):
         plt.text(i - 0.2, gender_series_plot['Male'][i] + 0.25, gender_series_plot['Male'][i], ha='center', fontsize=16, color='blue')
         plt.text(i + 0.2, gender_series_plot['Female'][i] + 0.25, gender_series_plot['Female'][i], ha='center', fontsize=16, color='green')
 
-    # Labels, title, ticks
     plt.xlabel('Series', fontsize = 20)
     plt.ylabel('Count', fontsize = 20)
     plt.ylim(0, 5)
@@ -51,7 +50,52 @@ def gender_count_series_bar(gender_age_table):
     plt.title('Counts of Male and Female per Series', fontsize = 25)
     plt.xticks(x, fontsize = 16)
     plt.yticks(fontsize = 16)
-    # plt.set_xticklabels(series)
     plt.legend(fontsize = 18)
+    plt.show()
 
+def setting_age_bins(table):
+    age_table = table.copy()
+    age_bins = [20, 30, 40, 50, 60, 70]
+    age_labels = ['20 - 29', '30 - 39', '40 - 49', '50 - 59', '60 - 69']
+    age_table['Age_Ranges'] = pd.cut(age_table['Age_at_First_Air'], bins = age_bins, labels = age_labels, right = False)
+    print(age_table)
+    return(age_table)
+
+def age_range_metrics(table):
+    age_table = table.copy()
+    age_ranges_count = age_table['Age_Ranges'].value_counts().reset_index()
+    age_ranges_count.columns = ['Age_Ranges', 'Count']
+    age_ranges_count['Percentage'] = (age_ranges_count['Count'] / age_ranges_count['Count'].sum()) * 100
+    print(age_ranges_count)
+    return(age_ranges_count)
+
+def age_group_series(table):
+    age_table = table.copy()
+    age_series = age_table.groupby('Series Number')['Age_Ranges'].value_counts().reset_index()
+    age_series = age_series.sort_values('Series Number', ascending = True)
+    print(age_series)
+    return(age_series)
+
+def age_series_stacked_bar(table):
+    age_series_plot = table.pivot_table(index="Series Number", columns="Age_Ranges", values="count",
+                aggfunc="sum", fill_value=0).reset_index()
+    fig, ax = plt.subplots()
+    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.88, left = 0.08, right = 0.96) 
+    ax = age_series_plot.plot(x='Series Number', kind='bar', stacked=True, width = 0.8, ax = ax)
+
+    plt.text(0.05, 5.33, 'Age Ranges:', fontsize = 14)
+
+    for c in ax.containers:
+        labels = [f"{int(v.get_height())}"
+                if np.isfinite(v.get_height()) and v.get_height() > 0 else '' for v in c]
+        
+        ax.bar_label(c, labels=labels, label_type='center', color = 'white', fontsize = 14)
+
+    ax.tick_params(axis='x', labelrotation=0)
+    plt.xlabel("Series", fontsize = 20)
+    plt.ylabel("Count", fontsize = 20)
+    plt.xticks(fontsize = 18)
+    plt.yticks(fontsize = 18)
+    ax.legend(loc="upper center", bbox_to_anchor=(0.5, 1.07), ncol=5, fontsize=14, frameon=False)
+    plt.title('Number of Age Ranges for each Contestent per Series', pad=30, fontsize = 24)
     plt.show()
