@@ -29,7 +29,6 @@ def gender_count_series_bar(gender_age_table, series_seat, title = 'Counts of Ma
     
     if series_seat.lower() == 'seat':
         gender_series_plot = gender_age_table.groupby(['Seat', 'Gender']).size().unstack(fill_value=0)
-        print(gender_series_plot)
         seat = gender_series_plot.index
         x = np.arange(len(seat))+1
         x_label = 'Seat'
@@ -88,26 +87,43 @@ def age_group_series(table):
     print(age_series)
     return(age_series)
 
-def age_series_stacked_bar(table):
-    age_series_plot = table.pivot_table(index="Series Number", columns="Age_Ranges", values="count",
+def age_series_stacked_bar(table, series_seat, title):
+
+    if series_seat.lower() == 'series':
+        x_axis = "Series Number"
+        x_label = "Series"
+        text_loc_x = 0.05
+        text_loc_y = 5.33
+        y_ticks = [0, 1, 2, 3, 4, 5]
+    
+    if series_seat.lower() == 'seat':
+        x_axis = "Seat"
+        x_label = 'Seat'
+        text_loc_x = -0.5
+        text_loc_y = 21.4
+        y_ticks = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
+
+    age_series_plot = table.pivot_table(index=x_axis, columns="Age_Ranges", values="count",
                 aggfunc="sum", fill_value=0).reset_index()
+    
+    print(age_series_plot)
     fig, ax = plt.subplots()
     plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.88, left = 0.08, right = 0.96) 
-    ax = age_series_plot.plot(x='Series Number', kind='bar', stacked=True, width = 0.8, ax = ax)
-
-    plt.text(0.05, 5.33, 'Age Ranges:', fontsize = 14)
+    ax = age_series_plot.plot(x=x_axis, kind='bar', stacked=True, width = 0.8, ax = ax)
 
     for c in ax.containers:
         labels = [f"{int(v.get_height())}"
                 if np.isfinite(v.get_height()) and v.get_height() > 0 else '' for v in c]
         
         ax.bar_label(c, labels=labels, label_type='center', color = 'white', fontsize = 14)
+    
+    plt.text(text_loc_x, text_loc_y, 'Age Ranges:', fontsize = 14)
 
     ax.tick_params(axis='x', labelrotation=0)
-    plt.xlabel("Series", fontsize = 20)
+    plt.xlabel(x_label, fontsize = 20)
     plt.ylabel("Count", fontsize = 20)
     plt.xticks(fontsize = 18)
-    plt.yticks(fontsize = 18)
+    plt.yticks(y_ticks, fontsize = 18)
     ax.legend(loc="upper center", bbox_to_anchor=(0.5, 1.07), ncol=5, fontsize=14, frameon=False)
-    plt.title('Number of Age Ranges for each Contestent per Series', pad=30, fontsize = 24)
+    plt.title(title, pad=30, fontsize = 24)
     plt.show()
