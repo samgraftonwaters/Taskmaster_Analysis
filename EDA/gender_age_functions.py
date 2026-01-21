@@ -17,13 +17,25 @@ def gender_count_series(gender_age_table):
     return(gender_series)
 
 
-def gender_count_series_bar(gender_age_table):
-    gender_series_plot = gender_age_table.groupby(['Series Number', 'Gender']).size().unstack(fill_value=0)
+def gender_count_series_bar(gender_age_table, series_seat, title = 'Counts of Male and Female per Series'):
 
-    nb_row = gender_series_plot[gender_series_plot['Non-Binary'] == 1]
-    print(nb_row)
-    series = gender_series_plot.index
-    x = np.arange(len(series))+1
+    if series_seat.lower() == 'series':
+        gender_series_plot = gender_age_table.groupby(['Series Number', 'Gender']).size().unstack(fill_value=0)
+        series = gender_series_plot.index
+        x = np.arange(len(series))+1
+        x_label = 'Series'
+        x_range = (0.25, 20.75)
+        y_range = (0, 5)
+    
+    if series_seat.lower() == 'seat':
+        gender_series_plot = gender_age_table.groupby(['Seat', 'Gender']).size().unstack(fill_value=0)
+        print(gender_series_plot)
+        seat = gender_series_plot.index
+        x = np.arange(len(seat))+1
+        x_label = 'Seat'
+        x_range = (0.5, 5.5)
+        y_range = (0, 15)
+
     width = 0.4
 
     plt.figure()
@@ -43,11 +55,11 @@ def gender_count_series_bar(gender_age_table):
         plt.text(i - 0.2, gender_series_plot['Male'][i] + 0.25, gender_series_plot['Male'][i], ha='center', fontsize=16, color='blue')
         plt.text(i + 0.2, gender_series_plot['Female'][i] + 0.25, gender_series_plot['Female'][i], ha='center', fontsize=16, color='green')
 
-    plt.xlabel('Series', fontsize = 20)
+    plt.xlabel(x_label, fontsize = 20)
     plt.ylabel('Count', fontsize = 20)
-    plt.ylim(0, 5)
-    plt.xlim(0.25, 20.75)
-    plt.title('Counts of Male and Female per Series', fontsize = 25)
+    plt.ylim(y_range)
+    plt.xlim(x_range)
+    plt.title(title, fontsize = 25)
     plt.xticks(x, fontsize = 16)
     plt.yticks(fontsize = 16)
     plt.legend(fontsize = 18)
