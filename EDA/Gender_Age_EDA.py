@@ -35,31 +35,12 @@ age_series = GAF.age_group_series(table = age_binned_table)
 GAF.age_series_stacked_bar(table = age_series, series_seat = 'Series', 
                            title = 'Number of Age Ranges for each Contestent per Series')
 
-print(gender_age_table[gender_age_table['Series'] == 'S14'])
-print(final_scores[final_scores['Series'] == 'S14'])
-print(episode_scores[episode_scores['Series'] == 'S14'])
+final_scores_age_gender = GAF.merge_series_age_gender(series_table = final_scores, gener_table = gender_age_table, 
+                        age_table = age_binned_table)
 
-final_scores_age_gender = pd.merge(left = final_scores, right = gender_age_table.drop('Series', axis = 1),
-                                   on = 'Name', how = 'left')
+seat_gender_table = GAF.seat_gender_metrics(datatable = final_scores_age_gender)
 
-final_scores_age_gender = pd.merge(left = final_scores_age_gender, 
-                                   right = age_binned_table.drop(['Series Number', 'Age_at_First_Air'], axis = 1), 
-                                   on = 'Name', how = 'left')
-
-print(final_scores_age_gender)
-
-seat_gender_table = final_scores_age_gender[['Seat', 'Gender']]
-seat_gender_table['Seat'] = seat_gender_table['Seat'].str.replace('Seat ', '').astype(int)
-print(seat_gender_table)
-
-seat_age_table = final_scores_age_gender[['Seat', 'Age_Ranges']]
-print(seat_age_table)
-seat_age_table['Seat'] = seat_age_table['Seat'].str.replace('Seat ', '').astype(int)
-print(seat_age_table)
-
-seat_age_table = seat_age_table.groupby('Seat')['Age_Ranges'].value_counts().reset_index()
-
-print(seat_age_table)
+seat_age_table = GAF.seat_age_metrics(datatable = final_scores_age_gender)
 
 GAF.gender_count_series_bar(gender_age_table = seat_gender_table, series_seat = 'seat', 
                             title = 'Counts of Male and Female per Seat')

@@ -127,3 +127,29 @@ def age_series_stacked_bar(table, series_seat, title):
     ax.legend(loc="upper center", bbox_to_anchor=(0.5, 1.07), ncol=5, fontsize=14, frameon=False)
     plt.title(title, pad=30, fontsize = 24)
     plt.show()
+
+
+def merge_series_age_gender(series_table, gener_table, age_table):
+
+    final_scores_age_gender = pd.merge(left = series_table, right = gener_table.drop('Series', axis = 1),
+                                    on = 'Name', how = 'left')
+
+    final_scores_age_gender = pd.merge(left = final_scores_age_gender, 
+                                    right = age_table.drop(['Series Number', 'Age_at_First_Air'], axis = 1), 
+                                    on = 'Name', how = 'left')
+
+    print(final_scores_age_gender)
+    return(final_scores_age_gender)
+
+def seat_gender_metrics(datatable):
+    seat_gender_table = datatable[['Seat', 'Gender']]
+    seat_gender_table['Seat'] = seat_gender_table['Seat'].str.replace('Seat ', '').astype(int)
+    print(seat_gender_table)
+    return(seat_gender_table)
+
+def seat_age_metrics(datatable):
+    seat_age_table = datatable[['Seat', 'Age_Ranges']]
+    seat_age_table['Seat'] = seat_age_table['Seat'].str.replace('Seat ', '').astype(int)
+    seat_age_table = seat_age_table.groupby('Seat')['Age_Ranges'].value_counts().reset_index()
+    print(seat_age_table)
+    return(seat_age_table)
