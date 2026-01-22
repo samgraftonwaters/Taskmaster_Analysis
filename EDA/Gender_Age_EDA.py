@@ -106,13 +106,19 @@ series_max = final_scores_age_gender.groupby("Series")["Score_Rank_Series"].tran
 
 final_scores_age_gender["Normalized_Rank"] = (
     1.0
-    - (final_scores_age_gender["Score_Rank_Series"] - 1).astype(float)
-    / (series_max - 1)
+    - (final_scores_age_gender["Score_Rank_Series"] - 1).astype(float) / (series_max - 1)
 )
 
-# Handle single-contestant series
+# Handle series with only 1 contestant
 final_scores_age_gender.loc[series_max == 1, "Normalized_Rank"] = 1.0
 
+# final_scores_age_gender = final_scores_age_gender.sort_values(["Series", "Score_Rank_Series"])[
+#     ["Series", "Name", "Score", "Score_Rank_Series", "Normalized_Rank"]
+# ]
+
+# Normalized rank must be per series, because each series is a separate mini-competition.
+
+# After normalization, Normalized_Rank ranges from 0–1 in each series, making contestants from different series comparable in terms of relative performance within their series.
 
 final_scores_age_gender["Score_z"] = final_scores_age_gender.groupby("Series")["Score"].transform(
     lambda x: (x - x.mean()) / x.std() #“Did contestants score higher or lower than their series average?”
@@ -120,12 +126,12 @@ final_scores_age_gender["Score_z"] = final_scores_age_gender.groupby("Series")["
 
 print(final_scores_age_gender.head())
 
-age_order = ["20-29", "30-39", "40-49", "50-59", "60-69"]
-final_scores_age_gender["Age_Ranges"] = pd.Categorical(
-    final_scores_age_gender["Age_Ranges"],
-    categories=age_order,
-    ordered=True
-)
+# age_order = ["20-29", "30-39", "40-49", "50-59", "60-69"]
+# final_scores_age_gender["Age_Ranges"] = pd.Categorical(
+#     final_scores_age_gender["Age_Ranges"],
+#     categories=age_order,
+#     ordered=True
+# )
 
 age_groups = [
     g["Normalized_Rank"].values
@@ -135,7 +141,7 @@ age_groups = [
 
 stat_age, p_age = kruskal(*age_groups)
 
-print(f"Kruskal–Wallis stat: {stat_age:.4f}; p-value: {p_age:.4f}")
+print(f"Kruskal–Wallis Age stat: {stat_age:.4f}; p-value: {p_age:.4f}")
 
 gender_groups = [
     g["Normalized_Rank"].values
@@ -143,7 +149,7 @@ gender_groups = [
 ]
 
 stat_gender, p_gender = kruskal(*gender_groups)
-print(f"Kruskal–Wallis stat: {stat_gender:.4f}; p-value: {p_gender:.4f}")
+print(f"Kruskal–Wallis Gender stat: {stat_gender:.4f}; p-value: {p_gender:.4f}")
 
 # p ≥ 0.05 → No evidence of gender bias in final outcomes
 
@@ -175,3 +181,25 @@ sns.boxplot(
 plt.axhline(0.5, ls="--", color="gray", alpha=0.6)
 plt.title("Within-Series Normalized Final Rank by Age")
 plt.show()
+
+
+# Age results
+
+# What the numbers mean
+
+# Kruskal–Wallis statistic = 1.4202
+# Measures the degree of difference in normalized ranks across your age bins.
+# Low values → little difference between groups.
+
+# p-value = 0.8407
+# Very high (≫ 0.05), meaning the differences you see could easily arise by chance.
+
+# 2️⃣ Interpretation
+
+# “There is no statistically significant difference in relative finishing positions between age ranges.”
+
+# Put another way:
+
+# Contestants in different age groups tend to perform similarly relative to their series, based on normalized ranks.
+
+# There’s no evidence of bias in Taskmaster scoring based on age.
