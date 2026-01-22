@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from scipy.stats import chi2_contingency
+from scipy.stats import chi2_contingency, kruskal
 
 import gender_age_functions as GAF
 
@@ -94,3 +94,84 @@ print(expected_age)
 
 # chi-squared result does not show gender bias in Taskmaster scoring for gener.
 # It shows that gender and finishing position are statistically associated, but not by scoring bias.
+
+#Given similar performance opportunities, are contestants of different genders scored differently?
+final_scores_age_gender["Score_Rank_Series"] = (
+    final_scores_age_gender
+    .groupby("Series")["Score"]
+    .rank(method="dense", ascending=False)
+)
+
+series_max = final_scores_age_gender.groupby("Series")["Score_Rank_Series"].transform("max")
+
+final_scores_age_gender["Normalized_Rank"] = (
+    1.0
+    - (final_scores_age_gender["Score_Rank_Series"] - 1).astype(float)
+    / (series_max - 1)
+)
+
+# Handle single-contestant series
+final_scores_age_gender.loc[series_max == 1, "Normalized_Rank"] = 1.0
+
+
+final_scores_age_gender["Score_z"] = final_scores_age_gender.groupby("Series")["Score"].transform(
+    lambda x: (x - x.mean()) / x.std() #“Did contestants score higher or lower than their series average?”
+)
+
+print(final_scores_age_gender.head())
+
+age_order = ["20-29", "30-39", "40-49", "50-59", "60-69"]
+final_scores_age_gender["Age_Ranges"] = pd.Categorical(
+    final_scores_age_gender["Age_Ranges"],
+    categories=age_order,
+    ordered=True
+)
+
+age_groups = [
+    g["Normalized_Rank"].values
+    for _, g in final_scores_age_gender.groupby("Age_Ranges")
+    if len(g) > 1   # guard against sparse bins
+]
+
+stat_age, p_age = kruskal(*age_groups)
+
+print(f"Kruskal–Wallis stat: {stat_age:.4f}; p-value: {p_age:.4f}")
+
+gender_groups = [
+    g["Normalized_Rank"].values
+    for _, g in final_scores_age_gender.groupby("Gender")
+]
+
+stat_gender, p_gender = kruskal(*gender_groups)
+print(f"Kruskal–Wallis stat: {stat_gender:.4f}; p-value: {p_gender:.4f}")
+
+# p ≥ 0.05 → No evidence of gender bias in final outcomes
+
+# p < 0.05 → Gender is associated with relative finishing position
+
+# This test now:
+# ✅ Respects Taskmaster’s structure
+# ✅ Removes forced rank dependence
+# ✅ Directly addresses bias
+
+
+sns.boxplot(
+    data=final_scores_age_gender,
+    x="Gender",
+    y="Normalized_Rank"
+)
+
+plt.axhline(0.5, ls="--", color="gray", alpha=0.6)
+plt.title("Within-Series Normalized Final Rank by Gender")
+plt.show()
+
+
+sns.boxplot(
+    data=final_scores_age_gender,
+    x="Age_Ranges",
+    y="Normalized_Rank"
+)
+
+plt.axhline(0.5, ls="--", color="gray", alpha=0.6)
+plt.title("Within-Series Normalized Final Rank by Age")
+plt.show()
