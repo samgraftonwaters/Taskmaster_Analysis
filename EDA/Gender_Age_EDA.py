@@ -35,7 +35,7 @@ age_series = GAF.age_group_series(table = age_binned_table)
 GAF.age_series_stacked_bar(table = age_series, series_seat = 'Series', 
                            title = 'Number of Age Ranges for each Contestent per Series')
 
-final_scores_age_gender = GAF.merge_series_age_gender(series_table = final_scores, gener_table = gender_age_table, 
+final_scores_age_gender = GAF.merge_series_age_gender(series_table = final_scores, gender_table = gender_age_table, 
                         age_table = age_binned_table)
 
 seat_gender_table = GAF.seat_gender_metrics(datatable = final_scores_age_gender)
@@ -47,3 +47,15 @@ GAF.gender_count_series_bar(gender_age_table = seat_gender_table, series_seat = 
 
 GAF.age_series_stacked_bar(table = seat_age_table, series_seat = 'seat', 
                            title = 'Number of Age Ranges for each Seat')
+
+
+print(final_scores_age_gender.head())
+
+position_gender_table = final_scores_age_gender[['Position', 'Gender', 'Score']]
+position_age_table = final_scores_age_gender[['Position', 'Age_Ranges', 'Score']]
+
+position_gender_count = position_gender_table.groupby(['Gender', 'Position'], observed=True)['Score'].sum().reset_index()
+position_age_count = position_age_table.groupby(['Age_Ranges', 'Position'], observed=True)['Score'].sum().reset_index()
+
+print(position_age_count)
+print(position_gender_count)

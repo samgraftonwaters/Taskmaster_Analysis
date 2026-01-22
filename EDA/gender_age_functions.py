@@ -104,7 +104,7 @@ def age_series_stacked_bar(table, series_seat, title):
         y_ticks = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
 
     age_series_plot = table.pivot_table(index=x_axis, columns="Age_Ranges", values="count",
-                aggfunc="sum", fill_value=0).reset_index()
+                aggfunc="sum", fill_value=0, observed=True).reset_index()
     
     print(age_series_plot)
     fig, ax = plt.subplots()
@@ -129,9 +129,13 @@ def age_series_stacked_bar(table, series_seat, title):
     plt.show()
 
 
-def merge_series_age_gender(series_table, gener_table, age_table):
+def merge_series_age_gender(series_table, gender_table, age_table):
 
-    final_scores_age_gender = pd.merge(left = series_table, right = gener_table.drop('Series', axis = 1),
+    series_table = series_table.copy()
+    gender_table = gender_table.copy() 
+    age_table = age_table.copy()
+
+    final_scores_age_gender = pd.merge(left = series_table, right = gender_table.drop('Series', axis = 1),
                                     on = 'Name', how = 'left')
 
     final_scores_age_gender = pd.merge(left = final_scores_age_gender, 
@@ -142,12 +146,14 @@ def merge_series_age_gender(series_table, gener_table, age_table):
     return(final_scores_age_gender)
 
 def seat_gender_metrics(datatable):
+    datatable = datatable.copy()
     seat_gender_table = datatable[['Seat', 'Gender']]
     seat_gender_table['Seat'] = seat_gender_table['Seat'].str.replace('Seat ', '').astype(int)
     print(seat_gender_table)
     return(seat_gender_table)
 
 def seat_age_metrics(datatable):
+    datatable = datatable.copy()
     seat_age_table = datatable[['Seat', 'Age_Ranges']]
     seat_age_table['Seat'] = seat_age_table['Seat'].str.replace('Seat ', '').astype(int)
     seat_age_table = seat_age_table.groupby('Seat')['Age_Ranges'].value_counts().reset_index()
