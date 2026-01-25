@@ -3,6 +3,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy.stats import chi2_contingency, kruskal
+import statsmodels.formula.api as smf
+from statsmodels.stats.anova import anova_lm
 
 def gender_count_percent(gender_age_table):
     gender_count = gender_age_table['Gender'].value_counts().reset_index()
@@ -180,3 +182,36 @@ def chi2_test(data_table, values, index, columns, agg):
     print(f"P-value: {pvalue:.6f}")
     
     print('/n/n')
+
+
+def formatting_table(data_table):
+    df = data_table.copy()
+
+    df['Gender'] = df['Gender'].astype('category')
+
+    df['Age_Ranges'] = df['Age_Ranges'].astype('category')
+
+    df['age_c'] = df['Age_at_First_Air'] - df['Age_at_First_Air'].mean()
+
+    df['Score_Z'] = (
+        df.groupby('Series')['Score']
+        .transform(lambda x: (x - x.mean()) / x.std())
+    )
+    print(df.columns)
+    return(df)
+
+def model_fitting(data_table, target_variable, test_variables):
+    df = data_table.copy()
+    model = smf.ols(
+        f"{target_variable} ~ {test_variables[0]} + {test_variables[1]}",
+        data=df
+    ).fit()
+
+    print(f"\n=== OLS Regression: {test_variables[0]} + {test_variables[1]} ===\n")
+    print(model.summary())
+    return(model)
+
+def anova_test(model):
+    anova_results = anova_lm(model, typ=2)
+    print("\n=== ANOVA Test ===\n")
+    print(anova_results)
