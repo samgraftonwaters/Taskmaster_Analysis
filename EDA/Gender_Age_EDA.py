@@ -109,6 +109,8 @@ final_scores_age_gender["Score_z"] = final_scores_age_gender.groupby("Series")["
 )
 
 print(final_scores_age_gender.head())
+sort_table = final_scores_age_gender.sort_values(['Series Number', 'Score']).reset_index()
+print(sort_table.head(20))
 
 # age_order = ["20-29", "30-39", "40-49", "50-59", "60-69"]
 # final_scores_age_gender["Age_Ranges"] = pd.Categorical(
