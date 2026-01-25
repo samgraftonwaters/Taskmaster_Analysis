@@ -22,7 +22,7 @@ print(gender_age_table.columns)
 
 gender_count = GAF.gender_count_percent(gender_age_table)
 gender_series = GAF.gender_count_series(gender_age_table)
-GAF.gender_count_series_bar(gender_age_table = gender_age_table, series_seat = 'series', 
+GAF.gender_count_series_bar(gender_age_table = gender_age_table, series_seat = 'Series', 
                             title = 'Counts of Male and Female per Series')
 
 age_table = gender_age_table[['Name', 'Series Number', 'Age_at_First_Air']]
@@ -67,17 +67,17 @@ age_chi2 = GAF.chi2_test(data_table = position_age_count, values = "Score", inde
 gender_chi2 = GAF.chi2_test(data_table = position_gender_count, values = "Score", index = "Gender", 
                      columns = "Position", agg = "sum")
 
-# chi-squared result does not show gender bias in Taskmaster scoring for gener.
-# It shows that gender and finishing position are statistically associated, but not by scoring bias.
+# chi-squared result does not show Gender bias in Taskmaster scoring for gener.
+# It shows that Gender and finishing position are statistically associated, but not by scoring bias.
 
-# A chi-square test of independence showed a statistically significant association between gender and position,
-# χ²(8) = 1040.85, p < .001, indicating that the distribution of positions differs substantially across gender 
+# A chi-square test of independence showed a statistically significant association between Gender and position,
+# χ²(8) = 1040.85, p < .001, indicating that the distribution of positions differs substantially across Gender 
 # groups.
 
 # So 1040.85 means:
 
-# Across all gender × position cells, the observed counts differ dramatically from what we’d expect 
-# if gender and position were unrelated.
+# Across all Gender × position cells, the observed counts differ dramatically from what we’d expect 
+# if Gender and position were unrelated.
 
 #Given similar performance opportunities, are contestants of different genders scored differently?
 final_scores_age_gender["Score_Rank_Series"] = (
@@ -93,19 +93,19 @@ final_scores_age_gender["Normalized_Rank"] = (
     - (final_scores_age_gender["Score_Rank_Series"] - 1).astype(float) / (series_max - 1)
 )
 
-# Handle series with only 1 contestant
+# Handle Series with only 1 Name
 final_scores_age_gender.loc[series_max == 1, "Normalized_Rank"] = 1.0
 
 # final_scores_age_gender = final_scores_age_gender.sort_values(["Series", "Score_Rank_Series"])[
 #     ["Series", "Name", "Score", "Score_Rank_Series", "Normalized_Rank"]
 # ]
 
-# Normalized rank must be per series, because each series is a separate mini-competition.
+# Normalized rank must be per Series, because each Series is a separate mini-competition.
 
-# After normalization, Normalized_Rank ranges from 0–1 in each series, making contestants from different series comparable in terms of relative performance within their series.
+# After normalization, Normalized_Rank ranges from 0–1 in each Series, making contestants from different Series comparable in terms of relative performance within their Series.
 
 final_scores_age_gender["Score_z"] = final_scores_age_gender.groupby("Series")["Score"].transform(
-    lambda x: (x - x.mean()) / x.std() #“Did contestants score higher or lower than their series average?”
+    lambda x: (x - x.mean()) / x.std() #“Did contestants score higher or lower than their Series average?”
 )
 
 print(final_scores_age_gender.head())
@@ -137,7 +137,7 @@ gender_groups = [
 stat_gender, p_gender = kruskal(*gender_groups)
 print(f"Kruskal–Wallis Gender stat: {stat_gender:.4f}; p-value: {p_gender:.4f}")
 
-# p ≥ 0.05 → No evidence of gender bias in final outcomes
+# p ≥ 0.05 → No evidence of Gender bias in final outcomes
 
 # p < 0.05 → Gender is associated with relative finishing position
 
@@ -186,17 +186,13 @@ plt.show()
 
 # Put another way:
 
-# Contestants in different age groups tend to perform similarly relative to their series, based on normalized ranks.
+# Contestants in different age groups tend to perform similarly relative to their Series, based on normalized ranks.
 
 # There’s no evidence of bias in Taskmaster scoring based on age.
 
 
 
-Here you go — **one continuous Python script**, start to finish, with no section breaks, that tests **gender and age bias** on **final scores** (mixed-effects, series-controlled) and **finishing position** (ordinal), exactly as discussed.
 
-You can paste this straight into a `.py` file or a notebook cell.
-
-```python
 import pandas as pd
 import numpy as np
 import statsmodels.formula.api as smf
@@ -205,130 +201,155 @@ from statsmodels.miscmodels.ordinal_model import OrderedModel
 # ------------------------------------------------------------------
 # Load data
 # ------------------------------------------------------------------
-# Assumes a CSV with one row per contestant per series
+# Assumes a CSV with one row per Name per Series
 # Required columns:
-# contestant, series, gender, age, final_score, position
+# Name, Series, Gender, age, Score, position
 
-df = pd.read_csv("taskmaster_contestants.csv")
+# df = pd.read_csv("taskmaster_contestants.csv")
+df = final_scores_age_gender.copy()
+import pandas as pd
+import statsmodels.formula.api as smf
 
-# ------------------------------------------------------------------
-# Preprocessing
-# ------------------------------------------------------------------
-df['series'] = df['series'].astype('category')
-df['gender'] = df['gender'].astype('category')
-df['contestant'] = df['contestant'].astype('category')
+# Drop Non-Binary (required)
+df = df[df['Gender'].isin(['Male', 'Female'])].copy()
+df['Gender'] = df['Gender'].astype('category')
 
-# Set reference category explicitly (optional but recommended)
-if set(['Male', 'Female', 'Non-Binary']).issubset(df['gender'].cat.categories):
-    df['gender'] = df['gender'].cat.reorder_categories(
-        ['Male', 'Female', 'Non-Binary'], ordered=False
-    )
+# Center age
+df['age_c'] = df['Age_at_First_Air'] - df['Age_at_First_Air'].mean()
 
-# Center age for interpretability
-df['age_c'] = df['age'] - df['age'].mean()
-
-# ------------------------------------------------------------------
-# MIXED-EFFECTS MODEL: Final score ~ gender + age (series-controlled)
-# ------------------------------------------------------------------
-score_model = smf.mixedlm(
-    "final_score ~ gender + age_c",
-    data=df,
-    groups=df["series"]
-)
-
-score_result = score_model.fit(reml=False)
-
-print("\n=== Mixed-Effects Model: Final Score ===\n")
-print(score_result.summary())
-
-# ------------------------------------------------------------------
-# INTERACTION MODEL: Gender × Age bias
-# ------------------------------------------------------------------
-interaction_model = smf.mixedlm(
-    "final_score ~ gender * age_c",
-    data=df,
-    groups=df["series"]
-)
-
-interaction_result = interaction_model.fit(reml=False)
-
-print("\n=== Mixed-Effects Model with Gender × Age Interaction ===\n")
-print(interaction_result.summary())
-
-# ------------------------------------------------------------------
-# SERIES-NORMALIZED SCORES (within-series z-scores)
-# ------------------------------------------------------------------
+# Normalize scores within each Series
 df['score_z'] = (
-    df.groupby('series')['final_score']
+    df.groupby('Series')['Score']
       .transform(lambda x: (x - x.mean()) / x.std())
 )
 
-z_model = smf.ols(
-    "score_z ~ gender + age_c",
+# Bias test
+bias_model = smf.ols(
+    "score_z ~ Gender + age_c",
     data=df
 ).fit()
 
-print("\n=== OLS Model: Series-Normalized Scores ===\n")
-print(z_model.summary())
+print(bias_model.summary())
 
-# ------------------------------------------------------------------
-# ORDINAL REGRESSION: Finishing position ~ gender + age
-# (Lower position = better finish)
-# ------------------------------------------------------------------
-df_ord = pd.get_dummies(df, columns=['gender'], drop_first=True)
 
-ordinal_predictors = ['age_c'] + [
-    c for c in df_ord.columns if c.startswith('gender_')
-]
+# # ------------------------------------------------------------------
+# # Preprocessing
+# # ------------------------------------------------------------------
+# df['Series'] = df['Series'].astype('category')
+# df['Gender'] = df['Gender'].astype('category')
+# df['Name'] = df['Name'].astype('category')
 
-ordinal_model = OrderedModel(
-    df_ord['position'],
-    df_ord[ordinal_predictors],
-    distr='logit'
-)
+# # Set reference category explicitly (optional but recommended)
+# if set(['Male', 'Female', 'Non-Binary']).issubset(df['Gender'].cat.categories):
+#     df['Gender'] = df['Gender'].cat.reorder_categories(
+#         ['Male', 'Female', 'Non-Binary'], ordered=False
+#     )
 
-ordinal_result = ordinal_model.fit(method='bfgs')
+# # Center age for interpretability
+# df['age_c'] = df['Age_at_First_Air'] - df['Age_at_First_Air'].mean()
 
-print("\n=== Ordinal Logistic Regression: Finishing Position ===\n")
-print(ordinal_result.summary())
+# # ------------------------------------------------------------------
+# # MIXED-EFFECTS MODEL: Final score ~ Gender + age (Series-controlled)
+# # ------------------------------------------------------------------
+# score_model = smf.mixedlm(
+#     "Score ~ Gender + age_c",
+#     data=df,
+#     groups=df["Series"]
+# )
 
-# ------------------------------------------------------------------
-# EFFECT SIZE SUMMARY (helpful for interpretation)
-# ------------------------------------------------------------------
-effects = pd.DataFrame({
-    "Coefficient": score_result.params,
-    "Std_Error": score_result.bse,
-    "p_value": score_result.pvalues
-})
+# score_result = score_model.fit(reml=False)
 
-print("\n=== Effect Sizes: Final Score Model ===\n")
-print(effects)
+# print("\n=== Mixed-Effects Model: Final Score ===\n")
+# print(score_result.summary())
 
-# ------------------------------------------------------------------
-# OPTIONAL: Flag significant bias terms
-# ------------------------------------------------------------------
-alpha = 0.05
-significant_effects = effects[effects["p_value"] < alpha]
+# # ------------------------------------------------------------------
+# # INTERACTION MODEL: Gender × Age bias
+# # ------------------------------------------------------------------
+# interaction_model = smf.mixedlm(
+#     "Score ~ Gender * age_c",
+#     data=df,
+#     groups=df["Series"]
+# )
 
-print("\n=== Significant Bias Indicators (alpha = 0.05) ===\n")
-print(significant_effects)
-```
+# interaction_result = interaction_model.fit(reml=False)
 
-### How to read the results (quickly)
+# print("\n=== Mixed-Effects Model with Gender × Age Interaction ===\n")
+# print(interaction_result.summary())
 
-# * **Mixed-effects final score model**
-#   → Significant `gender` or `age_c` terms = evidence of bias *within series*
-# * **Interaction model**
-#   → Significant `gender:age_c` = age affects genders differently
-# * **Ordinal model**
-#   → Significant terms = systematic differences in finishing position
-# * **Series-normalized model**
-#   → Confirms bias using relative (within-series) performance
+# # ------------------------------------------------------------------
+# # SERIES-NORMALIZED SCORES (within-Series z-scores)
+# # ------------------------------------------------------------------
+# df['score_z'] = (
+#     df.groupby('Series')['Score']
+#       .transform(lambda x: (x - x.mean()) / x.std())
+# )
 
-# If you want next:
+# z_model = smf.ols(
+#     "score_z ~ Gender + age_c",
+#     data=df
+# ).fit()
 
-# * A **Bayesian version** (best practice)
-# * Automatic **plots** of bias effects
-# * A version that handles **task-level scores**
-# * Or a **write-up-ready interpretation**
+# print("\n=== OLS Model: Series-Normalized Scores ===\n")
+# print(z_model.summary())
+
+# # ------------------------------------------------------------------
+# # ORDINAL REGRESSION: Finishing position ~ Gender + age
+# # (Lower position = better finish)
+# # ------------------------------------------------------------------
+# df_ord = pd.get_dummies(df, columns=['Gender'], drop_first=True)
+
+# ordinal_predictors = ['age_c'] + [
+#     c for c in df_ord.columns if c.startswith('gender_')
+# ]
+
+# ordinal_model = OrderedModel(
+#     df_ord['position'],
+#     df_ord[ordinal_predictors],
+#     distr='logit'
+# )
+
+# ordinal_result = ordinal_model.fit(method='bfgs')
+
+# print("\n=== Ordinal Logistic Regression: Finishing Position ===\n")
+# print(ordinal_result.summary())
+
+# # ------------------------------------------------------------------
+# # EFFECT SIZE SUMMARY (helpful for interpretation)
+# # ------------------------------------------------------------------
+# effects = pd.DataFrame({
+#     "Coefficient": score_result.params,
+#     "Std_Error": score_result.bse,
+#     "p_value": score_result.pvalues
+# })
+
+# print("\n=== Effect Sizes: Final Score Model ===\n")
+# print(effects)
+
+# # ------------------------------------------------------------------
+# # OPTIONAL: Flag significant bias terms
+# # ------------------------------------------------------------------
+# alpha = 0.05
+# significant_effects = effects[effects["p_value"] < alpha]
+
+# print("\n=== Significant Bias Indicators (alpha = 0.05) ===\n")
+# print(significant_effects)
+
+
+# ### How to read the results (quickly)
+
+# # * **Mixed-effects final score model**
+# #   → Significant `Gender` or `age_c` terms = evidence of bias *within Series*
+# # * **Interaction model**
+# #   → Significant `Gender:age_c` = age affects genders differently
+# # * **Ordinal model**
+# #   → Significant terms = systematic differences in finishing position
+# # * **Series-normalized model**
+# #   → Confirms bias using relative (within-Series) performance
+
+# # If you want next:
+
+# # * A **Bayesian version** (best practice)
+# # * Automatic **plots** of bias effects
+# # * A version that handles **task-level scores**
+# # * Or a **write-up-ready interpretation**
 
