@@ -61,39 +61,23 @@ position_age_count = position_age_table.groupby(['Age_Ranges', 'Position'], obse
 print(position_age_count)
 print(position_gender_count)
 
-contingency_age = pd.pivot_table(position_age_count, values="Score", index="Age_Ranges", columns="Position", 
-                                 aggfunc="sum", fill_value=0)
+age_chi2 = GAF.chi2_test(data_table = position_age_count, values = "Score", index = "Age_Ranges", 
+                     columns = "Position", agg = "sum")
 
-contingency_gender = pd.pivot_table(position_gender_count, values="Score", index="Gender", columns="Position", 
-                                 aggfunc="sum", fill_value=0)
-
-print(contingency_age)
-print(contingency_gender)
-print()
-
-chi2_gender, p_gender, dof_gender, expected_gender = chi2_contingency(contingency_gender)
-
-print(f"Chi-squared statistic: {chi2_gender:.3f}")
-print(f"Degrees of freedom: {dof_gender}")
-print(f"P-value: {p_gender:.6f}")
-
-expected_gender = pd.DataFrame(expected_gender, index=contingency_gender.index, columns=contingency_gender.columns)
-
-print(expected_gender)
-print()
-
-chi2_age, p_age, dof_age, expected_age = chi2_contingency(contingency_age)
-
-print(f"Chi-squared statistic: {chi2_age:.3f}")
-print(f"Degrees of freedom: {dof_age}")
-print(f"P-value: {p_age:.6f}")
-
-expected_age = pd.DataFrame(expected_age, index=contingency_age.index, columns=contingency_age.columns)
-
-print(expected_age)
+gender_chi2 = GAF.chi2_test(data_table = position_gender_count, values = "Score", index = "Gender", 
+                     columns = "Position", agg = "sum")
 
 # chi-squared result does not show gender bias in Taskmaster scoring for gener.
 # It shows that gender and finishing position are statistically associated, but not by scoring bias.
+
+# A chi-square test of independence showed a statistically significant association between gender and position,
+# χ²(8) = 1040.85, p < .001, indicating that the distribution of positions differs substantially across gender 
+# groups.
+
+# So 1040.85 means:
+
+# Across all gender × position cells, the observed counts differ dramatically from what we’d expect 
+# if gender and position were unrelated.
 
 #Given similar performance opportunities, are contestants of different genders scored differently?
 final_scores_age_gender["Score_Rank_Series"] = (

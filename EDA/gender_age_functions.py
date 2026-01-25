@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from scipy.stats import chi2_contingency, kruskal
 
 def gender_count_percent(gender_age_table):
     gender_count = gender_age_table['Gender'].value_counts().reset_index()
@@ -159,3 +160,23 @@ def seat_age_metrics(datatable):
     seat_age_table = seat_age_table.groupby('Seat')['Age_Ranges'].value_counts().reset_index()
     print(seat_age_table)
     return(seat_age_table)
+
+
+def chi2_test(data_table, values, index, columns, agg):
+    
+    contingency = pd.pivot_table(data_table, values=values, index=index, columns=columns, 
+                                 aggfunc=agg, fill_value=0)
+    
+    chi2, pvalue, dof, expected = chi2_contingency(contingency)
+
+    expected_table = pd.DataFrame(expected, index=contingency.index, columns=contingency.columns)
+
+    print('Observed Table:\n', contingency)
+    print()
+    print('Expected Table:\n', expected_table)
+
+    print(f"Chi-squared statistic: {chi2:.3f}")
+    print(f"Degrees of freedom: {dof}")
+    print(f"P-value: {pvalue:.6f}")
+    
+    print('/n/n')
