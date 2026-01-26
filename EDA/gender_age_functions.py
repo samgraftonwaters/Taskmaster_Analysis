@@ -254,6 +254,17 @@ def merge_series_age_gender(series_table, gender_table, age_table):
     return(final_scores_age_gender)
 
 def seat_gender_metrics(datatable):
+    """
+    counts the number male, femails and non-binary contestents for each seat separately
+
+    Parameters:
+    -----------
+        table (DataFrame): merged series, age groups and gender table
+
+    Returns:
+    ---------
+        table with value counts of genders for all contestents in each seat
+    """
     datatable = datatable.copy()
     seat_gender_table = datatable[['Seat', 'Gender']]
     seat_gender_table['Seat'] = seat_gender_table['Seat'].str.replace('Seat ', '').astype(int)
@@ -261,6 +272,17 @@ def seat_gender_metrics(datatable):
     return(seat_gender_table)
 
 def seat_age_metrics(datatable):
+    """
+    counts the number age ranges for each seat separately
+
+    Parameters:
+    -----------
+        table (DataFrame): merged series, age groups and gender table
+
+    Returns:
+    ---------
+        table with value counts of age ranges for all contestents in each seat
+    """
     datatable = datatable.copy()
     seat_age_table = datatable[['Seat', 'Age_Ranges']]
     seat_age_table['Seat'] = seat_age_table['Seat'].str.replace('Seat ', '').astype(int)
@@ -269,7 +291,24 @@ def seat_age_metrics(datatable):
     return(seat_age_table)
 
 
-def chi2_test(data_table, values, index, columns, agg):
+def chi2_test(data_table, values : str, index : str, columns : str, agg : str = 'sum'):
+
+    """
+    Creates a contigency table to carry out a chi-squared test on the data
+
+    Parameters:
+    -----------
+        data_table (DataFrame):  merged series, age groups and gender table
+        values (str): value column for the contingency table (e.g. Score)
+        index (str): independent variable to test with (e.g. age_range or gender)
+        columns (str): dependent variable to test against (e.g. Position)
+        agg (str): method for the contingency table values. default = 'sum'.
+
+    Returns:
+    --------
+        Prints out the observed and expected tables and summary of the Chi-Squared test
+    
+    """
     
     contingency = pd.pivot_table(data_table, values=values, index=index, columns=columns, 
                                  aggfunc=agg, fill_value=0)
@@ -290,6 +329,18 @@ def chi2_test(data_table, values, index, columns, agg):
 
 
 def formatting_table(data_table):
+
+    """
+    Creates additional columns to the merged score-gender-age table for bias testing 
+    
+    Parameters:
+    -----------
+        table (DataFrame): merged series, age groups and gender table
+    
+    Returns:
+    --------
+        finalised datatable with additional columns for further analysis.
+    """
     df = data_table.copy()
 
     df['Gender'] = df['Gender'].astype('category')
@@ -305,7 +356,31 @@ def formatting_table(data_table):
     print(df.columns)
     return(df)
 
-def model_fitting(data_table, target_variable, test_variables):
+def model_fitting(data_table, target_variable : str, test_variables : list | str):
+
+    """
+    Fit the OLS model to test for bias:
+
+    Model uses the calculated Z-score values per series (see previous function) and determines whether either
+    age range or gender affects the overall perfomance (e.g. final scores). OLS (Ordinary Least Squares) 
+    tests whether these factors (gender or age rage) systematically predict performance across all contestants.    
+    The coefficients state the average effect of gender or age group after controlling for series.
+
+    If a coefficient is significantly different from zero, that factor is associated with higher/lower 
+    performance. So if there were systematic gender or age bias in judging or task design, we’d expect 
+    the model coeffients to be significant.
+
+    Parameters:
+    -----------
+        data_table (data_table): merged series, age groups and gender table
+        target_variable (str): name of the column that contains the target variable (e.g. Z-score values)
+        test_variables (list or str): name of the columns that you are testing bias for (e.g. gender and age range)
+    
+    Returns:
+    --------
+        Prints summary of the OLS table to be used to dertermine whether there is bias
+        best fir model to be used in an ANOVA test (see next function)
+    """
     df = data_table.copy()
     model = smf.ols(
         f"{target_variable} ~ {test_variables[0]} + {test_variables[1]}",
@@ -317,6 +392,18 @@ def model_fitting(data_table, target_variable, test_variables):
     return(model)
 
 def anova_test(model):
+
+    """
+    Runs an ANOVA test on the model from the previous function
+
+    Parameters:
+    ----------
+        model (model): the best fit OLS model from the previous function
+
+    Returns:
+    --------
+        Prints the summary of the ANOVA Test
+    """
     anova_results = anova_lm(model, typ=2)
     print("\n=== ANOVA Test ===\n")
     print(anova_results)
