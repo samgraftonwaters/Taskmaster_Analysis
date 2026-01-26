@@ -7,6 +7,19 @@ import statsmodels.formula.api as smf
 from statsmodels.stats.anova import anova_lm
 
 def gender_count_percent(gender_age_table):
+    """
+    Measures the percentage of male, female and non-binary contestents in all series.
+
+    Parameters:
+    -----------
+        gender_age_table (DataFrame): table that contains each contestent's age range and gender, along with
+        searies, seat, name, etc.
+
+    Returns:
+    ---------
+        table with value counts and percentages of gender for all contestents
+    
+    """
     gender_count = gender_age_table['Gender'].value_counts().reset_index()
     gender_count.columns = ['Gender', 'Count']
     gender_count['Percent'] = (gender_count['Count'] / gender_count['Count'].sum() ) * 100
@@ -14,13 +27,41 @@ def gender_count_percent(gender_age_table):
     return(gender_count)
 
 def gender_count_series(gender_age_table):
+    """
+    counts the number of male, female and non-binary contestents for each series separately
+
+    Parameters:
+    -----------
+        gender_age_table (DataFrame): table that contains each contestent's age range and gender, along with
+                                        searies, seat, name, etc.
+
+    Returns:
+    ---------
+        table with value counts of gender for all contestents in each series
+    
+    """
     gender_series = gender_age_table.groupby('Series Number')['Gender'].value_counts().reset_index()
     gender_series = gender_series.sort_values('Series Number', ascending = True)
     print(gender_series)
     return(gender_series)
 
 
-def gender_count_series_bar(gender_age_table, series_seat, title = 'Counts of Male and Female per Series'):
+def gender_count_series_bar(gender_age_table, series_seat : bool, title: str):
+    """
+    Creates a bar chart for the number of male, female or non-binary contestests either per series or for each seat
+
+    Parameters:
+    ----------
+        gender_age_table (DataFrame): table that contains each contestent's age range and gender, along with
+                                        searies, seat, name, etc.
+        series_seat (boolean): if 'seat', then the count for all seats of each gender is plotted, if 'series'
+                                then the count of all genders from each series is plotted
+        title (str): title of the plot
+    
+    Returns:
+    --------
+        Bar chart to show number of contestents' gender based either on series or seat.
+    """
 
     if series_seat.lower() == 'series':
         gender_series_plot = gender_age_table.groupby(['Series Number', 'Gender']).size().unstack(fill_value=0)
@@ -68,6 +109,18 @@ def gender_count_series_bar(gender_age_table, series_seat, title = 'Counts of Ma
     plt.show()
 
 def setting_age_bins(table):
+    """
+    creates age bins based on each contestents ages.
+
+    Parameters:
+    ----------
+        table (DataFrame): data table that contains series, contestent names, and ages
+    
+    Returns:
+    -------
+        input datatable with an extra column containing the age bins
+    
+    """
     age_table = table.copy()
     age_bins = [20, 30, 40, 50, 60, 70]
     age_labels = ['20 - 29', '30 - 39', '40 - 49', '50 - 59', '60 - 69']
@@ -76,6 +129,18 @@ def setting_age_bins(table):
     return(age_table)
 
 def age_range_metrics(table):
+    """
+    counts the age ranges and measures corresponding perentage for each age range for all contestents
+    
+    Parameters:
+    ----------
+        table (DataFrame): data table that contains series, contestent names, ages, and age ranges (bins)
+    
+    Returns:
+    --------
+        dataframe with counts and percentage for each age range
+    
+    """
     age_table = table.copy()
     age_ranges_count = age_table['Age_Ranges'].value_counts().reset_index()
     age_ranges_count.columns = ['Age_Ranges', 'Count']
@@ -84,6 +149,17 @@ def age_range_metrics(table):
     return(age_ranges_count)
 
 def age_group_series(table):
+    """
+    counts the number age ranges for each series separately
+
+    Parameters:
+    -----------
+        table (DataFrame): data table that contains series, contestent names, ages, and age range bins
+
+    Returns:
+    ---------
+        table with value counts of age ranges for all contestents in each series
+    """
     age_table = table.copy()
     age_series = age_table.groupby('Series Number')['Age_Ranges'].value_counts().reset_index()
     age_series = age_series.sort_values('Series Number', ascending = True)
@@ -91,6 +167,21 @@ def age_group_series(table):
     return(age_series)
 
 def age_series_stacked_bar(table, series_seat, title):
+    """
+    Creates a bar chart for the number of each each range either per series or for each seat
+
+    Parameters:
+    ----------
+        table (DataFrame): table that contains each contestent's age range along with
+                                        searies, seat, name, etc.
+        series_seat (boolean): if 'seat', then the count for all seats of each gender is plotted, if 'series'
+                                then the count of all genders from each series is plotted
+        title (str): title of the plot
+    
+    Returns:
+    --------
+        Stacked bar chart to show number of contestents' age ranges based either on series or seat.
+    """
 
     if series_seat.lower() == 'series':
         x_axis = "Series Number"
@@ -133,6 +224,20 @@ def age_series_stacked_bar(table, series_seat, title):
 
 
 def merge_series_age_gender(series_table, gender_table, age_table):
+
+    """
+    Merge the series score table with the gender and age tables.
+
+    Parameters:
+    ----------
+        series_table (DataFrame): table with the final series scores
+        gender_table (DataFrame): table with the gender columns
+        age_table (DataFrame): table with the age range columns
+
+    Returns:
+    --------
+        merged dataframe with series scores, age ranges and genders.    
+    """
 
     series_table = series_table.copy()
     gender_table = gender_table.copy() 
