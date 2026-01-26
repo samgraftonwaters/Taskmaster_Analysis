@@ -102,7 +102,14 @@ ages_model = GAF.model_fitting(data_table = grouped_ages, target_variable = 'Sco
 GAF.anova_test(model = ages_model)
 
 
+#Epsisode Analysis
 
+episode_scores_age_gender = GAF.merge_series_age_gender(series_table = episode_scores, 
+                                                        gender_table = gender_age_table.drop(['First_Air_Date', 'Birth_Date'], axis = 1),
+                                                        age_table = age_binned_table)
+
+print(episode_scores_age_gender.head(20))
+print(episode_scores_age_gender.columns)
 
 
 
