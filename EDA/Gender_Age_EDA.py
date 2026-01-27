@@ -122,9 +122,21 @@ GAF.chi2_test(data_table = episode_gender, series_episode = 'episode', values = 
 GAF.chi2_test(data_table = episode_age, series_episode = 'episode', values = None, index = None, 
                      columns = None, agg = "sum")
 
+episode_gender = episode_gender.reset_index()
+episode_age = episode_age.reset_index()
+episode_gender['num'] = [1, 2]
+episode_age['num'] = range(1,6)
+print(episode_gender)
+print(episode_age)
 
-
-
-
-
-
+for i in range(len(episode_gender)):
+    plt.bar(episode_gender['num'][i]-0.2, episode_gender['Wins'], width = 0.4, label='Wins', color='dodgerblue', alpha = 0.8,
+                edgecolor = 'black')
+    plt.bar(episode_gender['num'][i]+0.2, episode_gender['Losses'], width = 0.4, label='Losses', color='green', alpha = 0.8,
+                edgecolor = 'black')
+# plt.bar(2-0.2, episode_gender['Wins'], width = 0.4, label='Wins', color='dodgerblue', alpha = 0.8,
+#             edgecolor = 'black')
+# plt.bar(2+0.2, episode_gender['Losses'], width = 0.4, label='Losses', color='green', alpha = 0.8,
+#             edgecolor = 'black')
+plt.xticks([1, 2], ['Females', 'Males'], fontsize = 20)
+plt.show()

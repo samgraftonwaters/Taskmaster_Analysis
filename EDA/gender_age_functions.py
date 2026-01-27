@@ -91,7 +91,7 @@ def gender_count_series_bar(gender_age_table, series_seat : bool, title: str):
             edgecolor = 'black')
     plt.scatter(x[gender_series_plot['Non-Binary'] == 1], 
                gender_series_plot.loc[gender_series_plot['Non-Binary'] == 1, 'Non-Binary'],
-               color='red', marker='D', s=100, label='Non-Binary')
+               color='orange', marker='D', s=100, label='Non-Binary')
     
     for i in range(len(gender_series_plot)):
         i = i + 1
@@ -319,7 +319,7 @@ def chi2_test(data_table, series_episode : str, values : str, index : str, colum
     
     chi2, pvalue, dof, expected = chi2_contingency(contingency)
 
-    expected_table = pd.DataFrame(expected, index=contingency.index, columns=contingency.columns)
+    expected_table = pd.DataFrame(expected, index=contingency.index, columns=contingency.columns).reset_index()
 
     print('Observed Table:\n', contingency)
     print()
@@ -329,7 +329,7 @@ def chi2_test(data_table, series_episode : str, values : str, index : str, colum
     print(f"Degrees of freedom: {dof}")
     print(f"P-value: {pvalue:.6f}")
     
-    print('/n/n')
+    print('\n\n')
 
 
 def formatting_table(data_table):
