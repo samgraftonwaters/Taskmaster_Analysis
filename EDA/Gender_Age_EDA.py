@@ -111,7 +111,38 @@ episode_scores_age_gender = GAF.merge_series_age_gender(series_table = episode_s
 print(episode_scores_age_gender.head(20))
 print(episode_scores_age_gender.columns)
 
+episode_gender = episode_scores_age_gender[episode_scores_age_gender['Gender'] != 'Non-Binary'].groupby('Gender')[['Wins', 'Losses']].sum()
+episode_age = episode_scores_age_gender.groupby('Age_Ranges')[['Wins', 'Losses']].sum()
+print(episode_gender)
+print(episode_age)
 
+from scipy.stats import chi2_contingency
+chi2, p, dof, expected = chi2_contingency(episode_gender)
+
+expected_table = pd.DataFrame(expected, index=episode_gender.index, columns=episode_gender.columns)
+
+# Print results
+print("Observed data:")
+print(episode_gender)
+print("Expected Table:")
+print(expected_table)
+print("\nChi-squared statistic:", chi2)
+print("Degrees of freedom:", dof)
+print("p-value:", p)
+
+from scipy.stats import chi2_contingency
+chi2, p, dof, expected = chi2_contingency(episode_age)
+
+expected_table = pd.DataFrame(expected, index=episode_age.index, columns=episode_age.columns)
+
+# Print results
+print("Observed Table:")
+print(episode_age)
+print("Expected Table:")
+print(expected_table)
+print("\nChi-squared statistic:", chi2)
+print("Degrees of freedom:", dof)
+print("p-value:", p)
 
 
 
