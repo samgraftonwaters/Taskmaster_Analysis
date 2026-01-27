@@ -130,13 +130,12 @@ print(episode_gender)
 print(episode_age)
 
 for i in range(len(episode_gender)):
-    plt.bar(episode_gender['num'][i]-0.2, episode_gender['Wins'], width = 0.4, label='Wins', color='dodgerblue', alpha = 0.8,
+    print(episode_gender['num'][i])
+    plt.bar(episode_gender['num'][i]-0.2, episode_gender['Wins'][i], width = 0.4, label='Wins', color='dodgerblue', alpha = 0.8,
                 edgecolor = 'black')
-    plt.bar(episode_gender['num'][i]+0.2, episode_gender['Losses'], width = 0.4, label='Losses', color='green', alpha = 0.8,
+    plt.bar(episode_gender['num'][i]+0.2, episode_gender['Losses'][i], width = 0.4, label='Losses', color='green', alpha = 0.8,
                 edgecolor = 'black')
-# plt.bar(2-0.2, episode_gender['Wins'], width = 0.4, label='Wins', color='dodgerblue', alpha = 0.8,
-#             edgecolor = 'black')
-# plt.bar(2+0.2, episode_gender['Losses'], width = 0.4, label='Losses', color='green', alpha = 0.8,
-#             edgecolor = 'black')
+
 plt.xticks([1, 2], ['Females', 'Males'], fontsize = 20)
+plt.legend(fontsize = 18)
 plt.show()
