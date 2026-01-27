@@ -291,7 +291,7 @@ def seat_age_metrics(datatable):
     return(seat_age_table)
 
 
-def chi2_test(data_table, values : str, index : str, columns : str, agg : str = 'sum'):
+def chi2_test(data_table, series_episode : str, values : str, index : str, columns : str, agg : str = 'sum'):
 
     """
     Creates a contigency table to carry out a chi-squared test on the data
@@ -299,9 +299,10 @@ def chi2_test(data_table, values : str, index : str, columns : str, agg : str = 
     Parameters:
     -----------
         data_table (DataFrame):  merged series, age groups and gender table
-        values (str): value column for the contingency table (e.g. Score)
-        index (str): independent variable to test with (e.g. age_range or gender)
-        columns (str): dependent variable to test against (e.g. Position)
+        series_episode (str): determine if series or episode tables are being used. options "series" or "episode"
+        values (str): value column for the contingency table (e.g. Score). If series_episode == 'episode', set to None
+        index (str): independent variable to test with (e.g. age_range or gender). If series_episode == 'episode', set to None
+        columns (str): dependent variable to test against (e.g. Position). If series_episode == 'episode', set to None
         agg (str): method for the contingency table values. default = 'sum'.
 
     Returns:
@@ -309,9 +310,12 @@ def chi2_test(data_table, values : str, index : str, columns : str, agg : str = 
         Prints out the observed and expected tables and summary of the Chi-Squared test
     
     """
+    if series_episode.lower() == 'series':
+        contingency = pd.pivot_table(data_table, values=values, index=index, columns=columns, 
+                                    aggfunc=agg, fill_value=0)
     
-    contingency = pd.pivot_table(data_table, values=values, index=index, columns=columns, 
-                                 aggfunc=agg, fill_value=0)
+    if series_episode.lower() == 'episode':
+        contingency = data_table
     
     chi2, pvalue, dof, expected = chi2_contingency(contingency)
 

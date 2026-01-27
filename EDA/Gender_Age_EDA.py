@@ -71,11 +71,11 @@ print(position_gender_count)
 
 #Carried out Chi-Squared Tests
 
-age_chi2 = GAF.chi2_test(data_table = position_age_count, values = "Score", index = "Age_Ranges", 
-                     columns = "Position", agg = "sum")
+age_chi2 = GAF.chi2_test(data_table = position_age_count, series_episode = 'series', values = "Score", 
+                         index = "Age_Ranges", columns = "Position", agg = "sum")
 
-gender_chi2 = GAF.chi2_test(data_table = position_gender_count, values = "Score", index = "Gender", 
-                     columns = "Position", agg = "sum")
+gender_chi2 = GAF.chi2_test(data_table = position_gender_count, series_episode = 'series', values = "Score", 
+                            index = "Gender", columns = "Position", agg = "sum")
 
 # chi-squared result does not show Gender bias in Taskmaster scoring for gener.
 # It shows that Gender and finishing position are statistically associated, but not by scoring bias.
@@ -116,33 +116,11 @@ episode_age = episode_scores_age_gender.groupby('Age_Ranges')[['Wins', 'Losses']
 print(episode_gender)
 print(episode_age)
 
-from scipy.stats import chi2_contingency
-chi2, p, dof, expected = chi2_contingency(episode_gender)
+GAF.chi2_test(data_table = episode_gender, series_episode = 'episode', values = None, index = None, 
+                     columns = None, agg = "sum")
 
-expected_table = pd.DataFrame(expected, index=episode_gender.index, columns=episode_gender.columns)
-
-# Print results
-print("Observed data:")
-print(episode_gender)
-print("Expected Table:")
-print(expected_table)
-print("\nChi-squared statistic:", chi2)
-print("Degrees of freedom:", dof)
-print("p-value:", p)
-
-from scipy.stats import chi2_contingency
-chi2, p, dof, expected = chi2_contingency(episode_age)
-
-expected_table = pd.DataFrame(expected, index=episode_age.index, columns=episode_age.columns)
-
-# Print results
-print("Observed Table:")
-print(episode_age)
-print("Expected Table:")
-print(expected_table)
-print("\nChi-squared statistic:", chi2)
-print("Degrees of freedom:", dof)
-print("p-value:", p)
+GAF.chi2_test(data_table = episode_age, series_episode = 'episode', values = None, index = None, 
+                     columns = None, agg = "sum")
 
 
 
