@@ -111,8 +111,47 @@ episode_scores_age_gender = GAF.merge_series_age_gender(series_table = episode_s
 print(episode_scores_age_gender.head(20))
 print(episode_scores_age_gender.columns)
 
-episode_gender = episode_scores_age_gender[episode_scores_age_gender['Gender'] != 'Non-Binary'].groupby('Gender')[['Wins', 'Losses']].sum()
-episode_age = episode_scores_age_gender.groupby('Age_Ranges')[['Wins', 'Losses']].sum()
+episode_gender = episode_scores_age_gender.groupby('Gender', observed=True)[['Wins', 'Losses']].sum().reset_index()
+episode_age = episode_scores_age_gender.groupby('Age_Ranges', observed=True)[['Wins', 'Losses']].sum().reset_index()
+print(episode_age)
+print(episode_gender)
+
+
+episode_gender['num'] = [1, 2, 3]
+episode_age['num'] = range(1,6)
+total_episodes = episode_age["Wins"] + episode_age["Losses"]
+print(total_episodes)
+
+# print(total_episodes_age)
+# print(total_episodes_gender)
+
+print(episode_age["Wins"].sum(),episode_age["Losses"].sum())
+print(episode_gender["Wins"].sum(), episode_gender["Losses"].sum())
+
+episode_age['Win Percentage'] = episode_age['Wins'] / total_episodes
+episode_age['Loss Percentage'] = episode_age['Losses'] / total_episodes
+episode_gender['Win Percentage'] = episode_gender['Wins'] / total_episodes
+episode_gender['Loss Percentage'] = episode_gender['Losses'] / total_episodes
+print(episode_gender)
+print(episode_age)
+
+for i in range(len(episode_gender)):
+    plt.bar(episode_gender['num'][i]-0.2, episode_gender['Wins'][i], width = 0.4, color='dodgerblue', alpha = 0.8,
+                edgecolor = 'black')
+    plt.bar(episode_gender['num'][i]+0.2, episode_gender['Losses'][i], width = 0.4, color='green', alpha = 0.8,
+                edgecolor = 'black')
+plt.plot([],[], lw = 10, label='Wins', color='dodgerblue')
+plt.plot([],[], lw = 10, label='Losses', color='green')
+plt.xticks([1, 2], ['Females', 'Males'], fontsize = 20)
+plt.legend(fontsize = 18)
+plt.show()
+
+
+
+#Chi Squared Analysis
+
+episode_gender = episode_scores_age_gender[episode_scores_age_gender['Gender'] != 'Non-Binary'].groupby('Gender',observed=True)[['Wins', 'Losses']].sum()
+episode_age = episode_scores_age_gender.groupby('Age_Ranges',observed=True)[['Wins', 'Losses']].sum()
 print(episode_gender)
 print(episode_age)
 
@@ -121,21 +160,3 @@ GAF.chi2_test(data_table = episode_gender, series_episode = 'episode', values = 
 
 GAF.chi2_test(data_table = episode_age, series_episode = 'episode', values = None, index = None, 
                      columns = None, agg = "sum")
-
-episode_gender = episode_gender.reset_index()
-episode_age = episode_age.reset_index()
-episode_gender['num'] = [1, 2]
-episode_age['num'] = range(1,6)
-print(episode_gender)
-print(episode_age)
-
-for i in range(len(episode_gender)):
-    print(episode_gender['num'][i])
-    plt.bar(episode_gender['num'][i]-0.2, episode_gender['Wins'][i], width = 0.4, label='Wins', color='dodgerblue', alpha = 0.8,
-                edgecolor = 'black')
-    plt.bar(episode_gender['num'][i]+0.2, episode_gender['Losses'][i], width = 0.4, label='Losses', color='green', alpha = 0.8,
-                edgecolor = 'black')
-
-plt.xticks([1, 2], ['Females', 'Males'], fontsize = 20)
-plt.legend(fontsize = 18)
-plt.show()
