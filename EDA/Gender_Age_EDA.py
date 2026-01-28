@@ -20,11 +20,13 @@ print(final_scores.head())
 print(gender_age_table.columns)
 
 #Count number of gender and age groups per series
+print('\n Gender Analysis \n')
 gender_count = GAF.gender_count_percent(gender_age_table)
 gender_series = GAF.gender_count_series(gender_age_table)
 GAF.gender_count_series_bar(gender_age_table = gender_age_table, series_seat = 'Series', 
                             title = 'Counts of Male and Female per Series')
 
+print('\n Age Analysis \n')
 age_table = gender_age_table[['Name', 'Series Number', 'Age_at_First_Air']]
 
 age_binned_table = GAF.setting_age_bins(table = age_table)
@@ -36,11 +38,13 @@ age_series = GAF.age_group_series(table = age_binned_table)
 GAF.age_series_stacked_bar(table = age_series, series_seat = 'Series', 
                            title = 'Number of Age Ranges for each Contestent per Series')
 
+print('\n Merging Tables \n')
 #Merge gender, age and total score tables together
 final_scores_age_gender = GAF.merge_series_age_gender(series_table = final_scores, gender_table = gender_age_table, 
                         age_table = age_binned_table)
 
 #Count number of gender and age groups per seat
+print('\n Seat Analysis \n')
 
 seat_gender_table = GAF.seat_gender_metrics(datatable = final_scores_age_gender)
 
@@ -70,6 +74,7 @@ print(position_age_count)
 print(position_gender_count)
 
 #Carried out Chi-Squared Tests
+print('\n Chi-Squared and Bias Testing \n')
 
 age_chi2 = GAF.chi2_test(data_table = position_age_count, series_episode = 'series', values = "Score", 
                          index = "Age_Ranges", columns = "Position", agg = "sum")
@@ -103,13 +108,13 @@ GAF.anova_test(model = ages_model)
 
 
 #Epsisode Analysis
+print('\n Episode Analysis \n')
 
 episode_scores_age_gender = GAF.merge_series_age_gender(series_table = episode_scores, 
                                                         gender_table = gender_age_table.drop(['First_Air_Date', 'Birth_Date'], axis = 1),
                                                         age_table = age_binned_table)
 
 print(episode_scores_age_gender.head(20))
-print(episode_scores_age_gender.columns)
 
 eps_per_series = episode_scores_age_gender.groupby('Series')['Number_Episodes'].first().reset_index()
 num_eps = eps_per_series['Number_Episodes'].sum()
@@ -126,54 +131,18 @@ episode_gender['Loss Percentage'] = round((episode_gender['Losses'] / num_eps*10
 print(episode_gender)
 print(episode_age)
 
+#count/percentage bar charts for wins/losses split by age range or gender
 
-def episode_gender_age_bar(data_table, number_percentage, gender_age, bartitle):
-
-    if number_percentage.lower() == 'number':
-        y_label = 'Counts'
-        win_column = 'Wins'
-        loss_column = 'Losses'
-
-    if number_percentage.lower() == 'percentage':
-        y_label = 'Percent'
-        win_column = 'Win Percentage'
-        loss_column = 'Loss Percentage'
-
-    if gender_age.lower() == 'gender':
-        x_range = [1, 2, 3]
-        x_labels = ['Female', 'Male', 'Non-Binary']
-
-    if gender_age.lower() == 'age':
-        x_range = [1, 2, 3, 4, 5]
-        x_labels = ['20-29', '30-30', '40-49', '50-59', '60-69']
-
-    plt.figure()
-    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
-
-    for i in range(len(data_table)):
-        plt.bar(x_range[i]-0.2, data_table[win_column][i], width = 0.4, color='dodgerblue', alpha = 0.8,
-                    edgecolor = 'black')
-        plt.bar(x_range[i]+0.2, data_table[loss_column][i], width = 0.4, color='green', alpha = 0.8,
-                    edgecolor = 'black')
-    plt.plot([],[], lw = 10, label='Wins', color='dodgerblue')
-    plt.plot([],[], lw = 10, label='Losses', color='green')
-    plt.yticks(fontsize = 18)
-    plt.ylabel(y_label, fontsize = 20)
-    plt.xticks(x_range, x_labels, fontsize = 20)
-    plt.legend(fontsize = 18)
-    plt.title(bartitle, fontsize = 22)
-    plt.show()
-
-episode_gender_age_bar(data_table = episode_gender, number_percentage = 'number', gender_age = 'gender', 
+GAF.episode_gender_age_bar(data_table = episode_gender, number_percentage = 'number', gender_age = 'gender', 
                        bartitle = 'Number of Wins and Losses for all Contestents a split by Gender')
 
-episode_gender_age_bar(data_table = episode_gender, number_percentage = 'percentage', gender_age = 'gender', 
+GAF.episode_gender_age_bar(data_table = episode_gender, number_percentage = 'percentage', gender_age = 'gender', 
                        bartitle = 'Percentage of Wins and Losses for all Contestents a split by Gender')
 
-episode_gender_age_bar(data_table = episode_age, number_percentage = 'number', gender_age = 'age', 
+GAF.episode_gender_age_bar(data_table = episode_age, number_percentage = 'number', gender_age = 'age', 
                        bartitle = 'Number of Wins and Losses for all Contestents a split by Age Range')
 
-episode_gender_age_bar(data_table = episode_age, number_percentage = 'percentage', gender_age = 'age', 
+GAF.episode_gender_age_bar(data_table = episode_age, number_percentage = 'percentage', gender_age = 'age', 
                        bartitle = 'Percentage of Wins and Losses for all Contestents a split by Age Range')
 
 
