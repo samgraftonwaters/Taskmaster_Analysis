@@ -71,6 +71,7 @@ seat_losers = seat_losers.drop('Seat', axis = 1)
 final_scores_ordered_seats = EF.final_score_seat_positions(score_table = Total_per_series, 
                                                         name_table = named_series_table)
 
+
 final_scores_players = final_scores_ordered_seats
 # [['Series', 'Fifth Place Name', 'Fourth Place Name', 
 #                       'Third Place Name', 'Second Place Name', 'First Place Name', 'Fifth Place Score', 
@@ -104,6 +105,8 @@ total_score_positions_ordered = EF.ordering_final_scores_all_positions(datafame 
                                         seat_cols = ['Fifth Place Seat', 'Fourth Place Seat', 'Third Place Seat', 
                                                     'Second Place Seat', 'First Place Seat'],
                                         positions = [5, 4, 3, 2, 1], order_col = 'Score', order = True)
+
+total_score_positions_ordered.to_csv(file_path + 'Total Final Scores and Positions.csv', sep = ',', index = False)
 
 total_score_positions_unordered = EF.ordering_final_scores_all_positions(datafame = final_scores_players, 
                                        series_col = 'Series', 
