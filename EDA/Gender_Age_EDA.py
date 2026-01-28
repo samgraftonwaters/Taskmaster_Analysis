@@ -111,27 +111,20 @@ episode_scores_age_gender = GAF.merge_series_age_gender(series_table = episode_s
 print(episode_scores_age_gender.head(20))
 print(episode_scores_age_gender.columns)
 
+eps_per_series = episode_scores_age_gender.groupby('Series')['Number_Episodes'].first().reset_index()
+num_eps = eps_per_series['Number_Episodes'].sum()
+
 episode_gender = episode_scores_age_gender.groupby('Gender', observed=True)[['Wins', 'Losses']].sum().reset_index()
 episode_age = episode_scores_age_gender.groupby('Age_Ranges', observed=True)[['Wins', 'Losses']].sum().reset_index()
 print(episode_age)
 print(episode_gender)
 
-
 episode_gender['num'] = [1, 2, 3]
 episode_age['num'] = range(1,6)
-total_episodes = episode_age["Wins"] + episode_age["Losses"]
-print(total_episodes)
-
-# print(total_episodes_age)
-# print(total_episodes_gender)
-
-print(episode_age["Wins"].sum(),episode_age["Losses"].sum())
-print(episode_gender["Wins"].sum(), episode_gender["Losses"].sum())
-
-episode_age['Win Percentage'] = episode_age['Wins'] / total_episodes
-episode_age['Loss Percentage'] = episode_age['Losses'] / total_episodes
-episode_gender['Win Percentage'] = episode_gender['Wins'] / total_episodes
-episode_gender['Loss Percentage'] = episode_gender['Losses'] / total_episodes
+episode_age['Win Percentage'] = round((episode_age['Wins'] / num_eps *100), 2)
+episode_age['Loss Percentage'] = round((episode_age['Losses'] / num_eps*100), 2)
+episode_gender['Win Percentage'] = round((episode_gender['Wins'] / num_eps*100), 2)
+episode_gender['Loss Percentage'] = round((episode_gender['Losses'] / num_eps*100), 2)
 print(episode_gender)
 print(episode_age)
 
@@ -142,7 +135,7 @@ for i in range(len(episode_gender)):
                 edgecolor = 'black')
 plt.plot([],[], lw = 10, label='Wins', color='dodgerblue')
 plt.plot([],[], lw = 10, label='Losses', color='green')
-plt.xticks([1, 2], ['Females', 'Males'], fontsize = 20)
+plt.xticks([1, 2, 3], ['Female', 'Male', 'Non-Binary'], fontsize = 20)
 plt.legend(fontsize = 18)
 plt.show()
 
