@@ -43,6 +43,8 @@ print('\n Merging Tables \n')
 final_scores_age_gender = GAF.merge_series_age_gender(series_table = final_scores, gender_table = gender_age_table, 
                         age_table = age_binned_table)
 
+final_scores_age_gender.to_csv(file_path + 'Gender_Age_Series_Scores.csv', index = False, sep = ',')
+
 #Count number of gender and age groups per seat
 print('\n Seat Analysis \n')
 
