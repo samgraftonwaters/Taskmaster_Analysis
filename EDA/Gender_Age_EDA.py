@@ -116,8 +116,6 @@ num_eps = eps_per_series['Number_Episodes'].sum()
 
 episode_gender = episode_scores_age_gender.groupby('Gender', observed=True)[['Wins', 'Losses']].sum().reset_index()
 episode_age = episode_scores_age_gender.groupby('Age_Ranges', observed=True)[['Wins', 'Losses']].sum().reset_index()
-print(episode_age)
-print(episode_gender)
 
 episode_gender['num'] = [1, 2, 3]
 episode_age['num'] = range(1,6)
@@ -128,17 +126,55 @@ episode_gender['Loss Percentage'] = round((episode_gender['Losses'] / num_eps*10
 print(episode_gender)
 print(episode_age)
 
-for i in range(len(episode_gender)):
-    plt.bar(episode_gender['num'][i]-0.2, episode_gender['Wins'][i], width = 0.4, color='dodgerblue', alpha = 0.8,
-                edgecolor = 'black')
-    plt.bar(episode_gender['num'][i]+0.2, episode_gender['Losses'][i], width = 0.4, color='green', alpha = 0.8,
-                edgecolor = 'black')
-plt.plot([],[], lw = 10, label='Wins', color='dodgerblue')
-plt.plot([],[], lw = 10, label='Losses', color='green')
-plt.xticks([1, 2, 3], ['Female', 'Male', 'Non-Binary'], fontsize = 20)
-plt.legend(fontsize = 18)
-plt.show()
 
+def episode_gender_age_bar(data_table, number_percentage, gender_age, bartitle):
+
+    if number_percentage.lower() == 'number':
+        y_label = 'Counts'
+        win_column = 'Wins'
+        loss_column = 'Losses'
+
+    if number_percentage.lower() == 'percentage':
+        y_label = 'Percent'
+        win_column = 'Win Percentage'
+        loss_column = 'Loss Percentage'
+
+    if gender_age.lower() == 'gender':
+        x_range = [1, 2, 3]
+        x_labels = ['Female', 'Male', 'Non-Binary']
+
+    if gender_age.lower() == 'age':
+        x_range = [1, 2, 3, 4, 5]
+        x_labels = ['20-29', '30-30', '40-49', '50-59', '60-69']
+
+    plt.figure()
+    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
+
+    for i in range(len(data_table)):
+        plt.bar(x_range[i]-0.2, data_table[win_column][i], width = 0.4, color='dodgerblue', alpha = 0.8,
+                    edgecolor = 'black')
+        plt.bar(x_range[i]+0.2, data_table[loss_column][i], width = 0.4, color='green', alpha = 0.8,
+                    edgecolor = 'black')
+    plt.plot([],[], lw = 10, label='Wins', color='dodgerblue')
+    plt.plot([],[], lw = 10, label='Losses', color='green')
+    plt.yticks(fontsize = 18)
+    plt.ylabel(y_label, fontsize = 20)
+    plt.xticks(x_range, x_labels, fontsize = 20)
+    plt.legend(fontsize = 18)
+    plt.title(bartitle, fontsize = 22)
+    plt.show()
+
+episode_gender_age_bar(data_table = episode_gender, number_percentage = 'number', gender_age = 'gender', 
+                       bartitle = 'Number of Wins and Losses for all Contestents a split by Gender')
+
+episode_gender_age_bar(data_table = episode_gender, number_percentage = 'percentage', gender_age = 'gender', 
+                       bartitle = 'Percentage of Wins and Losses for all Contestents a split by Gender')
+
+episode_gender_age_bar(data_table = episode_age, number_percentage = 'number', gender_age = 'age', 
+                       bartitle = 'Number of Wins and Losses for all Contestents a split by Age Range')
+
+episode_gender_age_bar(data_table = episode_age, number_percentage = 'percentage', gender_age = 'age', 
+                       bartitle = 'Percentage of Wins and Losses for all Contestents a split by Age Range')
 
 
 #Chi Squared Analysis
