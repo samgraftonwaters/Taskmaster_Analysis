@@ -33,10 +33,30 @@ tables = {"DQ_table": DQ_table, "Episode_win_loss": Episode_win_loss, "gender_ag
           "most_ones": most_ones, "most_eps_lost": most_eps_lost, "most_eps_wins": most_eps_wins, 
           "team_A": team_A, "team_B": team_B, "team_scores": team_scores, "tie_losers": tie_losers, 
           "tie_winners": tie_winners, "final_score_positions": final_score_positions, 
-          'avg_episode_scores' : avg_episode_scores, 'avg_episode_scores' : avg_task_scores}
+          'avg_episode_scores' : avg_episode_scores, 'avg_task_scores' : avg_task_scores}
 
 for name, df in tables.items():
     print(f"{name}")
     print(df.columns.tolist())
     print()
 
+#Overall and Average Scores
+avg_episode_scores = avg_episode_scores.rename(columns = {'Score' : 'Avg Score per Episodes'}).drop(['Series', 'Seat', 'Position'], axis = 1)
+avg_task_scores = avg_task_scores.rename(columns = {'Score' : 'Avg Score per Tasks'}).drop(['Series', 'Seat', 'Position'], axis = 1)
+
+merged_scores_table = pd.merge(left = final_score_positions, right = avg_episode_scores, on = 'Name', how = 'left')
+merged_scores_table = pd.merge(left = merged_scores_table, right = avg_task_scores, on = 'Name', how = 'left')
+
+print(merged_scores_table.head())
+
+#most/least ones/fives merged tables
+fives = pd.merge(left = least_fives.drop(['Series', 'Seat', 'index'], axis = 1), 
+                 right = most_fives.drop(['Series', 'Seat', 'index'], axis = 1), on = 'Name', how = 'left')
+print(least_fives)
+print(most_fives)
+ones = pd.merge(left = least_ones.drop(['Series', 'Seat', 'index'], axis = 1), 
+                right = most_ones.drop(['Series', 'Seat', 'index'], axis = 1), on = 'Name', how = 'left')
+
+points_per_task = pd.merge(left = fives, right = ones, on = 'Name', how = 'left')
+
+print(points_per_task.head())
