@@ -22,6 +22,8 @@ dq_table = DQF.count_DQ_all_contestents(file_path = file_path,
 
 print(dq_table.head(20))
 
+dq_table.to_csv(file_path + 'DQ_Table.csv', sep = ',', index = False)
+
 #Bar charts for number of DQ per series and seats
 dq_sort = dq_table.sort_values(by = 'DQ', ascending=False).reset_index(drop = True)
 
@@ -80,11 +82,13 @@ dq_change = dq_change[~dq_change['Name'].isin(['Frank Skinner', 'Romesh Ranganat
 dq_change_plus = dq_change[dq_change['Position Difference'] == 1]
 dq_change_minus = dq_change[dq_change['Position Difference'] == -1]
 
-print(dq_change[['Name', 'DQ','Total Score', 'Position', 'Total Missed Scores', 'New Position',
+print(dq_change[['Name', 'Series', 'DQ','Total Score', 'Position', 'Total Missed Scores', 'New Position',
        'Position Difference']].head(20))
 
-ax1_y_pos = [0.3, 0.71, 1.3, 1.71, 2.3, 2.71, 3.3, 3.71, 4.3, 4.71, 5.3, 5.71, 6.3, 6.71]
-ax2_y_pos  = [0.74, 1.66, 2.58, 3.5, 4.44, 5.349, 6.26]
+ax1_y_pos = [(i // 2) + (0.3 if i % 2 == 0 else 0.71) for i in range(len(dq_change))]
+#[0.3, 0.71, 1.3, 1.71, 2.3, 2.71, 3.3, 3.71, 4.3, 4.71, 5.3, 5.71]
+ax2_y_pos = [0.8 + i * 1.08 for i in range(int(len(dq_change)/2))]
+# print([0.74, 1.66, 2.58, 3.5, 4.44, 5.349])#, 6.26]
 ax2_x_pos = [1, 2, 3, 4, 5]
 
 fig = plt.figure()
@@ -113,14 +117,18 @@ xgrid = np.arange(xmin, xmax+0.1, 1)
 ax3.vlines(xgrid, ymin=ax3.get_ylim()[0], ymax=ax3.get_ylim()[1],
           colors='lightgray', linestyles='--', linewidth=0.8)
 
-ax3.plot(dq_change_plus['Position'], [0.7, 1.7, 2.7, 3.7, 4.7, 5.7, 6.7], 'o', markersize = 14, color = 'blue')
-ax3.plot(dq_change_minus['Position'], [0.3, 1.3, 2.3, 3.3, 4.3, 5.3, 6.3], 'o', markersize = 14, color = 'blue')
+ax3.plot(dq_change_plus['Position'], [0.7 + i for i in range(int(len(dq_change)/2))], #[0.7, 1.7, 2.7, 3.7, 4.7, 5.7], #, 6.7], 
+         'o', markersize = 14, color = 'blue')
+ax3.plot(dq_change_minus['Position'], [0.3 + i for i in range(int(len(dq_change)/2))], #[0.3, 1.3, 2.3, 3.3, 4.3, 5.3],# 6.3], 
+         'o', markersize = 14, color = 'blue')
 
-ax3.plot(dq_change_plus['New Position'], [0.7, 1.7, 2.7, 3.7, 4.7, 5.7, 6.7], '^', markersize = 14, color = 'darkgreen')
-ax3.plot(dq_change_minus['New Position'], [0.3, 1.3, 2.3, 3.3, 4.3, 5.3, 6.3], 'v', markersize = 14, color = 'darkred')
+ax3.plot(dq_change_plus['New Position'], [0.7 + i for i in range(int(len(dq_change)/2))], #[0.7, 1.7, 2.7, 3.7, 4.7, 5.7],# 6.7], 
+         '^', markersize = 14, color = 'darkgreen')
+ax3.plot(dq_change_minus['New Position'], [0.3 + i for i in range(int(len(dq_change)/2))], #[0.3, 1.3, 2.3, 3.3, 4.3, 5.3],# 6.3], 
+         'v', markersize = 14, color = 'darkred')
 
-ax1.text(43, 7.5, '# DQ', fontsize = 16)
-ax1.text(175, 7.5, 'Position:', fontsize = 16)
+ax1.text(42, (int(len(dq_change)/2) + 0.4), '# DQ', fontsize = 16)
+ax1.text(175, (int(len(dq_change)/2) + 0.4), 'Position:', fontsize = 16)
 
 for y, value in zip(ax1_y_pos, dq_change['DQ']):
        ax1.text(45, y-0.1, str(value), fontsize = 14)
@@ -129,7 +137,7 @@ for y, score in zip(ax1_y_pos, dq_change['Total Missed Scores']):
      ax1.text(score+1,y-0.1, str(score), fontsize = 12, color = 'darkblue')
 
 for y, score in zip(ax1_y_pos, dq_change['Total Score']):
-     ax1.text(score-10,y-0.1, str(score), fontsize = 12, color = 'black')
+     ax1.text(score-10,y-0.1, str(score), fontsize = 12, color = 'white')
 
 ax1.axvline(50, color='black', linewidth=1)
 ax1.set_xlim(40, 230)

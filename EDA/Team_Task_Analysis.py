@@ -30,7 +30,6 @@ team_task_totals = TTF.total_team_scores(team_table = team_task_totals)
 team_task_totals = TTF.include_team_names(team_score_table = team_task_totals, 
                                            team_two_table = team_two, team_three_table = team_three)
 
-
 # Determine percentage differences between Team A and Team B in each series
 total_per_diff = TTF.percent_diff(score_team_A = team_task_totals['Team A Total'],
                               score_team_B = team_task_totals['Team B Total'])
@@ -59,6 +58,14 @@ team_B = team_task_totals[['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Se
         'Team_B', 'Series Number', 'Team B Total', 'Team_B_per_person', 'Team_B_per_task',  
         'Team_B_per_person_task', 'Team B Names']]
 
+team_A['Team A Names'] = team_A['Team A Names'].apply(lambda x: ', '.join(map(str, x)))
+team_B['Team B Names'] = team_B['Team B Names'].apply(lambda x: ', '.join(map(str, x)))
+team_A[['Name A1', 'Name A2']] = team_A['Team A Names'].str.split(', ', expand=True)
+team_B[['Name B1', 'Name B2', 'Name B3']] = team_B['Team B Names'].str.split(', ', expand=True)
+
+team_A.to_csv(file_path + 'Team A Results.csv', sep = ',', index = False)
+team_B.to_csv(file_path + 'Team B Results.csv', sep = ',', index = False)
+
 # Sort Team A and Team B tables based on the total per person per task column.
 team_A_top = team_A.sort_values(by = 'Team_A_per_person_task', ascending = False)
 team_A_bottom = team_A.sort_values(by = 'Team_A_per_person_task', ascending = True)
@@ -68,6 +75,7 @@ team_B_bottom = team_B.sort_values(by = 'Team_B_per_person_task', ascending = Tr
 
 #get top and bottom teams
 team_name_scores = TTF.get_best_worse_teams(team_table = all_teams)
+print(team_name_scores.head())
 
 team_scores_top = team_name_scores.sort_values('TeamScoresPersonTask')[30:40]
 

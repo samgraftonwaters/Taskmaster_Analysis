@@ -91,7 +91,7 @@ def gender_count_series_bar(gender_age_table, series_seat : bool, title: str):
             edgecolor = 'black')
     plt.scatter(x[gender_series_plot['Non-Binary'] == 1], 
                gender_series_plot.loc[gender_series_plot['Non-Binary'] == 1, 'Non-Binary'],
-               color='orange', marker='D', s=100, label='Non-Binary')
+               color='darkred', marker='D', s=100, label='Non-Binary')
     
     for i in range(len(gender_series_plot)):
         i = i + 1
