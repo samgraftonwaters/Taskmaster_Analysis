@@ -13,10 +13,8 @@ file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outp
 DQ_table = pd.read_csv(file_path + 'DQ_Table.csv')
 Episode_win_loss = pd.read_csv(file_path + 'Episode Wins and Losses.csv')
 gender_age = pd.read_csv(file_path + 'Gender_Age_Series_Scores.csv')
-least_fives = pd.read_csv(file_path + 'Least_Fives_Table.csv') 
-most_fives = pd.read_csv(file_path + 'Most_Fives_Table.csv')
-least_ones = pd.read_csv(file_path + 'Least_Ones_Table.csv') 
-most_ones = pd.read_csv(file_path + 'Most_Ones_Table.csv') 
+count_fives = pd.read_csv(file_path + 'Number of Fives Scored.csv') 
+count_ones = pd.read_csv(file_path + 'Number of Ones Scored.csv')
 most_eps_lost = pd.read_csv(file_path + 'Most Episodes Lost.csv') 
 most_eps_wins = pd.read_csv(file_path + 'Most Episodes Won.csv') 
 team_A = pd.read_csv(file_path + 'Team A Results.csv') 
@@ -29,10 +27,9 @@ avg_episode_scores = pd.read_csv(file_path + 'Avg Episode Scores and Positions.c
 avg_task_scores = pd.read_csv(file_path + 'Avg Task Scores and Positions.csv')
 
 tables = {"DQ_table": DQ_table, "Episode_win_loss": Episode_win_loss, "gender_age": gender_age, 
-          "least_fives": least_fives, "most_fives": most_fives, "least_ones": least_ones, 
-          "most_ones": most_ones, "most_eps_lost": most_eps_lost, "most_eps_wins": most_eps_wins, 
-          "team_A": team_A, "team_B": team_B, "team_scores": team_scores, "tie_losers": tie_losers, 
-          "tie_winners": tie_winners, "final_score_positions": final_score_positions, 
+          "count_fives": count_fives, "most_fives": count_ones, "most_eps_lost": most_eps_lost, 
+          "most_eps_wins": most_eps_wins, "team_A": team_A, "team_B": team_B, "team_scores": team_scores,
+          "tie_losers": tie_losers, "tie_winners": tie_winners, "final_score_positions": final_score_positions, 
           'avg_episode_scores' : avg_episode_scores, 'avg_task_scores' : avg_task_scores}
 
 for name, df in tables.items():
@@ -49,14 +46,33 @@ merged_scores_table = pd.merge(left = merged_scores_table, right = avg_task_scor
 
 print(merged_scores_table.head())
 
-#most/least ones/fives merged tables
-fives = pd.merge(left = least_fives.drop(['Series', 'Seat', 'index'], axis = 1), 
-                 right = most_fives.drop(['Series', 'Seat', 'index'], axis = 1), on = 'Name', how = 'left')
-print(least_fives)
-print(most_fives)
-ones = pd.merge(left = least_ones.drop(['Series', 'Seat', 'index'], axis = 1), 
-                right = most_ones.drop(['Series', 'Seat', 'index'], axis = 1), on = 'Name', how = 'left')
+#counts ones/fives merged tables
+count_fives_ones = pd.merge(left = count_fives.drop(['Series', 'Seat'], axis = 1), 
+                 right = count_ones.drop(['Series', 'Seat'], axis = 1), on = 'Name', how = 'left')
 
-points_per_task = pd.merge(left = fives, right = ones, on = 'Name', how = 'left')
+print(count_fives_ones.head())
 
-print(points_per_task.head())
+#Tie Breaks
+tie_winners = (tie_winners.drop(['Series', 'Seat', 'Double Losers'], axis = 1)
+               .rename(columns = {'Tie breaks per series' : 'Tie breaks per series wins', 
+                                  'Tie Breaks per Person' : 'Tie Breaks per Person wins'}))
+
+print(len(tie_winners))
+
+tie_losers = (tie_losers.drop(['Series', 'Seat', 'Double Losers'], axis = 1)
+              .rename(columns = {'Tie breaks per series' : 'Tie breaks per series losses',
+                                 'Tie Breaks per Person' : 'Tie Breaks per Person losses'}))
+print(len(tie_losers))
+                 
+tie_breaks = pd.merge(left = tie_winners, right = tie_losers, how = 'outer', on = 'Name')
+
+print(tie_breaks.isna().sum())
+print(tie_breaks.info())
+
+tie_breaks['Losses'] = tie_breaks['Losses'].fillna(0).astype(int)
+tie_breaks['Wins'] = tie_breaks['Wins'].fillna(0).astype(int)
+tie_breaks['Tie Breaks per Person'] = tie_breaks[['Tie Breaks per Person wins', 'Tie Breaks per Person losses']].bfill(axis=1).iloc[:, 0].astype(int)
+tie_breaks['Tie Breaks per series'] = tie_breaks[['Tie breaks per series wins', 'Tie breaks per series losses']].bfill(axis=1).iloc[:, 0].astype(int)
+tie_breaks = tie_breaks.drop(['Tie Breaks per Person wins', 'Tie Breaks per Person losses', 
+                              'Tie breaks per series wins', 'Tie breaks per series losses'], axis = 1)
+print(tie_breaks.head(20))
