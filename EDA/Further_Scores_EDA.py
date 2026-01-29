@@ -38,6 +38,31 @@ score_diff = pd.DataFrame(score_diff, columns = ['Difference', 'Series'])
 count_one = FSF.count_scores(dataframe = scores_series_table, score = 1)
 count_five = FSF.count_scores(dataframe = scores_series_table, score = 5)
 
+print(count_one)
+print(named_series_table_reformatted)
+
+def point_counts(datatable, named_table, score_column_name):
+    
+    out = datatable.melt(id_vars="Series", value_vars=["Seat 1", "Seat 2", "Seat 3", "Seat 4", "Seat 5"],
+        var_name="Seat", value_name="Score")
+    
+    merged_table = pd.merge(left = out, right = named_table, 
+                                on = ['Series', 'Seat'], how = 'left')
+    
+    merged_table = merged_table.rename(columns = {'Score' : score_column_name})
+    return(merged_table)
+
+count_fives = point_counts(datatable = count_five, named_table = named_series_table_reformatted, 
+                           score_column_name = 'Number 5s Scored')
+count_ones = point_counts(datatable = count_one, named_table = named_series_table_reformatted, 
+                           score_column_name = 'Number 1s Scored')
+# count_fives = pd.merge(left = count_five, right = named_series_table_reformatted, 
+#                                 on = ['Series', 'Seat'], how = 'left')
+# count_ones = pd.merge(left = count_one, right = named_series_table_reformatted, 
+#                                 on = ['Series', 'Seat'], how = 'left')
+print(count_fives)
+print(count_ones)
+print('here')
 most_ones = FSF.most_least_scores(count_scores = count_one, named_table = named_series_table_reformatted, 
                                   score = 1, size = 'most')
 least_ones = FSF.most_least_scores(count_scores = count_one, named_table = named_series_table_reformatted, 
