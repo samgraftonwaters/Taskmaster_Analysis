@@ -43,6 +43,32 @@ def count_scores(dataframe, score : int):
 
     return(count)
 
+def point_counts(datatable, named_table, score_column_name : str):
+
+    """
+    Creates a dataframe that contains the count for certain points per task for all contestents
+    
+    Parameters:
+    -----------
+        datatable (DataFrame): table with total counts of each score (e.g. 1 - 5) for each seat
+        named_table (DataFrame): contestent name table
+        score_column_name (str): Name of the column that contains the number of times each contestent was 
+                                awarded e.g. 1 or 5 for each task. Example here could be "Number 1s Scored"
+    
+    Returns:
+    --------
+        DataFrame that contains the following columns: Series, Seat, Name and Score Count    
+    """
+    
+    out = datatable.melt(id_vars="Series", value_vars=["Seat 1", "Seat 2", "Seat 3", "Seat 4", "Seat 5"],
+        var_name="Seat", value_name="Score")
+    
+    merged_table = pd.merge(left = out, right = named_table, 
+                                on = ['Series', 'Seat'], how = 'left')
+    
+    merged_table = merged_table.rename(columns = {'Score' : score_column_name})
+    return(merged_table)
+
 
 def most_least_scores(count_scores, named_table, score : int, size : str):
 
