@@ -16,7 +16,6 @@ named_series_table = pd.read_csv(file_path + 'seat_contestent_series_table.csv')
 named_series_table_reformatted = named_series_table.melt(id_vars= 'Series', var_name = 'Seat', value_name = 'Name')
 named_series_table_reformatted['Seat'] = named_series_table_reformatted['Seat'].str.replace(' Name', "")
 
-
 score_diff = []
 
 for series in range(1, 21):
@@ -49,6 +48,11 @@ most_fives = FSF.most_least_scores(count_scores = count_five, named_table = name
 least_fives = FSF.most_least_scores(count_scores = count_five, named_table = named_series_table_reformatted, 
                                     score = 5, size = 'least')
 
+least_ones.to_csv(file_path + 'Least_Ones_Table.csv', sep = ',', index = False)
+most_ones.to_csv(file_path + 'Most_Ones_Table.csv', sep = ',', index = False)
+least_fives.to_csv(file_path + 'Least_Fives_Table.csv', sep = ',', index = False)
+most_fives.to_csv(file_path + 'Most_Fives_Table.csv', sep = ',', index = False)
+
 #Highest and lowest episode scores per seat
 
 episode_scores, tie_break_scores, before_tie_total = FSF.episode_tie_scores(data_table = scores_series_table)
@@ -58,9 +62,6 @@ lowest_ep_scores = FSF.high_low_ep_scores(data_table = episode_scores, named_tab
 
 highest_ep_scores = FSF.high_low_ep_scores(data_table = episode_scores, named_table = named_series_table_reformatted, 
                        direction = 'highest')
-
-
-
 
 #Number of times each contestent (seat) has one or lost an episode in each series
 
@@ -93,6 +94,9 @@ print(most_eps_lost_percent.head(10))
 print(never_won.head(10))
 print(never_lost.head(20))
 
+most_eps_won_num.to_csv(file_path + 'Most Episodes Won.csv', sep = ',', index = False)
+most_eps_lost_num.to_csv(file_path + 'Most Episodes Lost.csv', sep = ',', index = False)
+
 ## Tie Breaks
 print('Tie Break Analysis\n\n\n')
 
@@ -107,7 +111,8 @@ tie_break_count_losers = FSF.tie_break_losers(tie_break_scores_names = tie_break
 tie_break_count_winners_losers = FSF.tie_break_winners_losers(tie_break_count_winners = tie_break_count_winners,
                                                               tie_break_count_losers = tie_break_count_losers)
 
-print(tie_break_scores_names.head(20))
+tie_break_count_winners.to_csv(file_path + 'Tie_Break_Winners.csv', sep = ',', index = False)
+tie_break_count_losers.to_csv(file_path + 'Tie_Break_Losers.csv', sep = ',', index = False)
 
 (top_tie_break_count_winners, 
  top_tie_break_count_losers) = FSF.tie_break_counts_win_lose(tie_break_count_winners_table = tie_break_count_winners,
