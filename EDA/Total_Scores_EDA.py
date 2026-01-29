@@ -38,6 +38,7 @@ Total_per_series = EF.total_score_tables(table = Total_per_series, extra_columns
 Total_per_episode = EF.total_score_tables(table = Total_per_episode, extra_columns=['Series', 'Number of Episodes'])
 Total_per_task = EF.total_score_tables(table = Total_per_task, extra_columns=['Series', 'Number of Tasks'])
 
+print(Total_per_task)
 # EF.contestent_averages(average_table = Total_per_task , name_table = named_series_table)
 
 #Highest and lowest scores and averages per epsiodes or tasks for each seat
@@ -51,7 +52,8 @@ tasks_lowest_seat = EF.find_lowest_seat(value_table = Total_per_task, name_table
 #Average scores and total scores per seat
 total_scores_all_series = EF.total_scores_all_series(total_scores_df = Total_per_series, number_episodes_df = Total_per_episode,
                             number_tasks_df = Total_per_task)
-
+print('here')
+print(total_scores_all_series )
 
 ####### Number of times each seat has won or lost a series of Taskmaster
 seat_winners = EF.seat_winner_each_series(dataframe = Total_per_series)
@@ -82,6 +84,7 @@ average_tasks_ordered_seats = EF.final_score_seat_positions(score_table = Total_
                                                             name_table = named_series_table, contain_summed_total = False)
 
 average_tasks_players = average_tasks_ordered_seats
+
 # [['Series', 'Fifth Place Name', 'Fourth Place Name', 
 #                       'Third Place Name', 'Second Place Name', 'First Place Name', 'Fifth Place Score', 
 #                       'Fourth Place Score', 'Third Place Score', 'Second Place Score',
@@ -90,6 +93,8 @@ average_tasks_players = average_tasks_ordered_seats
 average_episodes_ordered_seats = EF.final_score_seat_positions(score_table = Total_per_episode , 
                                                             name_table = named_series_table, contain_summed_total = False)
 average_episodes_players = average_episodes_ordered_seats
+print(average_episodes_players)
+print(average_episodes_players.columns)
 # [['Series', 'Fifth Place Name', 'Fourth Place Name', 
 #                       'Third Place Name', 'Second Place Name', 'First Place Name', 'Fifth Place Score', 
 #                       'Fourth Place Score', 'Third Place Score', 'Second Place Score',
@@ -128,6 +133,8 @@ average_episode_positions_ordered = EF.ordering_final_scores_all_positions(dataf
                                         seat_cols = ['Fifth Place Seat', 'Fourth Place Seat', 'Third Place Seat', 
                                                     'Second Place Seat', 'First Place Seat'],
                                         positions = [5, 4, 3, 2, 1], order_col = 'Score', order = True)
+print(average_episode_positions_ordered)
+average_episode_positions_ordered.to_csv(file_path + 'Avg Episode Scores and Positions.csv', index = False, sep = ',')
 
 average_episode_positions_unordered = EF.ordering_final_scores_all_positions(datafame = average_episodes_players, 
                                        series_col = 'Series', 
@@ -148,7 +155,8 @@ average_tasks_positions_ordered = EF.ordering_final_scores_all_positions(datafam
                                         seat_cols = ['Fifth Place Seat', 'Fourth Place Seat', 'Third Place Seat', 
                                                     'Second Place Seat', 'First Place Seat'],
                                         positions = [5, 4, 3, 2, 1], order_col = 'Score', order = True)
-
+print(average_tasks_positions_ordered)
+average_tasks_positions_ordered.to_csv(file_path + 'Avg Task Scores and Positions.csv', index = False, sep = ',')
 
 average_tasks_positions_unordered = EF.ordering_final_scores_all_positions(datafame = average_tasks_players, 
                                        series_col = 'Series', 
