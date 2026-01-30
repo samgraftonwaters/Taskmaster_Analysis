@@ -7,6 +7,7 @@ import Team_Task_Functions as TTF
 plt.rcParams['figure.figsize'] = (13, 7)
 
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
+output_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
 
 team_table = pd.read_csv(file_path+'Teams.csv')
 
@@ -63,8 +64,8 @@ team_B['Team B Names'] = team_B['Team B Names'].apply(lambda x: ', '.join(map(st
 team_A[['Name A1', 'Name A2']] = team_A['Team A Names'].str.split(', ', expand=True)
 team_B[['Name B1', 'Name B2', 'Name B3']] = team_B['Team B Names'].str.split(', ', expand=True)
 
-team_A.to_csv(file_path + 'Team A Results.csv', sep = ',', index = False)
-team_B.to_csv(file_path + 'Team B Results.csv', sep = ',', index = False)
+team_A.to_csv(output_path + 'Team A Results.csv', sep = ',', index = False, encoding="utf-8")
+team_B.to_csv(output_path + 'Team B Results.csv', sep = ',', index = False, encoding="utf-8")
 
 # Sort Team A and Team B tables based on the total per person per task column.
 team_A_top = team_A.sort_values(by = 'Team_A_per_person_task', ascending = False)

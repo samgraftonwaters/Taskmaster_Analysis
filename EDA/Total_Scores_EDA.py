@@ -7,6 +7,7 @@ import EDA_Functions as EF
 # pd.set_option('display.width', 1000)
 
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
+output_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
 
 named_series_table = pd.read_csv(file_path + 'seat_contestent_series_table.csv')
 scores_series_table = file_path + 'Taskmaster_Series_Scores_Cleaned.xlsx'
@@ -111,7 +112,7 @@ total_score_positions_ordered = EF.ordering_final_scores_all_positions(datafame 
                                                     'Second Place Seat', 'First Place Seat'],
                                         positions = [5, 4, 3, 2, 1], order_col = 'Score', order = True)
 
-total_score_positions_ordered.to_csv(file_path + 'Total Final Scores and Positions.csv', sep = ',', index = False)
+total_score_positions_ordered.to_csv(output_path + 'Total Final Scores and Positions.csv', sep = ',', index = False, encoding="utf-8")
 
 total_score_positions_unordered = EF.ordering_final_scores_all_positions(datafame = final_scores_players, 
                                        series_col = 'Series', 
@@ -135,6 +136,7 @@ average_episode_positions_ordered = EF.ordering_final_scores_all_positions(dataf
                                         positions = [5, 4, 3, 2, 1], order_col = 'Score', order = True)
 print(average_episode_positions_ordered)
 average_episode_positions_ordered.to_csv(file_path + 'Avg Episode Scores and Positions.csv', index = False, sep = ',')
+average_episode_positions_ordered.to_csv(output_path + 'Avg Episode Scores and Positions.csv', index = False, sep = ',')
 
 average_episode_positions_unordered = EF.ordering_final_scores_all_positions(datafame = average_episodes_players, 
                                        series_col = 'Series', 
@@ -157,6 +159,7 @@ average_tasks_positions_ordered = EF.ordering_final_scores_all_positions(datafam
                                         positions = [5, 4, 3, 2, 1], order_col = 'Score', order = True)
 print(average_tasks_positions_ordered)
 average_tasks_positions_ordered.to_csv(file_path + 'Avg Task Scores and Positions.csv', index = False, sep = ',')
+average_tasks_positions_ordered.to_csv(output_path + 'Avg Task Scores and Positions.csv', index = False, sep = ',')
 
 average_tasks_positions_unordered = EF.ordering_final_scores_all_positions(datafame = average_tasks_players, 
                                        series_col = 'Series', 
