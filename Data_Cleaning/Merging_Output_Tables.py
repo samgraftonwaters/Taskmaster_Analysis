@@ -10,28 +10,23 @@ colours = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e
 
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
 
-DQ_table = pd.read_csv(file_path + 'DQ_Table.csv')
-Episode_win_loss = pd.read_csv(file_path + 'Episode Wins and Losses.csv')
-gender_age = pd.read_csv(file_path + 'Gender_Age_Series_Scores.csv')
-count_fives = pd.read_csv(file_path + 'Number of Fives Scored.csv') 
-count_ones = pd.read_csv(file_path + 'Number of Ones Scored.csv')
-# most_eps_lost = pd.read_csv(file_path + 'Most Episodes Lost.csv') 
-# most_eps_wins = pd.read_csv(file_path + 'Most Episodes Won.csv') 
-team_A = pd.read_csv(file_path + 'Team A Results.csv') 
-team_B = pd.read_csv(file_path + 'Team B Results.csv') 
-team_scores = pd.read_csv(file_path + 'Team_Scores.csv') 
-tie_losers = pd.read_csv(file_path + 'Tie_Break_Losers.csv') 
-tie_winners = pd.read_csv(file_path + 'Tie_Break_Winners.csv') 
-final_score_positions = pd.read_csv(file_path + 'Total Final Scores and Positions.csv')
-avg_episode_scores = pd.read_csv(file_path + 'Avg Episode Scores and Positions.csv')
-avg_task_scores = pd.read_csv(file_path + 'Avg Task Scores and Positions.csv')
+DQ_table = pd.read_csv(file_path + 'DQ_Table.csv', encoding="utf-8")
+Episode_win_loss = pd.read_csv(file_path + 'Episode Wins and Losses.csv', encoding="utf-8")
+gender_age = pd.read_csv(file_path + 'Gender_Age_Series_Scores.csv', encoding="utf-8")
+count_fives = pd.read_csv(file_path + 'Number of Fives Scored.csv', encoding="utf-8") 
+count_ones = pd.read_csv(file_path + 'Number of Ones Scored.csv', encoding="utf-8")
+team_A = pd.read_csv(file_path + 'Team A Results.csv', encoding="utf-8") 
+team_B = pd.read_csv(file_path + 'Team B Results.csv', encoding="utf-8") 
+tie_losers = pd.read_csv(file_path + 'Tie_Break_Losers.csv', encoding="utf-8") 
+tie_winners = pd.read_csv(file_path + 'Tie_Break_Winners.csv', encoding="utf-8") 
+final_score_positions = pd.read_csv(file_path + 'Total Final Scores and Positions.csv', encoding="utf-8")
+avg_episode_scores = pd.read_csv(file_path + 'Avg Episode Scores and Positions.csv', encoding="utf-8")
+avg_task_scores = pd.read_csv(file_path + 'Avg Task Scores and Positions.csv', encoding="utf-8")
 
 tables = {"DQ_table": DQ_table, "Episode_win_loss": Episode_win_loss, "gender_age": gender_age, 
-          "count_fives": count_fives, "most_fives": count_ones, "team_A": team_A, "team_B": team_B, "team_scores": team_scores,
+          "count_fives": count_fives, "most_fives": count_ones, "team_A": team_A, "team_B": team_B,
           "tie_losers": tie_losers, "tie_winners": tie_winners, "final_score_positions": final_score_positions, 
-          'avg_episode_scores' : avg_episode_scores, 'avg_task_scores' : avg_task_scores,
-          #"most_eps_lost": most_eps_lost,  "most_eps_wins": most_eps_wins,
-          }
+          'avg_episode_scores' : avg_episode_scores, 'avg_task_scores' : avg_task_scores}
 
 for name, df in tables.items():
     print(f"{name}")
@@ -45,13 +40,9 @@ avg_task_scores = avg_task_scores.rename(columns = {'Score' : 'Avg Score per Tas
 merged_scores_table = pd.merge(left = final_score_positions, right = avg_episode_scores, on = 'Name', how = 'left')
 merged_scores_table = pd.merge(left = merged_scores_table, right = avg_task_scores, on = 'Name', how = 'left')
 
-print(merged_scores_table.head())
-
 #counts ones/fives merged tables
 count_fives_ones = pd.merge(left = count_fives.drop(['Series', 'Seat'], axis = 1), 
                  right = count_ones.drop(['Series', 'Seat'], axis = 1), on = 'Name', how = 'left')
-
-print(count_fives_ones.head())
 
 #Tie Breaks
 tie_winners = (tie_winners.drop(['Series', 'Seat', 'Double Losers'], axis = 1)
@@ -70,7 +61,6 @@ tie_breaks['Tie Breaks per Person'] = tie_breaks[['Tie Breaks per Person wins', 
 tie_breaks['Tie Breaks per series'] = tie_breaks[['Tie breaks per series wins', 'Tie breaks per series losses']].bfill(axis=1).iloc[:, 0].astype(int)
 tie_breaks = tie_breaks.drop(['Tie Breaks per Person wins', 'Tie Breaks per Person losses', 
                               'Tie breaks per series wins', 'Tie breaks per series losses'], axis = 1)
-print(tie_breaks.head())
 
 #Removing columns from DQ, Gender/Age and Episode columns
 
@@ -81,10 +71,6 @@ Episode_win_loss = Episode_win_loss.drop(['Series', 'Seat'], axis = 1)
 Episode_win_loss = Episode_win_loss.rename(columns = {'Wins' : 'Episode Wins', 'Losses' : 'Episode Losses', 
                                                       'Percentage_Won' : 'Episode Percentage Wins', 
                                                       'Percentage_Lost' : 'Episode Percentage Lossses'})
-
-print(DQ_table.head())
-print(gender_age.head())
-print(Episode_win_loss.head())
 
 #Teams tables
 
@@ -105,11 +91,21 @@ team_B = team_B.rename(columns = {'Number' : 'Number Team Tasks', 'Team B Total'
 team_B['Team of'] = 3
 team_tasks = pd.concat([team_A, team_B], axis = 0)
 
-team_scores = team_scores.drop(['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Series', 'Team_A', 'Team_B'], axis = 1)
-
-print(team_A.head())
-print(team_B.head())
-print(len(team_A), len(team_B))
-print(team_scores.head())
+print(merged_scores_table.head())
+print(count_fives_ones.head())
+print(tie_breaks.head())
+print(DQ_table.head())
+print(gender_age.head())
+print(Episode_win_loss.head())
 print(team_tasks.head())
-print(len(team_tasks))
+
+dq_tie = pd.merge(left = tie_breaks, right = DQ_table, on = 'Name', how = 'left')
+score_points = pd.merge(left = merged_scores_table, right = count_fives_ones, on = 'Name', how = 'left')
+gender_age_eps = pd.merge(left = gender_age, right = Episode_win_loss, on = 'Name', how = 'left')
+
+merged_contestent_table = pd.merge(left = score_points, right = dq_tie, on = 'Name', how = 'left')
+merged_contestent_table = pd.merge(left = merged_contestent_table, right = gender_age_eps, on = 'Name', how = 'left')
+merged_contestent_table = pd.merge(left = merged_contestent_table, right = team_tasks, on = 'Name', how = 'left')
+
+print(merged_contestent_table)
+print(len(merged_contestent_table))
