@@ -3,7 +3,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-
 def count_scores(dataframe, score : int):
 
     """
@@ -346,11 +345,14 @@ def tie_break_score_calcs(tie_break_scores_table, before_tie_total_table):
 
             winners = [seat for seat in tied_seats if row[f"{seat}_tb"] == 1]
             losers  = [seat for seat in tied_seats if row[f"{seat}_tb"] == 0]
-            
+
+            print(series, episode, losers)
+
             if len(losers) > 1:
                 double_losers = 1
+
             else:
-                double_losers = 0
+                double_losers = 0      
 
             # create all winner–loser combinations
             for win in winners:

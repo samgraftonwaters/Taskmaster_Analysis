@@ -113,12 +113,21 @@ tie_break_scores = FSF.tie_break_score_calcs(tie_break_scores_table = tie_break_
 
 tie_break_scores_names = FSF.merged_tie_scores_names(tie_break_scores = tie_break_scores , named_table = named_series_table_reformatted)
 
+print(tie_break_scores_names[(tie_break_scores_names['Series'] == 'S4') | (tie_break_scores_names['Series'] == 'S8')])
+print(tie_break_scores_names[(tie_break_scores_names['Series'] == 'S1') | (tie_break_scores_names['Series'] == 'S13')])
+print('here')
+
 tie_break_count_winners = FSF.tie_break_winners(tie_break_scores_names = tie_break_scores_names)
 
 tie_break_count_losers = FSF.tie_break_losers(tie_break_scores_names = tie_break_scores_names)
 
 tie_break_count_winners_losers = FSF.tie_break_winners_losers(tie_break_count_winners = tie_break_count_winners,
                                                               tie_break_count_losers = tie_break_count_losers)
+
+print(tie_break_count_winners[(tie_break_count_winners['Name'] == 'Joe Lycett') | (tie_break_count_winners['Name'] == 'Lou Sanders')])
+print(tie_break_count_losers[(tie_break_count_losers['Name'] == 'Joe Lycett') | (tie_break_count_losers['Name'] == 'Lou Sanders')])
+print(tie_break_count_winners_losers[(tie_break_count_winners_losers['Name'] == 'Joe Lycett') | (tie_break_count_winners_losers['Name'] == 'Lou Sanders')])
+print('there')
 
 tie_break_count_winners.to_csv(output_path + 'Tie_Break_Winners.csv', sep = ',', index = False, encoding="utf-8")
 tie_break_count_losers.to_csv(output_path + 'Tie_Break_Losers.csv', sep = ',', index = False, encoding="utf-8")
@@ -156,222 +165,222 @@ print(seat_losers_totals)
 
 #Plots
 
-plt.figure()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
+# plt.figure()
+# plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
 
-plt.bar(x = score_diff['Series'], height = score_diff['Difference'], width = 0.8,
-        color = 'blue', alpha = 0.7, edgecolor = 'black')
+# plt.bar(x = score_diff['Series'], height = score_diff['Difference'], width = 0.8,
+#         color = 'blue', alpha = 0.7, edgecolor = 'black')
 
-plt.bar(score_diff['Series'][score_diff['Difference'].idxmax(axis = 0)], 
-        score_diff['Difference'][score_diff['Difference'].idxmax(axis = 0)], color = 'darkorange',
-        edgecolor = 'black', label = 'Biggest Difference')
+# plt.bar(score_diff['Series'][score_diff['Difference'].idxmax(axis = 0)], 
+#         score_diff['Difference'][score_diff['Difference'].idxmax(axis = 0)], color = 'darkorange',
+#         edgecolor = 'black', label = 'Biggest Difference')
 
-plt.bar(score_diff['Series'][score_diff['Difference'].idxmin(axis = 0)], 
-        score_diff['Difference'][score_diff['Difference'].idxmin(axis = 0)], color = 'maroon',
-        edgecolor = 'black', label = 'Smallest Difference')
+# plt.bar(score_diff['Series'][score_diff['Difference'].idxmin(axis = 0)], 
+#         score_diff['Difference'][score_diff['Difference'].idxmin(axis = 0)], color = 'maroon',
+#         edgecolor = 'black', label = 'Smallest Difference')
 
-for i in range(0, 20):
-    plt.text(i, score_diff['Difference'][i]+0.5, 
-            score_diff['Difference'][i], ha='center', fontsize = 14, color = 'blue')
+# for i in range(0, 20):
+#     plt.text(i, score_diff['Difference'][i]+0.5, 
+#             score_diff['Difference'][i], ha='center', fontsize = 14, color = 'blue')
 
-plt.xticks(fontsize = 14)
-plt.yticks(fontsize = 14)
-plt.xlim(-0.6, 19.6)
-plt.xlabel('Series', fontsize = 18)
-plt.ylabel('Difference in Scores', fontsize = 18)
-plt.title('Difference in Scores between Winner and Loser per Series', fontsize = 20)
-plt.legend(fontsize = 16)
-plt.show()
-
-
-FSF.least_most_points(data_table_most = most_ones, data_table_least = least_ones, series_column = 'Series', 
-                seat_column = 'Seat', name_column = 'Name', most_column = 'Most 1s',
-                least_column = 'Least 1s', plot_title = 'Most and Least Number of 1s Scored Per Seat')
-
-FSF.least_most_points(data_table_most = most_fives, data_table_least = least_fives, series_column = 'Series', 
-                seat_column = 'Seat', name_column = 'Name', most_column = 'Most 5s',
-                least_column = 'Least 5s', plot_title = 'Most and Least Number of 5s Scored Per Seat')
-
-plt.figure()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.05, right = 0.96)
-
-sns.barplot(highest_ep_scores, x="Score", y="index", orient="y", hue = 'Seat', legend = False)
-
-for i, (score, name, series, episode, seat) in enumerate(zip(highest_ep_scores['Score'], highest_ep_scores['Name'],
-                                              highest_ep_scores['Series'], highest_ep_scores['Episodes'],
-                                              highest_ep_scores['Seat'])):
-    plt.text(1, i, name, va='center', ha='left', fontsize=15, color='white')
-    plt.text(12, i, series, va='center', ha='left', fontsize=15, color='white')
-    plt.text(15, i, episode, va='center', ha='left', fontsize=15, color='white')
-    plt.text(18, i, seat, va='center', ha='left', fontsize=15, color = 'white')
-    plt.text(score+0.1, i, int(score), fontsize = 15, color = 'black')
-
-plt.yticks([],[])
-
-plt.xticks(fontsize = 14)
-plt.xlim(0, highest_ep_scores['Score'].max() + 2)
-plt.xlabel('Episode Score', fontsize = 18)
-plt.ylabel('', fontsize = 18)
-
-plt.title('Highest Total Scores in an Episode per Seat', fontsize = 20)
-
-plt.show()
-
-plt.figure()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.05, right = 0.96)
-
-sns.barplot(lowest_ep_scores, x="Score", y="index", orient="y", hue = 'Seat', legend = False)
-
-for i, (score, name, series, episode, seat) in enumerate(zip(lowest_ep_scores['Score'], lowest_ep_scores['Name'],
-                                              lowest_ep_scores['Series'], lowest_ep_scores['Episodes'],
-                                              lowest_ep_scores['Seat'])):
-    plt.text(0.25, i, name, va='center', ha='left', fontsize=15, color='white')
-    plt.text(1.5, i, series, va='center', ha='left', fontsize=15, color='white')
-    plt.text(2, i, episode, va='center', ha='left', fontsize=15, color='white')
-    plt.text(2.4, i, seat, va='center', ha='left', fontsize=15, color = 'white')
-    plt.text(score+0.1, i, int(score), fontsize = 15, color = 'black')
-
-plt.yticks([],[])
-plt.xticks(fontsize = 14)
-plt.xlim(0, lowest_ep_scores['Score'].max() + 0.5)
-plt.xlabel('Episode Score', fontsize = 18)
-plt.ylabel('', fontsize = 18)
-
-plt.title('Lowest Total Scores in an Episode per Seat', fontsize = 20)
-
-plt.show()
+# plt.xticks(fontsize = 14)
+# plt.yticks(fontsize = 14)
+# plt.xlim(-0.6, 19.6)
+# plt.xlabel('Series', fontsize = 18)
+# plt.ylabel('Difference in Scores', fontsize = 18)
+# plt.title('Difference in Scores between Winner and Loser per Series', fontsize = 20)
+# plt.legend(fontsize = 16)
+# plt.show()
 
 
-fig, (ax1, ax2) = plt.subplots(ncols=1, nrows=2, sharex = True)
-plt.subplots_adjust(wspace=0, hspace=0.05, bottom=0.1, top=0.94, left=0.02, right=0.98)
+# FSF.least_most_points(data_table_most = most_ones, data_table_least = least_ones, series_column = 'Series', 
+#                 seat_column = 'Seat', name_column = 'Name', most_column = 'Most 1s',
+#                 least_column = 'Least 1s', plot_title = 'Most and Least Number of 1s Scored Per Seat')
 
-most_eps_won_percent_top.plot.barh(y='Percentage_Won', x='Name', ax=ax1, color='red', alpha=0.8, 
-                 edgecolor='white', width=0.9, label='Most Episodes Won')
+# FSF.least_most_points(data_table_most = most_fives, data_table_least = least_fives, series_column = 'Series', 
+#                 seat_column = 'Seat', name_column = 'Name', most_column = 'Most 5s',
+#                 least_column = 'Least 5s', plot_title = 'Most and Least Number of 5s Scored Per Seat')
 
-for i, (wins, percent, number, name, series, seat) in enumerate(zip(most_eps_won_percent_top['Wins'], 
-                                                                    most_eps_won_percent_top['Percentage_Won'],
-                                            most_eps_won_percent_top['Number_Episodes'], 
-                                              most_eps_won_percent_top['Name'],
-                                              most_eps_won_percent_top['Series'],
-                                              most_eps_won_percent_top['Seat'])):
+# plt.figure()
+# plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.05, right = 0.96)
+
+# sns.barplot(highest_ep_scores, x="Score", y="index", orient="y", hue = 'Seat', legend = False)
+
+# for i, (score, name, series, episode, seat) in enumerate(zip(highest_ep_scores['Score'], highest_ep_scores['Name'],
+#                                               highest_ep_scores['Series'], highest_ep_scores['Episodes'],
+#                                               highest_ep_scores['Seat'])):
+#     plt.text(1, i, name, va='center', ha='left', fontsize=15, color='white')
+#     plt.text(12, i, series, va='center', ha='left', fontsize=15, color='white')
+#     plt.text(15, i, episode, va='center', ha='left', fontsize=15, color='white')
+#     plt.text(18, i, seat, va='center', ha='left', fontsize=15, color = 'white')
+#     plt.text(score+0.1, i, int(score), fontsize = 15, color = 'black')
+
+# plt.yticks([],[])
+
+# plt.xticks(fontsize = 14)
+# plt.xlim(0, highest_ep_scores['Score'].max() + 2)
+# plt.xlabel('Episode Score', fontsize = 18)
+# plt.ylabel('', fontsize = 18)
+
+# plt.title('Highest Total Scores in an Episode per Seat', fontsize = 20)
+
+# plt.show()
+
+# plt.figure()
+# plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.05, right = 0.96)
+
+# sns.barplot(lowest_ep_scores, x="Score", y="index", orient="y", hue = 'Seat', legend = False)
+
+# for i, (score, name, series, episode, seat) in enumerate(zip(lowest_ep_scores['Score'], lowest_ep_scores['Name'],
+#                                               lowest_ep_scores['Series'], lowest_ep_scores['Episodes'],
+#                                               lowest_ep_scores['Seat'])):
+#     plt.text(0.25, i, name, va='center', ha='left', fontsize=15, color='white')
+#     plt.text(1.5, i, series, va='center', ha='left', fontsize=15, color='white')
+#     plt.text(2, i, episode, va='center', ha='left', fontsize=15, color='white')
+#     plt.text(2.4, i, seat, va='center', ha='left', fontsize=15, color = 'white')
+#     plt.text(score+0.1, i, int(score), fontsize = 15, color = 'black')
+
+# plt.yticks([],[])
+# plt.xticks(fontsize = 14)
+# plt.xlim(0, lowest_ep_scores['Score'].max() + 0.5)
+# plt.xlabel('Episode Score', fontsize = 18)
+# plt.ylabel('', fontsize = 18)
+
+# plt.title('Lowest Total Scores in an Episode per Seat', fontsize = 20)
+
+# plt.show()
+
+
+# fig, (ax1, ax2) = plt.subplots(ncols=1, nrows=2, sharex = True)
+# plt.subplots_adjust(wspace=0, hspace=0.05, bottom=0.1, top=0.94, left=0.02, right=0.98)
+
+# most_eps_won_percent_top.plot.barh(y='Percentage_Won', x='Name', ax=ax1, color='red', alpha=0.8, 
+#                  edgecolor='white', width=0.9, label='Most Episodes Won')
+
+# for i, (wins, percent, number, name, series, seat) in enumerate(zip(most_eps_won_percent_top['Wins'], 
+#                                                                     most_eps_won_percent_top['Percentage_Won'],
+#                                             most_eps_won_percent_top['Number_Episodes'], 
+#                                               most_eps_won_percent_top['Name'],
+#                                               most_eps_won_percent_top['Series'],
+#                                               most_eps_won_percent_top['Seat'])):
     
     
-    ax1.text(-0.29, i, series, va='center', ha='left', fontsize=12, color='black')
-    ax1.text(-0.2, i, wins, va='center', ha='left', fontsize=12, color='black')
-    ax1.text(-0.15, i, number, va='center', ha='left', fontsize=12, color='black')
-    ax1.text(-0.08, i, seat, va='center', ha='left', fontsize=12, color = 'black')
-    ax1.text(0.05, i, name, va='center', ha='left', fontsize=12, color = 'white')
-    ax1.text(percent + 0.02, i, percent, va='center', ha='left', fontsize=12, color = 'red')
-    ax1.text(-0.29, 10, 'Series  Number  Episodes', fontsize = 12, color = 'black')
+#     ax1.text(-0.29, i, series, va='center', ha='left', fontsize=12, color='black')
+#     ax1.text(-0.2, i, wins, va='center', ha='left', fontsize=12, color='black')
+#     ax1.text(-0.15, i, number, va='center', ha='left', fontsize=12, color='black')
+#     ax1.text(-0.08, i, seat, va='center', ha='left', fontsize=12, color = 'black')
+#     ax1.text(0.05, i, name, va='center', ha='left', fontsize=12, color = 'white')
+#     ax1.text(percent + 0.02, i, percent, va='center', ha='left', fontsize=12, color = 'red')
+#     ax1.text(-0.29, 10, 'Series  Number  Episodes', fontsize = 12, color = 'black')
 
-ax1.set_xlim(-0.30, 0.85)
-ax1.set_yticks([])
-ax1.set_ylabel('')
-ax1.legend(fontsize=15)
+# ax1.set_xlim(-0.30, 0.85)
+# ax1.set_yticks([])
+# ax1.set_ylabel('')
+# ax1.legend(fontsize=15)
 
-most_eps_lost_percent_top.plot.barh(y='Percentage_Lost', x='Name', ax=ax2, color='dodgerblue', alpha=0.7,
-                 edgecolor='white', width=0.9, label='Most Episodes Lost')
+# most_eps_lost_percent_top.plot.barh(y='Percentage_Lost', x='Name', ax=ax2, color='dodgerblue', alpha=0.7,
+#                  edgecolor='white', width=0.9, label='Most Episodes Lost')
 
-for i, (losses, percent, number, name, series, seat) in enumerate(zip(most_eps_lost_percent_top['Losses'], most_eps_lost_percent_top['Percentage_Lost'],
-                                              most_eps_lost_percent_top['Number_Episodes'], 
-                                              most_eps_lost_percent_top['Name'],
-                                              most_eps_lost_percent_top['Series'],
-                                              most_eps_lost_percent_top['Seat'])):
+# for i, (losses, percent, number, name, series, seat) in enumerate(zip(most_eps_lost_percent_top['Losses'], most_eps_lost_percent_top['Percentage_Lost'],
+#                                               most_eps_lost_percent_top['Number_Episodes'], 
+#                                               most_eps_lost_percent_top['Name'],
+#                                               most_eps_lost_percent_top['Series'],
+#                                               most_eps_lost_percent_top['Seat'])):
 
-    ax2.text(-0.29, i, series, va='center', ha='left', fontsize=12, color='black')
-    ax2.text(-0.2, i, wins, va='center', ha='left', fontsize=12, color='black')
-    ax2.text(-0.15, i, number, va='center', ha='left', fontsize=12, color='black')
-    ax2.text(-0.08, i, seat, va='center', ha='left', fontsize=12, color = 'black')
-    ax2.text(0.05, i, name, va='center', ha='left', fontsize=12, color = 'black')
-    ax2.text(percent + 0.02, i, percent, va='center', ha='left', fontsize=12, color = 'blue')
+#     ax2.text(-0.29, i, series, va='center', ha='left', fontsize=12, color='black')
+#     ax2.text(-0.2, i, wins, va='center', ha='left', fontsize=12, color='black')
+#     ax2.text(-0.15, i, number, va='center', ha='left', fontsize=12, color='black')
+#     ax2.text(-0.08, i, seat, va='center', ha='left', fontsize=12, color = 'black')
+#     ax2.text(0.05, i, name, va='center', ha='left', fontsize=12, color = 'black')
+#     ax2.text(percent + 0.02, i, percent, va='center', ha='left', fontsize=12, color = 'blue')
 
-ax2.set_xlim(-0.30, 0.85)
-ax2.set_xticks([0, 0.2, 0.4, 0.6, 0.8])
-ax2.set_yticks([])
-ax2.set_ylabel('')
-ax2.legend(fontsize=15)
+# ax2.set_xlim(-0.30, 0.85)
+# ax2.set_xticks([0, 0.2, 0.4, 0.6, 0.8])
+# ax2.set_yticks([])
+# ax2.set_ylabel('')
+# ax2.legend(fontsize=15)
 
-fig.suptitle("Proportion of Times Contestents Won or Lost each Episode", fontsize = 18)
-plt.xlabel('Proportion', fontsize=18)
-plt.ylabel('')
-ax1.tick_params(axis='x', labelsize=12)
-ax2.tick_params(axis='x', labelsize=14)
-plt.show()
-
-
-FSF.tie_break_person_series_plots(data_table = top_tie_break_count_winners_person, win_lose = 'win', 
-                            plot_title = 'Tie Break Percentage Wins per Number for each Person', 
-                            bar_label = 'Most Tie Breaks Won', wins_lose_column = 'Wins',
-                            percent_column = 'Percentage Wins Person', ties_series_person_column = 'Tie Breaks per Person',
-                            name_column = 'Name', series_column = 'Series', seat_column = 'Seat', n_series = 20)
-
-FSF.tie_break_person_series_plots(data_table = top_tie_break_count_losers_person, win_lose = 'lose', 
-                            plot_title = 'Tie Break Percentage Losses per Number for each Person', 
-                            bar_label = 'Most Tie Breaks Lost', wins_lose_column = 'Losses',
-                            percent_column = 'Percentage Losses Person', ties_series_person_column = 'Tie Breaks per Person',
-                            name_column = 'Name', series_column = 'Series', seat_column = 'Seat', n_series = 20)
-
-FSF.tie_break_person_series_plots(data_table = top_tie_break_count_winners_series, win_lose = 'win', 
-                            plot_title = 'Tie Break Percentage Wins per Number in each Series', 
-                            bar_label = 'Most Tie Breaks Won', wins_lose_column = 'Wins',
-                            percent_column = 'Percentage Wins Series', ties_series_person_column = 'Tie breaks per series',
-                            name_column = 'Name', series_column = 'Series', seat_column = 'Seat', n_series = 20)
-
-FSF.tie_break_person_series_plots(data_table = top_tie_break_count_losers_series, win_lose = 'lose', 
-                            plot_title = 'Tie Break Percentage Losses per Number in each Series', 
-                            bar_label = 'Most Tie Breaks Lost', wins_lose_column = 'Losses',
-                            percent_column = 'Percentage Losses Series', ties_series_person_column = 'Tie breaks per series',
-                            name_column = 'Name', series_column = 'Series', seat_column = 'Seat', n_series = 20)
+# fig.suptitle("Proportion of Times Contestents Won or Lost each Episode", fontsize = 18)
+# plt.xlabel('Proportion', fontsize=18)
+# plt.ylabel('')
+# ax1.tick_params(axis='x', labelsize=12)
+# ax2.tick_params(axis='x', labelsize=14)
+# plt.show()
 
 
+# FSF.tie_break_person_series_plots(data_table = top_tie_break_count_winners_person, win_lose = 'win', 
+#                             plot_title = 'Tie Break Percentage Wins per Number for each Person', 
+#                             bar_label = 'Most Tie Breaks Won', wins_lose_column = 'Wins',
+#                             percent_column = 'Percentage Wins Person', ties_series_person_column = 'Tie Breaks per Person',
+#                             name_column = 'Name', series_column = 'Series', seat_column = 'Seat', n_series = 20)
 
-fig = plt.subplots()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.1, right = 0.95)
+# FSF.tie_break_person_series_plots(data_table = top_tie_break_count_losers_person, win_lose = 'lose', 
+#                             plot_title = 'Tie Break Percentage Losses per Number for each Person', 
+#                             bar_label = 'Most Tie Breaks Lost', wins_lose_column = 'Losses',
+#                             percent_column = 'Percentage Losses Person', ties_series_person_column = 'Tie Breaks per Person',
+#                             name_column = 'Name', series_column = 'Series', seat_column = 'Seat', n_series = 20)
 
-plt.bar(x = seat_winners_totals['Numbers']-0.2, height = seat_winners_totals['Percentage Wins per Seat']*100, 
-        label = 'Percentage Tie Break Wins', width = 0.40, color = 'blue', alpha = 0.6, edgecolor ='black')
-plt.bar(x = seat_losers_totals['Numbers']+0.2, height = seat_losers_totals['Percentage Losses per Seat']*100, 
-        label = 'Percentage Tie Break Losses', width = 0.40, color = 'green', alpha = 0.6, edgecolor ='black')
+# FSF.tie_break_person_series_plots(data_table = top_tie_break_count_winners_series, win_lose = 'win', 
+#                             plot_title = 'Tie Break Percentage Wins per Number in each Series', 
+#                             bar_label = 'Most Tie Breaks Won', wins_lose_column = 'Wins',
+#                             percent_column = 'Percentage Wins Series', ties_series_person_column = 'Tie breaks per series',
+#                             name_column = 'Name', series_column = 'Series', seat_column = 'Seat', n_series = 20)
 
-
-for i in range(len(seat_winners_totals)):
-    win_per = seat_winners_totals['Percentage Wins per Seat'][i] * 100
-    los_per = seat_losers_totals['Percentage Losses per Seat'][i] * 100
-    plt.text(i+0.8, win_per + 2, f"{win_per:.1f}", ha='center', fontsize=15, color='blue')
-    plt.text(i+1.2, los_per + 2, f"{los_per:.1f}", ha='center', fontsize=15, color='green')
-
-plt.ylabel('Percentage', fontsize = 20)
-plt.yticks(fontsize = 16)
-plt.ylim(0, 70)
-plt.xticks(fontsize = 16)
-plt.xlabel('Seat Number', fontsize = 20)
-plt.title('Percentage Win or Lose Rate for each Seat when it comes to Tie Breakers', fontsize = 18)
-
-plt.legend(loc = 'best', fontsize = 15)
-plt.show()
+# FSF.tie_break_person_series_plots(data_table = top_tie_break_count_losers_series, win_lose = 'lose', 
+#                             plot_title = 'Tie Break Percentage Losses per Number in each Series', 
+#                             bar_label = 'Most Tie Breaks Lost', wins_lose_column = 'Losses',
+#                             percent_column = 'Percentage Losses Series', ties_series_person_column = 'Tie breaks per series',
+#                             name_column = 'Name', series_column = 'Series', seat_column = 'Seat', n_series = 20)
 
 
-fig = plt.subplots()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.1, right = 0.95)
 
-plt.bar(x = seat_winners_totals['Numbers']-0.2, height = seat_winners_totals['Wins'], 
-        label = 'Number Tie Break Wins', width = 0.40, color = 'blue', alpha = 0.6, edgecolor ='black')
-plt.bar(x = seat_losers_totals['Numbers']+0.2, height = seat_losers_totals['Losses'], 
-        label = 'Number Tie Break Losses', width = 0.40, color = 'green', alpha = 0.6, edgecolor ='black')
+# fig = plt.subplots()
+# plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.1, right = 0.95)
 
-for i in range(len(seat_winners_totals)):
-    plt.text(i+0.8, seat_winners_totals['Wins'][i] + 0.75, seat_winners_totals['Wins'][i], ha='center', fontsize=16, color='blue')
-    plt.text(i+1.2, seat_losers_totals['Losses'][i] + 0.75, seat_losers_totals['Losses'][i], ha='center', fontsize=16, color='green')
+# plt.bar(x = seat_winners_totals['Numbers']-0.2, height = seat_winners_totals['Percentage Wins per Seat']*100, 
+#         label = 'Percentage Tie Break Wins', width = 0.40, color = 'blue', alpha = 0.6, edgecolor ='black')
+# plt.bar(x = seat_losers_totals['Numbers']+0.2, height = seat_losers_totals['Percentage Losses per Seat']*100, 
+#         label = 'Percentage Tie Break Losses', width = 0.40, color = 'green', alpha = 0.6, edgecolor ='black')
 
-    plt.text(i+0.8, seat_winners_totals['Wins'][i] - 1, seat_winners_totals['Tie breaks per series'][i], ha='center', fontsize=16, color='white')
-    plt.text(i+1.2, seat_losers_totals['Losses'][i] - 1, seat_losers_totals['Tie breaks per series'][i], ha='center', fontsize=16, color='white')
 
-plt.ylabel('Count', fontsize = 20)
-plt.yticks(fontsize = 16)
-plt.ylim(0, 12)
-plt.xticks(fontsize = 16)
-plt.xlabel('Seat Number', fontsize = 20)
-plt.title('Number of Wins or Losses for each Seat when it comes to Tie Breakers', fontsize = 20)
+# for i in range(len(seat_winners_totals)):
+#     win_per = seat_winners_totals['Percentage Wins per Seat'][i] * 100
+#     los_per = seat_losers_totals['Percentage Losses per Seat'][i] * 100
+#     plt.text(i+0.8, win_per + 2, f"{win_per:.1f}", ha='center', fontsize=15, color='blue')
+#     plt.text(i+1.2, los_per + 2, f"{los_per:.1f}", ha='center', fontsize=15, color='green')
 
-plt.legend(loc = 'best', fontsize = 15)
-plt.show()
+# plt.ylabel('Percentage', fontsize = 20)
+# plt.yticks(fontsize = 16)
+# plt.ylim(0, 70)
+# plt.xticks(fontsize = 16)
+# plt.xlabel('Seat Number', fontsize = 20)
+# plt.title('Percentage Win or Lose Rate for each Seat when it comes to Tie Breakers', fontsize = 18)
+
+# plt.legend(loc = 'best', fontsize = 15)
+# plt.show()
+
+
+# fig = plt.subplots()
+# plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.1, right = 0.95)
+
+# plt.bar(x = seat_winners_totals['Numbers']-0.2, height = seat_winners_totals['Wins'], 
+#         label = 'Number Tie Break Wins', width = 0.40, color = 'blue', alpha = 0.6, edgecolor ='black')
+# plt.bar(x = seat_losers_totals['Numbers']+0.2, height = seat_losers_totals['Losses'], 
+#         label = 'Number Tie Break Losses', width = 0.40, color = 'green', alpha = 0.6, edgecolor ='black')
+
+# for i in range(len(seat_winners_totals)):
+#     plt.text(i+0.8, seat_winners_totals['Wins'][i] + 0.75, seat_winners_totals['Wins'][i], ha='center', fontsize=16, color='blue')
+#     plt.text(i+1.2, seat_losers_totals['Losses'][i] + 0.75, seat_losers_totals['Losses'][i], ha='center', fontsize=16, color='green')
+
+#     plt.text(i+0.8, seat_winners_totals['Wins'][i] - 1, seat_winners_totals['Tie breaks per series'][i], ha='center', fontsize=16, color='white')
+#     plt.text(i+1.2, seat_losers_totals['Losses'][i] - 1, seat_losers_totals['Tie breaks per series'][i], ha='center', fontsize=16, color='white')
+
+# plt.ylabel('Count', fontsize = 20)
+# plt.yticks(fontsize = 16)
+# plt.ylim(0, 12)
+# plt.xticks(fontsize = 16)
+# plt.xlabel('Seat Number', fontsize = 20)
+# plt.title('Number of Wins or Losses for each Seat when it comes to Tie Breakers', fontsize = 20)
+
+# plt.legend(loc = 'best', fontsize = 15)
+# plt.show()
