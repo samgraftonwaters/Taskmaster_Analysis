@@ -481,8 +481,8 @@ def tie_break_winners(tie_break_scores_names):
                                     how = 'left')
     
     # tie_break_count_winners['Tie breaks per series'] = tie_break_count_winners['Tie breaks per series'] - tie_break_count_winners['Double Losers']
-    #tie_break_count_winners['Tie Breaks per Person'] = tie_break_count_winners['Tie Breaks per Person'] - tie_break_count_winners['Double Losers']
-    # tie_break_count_winners['Wins'] = round((tie_break_count_winners["Wins"] - tie_break_count_winners["Double Losers"]),2)
+    tie_break_count_winners['Tie Breaks per Person'] = tie_break_count_winners['Tie Breaks per Person'] - tie_break_count_winners['Double Losers']
+    tie_break_count_winners['Wins'] = round((tie_break_count_winners["Wins"] - tie_break_count_winners["Double Losers"]),2)
 
     return(tie_break_count_winners)
 
@@ -517,8 +517,8 @@ def tie_break_losers(tie_break_scores_names):
                                     how = 'left')
     
     # tie_break_count_losers['Tie breaks per series'] = tie_break_count_losers['Tie breaks per series'] - tie_break_count_losers['Double Losers']
-    #tie_break_count_losers['Tie Breaks per Person'] = tie_break_count_losers['Tie Breaks per Person'] - tie_break_count_losers['Double Losers']
-    # tie_break_count_losers['Losses'] = round((tie_break_count_losers["Losses"] - tie_break_count_losers["Double Losers"]),2)
+    tie_break_count_losers['Tie Breaks per Person'] = tie_break_count_losers['Tie Breaks per Person'] - tie_break_count_losers['Double Losers']
+    tie_break_count_losers['Losses'] = round((tie_break_count_losers["Losses"] - tie_break_count_losers["Double Losers"]),2)
 
     return(tie_break_count_losers)
 
@@ -570,8 +570,8 @@ def tie_break_counts_win_lose(tie_break_count_winners_table, tie_break_count_los
     tie_break_count_winners = tie_break_count_winners_table.copy()
     tie_break_count_losers = tie_break_count_losers_table.copy()
 
-    tie_break_count_winners['Wins'] = tie_break_count_winners['Wins'] - tie_break_count_winners['Double Losers']
-    tie_break_count_losers['Losses'] = tie_break_count_losers['Losses'] - tie_break_count_losers['Double Losers']
+    #tie_break_count_winners['Wins'] = tie_break_count_winners['Wins'] - tie_break_count_winners['Double Losers']
+    #tie_break_count_losers['Losses'] = tie_break_count_losers['Losses'] - tie_break_count_losers['Double Losers']
 
     tie_break_count_winners['Percentage Wins Series'] = round((tie_break_count_winners["Wins"] / tie_break_count_winners['Tie breaks per series']),2)
     tie_break_count_losers['Percentage Losses Series'] = round((tie_break_count_losers["Losses"] / tie_break_count_losers['Tie breaks per series']),2)

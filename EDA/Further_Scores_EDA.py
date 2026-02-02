@@ -126,6 +126,8 @@ tie_break_count_winners_losers = FSF.tie_break_winners_losers(tie_break_count_wi
 
 print(tie_break_count_winners[(tie_break_count_winners['Name'] == 'Joe Lycett') | (tie_break_count_winners['Name'] == 'Lou Sanders')])
 print(tie_break_count_losers[(tie_break_count_losers['Name'] == 'Joe Lycett') | (tie_break_count_losers['Name'] == 'Lou Sanders')])
+print(tie_break_count_winners[(tie_break_count_winners['Series'] == 'S8') | (tie_break_count_winners['Series'] == 'S4')])
+print(tie_break_count_winners[(tie_break_count_winners['Series'] == 'S17') | (tie_break_count_winners['Series'] == 'S16')])
 print(tie_break_count_winners_losers[(tie_break_count_winners_losers['Name'] == 'Joe Lycett') | (tie_break_count_winners_losers['Name'] == 'Lou Sanders')])
 print('there')
 
