@@ -370,20 +370,38 @@ def tie_break_score_calcs(tie_break_scores_table, before_tie_total_table):
                         "Seat Loser": lost})
 
     tie_break_scores = pd.DataFrame(rows)
+    double_losers = pd.DataFrame(loser_doubles, columns = ['Series', 'Seat Counts'])
+    double_losers_grouped = double_losers.groupby('Series')['Seat Counts'].count()
+    print(double_losers.head(30))
+    print(double_losers_grouped)
 
-    double_losers = []
-    for two_losers in loser_doubles:
-        print(two_losers)
-        if len(two_losers[1]) > 1:            
+    multiple_losers = []
+    for i in range(len(loser_doubles)):
+        print(double_losers)
+        if len(double_losers['Seat Counts'][i]) > 1:            
             losers = 1 #np.where(tie_break_scores['Series'] == two_losers[0], 1, 0)
-            double_losers.append(losers)
+            multiple_losers.append(losers)
             print(losers)
         else:
             losers = 0 
-            double_losers.append(losers) 
+            multiple_losers.append(losers) 
             print(losers)
+    
+    print(multiple_losers)
+    double_losers = pd.concat([double_losers, pd.Series(multiple_losers)], axis = 1)
+    double_losers.columns = ['Series', 'Seat Count', 'Double Losers']
+    print(double_losers.head(30))
+
+    double_losers_grouped = double_losers.groupby('Series')['Double Losers'].sum().reset_index()
+    print(double_losers.head(30))
+    print(double_losers_grouped)
+
+    tie_break_scores = pd.merge(left = tie_break_scores, right = double_losers_grouped, 
+                                 on = 'Series', how = 'left')
+
+
         
-    tie_break_scores['Double Losers'] = double_losers
+    # tie_break_scores['Double Losers'] = double_losers
     
     print(tie_break_scores.head(20))
 
