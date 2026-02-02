@@ -114,7 +114,7 @@ tie_break_scores = FSF.tie_break_score_calcs(tie_break_scores_table = tie_break_
 tie_break_scores_names = FSF.merged_tie_scores_names(tie_break_scores = tie_break_scores , named_table = named_series_table_reformatted)
 
 print(tie_break_scores_names[(tie_break_scores_names['Series'] == 'S4') | (tie_break_scores_names['Series'] == 'S8')])
-print(tie_break_scores_names[(tie_break_scores_names['Series'] == 'S1') | (tie_break_scores_names['Series'] == 'S13')])
+print(tie_break_scores_names[(tie_break_scores_names['Series'] == 'S17') | (tie_break_scores_names['Series'] == 'S13')])
 print('here')
 
 tie_break_count_winners = FSF.tie_break_winners(tie_break_scores_names = tie_break_scores_names)
