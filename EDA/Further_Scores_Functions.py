@@ -518,7 +518,8 @@ def tie_break_winners(tie_break_scores_names):
             "Wins": "sum",
             "Tie Breaks per Person": "max"
         }))
-
+    print('\n multiple')
+    print(wins_multi_clean.head(40))
     # recombine
     tie_break_count_winners = pd.concat([wins_single, wins_multi_clean], ignore_index=True)
 
@@ -568,19 +569,44 @@ def tie_break_losers(tie_break_scores_names):
     tie_break_count_losers = pd.merge(left = tie_break_count_losers, right = count_names_counts, on = 'Name',
                                     how = 'left')
     
+    group_cols = ["Series", "Name", "Seat"]
+
+    # count rows per contestant
+    row_counts = tie_break_count_losers.groupby(group_cols).size()
+
+    # contestants with more than one row
+    multi_row_keys = row_counts[row_counts > 1].index
+
+    # split dataframe
+    losses_multi = tie_break_count_losers.set_index(group_cols).loc[multi_row_keys].reset_index()
+    losses_single = tie_break_count_losers.set_index(group_cols).drop(multi_row_keys, errors="ignore").reset_index()
+
+    # aggregate only multi-row contestants
+    losses_multi_clean = (
+        losses_multi
+        .groupby(group_cols, as_index=False)
+        .agg({
+            "Tie breaks per series": "max",
+            "Double Losers": "sum",
+            "Losses": "sum",
+            "Tie Breaks per Person": "max"
+        }))
+    print('\n multiple')
+    print(losses_multi_clean.head(40))
+    tie_break_count_losers = pd.concat([losses_single, losses_multi_clean], ignore_index=True)
     # tie_break_count_losers['Tie breaks per series'] = tie_break_count_losers['Tie breaks per series'] - tie_break_count_losers['Double Losers']
     #tie_break_count_losers['Tie Breaks per Person'] = tie_break_count_losers['Tie Breaks per Person'] - tie_break_count_losers['Double Losers']
     # tie_break_count_losers['Losses'] = round((tie_break_count_losers["Losses"] - tie_break_count_losers["Double Losers"]),2)
-    tie_break_count_losers = (tie_break_count_losers.groupby(["Series", "Name", "Seat"], as_index=False).agg({
-            "Tie breaks per series": "max",
-            "Double Losers": "sum",
-            # "Double Losers Series": "max",
-            "Losses": "sum",
-            "Tie Breaks per Person": "size"
-        }))
+    # tie_break_count_losers = (tie_break_count_losers.groupby(["Series", "Name", "Seat"], as_index=False).agg({
+    #         "Tie breaks per series": "max",
+    #         "Double Losers": "sum",
+    #         # "Double Losers Series": "max",
+    #         "Losses": "sum",
+    #         "Tie Breaks per Person": "size"
+    #     }))
     # tie_break_count_losers['Tie Breaks per Person'] = tie_break_count_losers['Tie Breaks per Person'] - tie_break_count_losers['Double Losers']
     # tie_break_count_losers['Losses'] = round((tie_break_count_losers["Losses"] - tie_break_count_losers["Double Losers"]),2)
-    
+    print(tie_break_count_losers.head(40))
     return(tie_break_count_losers)
 
 
