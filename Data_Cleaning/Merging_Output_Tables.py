@@ -74,7 +74,7 @@ tie_breaks = tie_breaks.rename(columns = {'Wins' : 'Tie Break Wins', 'Losses' : 
 #Removing columns from DQ, Gender/Age and Episode columns
 
 DQ_table = DQ_table.drop(['Series', 'Seat'], axis = 1)
-gender_age = gender_age.drop(['Series', 'Score', 'Seat', 'Position', 'Birth_Date', 'Age_at_First_Air', 'Series Number'], axis = 1)
+gender_age = gender_age.drop(['Series', 'Score', 'Seat', 'Position', 'Birth_Date', 'Age_at_First_Air'], axis = 1)
 gender_age = gender_age.rename(columns = {'Age_at_First_Air' : 'Age'})
 Episode_win_loss = Episode_win_loss.drop(['Series', 'Seat'], axis = 1)
 Episode_win_loss = Episode_win_loss.rename(columns = {'Wins' : 'Episode Wins', 'Losses' : 'Episode Losses', 
@@ -115,6 +115,8 @@ gender_age_eps = pd.merge(left = gender_age, right = Episode_win_loss, on = 'Nam
 merged_contestent_table = pd.merge(left = score_points, right = dq_tie, on = 'Name', how = 'left')
 merged_contestent_table = pd.merge(left = merged_contestent_table, right = gender_age_eps, on = 'Name', how = 'left')
 merged_contestent_table = pd.merge(left = merged_contestent_table, right = team_tasks, on = 'Name', how = 'left')
+
+merged_contestent_table = merged_contestent_table.sort_values(by = ['Series Number', 'Seat'], ascending = True).reset_index(drop = True)
 
 merged_contestent_table.to_csv(file_path + 'Full Contestent Table.csv', sep = ',', index = False, encoding="utf-8")
 print(merged_contestent_table)
