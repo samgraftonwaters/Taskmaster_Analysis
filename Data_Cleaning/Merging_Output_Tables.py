@@ -31,6 +31,7 @@ print(gender_age[gender_age['Series'] == 'S14'])
 print(tie_winners[tie_winners['Series'] == 'S14'])
 print(DQ_table[DQ_table['Series'] == 'S14'])
 
+
 tables = {"DQ_table": DQ_table, "Episode_win_loss": Episode_win_loss, "gender_age": gender_age, 
           "count_fives": count_fives, "most_fives": count_ones, "team_A": team_A, "team_B": team_B,
           "tie_losers": tie_losers, "tie_winners": tie_winners, "final_score_positions": final_score_positions, 
@@ -100,6 +101,7 @@ team_B = team_B.rename(columns = {'Number' : 'Number Team Tasks', 'Team B Total'
 team_B['Team of'] = 3
 team_tasks = pd.concat([team_A, team_B], axis = 0)
 
+
 print(merged_scores_table.head())
 print(count_fives_ones.head())
 print(tie_breaks.head())
@@ -117,7 +119,10 @@ merged_contestent_table = pd.merge(left = merged_contestent_table, right = gende
 merged_contestent_table = pd.merge(left = merged_contestent_table, right = team_tasks, on = 'Name', how = 'left')
 
 merged_contestent_table = merged_contestent_table.sort_values(by = ['Series Number', 'Seat'], ascending = True).reset_index(drop = True)
+merged_contestent_table = merged_contestent_table.fillna(0)
+print(merged_contestent_table.isna().sum())
 
-merged_contestent_table.to_csv(file_path + 'Full Contestent Table.csv', sep = ',', index = False, encoding="utf-8")
 print(merged_contestent_table)
 print(len(merged_contestent_table))
+
+merged_contestent_table.to_csv(file_path + 'Full Contestent Table.csv', sep = ',', index = False, encoding="utf-8")

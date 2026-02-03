@@ -9,7 +9,7 @@ plt.rcParams['figure.figsize'] = (13, 7)
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
 output_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
 
-team_table = pd.read_csv(file_path+'Teams.csv')
+team_table = pd.read_csv(file_path+'Teams.csv', encoding="utf-8")
 
 team_table = TTF.formatting_team_table(dataframe = team_table)
 
