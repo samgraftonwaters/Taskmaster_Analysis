@@ -8,6 +8,7 @@ plt.rcParams['figure.figsize'] = (13, 7)
 
 #Read in the data
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
+output_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
 
 episode_scores = pd.read_csv(file_path + 'Episode Wins and Losses.csv', encoding="utf-8")
 final_scores = pd.read_csv(file_path + 'Total Final Scores and Positions.csv', encoding="utf-8")
@@ -43,7 +44,7 @@ print('\n Merging Tables \n')
 final_scores_age_gender = GAF.merge_series_age_gender(series_table = final_scores, gender_table = gender_age_table, 
                         age_table = age_binned_table)
 
-final_scores_age_gender.to_csv(file_path + 'Gender_Age_Series_Scores.csv', index = False, sep = ',')
+final_scores_age_gender.to_csv(output_path + 'Gender_Age_Series_Scores.csv', index = False, sep = ',', encoding="utf-8")
 
 #Count number of gender and age groups per seat
 print('\n Seat Analysis \n')
