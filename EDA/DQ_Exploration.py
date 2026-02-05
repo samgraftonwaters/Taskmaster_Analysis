@@ -12,6 +12,7 @@ colours = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e
  '#7f7f7f', '#bcbd22', '#17becf']
 
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
+output_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
 
 named_series_table = pd.read_csv(file_path + 'seat_contestent_series_table.csv')
 series_tables = file_path + 'Taskmaster_Series_Scores.xlsx'
@@ -20,9 +21,9 @@ dq_table = DQF.count_DQ_all_contestents(file_path = file_path,
                                         table_name = 'Taskmaster_Series_Scores.xlsx', 
                                         number_series = 20)
 
-print(dq_table.head(20))
+dq_table.to_csv(output_path + 'DQ_Table.csv', sep = ',', index = False, encoding="utf-8")
 
-dq_table.to_csv(file_path + 'DQ_Table.csv', sep = ',', index = False)
+print(dq_table.head(20))
 
 #Bar charts for number of DQ per series and seats
 dq_sort = dq_table.sort_values(by = 'DQ', ascending=False).reset_index(drop = True)

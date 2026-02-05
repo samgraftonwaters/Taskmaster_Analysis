@@ -111,7 +111,7 @@ def dq_series_bar(datatable):
     """
 
     fig = plt.figure()
-    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.1)
+    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.1, right = 0.95)
 
     plt.hlines(datatable['Total DQ'].mean(), -0.4, 19.4, linestyle = '--', lw = 3, color = 'black', 
             label = f'Average = {datatable['Total DQ'].mean()}')
@@ -145,7 +145,7 @@ def dq_seat_bar(datatable):
     """
 
     fig = plt.figure()
-    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.05, top = 0.9, left = 0.1)
+    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.05, top = 0.9, left = 0.1, right = 0.95)
 
     plt.hlines(datatable['DQ'].mean(), -0.5, 5.5, linestyle = '--', lw = 3, color = 'black',
             label = f'Average = {datatable['DQ'].mean()}')

@@ -8,6 +8,7 @@ import Further_Scores_Functions as FSF
 plt.rcParams['figure.figsize'] = (13, 7)
 
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
+output_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
 
 scores_series_table = file_path + 'Taskmaster_Series_Scores_Cleaned.xlsx'
 
@@ -38,6 +39,14 @@ score_diff = pd.DataFrame(score_diff, columns = ['Difference', 'Series'])
 count_one = FSF.count_scores(dataframe = scores_series_table, score = 1)
 count_five = FSF.count_scores(dataframe = scores_series_table, score = 5)
 
+count_fives = FSF.point_counts(datatable = count_five, named_table = named_series_table_reformatted, 
+                           score_column_name = 'Number 5s Scored')
+count_ones = FSF.point_counts(datatable = count_one, named_table = named_series_table_reformatted, 
+                           score_column_name = 'Number 1s Scored')
+
+count_fives.to_csv(output_path + 'Number of Fives Scored.csv', sep = ',', index = False, encoding="utf-8")
+count_ones.to_csv(output_path + 'Number of Ones Scored.csv', sep = ',', index = False, encoding="utf-8")
+
 most_ones = FSF.most_least_scores(count_scores = count_one, named_table = named_series_table_reformatted, 
                                   score = 1, size = 'most')
 least_ones = FSF.most_least_scores(count_scores = count_one, named_table = named_series_table_reformatted, 
@@ -48,10 +57,10 @@ most_fives = FSF.most_least_scores(count_scores = count_five, named_table = name
 least_fives = FSF.most_least_scores(count_scores = count_five, named_table = named_series_table_reformatted, 
                                     score = 5, size = 'least')
 
-least_ones.to_csv(file_path + 'Least_Ones_Table.csv', sep = ',', index = False)
-most_ones.to_csv(file_path + 'Most_Ones_Table.csv', sep = ',', index = False)
-least_fives.to_csv(file_path + 'Least_Fives_Table.csv', sep = ',', index = False)
-most_fives.to_csv(file_path + 'Most_Fives_Table.csv', sep = ',', index = False)
+least_ones.to_csv(output_path + 'Least_Ones_Table.csv', sep = ',', index = False, encoding="utf-8")
+most_ones.to_csv(output_path + 'Most_Ones_Table.csv', sep = ',', index = False, encoding="utf-8")
+least_fives.to_csv(output_path + 'Least_Fives_Table.csv', sep = ',', index = False, encoding="utf-8")
+most_fives.to_csv(output_path + 'Most_Fives_Table.csv', sep = ',', index = False, encoding="utf-8")
 
 #Highest and lowest episode scores per seat
 
@@ -68,7 +77,7 @@ highest_ep_scores = FSF.high_low_ep_scores(data_table = episode_scores, named_ta
 episode_win_lose_results = FSF.episodes_win_lose(episode_scores_table = episode_scores,
                                                  named_table = named_series_table_reformatted)
 
-episode_win_lose_results.to_csv(file_path + 'Episode Wins and Losses.csv', sep = ',', index = False)
+episode_win_lose_results.to_csv(output_path + 'Episode Wins and Losses.csv', sep = ',', index = False, encoding="utf-8")
 
 most_eps_won_num = episode_win_lose_results[['Series', 'Seat', "Wins", 'Percentage_Won', 'Number_Episodes', 'Name']].sort_values(by = 'Wins', ascending = False).reset_index(drop = True)
 
@@ -94,15 +103,15 @@ print(most_eps_lost_percent.head(10))
 print(never_won.head(10))
 print(never_lost.head(20))
 
-most_eps_won_num.to_csv(file_path + 'Most Episodes Won.csv', sep = ',', index = False)
-most_eps_lost_num.to_csv(file_path + 'Most Episodes Lost.csv', sep = ',', index = False)
+most_eps_won_num.to_csv(output_path + 'Most Episodes Won.csv', sep = ',', index = False, encoding="utf-8")
+most_eps_lost_num.to_csv(output_path + 'Most Episodes Lost.csv', sep = ',', index = False, encoding="utf-8")
 
 ## Tie Breaks
 print('Tie Break Analysis\n\n\n')
 
 tie_break_scores = FSF.tie_break_score_calcs(tie_break_scores_table = tie_break_scores, before_tie_total_table = before_tie_total)
 
-tie_break_scores_names = FSF.merged_tie_scores_names(tie_break_scores = tie_break_scores , named_table = named_series_table_reformatted)
+tie_break_scores_names = FSF.merged_tie_scores_names(tie_break_scores = tie_break_scores, named_table = named_series_table_reformatted)
 
 tie_break_count_winners = FSF.tie_break_winners(tie_break_scores_names = tie_break_scores_names)
 
@@ -111,8 +120,8 @@ tie_break_count_losers = FSF.tie_break_losers(tie_break_scores_names = tie_break
 tie_break_count_winners_losers = FSF.tie_break_winners_losers(tie_break_count_winners = tie_break_count_winners,
                                                               tie_break_count_losers = tie_break_count_losers)
 
-tie_break_count_winners.to_csv(file_path + 'Tie_Break_Winners.csv', sep = ',', index = False)
-tie_break_count_losers.to_csv(file_path + 'Tie_Break_Losers.csv', sep = ',', index = False)
+tie_break_count_winners.to_csv(output_path + 'Tie_Break_Winners.csv', sep = ',', index = False, encoding="utf-8")
+tie_break_count_losers.to_csv(output_path + 'Tie_Break_Losers.csv', sep = ',', index = False, encoding="utf-8")
 
 (top_tie_break_count_winners, 
  top_tie_break_count_losers) = FSF.tie_break_counts_win_lose(tie_break_count_winners_table = tie_break_count_winners,
@@ -333,7 +342,7 @@ for i in range(len(seat_winners_totals)):
 
 plt.ylabel('Percentage', fontsize = 20)
 plt.yticks(fontsize = 16)
-plt.ylim(0, 70)
+plt.ylim(0, 80)
 plt.xticks(fontsize = 16)
 plt.xlabel('Seat Number', fontsize = 20)
 plt.title('Percentage Win or Lose Rate for each Seat when it comes to Tie Breakers', fontsize = 18)
