@@ -39,17 +39,39 @@ print(len(non_normal))
 print(normal)
 print(len(normal))
 
-for cols in non_normal:
-    plt.hist(data_nums[cols])
-    plt.title(f'{cols}', fontsize = 20)
-    plt.show()
+# for cols in non_normal:
+#     plt.hist(data_nums[cols])
+#     plt.title(f'{cols}', fontsize = 20)
+#     plt.show()
 
+# for cols in normal:
+#     plt.hist(data_nums[cols])
+#     plt.title(f'{cols}', fontsize = 20)
+#     plt.show()
 
-# correlations = data_nums.corr(method = 'pearson')
-# print(correlations)
+correlations = data_nums.corr(method = 'spearman')
+print(correlations)
+print(correlations.columns)
 
-# correlations = data_nums.corr(method = 'spearman')
-# print(correlations)
+print(correlations.stack())
+
+high_corr = (
+    correlations.where(np.triu(np.ones(correlations.shape), k=1).astype(bool))  # keep upper triangle only
+    .stack()                                                 # convert to pairs
+    .reset_index()
+)
+
+print(np.ones(correlations.shape))
+print(np.triu(np.ones(correlations.shape), k=0))
+
+print(correlations.where(np.triu(np.ones(correlations.shape), k=1).astype(bool)))
+
+print(high_corr)
+
+high_corr.columns = ['var_1', 'var_2', 'correlation']
+
+result = high_corr[high_corr['correlation'].abs() > 0.7]
+
 
 # sns.scatterplot(x = DQE.final_positions_dq['Avg_Task_Score'], y = DQE.final_positions_dq['Total Score'], 
 #                 hue = DQE.final_positions_dq['Position'], size = DQE.final_positions_dq['Seat'])
