@@ -72,6 +72,43 @@ result_low = high_corr[(high_corr['correlation'].abs() <= 0.7) & ((high_corr['co
 
 print(result_low)
 print(len(result_low))
+
+result_high_var1 = result_high['var_1'].unique()
+result_high_var2 = result_high['var_2'].unique()
+
+result_high_var1 = []
+result_high_var2 = []
+
+for num, i in enumerate(np.array(result_high['var_1'].unique())):
+    result_high_var1.append([num, i])
+for num, j in enumerate(np.array(result_high['var_2'].unique())):
+    result_high_var2.append([num, j])
+
+result_high_var1 = pd.DataFrame(np.vstack(result_high_var1), columns = ['x_axis', 'var_1'])
+result_high_var2 = pd.DataFrame(np.vstack(result_high_var2), columns = ['y_axis', 'var_2'])
+
+result_high = pd.merge(result_high, result_high_var1, on = 'var_1', how = 'left')
+result_high = pd.merge(result_high, result_high_var2, on = 'var_2', how = 'left')
+result_high['x_axis'] = result_high['x_axis'].astype(int)
+result_high['y_axis'] = result_high['y_axis'].astype(int)
+
+var1_labels = result_high['var_1'].str.replace(' ', '\n').str.replace('_', '\n')
+print(var1_labels)
+
+print(result_high.info())
+print(result_high)
+
+plt.figure()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.15, top = 0.92, left = 0.2, right = 0.98)
+for i in range(len(result_high)):
+    plt.text(result_high.iloc[i]['x_axis']-0.2, result_high.iloc[i]['y_axis'], 
+             f"{result_high.iloc[i]['correlation']:.2f}", fontsize = 15)
+plt.xlim(-0.5, 10)
+plt.ylim(-0.5, 12)
+plt.xticks(result_high['x_axis'], var1_labels, fontsize = 12)
+plt.yticks(result_high['y_axis'], result_high['var_2'], fontsize = 12)
+plt.show()
+
 # sns.scatterplot(x = DQE.final_positions_dq['Avg_Task_Score'], y = DQE.final_positions_dq['Total Score'], 
 #                 hue = DQE.final_positions_dq['Position'], size = DQE.final_positions_dq['Seat'])
 # plt.xticks(fontsize = 14)
