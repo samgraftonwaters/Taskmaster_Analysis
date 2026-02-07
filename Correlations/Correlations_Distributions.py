@@ -61,18 +61,17 @@ high_corr = (
     .reset_index()
 )
 
-print(np.ones(correlations.shape))
-print(np.triu(np.ones(correlations.shape), k=0))
-
-print(correlations.where(np.triu(np.ones(correlations.shape), k=1).astype(bool)))
-
-print(high_corr)
-
 high_corr.columns = ['var_1', 'var_2', 'correlation']
 
-result = high_corr[high_corr['correlation'].abs() > 0.7]
+result_high = high_corr[high_corr['correlation'].abs() > 0.7]
 
+print(result_high)
+print(len(result_high))
 
+result_low = high_corr[(high_corr['correlation'].abs() <= 0.7) & ((high_corr['correlation'].abs() > 0.4))]
+
+print(result_low)
+print(len(result_low))
 # sns.scatterplot(x = DQE.final_positions_dq['Avg_Task_Score'], y = DQE.final_positions_dq['Total Score'], 
 #                 hue = DQE.final_positions_dq['Position'], size = DQE.final_positions_dq['Seat'])
 # plt.xticks(fontsize = 14)
