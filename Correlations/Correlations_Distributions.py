@@ -18,11 +18,13 @@ input_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Out
 
 data = pd.read_csv(input_path + 'Full Contestent Table.csv')
 data = data.rename(columns = {'DQ' : 'Disqualifications'})
+data.columns = data.columns.str.replace('_', ' ')
 
 print(data.head())
 print(data.info())
 
 data_nums = data.select_dtypes(include=[float, int])
+data_nums = data_nums.drop(['Team of'], axis = 1)
 
 columns = data_nums.columns
 
@@ -76,8 +78,8 @@ result_high_var2 = CF.axis_values_for_variables(data_table = result_high, variab
 result_high = pd.merge(result_high, result_high_var1, on = 'var_1', how = 'left')
 result_high = pd.merge(result_high, result_high_var2, on = 'var_2', how = 'left')
 
-
-var1_labels_high = result_high['var_1'].str.replace(' ', '\n').str.replace('_', '\n')
+var1_labels_high = result_high['var_1'].str.replace(' ', '\n').str.replace('Percentage', '%').str.replace(' per ', ' ')
+result_high['var_2'] = result_high['var_2'].str.replace('Percentage', '%').str.replace(' per ', ' ')
 print(var1_labels_high)
 
 print(result_high.info())
@@ -107,7 +109,8 @@ result_low = pd.merge(result_low, result_low_var1, on = 'var_1', how = 'left')
 result_low = pd.merge(result_low, result_low_var2, on = 'var_2', how = 'left')
 
 
-var1_labels_low = result_low['var_1'].str.replace(' ', '\n').str.replace('_', '\n')
+var1_labels_low = result_low['var_1'].str.replace(' ', '\n').str.replace('Percentage', '%').str.replace(' per ', ' ')
+result_low['var_2'] = result_low['var_2'].str.replace('Percentage', '%').str.replace(' per ', ' ')
 print(var1_labels_low)
 
 print(result_low.info())
@@ -119,7 +122,7 @@ print(result_low)
 
 CF.correlation_compare_plot(data_table = result_low, xaxis_column = 'x_axis', yaxis_column = 'y_axis',
                             correlation_column = 'correlation', var1_labels = var1_labels_low, 
-                            var2_column = 'var_2', title = 'lowest Correlated Variables (corr > 0.7)',
+                            var2_column = 'var_2', title = 'Medium Correlated Variables (0.4 < corr < 0.7)',
                             cmap = cmap, norm = norm)
 
 

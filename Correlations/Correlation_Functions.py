@@ -58,26 +58,26 @@ def set_correlation_colours(data_table, corr_column : str, limits : int):
 def correlation_compare_colourbad(fig, ax, cmap, norm):
     sm = ScalarMappable(cmap=cmap, norm=norm)
     sm.set_array([])
-    cbar = fig.colorbar(sm, ax=ax, label="Correlation")
-    cbar.set_label("Correlation", fontsize=14)
-    cbar.ax.tick_params(labelsize=12)
+    cbar = fig.colorbar(sm, ax=ax, pad=0.01)
+    # cbar.set_label("Correlation", fontsize=12)
+    cbar.ax.tick_params(labelsize=10)
 
 def correlation_compare_plot(data_table, xaxis_column : str, yaxis_column : str, correlation_column : str,
                              var1_labels, var2_column : str, title : str, cmap, norm ):
 
     fig, ax = plt.subplots()
-    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.15, top = 0.92, left = 0.2, right = 0.98)
+    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.13, top = 0.94, left = 0.17, right = 1.05)
     for i in range(len(data_table)):
         text = plt.text(data_table.iloc[i][xaxis_column], data_table.iloc[i][yaxis_column], 
-                f"{data_table.iloc[i][correlation_column]:.2f}", fontsize = 15,
+                f"{data_table.iloc[i][correlation_column]:.2f}", fontsize = 13,
                 ha="center", va="center", color="white",
                 bbox=dict(boxstyle="round,pad=0.3",
                     fc=data_table.iloc[i]["colour"],
                     ec="black",
                     lw=0.7,
                     alpha=0.9))
-    plt.xlim(-0.5, 9.5)
-    plt.ylim(-0.5, 11.5)
+    plt.xlim(-0.5, data_table[xaxis_column].max() + 0.5)
+    plt.ylim(-0.5, data_table[yaxis_column].max() + 0.5)
     plt.xticks(data_table[xaxis_column], var1_labels, fontsize = 12)
     plt.yticks(data_table[yaxis_column], data_table[var2_column], fontsize = 12)
     plt.title(title, fontsize = 20)
