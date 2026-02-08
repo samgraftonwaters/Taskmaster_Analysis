@@ -3,6 +3,8 @@ import numpy as np
 from scipy import stats
 
 import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
+from matplotlib.cm import ScalarMappable
 import seaborn as sns
 
 plt.rcParams['figure.figsize'] = (13, 7)
@@ -13,6 +15,7 @@ colours = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e
 input_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
 
 data = pd.read_csv(input_path + 'Full Contestent Table.csv')
+data = data.rename(columns = {'DQ' : 'Disqualifications'})
 
 print(data.head())
 print(data.info())
@@ -98,15 +101,42 @@ print(var1_labels)
 print(result_high.info())
 print(result_high)
 
-plt.figure()
+high_colour = result_high["correlation"]
+
+# center the colormap at 0
+norm = mcolors.TwoSlopeNorm(vmin=-1, vcenter=0, vmax=1)
+
+# choose a diverging colormap
+cmap = plt.cm.coolwarm
+
+# map correlations to RGBA colors
+result_high["color"] = high_colour.apply(lambda x: cmap(norm(x)))
+
+print(result_high)
+
+fig, ax = plt.subplots()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.15, top = 0.92, left = 0.2, right = 0.98)
 for i in range(len(result_high)):
-    plt.text(result_high.iloc[i]['x_axis']-0.2, result_high.iloc[i]['y_axis'], 
-             f"{result_high.iloc[i]['correlation']:.2f}", fontsize = 15)
-plt.xlim(-0.5, 10)
-plt.ylim(-0.5, 12)
+    text = plt.text(result_high.iloc[i]['x_axis'], result_high.iloc[i]['y_axis'], 
+             f"{result_high.iloc[i]['correlation']:.2f}", fontsize = 15,
+               ha="center", va="center", color="white",
+               bbox=dict(boxstyle="round,pad=0.3",
+                fc=result_high.iloc[i]["color"],
+                ec="black",
+                lw=0.7,
+                alpha=0.9))
+plt.xlim(-0.5, 9.5)
+plt.ylim(-0.5, 11.5)
 plt.xticks(result_high['x_axis'], var1_labels, fontsize = 12)
 plt.yticks(result_high['y_axis'], result_high['var_2'], fontsize = 12)
+plt.title('Highest Correlated Variables (corr > 0.7)', fontsize = 20)
+plt.grid(True, linestyle="--", alpha=0.3)
+#colour bar
+sm = ScalarMappable(cmap=cmap, norm=norm)
+sm.set_array([])
+cbar = fig.colorbar(sm, ax=ax, label="Correlation")
+cbar.set_label("Correlation", fontsize=14)
+cbar.ax.tick_params(labelsize=12)
 plt.show()
 
 # sns.scatterplot(x = DQE.final_positions_dq['Avg_Task_Score'], y = DQE.final_positions_dq['Total Score'], 
