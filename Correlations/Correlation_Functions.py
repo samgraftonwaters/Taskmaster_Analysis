@@ -21,7 +21,7 @@ def group_corr_variables(correlations):
 def set_corr_thresholds(corr_data, range : bool, threshold : int | list):
 
     if range == True:
-        result = corr_data[(corr_data['correlation'].abs() <= threshold[0]) & ((corr_data['correlation'].abs() > threshold[1]))]
+        result = corr_data[((corr_data['correlation'].abs() > threshold[0])) & (corr_data['correlation'].abs() <= threshold[1])]
 
     if range == False:
         result = corr_data[corr_data['correlation'].abs() > threshold]

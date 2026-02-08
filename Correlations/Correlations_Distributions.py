@@ -68,13 +68,6 @@ result_high = CF.set_corr_thresholds(corr_data = grouped_variables, range = Fals
 print(result_high)
 print(len(result_high))
 
-result_low = CF.set_corr_thresholds(corr_data = grouped_variables, range = True, threshold = [0.4, 0.7])
-
-print(result_low)
-print(len(result_low))
-
-
-
 result_high_var1 = CF.axis_values_for_variables(data_table = result_high, variable_column = 'var_1',
                                              axis_column = 'x_axis')
 result_high_var2 = CF.axis_values_for_variables(data_table = result_high, variable_column = 'var_2',
@@ -99,6 +92,11 @@ CF.correlation_compare_plot(data_table = result_high, xaxis_column = 'x_axis', y
                             var2_column = 'var_2', title = 'Highest Correlated Variables (corr > 0.7)',
                             cmap = cmap, norm = norm)
 
+result_low = CF.set_corr_thresholds(corr_data = grouped_variables, range = True, threshold = [0.4, 0.7])
+
+
+print(result_low)
+print(len(result_low))
 
 result_low_var1 = CF.axis_values_for_variables(data_table = result_low, variable_column = 'var_1',
                                              axis_column = 'x_axis')
@@ -115,7 +113,7 @@ print(var1_labels_low)
 print(result_low.info())
 print(result_low)
 
-result_low, cmap, norm = CF.set_correlation_colours(data_table = result_low, corr_column = 'correlation', limits = 1)
+result_low, cmap, norm = CF.set_correlation_colours(data_table = result_low, corr_column = 'correlation', limits = 0.7)
 
 print(result_low)
 
