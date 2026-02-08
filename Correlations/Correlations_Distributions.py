@@ -7,6 +7,8 @@ import matplotlib.colors as mcolors
 from matplotlib.cm import ScalarMappable
 import seaborn as sns
 
+import Correlation_Functions as CF
+
 plt.rcParams['figure.figsize'] = (13, 7)
 
 colours = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2',
@@ -56,88 +58,73 @@ correlations = data_nums.corr(method = 'spearman')
 print(correlations)
 print(correlations.columns)
 
-print(correlations.stack())
 
-high_corr = (
-    correlations.where(np.triu(np.ones(correlations.shape), k=1).astype(bool))  # keep upper triangle only
-    .stack()                                                 # convert to pairs
-    .reset_index()
-)
 
-high_corr.columns = ['var_1', 'var_2', 'correlation']
+grouped_variables = CF.group_corr_variables(correlations = correlations)
 
-result_high = high_corr[high_corr['correlation'].abs() > 0.7]
+
+result_high = CF.set_corr_thresholds(corr_data = grouped_variables, range = False, threshold = 0.7)
 
 print(result_high)
 print(len(result_high))
 
-result_low = high_corr[(high_corr['correlation'].abs() <= 0.7) & ((high_corr['correlation'].abs() > 0.4))]
+result_low = CF.set_corr_thresholds(corr_data = grouped_variables, range = True, threshold = [0.4, 0.7])
 
 print(result_low)
 print(len(result_low))
 
-result_high_var1 = result_high['var_1'].unique()
-result_high_var2 = result_high['var_2'].unique()
 
-result_high_var1 = []
-result_high_var2 = []
 
-for num, i in enumerate(np.array(result_high['var_1'].unique())):
-    result_high_var1.append([num, i])
-for num, j in enumerate(np.array(result_high['var_2'].unique())):
-    result_high_var2.append([num, j])
-
-result_high_var1 = pd.DataFrame(np.vstack(result_high_var1), columns = ['x_axis', 'var_1'])
-result_high_var2 = pd.DataFrame(np.vstack(result_high_var2), columns = ['y_axis', 'var_2'])
+result_high_var1 = CF.axis_values_for_variables(data_table = result_high, variable_column = 'var_1',
+                                             axis_column = 'x_axis')
+result_high_var2 = CF.axis_values_for_variables(data_table = result_high, variable_column = 'var_2',
+                                             axis_column = 'y_axis')
 
 result_high = pd.merge(result_high, result_high_var1, on = 'var_1', how = 'left')
 result_high = pd.merge(result_high, result_high_var2, on = 'var_2', how = 'left')
-result_high['x_axis'] = result_high['x_axis'].astype(int)
-result_high['y_axis'] = result_high['y_axis'].astype(int)
 
-var1_labels = result_high['var_1'].str.replace(' ', '\n').str.replace('_', '\n')
-print(var1_labels)
+
+var1_labels_high = result_high['var_1'].str.replace(' ', '\n').str.replace('_', '\n')
+print(var1_labels_high)
 
 print(result_high.info())
 print(result_high)
 
-high_colour = result_high["correlation"]
-
-# center the colormap at 0
-norm = mcolors.TwoSlopeNorm(vmin=-1, vcenter=0, vmax=1)
-
-# choose a diverging colormap
-cmap = plt.cm.coolwarm
-
-# map correlations to RGBA colors
-result_high["color"] = high_colour.apply(lambda x: cmap(norm(x)))
+result_high, cmap, norm = CF.set_correlation_colours(data_table = result_high, corr_column = 'correlation', limits = 1)
 
 print(result_high)
 
-fig, ax = plt.subplots()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.15, top = 0.92, left = 0.2, right = 0.98)
-for i in range(len(result_high)):
-    text = plt.text(result_high.iloc[i]['x_axis'], result_high.iloc[i]['y_axis'], 
-             f"{result_high.iloc[i]['correlation']:.2f}", fontsize = 15,
-               ha="center", va="center", color="white",
-               bbox=dict(boxstyle="round,pad=0.3",
-                fc=result_high.iloc[i]["color"],
-                ec="black",
-                lw=0.7,
-                alpha=0.9))
-plt.xlim(-0.5, 9.5)
-plt.ylim(-0.5, 11.5)
-plt.xticks(result_high['x_axis'], var1_labels, fontsize = 12)
-plt.yticks(result_high['y_axis'], result_high['var_2'], fontsize = 12)
-plt.title('Highest Correlated Variables (corr > 0.7)', fontsize = 20)
-plt.grid(True, linestyle="--", alpha=0.3)
-#colour bar
-sm = ScalarMappable(cmap=cmap, norm=norm)
-sm.set_array([])
-cbar = fig.colorbar(sm, ax=ax, label="Correlation")
-cbar.set_label("Correlation", fontsize=14)
-cbar.ax.tick_params(labelsize=12)
-plt.show()
+CF.correlation_compare_plot(data_table = result_high, xaxis_column = 'x_axis', yaxis_column = 'y_axis',
+                            correlation_column = 'correlation', var1_labels = var1_labels_high, 
+                            var2_column = 'var_2', title = 'Highest Correlated Variables (corr > 0.7)',
+                            cmap = cmap, norm = norm)
+
+
+result_low_var1 = CF.axis_values_for_variables(data_table = result_low, variable_column = 'var_1',
+                                             axis_column = 'x_axis')
+result_low_var2 = CF.axis_values_for_variables(data_table = result_low, variable_column = 'var_2',
+                                             axis_column = 'y_axis')
+
+result_low = pd.merge(result_low, result_low_var1, on = 'var_1', how = 'left')
+result_low = pd.merge(result_low, result_low_var2, on = 'var_2', how = 'left')
+
+
+var1_labels_low = result_low['var_1'].str.replace(' ', '\n').str.replace('_', '\n')
+print(var1_labels_low)
+
+print(result_low.info())
+print(result_low)
+
+result_low, cmap, norm = CF.set_correlation_colours(data_table = result_low, corr_column = 'correlation', limits = 1)
+
+print(result_low)
+
+CF.correlation_compare_plot(data_table = result_low, xaxis_column = 'x_axis', yaxis_column = 'y_axis',
+                            correlation_column = 'correlation', var1_labels = var1_labels_low, 
+                            var2_column = 'var_2', title = 'lowest Correlated Variables (corr > 0.7)',
+                            cmap = cmap, norm = norm)
+
+
 
 # sns.scatterplot(x = DQE.final_positions_dq['Avg_Task_Score'], y = DQE.final_positions_dq['Total Score'], 
 #                 hue = DQE.final_positions_dq['Position'], size = DQE.final_positions_dq['Seat'])

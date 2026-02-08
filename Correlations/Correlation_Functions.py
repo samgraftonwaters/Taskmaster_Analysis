@@ -1,0 +1,87 @@
+import pandas as pd
+import numpy as np
+from scipy import stats
+
+import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
+from matplotlib.cm import ScalarMappable
+import seaborn as sns
+
+def group_corr_variables(correlations):
+    corr = (
+        correlations.where(np.triu(np.ones(correlations.shape), k=1).astype(bool))  # keep upper triangle only
+        .stack()                                                 # convert to pairs
+        .reset_index()
+    )
+
+    corr.columns = ['var_1', 'var_2', 'correlation']
+
+    return(corr)
+
+def set_corr_thresholds(corr_data, range : bool, threshold : int | list):
+
+    if range == True:
+        result = corr_data[(corr_data['correlation'].abs() <= threshold[0]) & ((corr_data['correlation'].abs() > threshold[1]))]
+
+    if range == False:
+        result = corr_data[corr_data['correlation'].abs() > threshold]
+
+    return(result)
+
+
+def axis_values_for_variables(data_table, variable_column : str, axis_column : str):
+
+    result = []
+
+    for num, i in enumerate(np.array(data_table[variable_column].unique())):
+        result.append([num, i])
+
+    result = pd.DataFrame(np.vstack(result), columns = [axis_column, variable_column])
+    result[axis_column] = result[axis_column].astype(int)
+
+    return(result)
+
+def set_correlation_colours(data_table, corr_column : str, limits : int):
+    colour = data_table[corr_column]
+
+    # center the colormap at 0
+    norm = mcolors.TwoSlopeNorm(vmin=-limits, vcenter=0, vmax=limits)
+
+    # choose a diverging colormap
+    cmap = plt.cm.coolwarm
+
+    # map correlations to RGBA colors
+    data_table["colour"] = colour.apply(lambda x: cmap(norm(x)))
+
+    return(data_table, cmap, norm)
+
+def correlation_compare_colourbad(fig, ax, cmap, norm):
+    sm = ScalarMappable(cmap=cmap, norm=norm)
+    sm.set_array([])
+    cbar = fig.colorbar(sm, ax=ax, label="Correlation")
+    cbar.set_label("Correlation", fontsize=14)
+    cbar.ax.tick_params(labelsize=12)
+
+def correlation_compare_plot(data_table, xaxis_column : str, yaxis_column : str, correlation_column : str,
+                             var1_labels, var2_column : str, title : str, cmap, norm ):
+
+    fig, ax = plt.subplots()
+    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.15, top = 0.92, left = 0.2, right = 0.98)
+    for i in range(len(data_table)):
+        text = plt.text(data_table.iloc[i][xaxis_column], data_table.iloc[i][yaxis_column], 
+                f"{data_table.iloc[i][correlation_column]:.2f}", fontsize = 15,
+                ha="center", va="center", color="white",
+                bbox=dict(boxstyle="round,pad=0.3",
+                    fc=data_table.iloc[i]["colour"],
+                    ec="black",
+                    lw=0.7,
+                    alpha=0.9))
+    plt.xlim(-0.5, 9.5)
+    plt.ylim(-0.5, 11.5)
+    plt.xticks(data_table[xaxis_column], var1_labels, fontsize = 12)
+    plt.yticks(data_table[yaxis_column], data_table[var2_column], fontsize = 12)
+    plt.title(title, fontsize = 20)
+    plt.grid(True, linestyle="--", alpha=0.3)
+    #colour bar
+    correlation_compare_colourbad(fig = fig, ax = ax, cmap = cmap, norm = norm)
+    plt.show()
