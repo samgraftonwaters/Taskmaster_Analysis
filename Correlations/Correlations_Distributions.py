@@ -78,17 +78,37 @@ CF.correlation_compare_plot(data_table = result_low, xaxis_column = 'x_axis', ya
 
 
 
-# sns.scatterplot(x = DQE.final_positions_dq['Avg_Task_Score'], y = DQE.final_positions_dq['Total Score'], 
-#                 hue = DQE.final_positions_dq['Position'], size = DQE.final_positions_dq['Seat'])
-# plt.xticks(fontsize = 14)
-# plt.yticks(fontsize = 14)
-# plt.xlabel('Avgerage Score per Number of Tasks', fontsize = 15)
-# plt.ylabel('Total Score', fontsize = 15)
-# plt.legend(loc = 'lower right', ncol = 2, fontsize = 14)
-# plt.show()
+sns.scatterplot(x = data['Avg Score per Tasks'], y = data['Score'], 
+                hue = data['Position'], size = data['Seat'])
+sns.regplot(x = data['Avg Score per Tasks'], y = data['Score'])
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.xlabel('Avgerage Score per Number of Tasks', fontsize = 15)
+plt.ylabel('Total Score', fontsize = 15)
+plt.legend(loc = 'lower right', ncol = 2, fontsize = 14)
+plt.show()
 
-# sns.scatterplot(x = DQE.final_positions_dq['DQ'], y = DQE.final_positions_dq['Total Score'], 
-#                 hue = DQE.final_positions_dq['Position'], size = DQE.final_positions_dq['Seat'])
+score_above_115 = data[data['Score'] > 115][['Score', 'Avg Score per Tasks']]
+score_below_115 = data[data['Score'] <= 115][['Score', 'Avg Score per Tasks']]
+
+above_115_corr = score_above_115.corr()
+below_115_corr = score_below_115.corr()
+
+print(above_115_corr)
+print(below_115_corr)
+
+sns.regplot(x = score_above_115['Avg Score per Tasks'], y = score_above_115['Score'])
+sns.regplot(x = score_below_115['Avg Score per Tasks'], y = score_below_115['Score'])
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.xlabel('Avgerage Score per Number of Tasks', fontsize = 15)
+plt.ylabel('Total Score', fontsize = 15)
+plt.legend(loc = 'lower right', ncol = 2, fontsize = 14)
+plt.show()
+
+
+# sns.scatterplot(x = data['Disqualifications'], y = data['Score'], 
+#                 hue = data['Position'], size = data['Seat'])
 # plt.xticks(fontsize = 14)
 # plt.yticks(fontsize = 14)
 # plt.xlabel('Number of Disqualifications', fontsize = 15)
@@ -96,8 +116,8 @@ CF.correlation_compare_plot(data_table = result_low, xaxis_column = 'x_axis', ya
 # plt.legend(loc = 'lower right', ncol = 2, fontsize = 14)
 # plt.show()
 
-# sns.scatterplot(x = DQE.final_positions_dq['DQ'], y = DQE.final_positions_dq['Position'], 
-#                 hue = DQE.final_positions_dq['Total Score'], size = DQE.final_positions_dq['Seat'])
+# sns.scatterplot(x = data['Disqualifications'], y = data['Position'], 
+#                 hue = data['Score'], size = data['Seat'])
 # plt.xticks(fontsize = 14)
 # plt.yticks(ticks = [5, 4, 3, 2, 1], labels = ['5th', '4th', '3rd', '2nd', '1st'], fontsize = 14)
 # plt.gca().invert_yaxis()
