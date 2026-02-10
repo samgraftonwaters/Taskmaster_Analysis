@@ -7,6 +7,29 @@ import matplotlib.colors as mcolors
 from matplotlib.cm import ScalarMappable
 import seaborn as sns
 
+def normal_variables(data_table):
+    columns = data_table.columns
+
+    non_normal = []
+    normal = []
+
+    for cols in columns:
+        norm = stats.normaltest(data_table[cols])
+        if norm.pvalue < 0.01:
+            non_normal.append(cols)
+            print(f'{cols} p-value = {norm.pvalue}')
+        else:
+            normal.append(cols)
+            print(f'{cols} p-value = {norm.pvalue}')
+
+    print(non_normal)
+    print(len(non_normal))
+
+    print(normal)
+    print(len(normal))
+
+    return(normal, non_normal)
+
 def group_corr_variables(correlations):
     corr = (
         correlations.where(np.triu(np.ones(correlations.shape), k=1).astype(bool))  # keep upper triangle only
