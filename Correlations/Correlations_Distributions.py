@@ -43,6 +43,7 @@ result_high_var2 = CF.axis_values_for_variables(data_table = result_high, variab
 
 result_high = pd.merge(result_high, result_high_var1, on = 'var_1', how = 'left')
 result_high = pd.merge(result_high, result_high_var2, on = 'var_2', how = 'left')
+result_high_corrs = result_high.copy()
 
 var1_labels_high = result_high['var_1'].str.replace(' ', '\n').str.replace('Percentage', '%').str.replace(' per ', ' ')
 result_high['var_2'] = result_high['var_2'].str.replace('Percentage', '%').str.replace(' per ', ' ')
@@ -106,6 +107,33 @@ plt.ylabel('Total Score', fontsize = 15)
 plt.legend(loc = 'lower right', ncol = 2, fontsize = 14)
 plt.show()
 
+# data.columns = data.columns.str.replace('Percentage', '%')
+# data = data.rename(columns = {'Avg Score per Episodes' : 'Avg Score Episodes',
+#                               'Avg Score per Tasks' : 'Avg Score Tasks',
+#                               'Tie Breaks per series' : 'Tie Breaks series'})
+data.columns = data.columns.str.replace('Percentage', '%').str.replace(' per ', ' ')
+result_high_corrs['var_1'] = result_high_corrs['var_1'].str.replace('Percentage', '%').str.replace(' per ', ' ')
+result_high_corrs['var_2'] = result_high_corrs['var_2'].str.replace('Percentage', '%').str.replace(' per ', ' ')
+
+print(result_high)
+
+fig, axes = plt.subplots(nrows = 4, ncols = 4)
+plt.subplots_adjust(wspace=0.28, hspace=0.35, bottom = 0.08, top = 0.98, left = 0.05, right = 0.95)
+
+for row, ax in enumerate(axes.flatten()):
+
+    ax.scatter(data[result_high_corrs['var_1'][row]], data[result_high_corrs['var_2'][row]]) 
+    ax.plot([], [], color = 'white', label = f"{round(result_high_corrs['correlation'][row],2)}")
+    ax.set_xlabel(result_high_corrs['var_1'][row])
+    ax.set_ylabel(result_high_corrs['var_2'][row])
+    ax.legend(frameon=False, loc = 'best')
+plt.show()
+    # sns.scatterplot(x = data[result_high['var_1']][row], y = data[result_high['var_2']][row])
+    # plt.xticks(fontsize = 14)
+    # plt.yticks(fontsize = 14)
+    # plt.xlabel(str(result_high['var_1'][row]), fontsize = 15)
+    # plt.ylabel(str(result_high['var_2'][row]), fontsize = 15)
+    # plt.show()
 
 # sns.scatterplot(x = data['Disqualifications'], y = data['Score'], 
 #                 hue = data['Position'], size = data['Seat'])
