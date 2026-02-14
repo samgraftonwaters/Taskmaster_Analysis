@@ -115,7 +115,7 @@ result_high_corrs['var_2'] = result_high_corrs['var_2'].str.replace('Percentage'
 result_high_corrs = result_high_corrs.iloc[:11]
 print(result_high_corrs)
 
-fig, axes = plt.subplots(nrows = (math.ceil(len(result_high_corrs)/2)), ncols = 2)
+fig, axes = plt.subplots(nrows = (math.ceil(len(result_high_corrs)/3)), ncols = 3)
 plt.subplots_adjust(wspace=0.28, hspace=0.35, bottom = 0.08, top = 0.98, left = 0.05, right = 0.95)
 
 for row, ax in enumerate(axes.flatten()[:len(result_high_corrs)]):
@@ -129,6 +129,7 @@ for row, ax in enumerate(axes.flatten()[:len(result_high_corrs)]):
     legend = ax.legend(frameon=True, loc = 'best', labelcolor = 'white', 
                        facecolor = result_high_corrs['colour'][row])
     # legend.get_frame().set_facecolor(result_high_corrs['colour'][row])
+fig.delaxes(axes[3][2])
 plt.show()
     # sns.scatterplot(x = data[result_high['var_1']][row], y = data[result_high['var_2']][row])
     # plt.xticks(fontsize = 14)
