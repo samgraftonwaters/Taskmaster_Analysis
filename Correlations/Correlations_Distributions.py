@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from scipy import stats
+import math
 
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
@@ -18,6 +19,7 @@ input_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Out
 
 data = pd.read_csv(input_path + 'Full Contestent Table.csv')
 data = data.rename(columns = {'DQ' : 'Disqualifications'})
+data['Seat Num'] = data['Seat'].str.replace('Seat ', '').astype(int)
 data.columns = data.columns.str.replace('_', ' ')
 
 print(data.head())
@@ -68,9 +70,9 @@ result_low = pd.merge(result_low, result_low_var2, on = 'var_2', how = 'left')
 
 var1_labels_low = result_low['var_1'].str.replace(' ', '\n').str.replace('Percentage', '%').str.replace(' per ', ' ')
 result_low['var_2'] = result_low['var_2'].str.replace('Percentage', '%').str.replace(' per ', ' ')
-print(result_low)
 
 result_low, cmap, norm = CF.set_correlation_colours(data_table = result_low, corr_column = 'correlation', limits = 0.7)
+print(result_low)
 
 CF.correlation_compare_plot(data_table = result_low, xaxis_column = 'x_axis', yaxis_column = 'y_axis',
                             correlation_column = 'correlation', var1_labels = var1_labels_low, 
@@ -107,20 +109,17 @@ plt.ylabel('Total Score', fontsize = 15)
 plt.legend(loc = 'lower right', ncol = 2, fontsize = 14)
 plt.show()
 
-# data.columns = data.columns.str.replace('Percentage', '%')
-# data = data.rename(columns = {'Avg Score per Episodes' : 'Avg Score Episodes',
-#                               'Avg Score per Tasks' : 'Avg Score Tasks',
-#                               'Tie Breaks per series' : 'Tie Breaks series'})
 data.columns = data.columns.str.replace('Percentage', '%').str.replace(' per ', ' ')
 result_high_corrs['var_1'] = result_high_corrs['var_1'].str.replace('Percentage', '%').str.replace(' per ', ' ')
 result_high_corrs['var_2'] = result_high_corrs['var_2'].str.replace('Percentage', '%').str.replace(' per ', ' ')
+result_high_corrs = result_high_corrs.iloc[:11]
+print(result_high_corrs)
 
-print(result_high)
-
-fig, axes = plt.subplots(nrows = 4, ncols = 4)
+fig, axes = plt.subplots(nrows = (math.ceil(len(result_high_corrs)/2)), ncols = 2)
 plt.subplots_adjust(wspace=0.28, hspace=0.35, bottom = 0.08, top = 0.98, left = 0.05, right = 0.95)
 
-for row, ax in enumerate(axes.flatten()):
+for row, ax in enumerate(axes.flatten()[:len(result_high_corrs)]):
+    # print(data[result_high_corrs['var_1'][row]])
 
     ax.scatter(data[result_high_corrs['var_1'][row]], data[result_high_corrs['var_2'][row]], 
                color = result_high_corrs['colour'][row]) 
