@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from scipy import stats
+import math
 
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
@@ -107,4 +108,22 @@ def correlation_compare_plot(data_table, xaxis_column : str, yaxis_column : str,
     plt.grid(True, linestyle="--", alpha=0.3)
     #colour bar
     correlation_compare_colourbad(fig = fig, ax = ax, cmap = cmap, norm = norm)
+    plt.show()
+
+def corr_subplots(data_table, corr_table):
+
+    fig, axes = plt.subplots(nrows = (math.ceil(len(corr_table)/3)), ncols = 3)
+    plt.subplots_adjust(wspace=0.3, hspace=0.35, bottom = 0.08, top = 0.98, left = 0.05, right = 0.95)
+
+    for row, ax in enumerate(axes.flatten()[:len(corr_table)]):
+
+        ax.scatter(data_table[corr_table['var_1'][row]], data_table[corr_table['var_2'][row]], 
+                color = corr_table['colour'][row]) 
+        ax.plot([], [], color = 'white', label = f"{round(corr_table['correlation'][row],2)}")
+        ax.set_xlabel(corr_table['var_1'][row])
+        ax.set_ylabel(corr_table['var_2'][row])
+        legend = ax.legend(frameon=True, loc = 'best', labelcolor = 'white', 
+                        facecolor = corr_table['colour'][row])
+        
+    # fig.delaxes(axes[3][2])
     plt.show()
