@@ -17,15 +17,17 @@ def normal_variables(data_table):
     for cols in columns:
         norm = stats.normaltest(data_table[cols])
         if norm.pvalue < 0.01:
-            non_normal.append(cols)
+            non_normal.append([cols, norm.pvalue])
             print(f'{cols} p-value = {norm.pvalue}')
         else:
-            normal.append(cols)
+            normal.append([cols, norm.pvalue])
             print(f'{cols} p-value = {norm.pvalue}')
 
+    non_normal = pd.DataFrame(np.vstack(non_normal), columns = ['Variable', 'p-value'])
     print(non_normal)
     print(len(non_normal))
 
+    normal = pd.DataFrame(np.vstack(normal), columns = ['Variable', 'p-value'])
     print(normal)
     print(len(normal))
 
