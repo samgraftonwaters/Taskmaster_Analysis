@@ -30,9 +30,14 @@ data_nums = data_nums.drop(['Team of'], axis = 1)
 
 normal_variables, non_normal_variables = CF.normal_variables(data_table = data_nums)
 
+normal_variables.to_csv(input_path + 'Normal Variable Comparison Table.csv', sep = ',', index = False)
+non_normal_variables.to_csv(input_path + 'Non-Normal Variable Comparison Table.csv', sep = ',', index = False)
+
 correlations = data_nums.corr(method = 'spearman')
 print(correlations)
 print(correlations.columns)
+
+correlations.to_csv(input_path + 'All Numerical Correlations.csv', sep = ',', index = False)
 
 grouped_variables = CF.group_corr_variables(correlations = correlations)
 
@@ -54,6 +59,7 @@ result_high_corrs = result_high.copy()
 var1_labels_high = result_high['var_1'].str.replace(' ', '\n').str.replace('Percentage', '%').str.replace(' per ', ' ')
 result_high['var_2'] = result_high['var_2'].str.replace('Percentage', '%').str.replace(' per ', ' ')
 print(result_high)
+result_high.to_csv(input_path + 'Highly (>0.7) Correlated Variables.csv', sep = ',', index = False)
 
 CF.correlation_compare_plot(data_table = result_high, xaxis_column = 'x_axis', yaxis_column = 'y_axis',
                             correlation_column = 'correlation', var1_labels = var1_labels_high, 
@@ -89,6 +95,8 @@ result_medium['var_2'] = result_medium['var_2'].str.replace('Percentage', '%').s
 
 result_medium, cmap, norm = CF.set_correlation_colours(data_table = result_medium, corr_column = 'correlation', limits = 0.7)
 print(result_medium)
+
+result_medium.to_csv(input_path + 'Medium (0.4-0.7) Correlated Variables.csv', sep = ',', index = False)
 
 CF.correlation_compare_plot(data_table = result_medium, xaxis_column = 'x_axis', yaxis_column = 'y_axis',
                             correlation_column = 'correlation', var1_labels = var1_labels_medium, 
