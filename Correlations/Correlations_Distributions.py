@@ -68,7 +68,52 @@ print(result_high_corrs)
 
 CF.corr_subplots(data_table = data, corr_table = result_high_corrs)
 
+#medium Correlations
 
+result_medium = CF.set_corr_thresholds(corr_data = grouped_variables, range = True, threshold = [0.4, 0.7])
+
+result_medium_var1 = CF.axis_values_for_variables(data_table = result_medium, variable_column = 'var_1',
+                                             axis_column = 'x_axis')
+result_medium_var2 = CF.axis_values_for_variables(data_table = result_medium, variable_column = 'var_2',
+                                             axis_column = 'y_axis')
+
+result_medium = pd.merge(result_medium, result_medium_var1, on = 'var_1', how = 'left')
+result_medium = pd.merge(result_medium, result_medium_var2, on = 'var_2', how = 'left')
+
+var1_labels_medium = result_medium['var_1'].str.replace(' ', '\n').str.replace('Percentage', '%').str.replace(' per ', ' ')
+result_medium['var_2'] = result_medium['var_2'].str.replace('Percentage', '%').str.replace(' per ', ' ')
+
+result_medium, cmap, norm = CF.set_correlation_colours(data_table = result_medium, corr_column = 'correlation', limits = 0.7)
+print(result_medium)
+
+CF.correlation_compare_plot(data_table = result_medium, xaxis_column = 'x_axis', yaxis_column = 'y_axis',
+                            correlation_column = 'correlation', var1_labels = var1_labels_medium, 
+                            var2_column = 'var_2', title = 'Medium Correlated Variables (0.4 < corr < 0.7)',
+                            cmap = cmap, norm = norm)
+
+result_medium_corrs = result_medium.copy()
+result_medium_corrs['var_1'] = result_medium_corrs['var_1'].str.replace('Percentage', '%').str.replace(' per ', ' ')
+result_medium_corrs['var_2'] = result_medium_corrs['var_2'].str.replace('Percentage', '%').str.replace(' per ', ' ')
+
+result_medium_corrs_split = result_medium_corrs.iloc[0:12]
+print(result_medium_corrs_split)
+CF.corr_subplots(data_table = data, corr_table = result_medium_corrs_split)
+
+result_medium_corrs_split = result_medium_corrs.iloc[12:24].reset_index(drop = True)
+print(result_medium_corrs_split)
+CF.corr_subplots(data_table = data, corr_table = result_medium_corrs_split)
+
+result_medium_corrs_split = result_medium_corrs.iloc[24:36].reset_index(drop = True)
+print(result_medium_corrs_split)
+CF.corr_subplots(data_table = data, corr_table = result_medium_corrs_split)
+
+result_medium_corrs_split = result_medium_corrs.iloc[36:48].reset_index(drop = True)
+print(result_medium_corrs_split)
+CF.corr_subplots(data_table = data, corr_table = result_medium_corrs_split)
+
+result_medium_corrs_split = result_medium_corrs.iloc[48:].reset_index(drop = True)
+print(result_medium_corrs_split)
+CF.corr_subplots(data_table = data, corr_table = result_medium_corrs_split)
 
 ####
 sns.scatterplot(x = data['Avg Score Tasks'], y = data['Score'], 
