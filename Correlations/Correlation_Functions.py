@@ -23,11 +23,11 @@ def normal_variables(data_table):
             normal.append([cols, norm.pvalue])
             print(f'{cols} p-value = {norm.pvalue}')
 
-    non_normal = pd.DataFrame(np.vstack(non_normal), columns = ['Variable', 'p-value'])
+    non_normal = pd.DataFrame(np.vstack(non_normal), columns = ['Non Normal Variable', 'p-value'])
     print(non_normal)
     print(len(non_normal))
 
-    normal = pd.DataFrame(np.vstack(normal), columns = ['Variable', 'p-value'])
+    normal = pd.DataFrame(np.vstack(normal), columns = ['Normal Variable', 'p-value'])
     print(normal)
     print(len(normal))
 
