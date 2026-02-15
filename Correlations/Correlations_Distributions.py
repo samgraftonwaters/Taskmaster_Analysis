@@ -63,10 +63,14 @@ CF.correlation_compare_plot(data_table = result_high, xaxis_column = 'x_axis', y
 data.columns = data.columns.str.replace('Percentage', '%').str.replace(' per ', ' ')
 result_high_corrs['var_1'] = result_high_corrs['var_1'].str.replace('Percentage', '%').str.replace(' per ', ' ')
 result_high_corrs['var_2'] = result_high_corrs['var_2'].str.replace('Percentage', '%').str.replace(' per ', ' ')
-result_high_corrs = result_high_corrs.iloc[:11]
-print(result_high_corrs)
 
-CF.corr_subplots(data_table = data, corr_table = result_high_corrs)
+result_high_corrs_split = result_high_corrs.iloc[:11]
+print(result_high_corrs_split)
+CF.corr_subplots(data_table = data, corr_table = result_high_corrs_split)
+
+result_high_corrs_split = result_high_corrs.iloc[11:].reset_index(drop = True)
+print(result_high_corrs_split)
+CF.corr_subplots(data_table = data, corr_table = result_high_corrs_split)
 
 #medium Correlations
 

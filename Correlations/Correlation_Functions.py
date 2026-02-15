@@ -124,6 +124,8 @@ def corr_subplots(data_table, corr_table):
         ax.set_ylabel(corr_table['var_2'][row])
         legend = ax.legend(frameon=True, loc = 'best', labelcolor = 'white', 
                         facecolor = corr_table['colour'][row])
-        
-    # fig.delaxes(axes[3][2])
+    if len(corr_table) == 11:   
+        fig.delaxes(axes[3][2])
+    if len(corr_table) == 5:
+        fig.delaxes(axes[1][2])
     plt.show()
