@@ -143,9 +143,17 @@ def intercept(y1, x1, slope):
 
 scores = data[['Avg Score Tasks', 'Score', 'Position', 'Seat']]
 
-sns.scatterplot(x = data['Avg Score Tasks'], y = data['Score'], 
-                hue = data['Position'], size = data['Seat'])
-sns.regplot(x = data['Avg Score Tasks'], y = data['Score'])
+m = slope(y1 = 80, y2 = 150,
+          x1 = scores['Avg Score Tasks'].min(), x2 = scores['Avg Score Tasks'].max())
+
+c = intercept(y1 = 80, x1 = scores['Avg Score Tasks'].min(), slope = m)
+
+y = (scores['Avg Score Tasks'] * m) + c
+
+sns.scatterplot(x = scores['Avg Score Tasks'], y = scores['Score'], 
+                hue = scores['Position'], size = scores['Seat'])
+sns.regplot(x = scores['Avg Score Tasks'], y = scores['Score'])
+plt.plot(scores['Avg Score Tasks'], y, color = 'green', lw = 3)
 plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
 plt.xlabel('Avgerage Score per Number of Tasks', fontsize = 15)
@@ -153,13 +161,13 @@ plt.ylabel('Total Score', fontsize = 15)
 plt.legend(loc = 'lower right', ncol = 2, fontsize = 14)
 plt.show()
 
-score_above_115 = data[data['Score'] > 115][['Score', 'Avg Score Tasks']]
-score_below_115 = data[data['Score'] <= 115][['Score', 'Avg Score Tasks']]
+score_above_115 = scores[scores['Score'] > y][['Score', 'Avg Score Tasks']]
+score_below_115 = scores[scores['Score'] <= y][['Score', 'Avg Score Tasks']]
 
 above_115_corr = score_above_115.corr()
 below_115_corr = score_below_115.corr()
 
-print(data[['Score', 'Avg Score Tasks']].corr())
+print(scores[['Score', 'Avg Score Tasks']].corr())
 print(above_115_corr)
 print(below_115_corr)
 
@@ -177,9 +185,17 @@ plt.show()
 avg_scores = data[['Avg Score Tasks', 'Avg Score Episodes', 'Position', 'Seat']]
 print(avg_scores)
 
+m = slope(y1 = 14, y2 = 19,
+          x1 = avg_scores['Avg Score Tasks'].min(), x2 = 2.6)
+
+c = intercept(y1 = 14, x1 = avg_scores['Avg Score Tasks'].min(), slope = m)
+
+y = (avg_scores['Avg Score Tasks'] * m) + c
+
 sns.scatterplot(x = avg_scores['Avg Score Tasks'], y = avg_scores['Avg Score Episodes'], 
                 hue = avg_scores['Position'], size = avg_scores['Seat'])
 sns.regplot(x = avg_scores['Avg Score Tasks'], y = avg_scores['Avg Score Episodes'])
+plt.plot(avg_scores['Avg Score Tasks'], y, color = 'green', lw = 3)
 plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
 plt.xlabel('Avgerage Score per Number of Tasks', fontsize = 15)
@@ -188,10 +204,8 @@ plt.legend(loc = 'lower right', ncol = 2, fontsize = 14)
 plt.show()
 
 
-score_below = avg_scores[(avg_scores['Avg Score Episodes'] > 15) & (avg_scores['Avg Score Episodes'] <= 18) 
-                       & (avg_scores['Avg Score Tasks'] < 2.2)][['Avg Score Episodes', 'Avg Score Tasks']]
-score_above = avg_scores[(avg_scores['Avg Score Episodes'] <= 15) & (avg_scores['Avg Score Episodes'] >18) 
-                       & (avg_scores['Avg Score Tasks'] > 2.2)][['Avg Score Episodes', 'Avg Score Tasks']]
+score_below = avg_scores[avg_scores['Avg Score Episodes'] > y][['Avg Score Episodes', 'Avg Score Tasks']]
+score_above = avg_scores[avg_scores['Avg Score Episodes'] <= y][['Avg Score Episodes', 'Avg Score Tasks']]
 
 above_corr = score_above.corr()
 below_corr = score_below.corr()
