@@ -26,7 +26,6 @@ print(data.head())
 print(data.info())
 
 data_nums = data.select_dtypes(include=[float, int])
-data_nums = data_nums.drop(['Team of'], axis = 1)
 
 normal_variables, non_normal_variables = CF.normal_variables(data_table = data_nums)
 
@@ -70,13 +69,13 @@ data.columns = data.columns.str.replace('Percentage', '%').str.replace(' per ', 
 result_high_corrs['var_1'] = result_high_corrs['var_1'].str.replace('Percentage', '%').str.replace(' per ', ' ')
 result_high_corrs['var_2'] = result_high_corrs['var_2'].str.replace('Percentage', '%').str.replace(' per ', ' ')
 
-result_high_corrs_split = result_high_corrs.iloc[:11]
-print(result_high_corrs_split)
-CF.corr_subplots(data_table = data, corr_table = result_high_corrs_split)
+# result_high_corrs_split = result_high_corrs.iloc[:11]
+# print(result_high_corrs_split)
+# CF.corr_subplots(data_table = data, corr_table = result_high_corrs_split)
 
-result_high_corrs_split = result_high_corrs.iloc[11:].reset_index(drop = True)
-print(result_high_corrs_split)
-CF.corr_subplots(data_table = data, corr_table = result_high_corrs_split)
+# result_high_corrs_split = result_high_corrs.iloc[11:].reset_index(drop = True)
+# print(result_high_corrs_split)
+# CF.corr_subplots(data_table = data, corr_table = result_high_corrs_split)
 
 #medium Correlations
 
@@ -107,27 +106,43 @@ result_medium_corrs = result_medium.copy()
 result_medium_corrs['var_1'] = result_medium_corrs['var_1'].str.replace('Percentage', '%').str.replace(' per ', ' ')
 result_medium_corrs['var_2'] = result_medium_corrs['var_2'].str.replace('Percentage', '%').str.replace(' per ', ' ')
 
-result_medium_corrs_split = result_medium_corrs.iloc[0:12]
-print(result_medium_corrs_split)
-CF.corr_subplots(data_table = data, corr_table = result_medium_corrs_split)
+# result_medium_corrs_split = result_medium_corrs.iloc[0:12]
+# print(result_medium_corrs_split)
+# CF.corr_subplots(data_table = data, corr_table = result_medium_corrs_split)
 
-result_medium_corrs_split = result_medium_corrs.iloc[12:24].reset_index(drop = True)
-print(result_medium_corrs_split)
-CF.corr_subplots(data_table = data, corr_table = result_medium_corrs_split)
+# result_medium_corrs_split = result_medium_corrs.iloc[12:24].reset_index(drop = True)
+# print(result_medium_corrs_split)
+# CF.corr_subplots(data_table = data, corr_table = result_medium_corrs_split)
 
-result_medium_corrs_split = result_medium_corrs.iloc[24:36].reset_index(drop = True)
-print(result_medium_corrs_split)
-CF.corr_subplots(data_table = data, corr_table = result_medium_corrs_split)
+# result_medium_corrs_split = result_medium_corrs.iloc[24:36].reset_index(drop = True)
+# print(result_medium_corrs_split)
+# CF.corr_subplots(data_table = data, corr_table = result_medium_corrs_split)
 
-result_medium_corrs_split = result_medium_corrs.iloc[36:48].reset_index(drop = True)
-print(result_medium_corrs_split)
-CF.corr_subplots(data_table = data, corr_table = result_medium_corrs_split)
+# result_medium_corrs_split = result_medium_corrs.iloc[36:48].reset_index(drop = True)
+# print(result_medium_corrs_split)
+# CF.corr_subplots(data_table = data, corr_table = result_medium_corrs_split)
 
-result_medium_corrs_split = result_medium_corrs.iloc[48:].reset_index(drop = True)
-print(result_medium_corrs_split)
-CF.corr_subplots(data_table = data, corr_table = result_medium_corrs_split)
+# result_medium_corrs_split = result_medium_corrs.iloc[48:].reset_index(drop = True)
+# print(result_medium_corrs_split)
+# CF.corr_subplots(data_table = data, corr_table = result_medium_corrs_split)
 
 ####
+#Score vs Average Score Tasks (0.61)
+
+def slope(y1, y2, x1, x2):
+    y = y2 - y1
+    x = x2 - x1
+    m = y/x
+    return(m)
+
+def intercept(y1, x1, slope):
+    b = y1 - x1*slope
+    return(b)
+
+    
+
+scores = data[['Avg Score Tasks', 'Score', 'Position', 'Seat']]
+
 sns.scatterplot(x = data['Avg Score Tasks'], y = data['Score'], 
                 hue = data['Position'], size = data['Seat'])
 sns.regplot(x = data['Avg Score Tasks'], y = data['Score'])
@@ -144,6 +159,7 @@ score_below_115 = data[data['Score'] <= 115][['Score', 'Avg Score Tasks']]
 above_115_corr = score_above_115.corr()
 below_115_corr = score_below_115.corr()
 
+print(data[['Score', 'Avg Score Tasks']].corr())
 print(above_115_corr)
 print(below_115_corr)
 
@@ -153,6 +169,43 @@ plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
 plt.xlabel('Avgerage Score per Number of Tasks', fontsize = 15)
 plt.ylabel('Total Score', fontsize = 15)
+plt.legend(loc = 'lower right', ncol = 2, fontsize = 14)
+plt.show()
+
+#Average Score Tasks vs Average Score Episodes (0.61)
+
+avg_scores = data[['Avg Score Tasks', 'Avg Score Episodes', 'Position', 'Seat']]
+print(avg_scores)
+
+sns.scatterplot(x = avg_scores['Avg Score Tasks'], y = avg_scores['Avg Score Episodes'], 
+                hue = avg_scores['Position'], size = avg_scores['Seat'])
+sns.regplot(x = avg_scores['Avg Score Tasks'], y = avg_scores['Avg Score Episodes'])
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.xlabel('Avgerage Score per Number of Tasks', fontsize = 15)
+plt.ylabel('Avgerage Score per Number of Episodes', fontsize = 15)
+plt.legend(loc = 'lower right', ncol = 2, fontsize = 14)
+plt.show()
+
+
+score_below = avg_scores[(avg_scores['Avg Score Episodes'] > 15) & (avg_scores['Avg Score Episodes'] <= 18) 
+                       & (avg_scores['Avg Score Tasks'] < 2.2)][['Avg Score Episodes', 'Avg Score Tasks']]
+score_above = avg_scores[(avg_scores['Avg Score Episodes'] <= 15) & (avg_scores['Avg Score Episodes'] >18) 
+                       & (avg_scores['Avg Score Tasks'] > 2.2)][['Avg Score Episodes', 'Avg Score Tasks']]
+
+above_corr = score_above.corr()
+below_corr = score_below.corr()
+
+print(avg_scores[['Avg Score Episodes', 'Avg Score Tasks']].corr())
+print(above_corr)
+print(below_corr)
+
+sns.regplot(x = score_above['Avg Score Tasks'], y = score_above['Avg Score Episodes'])
+sns.regplot(x = score_below['Avg Score Tasks'], y = score_below['Avg Score Episodes'])
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.xlabel('Avgerage Score per Number of Tasks', fontsize = 15)
+plt.ylabel('Avgerage Score per Number of Episodes', fontsize = 15)
 plt.legend(loc = 'lower right', ncol = 2, fontsize = 14)
 plt.show()
 
