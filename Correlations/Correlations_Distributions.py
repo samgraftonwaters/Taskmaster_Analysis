@@ -159,7 +159,7 @@ sns.regplot(x = scores['Avg Score Tasks'], y = scores['Score'])
 plt.plot(scores['Avg Score Tasks'], y, color = 'green', lw = 3)
 plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
-plt.xlabel('Avgerage Score per Number of Tasks', fontsize = 15)
+plt.xlabel('Average Score per Number of Tasks', fontsize = 15)
 plt.ylabel('Total Score', fontsize = 15)
 plt.legend(loc = 'lower right', ncol = 2, fontsize = 14)
 plt.show()
@@ -175,14 +175,16 @@ print(above_115_corr)
 print(below_115_corr)
 
 fig, ax = plt.subplots()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.98, left = 0.1, right = 0.95)
-sns.regplot(x = score_above_115['Avg Score Tasks'], y = score_above_115['Score'])
-sns.regplot(x = score_below_115['Avg Score Tasks'], y = score_below_115['Score'])
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
+sns.regplot(x = score_above_115['Avg Score Tasks'], y = score_above_115['Score'], color = 'dodgerblue')
+sns.regplot(x = score_below_115['Avg Score Tasks'], y = score_below_115['Score'], color = 'darkred')
+plt.text(3, 110, round(below_115_corr.loc['Score', 'Avg Score Tasks'], 4), fontsize = 18, color = 'darkred')
+plt.text(2.2, 160, round(above_115_corr.loc['Score', 'Avg Score Tasks'], 4), fontsize = 18, color = 'dodgerblue')
 plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
-plt.xlabel('Avgerage Score per Number of Tasks', fontsize = 15)
+plt.xlabel('Average Score per Number of Tasks', fontsize = 15)
 plt.ylabel('Total Score', fontsize = 15)
-plt.legend(loc = 'lower right', ncol = 2, fontsize = 14)
+plt.title('Splitting the Data and Extracting Separate Correlations for \n Total Scores and Average Score per Tasks', fontsize = 16)
 plt.show()
 
 #Average Score Tasks vs Average Score Episodes (0.61)
@@ -190,10 +192,10 @@ plt.show()
 avg_scores = data[['Avg Score Tasks', 'Avg Score Episodes', 'Position', 'Seat']]
 print(avg_scores)
 
-m = slope(y1 = 14, y2 = 19,
-          x1 = avg_scores['Avg Score Tasks'].min(), x2 = 2.6)
+m = slope(y1 = 14.5, y2 = 19,
+          x1 = 2, x2 = 2.6)
 
-c = intercept(y1 = 14, x1 = avg_scores['Avg Score Tasks'].min(), slope = m)
+c = intercept(y1 = 14.5, x1 = 2, slope = m)
 
 y = (avg_scores['Avg Score Tasks'] * m) + c
 
@@ -205,15 +207,15 @@ sns.regplot(x = avg_scores['Avg Score Tasks'], y = avg_scores['Avg Score Episode
 plt.plot(avg_scores['Avg Score Tasks'], y, color = 'green', lw = 3)
 plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
-plt.xlabel('Avgerage Score per Number of Tasks', fontsize = 15)
-plt.ylabel('Avgerage Score per Number of Episodes', fontsize = 15)
+plt.xlabel('Average Score per Number of Tasks', fontsize = 15)
+plt.ylabel('Average Score per Number of Episodes', fontsize = 15)
 plt.legend(loc = 'lower right', ncol = 2, fontsize = 14)
 plt.ylim(11, 19.5)
 plt.show()
 
 
-score_below = avg_scores[avg_scores['Avg Score Episodes'] > y][['Avg Score Episodes', 'Avg Score Tasks']]
-score_above = avg_scores[avg_scores['Avg Score Episodes'] <= y][['Avg Score Episodes', 'Avg Score Tasks']]
+score_above = avg_scores[avg_scores['Avg Score Episodes'] > y][['Avg Score Episodes', 'Avg Score Tasks']]
+score_below = avg_scores[avg_scores['Avg Score Episodes'] <= y][['Avg Score Episodes', 'Avg Score Tasks']]
 
 above_corr = score_above.corr()
 below_corr = score_below.corr()
@@ -223,14 +225,16 @@ print(above_corr)
 print(below_corr)
 
 fig, ax = plt.subplots()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.98, left = 0.1, right = 0.95)
-sns.regplot(x = score_above['Avg Score Tasks'], y = score_above['Avg Score Episodes'])
-sns.regplot(x = score_below['Avg Score Tasks'], y = score_below['Avg Score Episodes'])
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
+sns.regplot(x = score_above['Avg Score Tasks'], y = score_above['Avg Score Episodes'], color = 'dodgerblue')
+sns.regplot(x = score_below['Avg Score Tasks'], y = score_below['Avg Score Episodes'], color = 'darkred')
+plt.text(3.1, 16, round(below_corr.loc['Avg Score Tasks', 'Avg Score Episodes'], 4), fontsize = 18, color = 'darkred')
+plt.text(2.3, 18, round(above_corr.loc['Avg Score Tasks', 'Avg Score Episodes'], 4), fontsize = 18, color = 'dodgerblue')
 plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
-plt.xlabel('Avgerage Score per Number of Tasks', fontsize = 15)
-plt.ylabel('Avgerage Score per Number of Episodes', fontsize = 15)
-plt.legend(loc = 'lower right', ncol = 2, fontsize = 14)
+plt.xlabel('Average Score per Number of Tasks', fontsize = 15)
+plt.ylabel('Average Score per Number of Episodes', fontsize = 15)
+plt.title('Splitting the Data and Extracting Separate Correlations for \n Average Scores per Number of Tasks or Episodes', fontsize = 16)
 plt.ylim(11, 19.5)
 plt.show()
 
