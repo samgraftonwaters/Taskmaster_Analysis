@@ -150,6 +150,9 @@ c = intercept(y1 = 80, x1 = scores['Avg Score Tasks'].min(), slope = m)
 
 y = (scores['Avg Score Tasks'] * m) + c
 
+
+fig, ax = plt.subplots()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.98, left = 0.1, right = 0.95)
 sns.scatterplot(x = scores['Avg Score Tasks'], y = scores['Score'], 
                 hue = scores['Position'], size = scores['Seat'])
 sns.regplot(x = scores['Avg Score Tasks'], y = scores['Score'])
@@ -171,6 +174,8 @@ print(scores[['Score', 'Avg Score Tasks']].corr())
 print(above_115_corr)
 print(below_115_corr)
 
+fig, ax = plt.subplots()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.98, left = 0.1, right = 0.95)
 sns.regplot(x = score_above_115['Avg Score Tasks'], y = score_above_115['Score'])
 sns.regplot(x = score_below_115['Avg Score Tasks'], y = score_below_115['Score'])
 plt.xticks(fontsize = 14)
@@ -192,6 +197,8 @@ c = intercept(y1 = 14, x1 = avg_scores['Avg Score Tasks'].min(), slope = m)
 
 y = (avg_scores['Avg Score Tasks'] * m) + c
 
+fig, ax = plt.subplots()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.98, left = 0.1, right = 0.95)
 sns.scatterplot(x = avg_scores['Avg Score Tasks'], y = avg_scores['Avg Score Episodes'], 
                 hue = avg_scores['Position'], size = avg_scores['Seat'])
 sns.regplot(x = avg_scores['Avg Score Tasks'], y = avg_scores['Avg Score Episodes'])
@@ -201,6 +208,7 @@ plt.yticks(fontsize = 14)
 plt.xlabel('Avgerage Score per Number of Tasks', fontsize = 15)
 plt.ylabel('Avgerage Score per Number of Episodes', fontsize = 15)
 plt.legend(loc = 'lower right', ncol = 2, fontsize = 14)
+plt.ylim(11, 19.5)
 plt.show()
 
 
@@ -214,6 +222,8 @@ print(avg_scores[['Avg Score Episodes', 'Avg Score Tasks']].corr())
 print(above_corr)
 print(below_corr)
 
+fig, ax = plt.subplots()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.98, left = 0.1, right = 0.95)
 sns.regplot(x = score_above['Avg Score Tasks'], y = score_above['Avg Score Episodes'])
 sns.regplot(x = score_below['Avg Score Tasks'], y = score_below['Avg Score Episodes'])
 plt.xticks(fontsize = 14)
@@ -221,54 +231,14 @@ plt.yticks(fontsize = 14)
 plt.xlabel('Avgerage Score per Number of Tasks', fontsize = 15)
 plt.ylabel('Avgerage Score per Number of Episodes', fontsize = 15)
 plt.legend(loc = 'lower right', ncol = 2, fontsize = 14)
+plt.ylim(11, 19.5)
 plt.show()
 
 
 
-    # sns.scatterplot(x = data[result_high['var_1']][row], y = data[result_high['var_2']][row])
-    # plt.xticks(fontsize = 14)
-    # plt.yticks(fontsize = 14)
-    # plt.xlabel(str(result_high['var_1'][row]), fontsize = 15)
-    # plt.ylabel(str(result_high['var_2'][row]), fontsize = 15)
-    # plt.show()
 
-# sns.scatterplot(x = data['Disqualifications'], y = data['Score'], 
-#                 hue = data['Position'], size = data['Seat'])
-# plt.xticks(fontsize = 14)
-# plt.yticks(fontsize = 14)
-# plt.xlabel('Number of Disqualifications', fontsize = 15)
-# plt.ylabel('Total Score', fontsize = 15)
-# plt.legend(loc = 'lower right', ncol = 2, fontsize = 14)
-# plt.show()
-
-# sns.scatterplot(x = data['Disqualifications'], y = data['Position'], 
-#                 hue = data['Score'], size = data['Seat'])
-# plt.xticks(fontsize = 14)
-# plt.yticks(ticks = [5, 4, 3, 2, 1], labels = ['5th', '4th', '3rd', '2nd', '1st'], fontsize = 14)
-# plt.gca().invert_yaxis()
-# plt.xlabel('Number of Disqualifications', fontsize = 15)
-# plt.ylabel('Final Position', fontsize = 15)
-# plt.legend(loc = 'lower right', ncol = 2, fontsize = 14)
-# plt.show()
-
-
-######
+#####
 # plot distributions of total scores, team scores etc
 # plot total scores against vs team A and team B scores, and all player scores based on those from team tasks
 # plot correlation plots
 # Determine correlations and R_squared values for above plots
-
-
-### TEAM CORRELATION PLOTS
-
-# plt.plot(all_teams['Number'], all_teams['Team_A_per_person_task'], 'o')
-# plt.plot(all_teams['Number'], all_teams['Team_B_per_person_task'], 'o')
-# plt.show()
-
-# plt.plot(all_teams['Team_A_per_person_task'], all_teams['Team_B_per_person_task'], 'o')
-# plt.grid()
-# plt.show()
-
-# plt.plot(team_name_scores['Number'], team_name_scores['TeamScoresPersonTask'], 'o')
-# plt.grid()
-# plt.show()
