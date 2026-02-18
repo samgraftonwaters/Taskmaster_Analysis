@@ -70,6 +70,22 @@ def group_corr_variables(correlations):
 
 def set_corr_thresholds(corr_data, range : bool, threshold : int | list):
 
+    """
+    Applies absolute thresholds to the full correlation table (see previous function)
+
+    Parameters:
+    -----------
+        corr_data (DataFrame): datatable with the paired variables and respective correlations
+        range (bool): If True, upper and lower thresholds should be applied, if False, the lower limit should be applied
+        threshold (int | list): if range == True, a list should be given, with the lower threshold limit first. 
+                                If range == False, a single threhsold should be used.
+
+    Returns:
+    ---------
+        Filtered correlation variables datatable based on given thresholds.   
+    
+    """
+
     if range == True:
         result = corr_data[((corr_data['correlation'].abs() > threshold[0])) & (corr_data['correlation'].abs() <= threshold[1])]
 
@@ -81,6 +97,20 @@ def set_corr_thresholds(corr_data, range : bool, threshold : int | list):
 
 def axis_values_for_variables(data_table, variable_column : str, axis_column : str):
 
+    """
+    Converts the variable name to a value for either x or y axes for plotting
+
+    Parameters:
+    -----------
+        data_table (DataFrame): datatable with paired variables and correlations
+        variable_column (str): column name with the variables to apply numerical values for plot axes
+        axis_column (str): name of the numeric column for either x or y axes
+    
+    Returns:
+    --------
+        Input dataframe with additional column with axes values. 
+    """
+
     result = []
 
     for num, i in enumerate(np.array(data_table[variable_column].unique())):
@@ -91,7 +121,23 @@ def axis_values_for_variables(data_table, variable_column : str, axis_column : s
 
     return(result)
 
-def set_correlation_colours(data_table, corr_column : str, limits : int):
+def set_correlation_colours(data_table, corr_column : str, limits : float):
+    """
+    create correlation colours for plots
+
+    Parameters:
+    -----------
+        data_table (DataFrame): datatable with paired variables and correlations
+        corr_column (str): column that contains the correlation values
+        limits (float): upper threshold values for the correlation cutoff
+    
+    Returns:
+    --------
+        data_table (DataFrame): correlation and variable datatable with new colour column
+        cmap: colourmap for the plots
+        norm: center of the colourmap
+    
+    """
     colour = data_table[corr_column]
 
     # center the colormap at 0
@@ -106,6 +152,22 @@ def set_correlation_colours(data_table, corr_column : str, limits : int):
     return(data_table, cmap, norm)
 
 def correlation_compare_colourbad(fig, ax, cmap, norm):
+
+    """
+    Creates a colourbar based on the figure data.
+    
+    Parameters:
+    -----------
+        fig: plot figure
+        ax: subplot panel
+        cmap: colourmap for the plots
+        norm: center of the colourmap
+
+    Returns:
+    -------
+        Creates a colour bar for the plots
+    
+    """
     sm = ScalarMappable(cmap=cmap, norm=norm)
     sm.set_array([])
     cbar = fig.colorbar(sm, ax=ax, pad=0.01)
@@ -114,6 +176,22 @@ def correlation_compare_colourbad(fig, ax, cmap, norm):
 
 def correlation_compare_plot(data_table, xaxis_column : str, yaxis_column : str, correlation_column : str,
                              var1_labels, var2_column : str, title : str, cmap, norm ):
+    
+    """
+    Creates a plot comparing the variables and their respective correlation values for easy comparison.
+
+    Parameters:
+    ----------
+        data_table (DataFrmae): table with contestent values
+        xaxis_column (str): name of column for x axis
+        yaxis_column (str): name of column for y axis
+        correlation_column (str): name of column with values correlations
+        var1_labels: variable of editted column with first variables for the x axis
+        var2_column (str): name of column with second variable (for y axis)
+        title (str): title of the plot
+        cmap: colourmap for the plots
+        norm: center of the colourmap    
+    """
 
     fig, ax = plt.subplots()
     plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.13, top = 0.94, left = 0.17, right = 1.05)
@@ -137,6 +215,16 @@ def correlation_compare_plot(data_table, xaxis_column : str, yaxis_column : str,
     plt.show()
 
 def corr_subplots(data_table, corr_table):
+
+    """
+    Creates a figure with subplots for each variable pair
+
+    Parameters:
+    -----------
+        data_table (DataFrame): table with contestent values
+        corr_table (DataFrame): correlation datatable
+    
+    """
 
     fig, axes = plt.subplots(nrows = (math.ceil(len(corr_table)/3)), ncols = 3)
     plt.subplots_adjust(wspace=0.3, hspace=0.35, bottom = 0.08, top = 0.98, left = 0.05, right = 0.95)
