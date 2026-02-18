@@ -41,4 +41,13 @@ data_merged = pd.concat([data, concat_ohe_data], axis = 1)
 
 print(data_merged.head())
 
-data_merged.to_csv(input_path + 'Full Contestent Table.csv', sep = ',', index = 'drop')
+data_merged.to_csv(input_path + 'Full Contestent Table OHE.csv', sep = ',', index = False)
+
+print(data_merged.columns)
+
+data_modelling = data_merged.drop([['Age_Range', 'Team', 'Gender', 'Seat', 
+                                   'Team Score per Person', 'Team Score per Task', 'Episode Wins',
+                                   'Episode Losses', 'Series Number']], axis = 1)
+
+#Removing first 4 as OHE, remving last 5 due to correlation analysis
+print(data_modelling.columns)
