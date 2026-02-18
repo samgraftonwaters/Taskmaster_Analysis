@@ -15,7 +15,6 @@ def onehotcolumns(data_table, column_name):
     data_ohe = one_hot_encoder.fit_transform(data_table[[column_name]]).toarray()
     column_names = one_hot_encoder.get_feature_names_out([column_name])
     ohe_data = pd.DataFrame(data=data_ohe, columns=column_names)
-    ohe_data = pd.concat([ohe_data, data], axis=1)
     return(ohe_data)
 
 teams = onehotcolumns(data_table = data, column_name = 'Team')
@@ -34,22 +33,11 @@ seat = onehotcolumns(data_table = data, column_name = 'Seat')
 
 print(seat.head())
 
-# season_data = pd.DataFrame(data=data["season"])
+concat_ohe_data = pd.concat([teams, age_range, gender, seat], axis=1)
 
-# # Create the encoder object
-# 
+print(concat_ohe_data.head())
 
-# # Fit and transform the data to the new encoded form in the same step.
-# # using the .toarray() method or a sparse output is produced that cannot be passed to pandas
-# ohe_season_data_array = one_hot_encoder.fit_transform(season_data[["season"]]).toarray()
+data_merged = pd.concat([data, concat_ohe_data], axis = 1)
 
-# # Get the names of the new features created.
-# column_names = one_hot_encoder.get_feature_names_out(['season'])
+print(data_merged.head())
 
-# # Make a data frame with the new data columns.
-# ohe_season_data = pd.DataFrame(data=ohe_season_data_array, columns=column_names)
-
-# # Combine the original season and encoded season data.
-# ohe_season_data = pd.concat([ohe_season_data, season_data], axis=1)
-
-# ohe_season_data.sample(n=10)
