@@ -41,3 +41,4 @@ data_merged = pd.concat([data, concat_ohe_data], axis = 1)
 
 print(data_merged.head())
 
+data_merged.to_csv(input_path + 'Full Contestent Table.csv', sep = ',', index = 'drop')
