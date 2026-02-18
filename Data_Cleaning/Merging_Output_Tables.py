@@ -90,7 +90,7 @@ team_A = team_A.melt(id_vars=[c for c in team_A.columns if c not in ["Name A1", 
 team_A = team_A.rename(columns = {'Number' : 'Number Team Tasks', 'Team A Total' : 'Team Total', 
                                   'Team_A_per_person' : 'Team Score per Person', 'Team_A_per_task' : 'Team Score per Task',
                                   'Team_A_per_person_task' : 'Team Score per Person Task'})
-team_A['Team of'] = 2
+team_A['Team'] = 'A'
 
 team_B = team_B.drop(['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Series', 'Series Number', 'Team B Names', 'Team_B'], axis = 1)
 team_B = team_B.melt(id_vars=[c for c in team_B.columns if c not in ["Name B1", "Name B2", 'Name B3']],
@@ -98,7 +98,7 @@ team_B = team_B.melt(id_vars=[c for c in team_B.columns if c not in ["Name B1", 
 team_B = team_B.rename(columns = {'Number' : 'Number Team Tasks', 'Team B Total' : 'Team Total', 
                                   'Team_B_per_person' : 'Team Score per Person', 'Team_B_per_task' : 'Team Score per Task',
                                   'Team_B_per_person_task' : 'Team Score per Person Task'})
-team_B['Team of'] = 3
+team_B['Team'] = 'B'
 team_tasks = pd.concat([team_A, team_B], axis = 0)
 
 
