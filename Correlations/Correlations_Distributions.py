@@ -69,13 +69,13 @@ data.columns = data.columns.str.replace('Percentage', '%').str.replace(' per ', 
 result_high_corrs['var_1'] = result_high_corrs['var_1'].str.replace('Percentage', '%').str.replace(' per ', ' ')
 result_high_corrs['var_2'] = result_high_corrs['var_2'].str.replace('Percentage', '%').str.replace(' per ', ' ')
 
-# result_high_corrs_split = result_high_corrs.iloc[:11]
-# print(result_high_corrs_split)
-# CF.corr_subplots(data_table = data, corr_table = result_high_corrs_split)
+result_high_corrs_split = result_high_corrs.iloc[:11]
+print(result_high_corrs_split)
+CF.corr_subplots(data_table = data, corr_table = result_high_corrs_split)
 
-# result_high_corrs_split = result_high_corrs.iloc[11:].reset_index(drop = True)
-# print(result_high_corrs_split)
-# CF.corr_subplots(data_table = data, corr_table = result_high_corrs_split)
+result_high_corrs_split = result_high_corrs.iloc[11:].reset_index(drop = True)
+print(result_high_corrs_split)
+CF.corr_subplots(data_table = data, corr_table = result_high_corrs_split)
 
 #medium Correlations
 
@@ -106,47 +106,35 @@ result_medium_corrs = result_medium.copy()
 result_medium_corrs['var_1'] = result_medium_corrs['var_1'].str.replace('Percentage', '%').str.replace(' per ', ' ')
 result_medium_corrs['var_2'] = result_medium_corrs['var_2'].str.replace('Percentage', '%').str.replace(' per ', ' ')
 
-# result_medium_corrs_split = result_medium_corrs.iloc[0:12]
-# print(result_medium_corrs_split)
-# CF.corr_subplots(data_table = data, corr_table = result_medium_corrs_split)
+result_medium_corrs_split = result_medium_corrs.iloc[0:12]
+print(result_medium_corrs_split)
+CF.corr_subplots(data_table = data, corr_table = result_medium_corrs_split)
 
-# result_medium_corrs_split = result_medium_corrs.iloc[12:24].reset_index(drop = True)
-# print(result_medium_corrs_split)
-# CF.corr_subplots(data_table = data, corr_table = result_medium_corrs_split)
+result_medium_corrs_split = result_medium_corrs.iloc[12:24].reset_index(drop = True)
+print(result_medium_corrs_split)
+CF.corr_subplots(data_table = data, corr_table = result_medium_corrs_split)
 
-# result_medium_corrs_split = result_medium_corrs.iloc[24:36].reset_index(drop = True)
-# print(result_medium_corrs_split)
-# CF.corr_subplots(data_table = data, corr_table = result_medium_corrs_split)
+result_medium_corrs_split = result_medium_corrs.iloc[24:36].reset_index(drop = True)
+print(result_medium_corrs_split)
+CF.corr_subplots(data_table = data, corr_table = result_medium_corrs_split)
 
-# result_medium_corrs_split = result_medium_corrs.iloc[36:48].reset_index(drop = True)
-# print(result_medium_corrs_split)
-# CF.corr_subplots(data_table = data, corr_table = result_medium_corrs_split)
+result_medium_corrs_split = result_medium_corrs.iloc[36:48].reset_index(drop = True)
+print(result_medium_corrs_split)
+CF.corr_subplots(data_table = data, corr_table = result_medium_corrs_split)
 
-# result_medium_corrs_split = result_medium_corrs.iloc[48:].reset_index(drop = True)
-# print(result_medium_corrs_split)
-# CF.corr_subplots(data_table = data, corr_table = result_medium_corrs_split)
+result_medium_corrs_split = result_medium_corrs.iloc[48:].reset_index(drop = True)
+print(result_medium_corrs_split)
+CF.corr_subplots(data_table = data, corr_table = result_medium_corrs_split)
 
 ####
-#Score vs Average Score Tasks (0.61)
-
-def slope(y1, y2, x1, x2):
-    y = y2 - y1
-    x = x2 - x1
-    m = y/x
-    return(m)
-
-def intercept(y1, x1, slope):
-    b = y1 - x1*slope
-    return(b)
-
-    
+#Score vs Average Score Tasks (0.61)   
 
 scores = data[['Avg Score Tasks', 'Score', 'Position', 'Seat']]
 
-m = slope(y1 = 80, y2 = 150,
+m = CF.slope(y1 = 80, y2 = 150,
           x1 = scores['Avg Score Tasks'].min(), x2 = scores['Avg Score Tasks'].max())
 
-c = intercept(y1 = 80, x1 = scores['Avg Score Tasks'].min(), slope = m)
+c = CF.intercept(y1 = 80, x1 = scores['Avg Score Tasks'].min(), slope = m)
 
 y = (scores['Avg Score Tasks'] * m) + c
 
@@ -192,10 +180,10 @@ plt.show()
 avg_scores = data[['Avg Score Tasks', 'Avg Score Episodes', 'Position', 'Seat']]
 print(avg_scores)
 
-m = slope(y1 = 14.5, y2 = 19,
+m = CF.slope(y1 = 14.5, y2 = 19,
           x1 = 2, x2 = 2.6)
 
-c = intercept(y1 = 14.5, x1 = 2, slope = m)
+c = CF.intercept(y1 = 14.5, x1 = 2, slope = m)
 
 y = (avg_scores['Avg Score Tasks'] * m) + c
 
@@ -237,12 +225,3 @@ plt.ylabel('Average Score per Number of Episodes', fontsize = 15)
 plt.title('Splitting the Data and Extracting Separate Correlations for \n Average Scores per Number of Tasks or Episodes', fontsize = 16)
 plt.ylim(11, 19.5)
 plt.show()
-
-
-
-
-#####
-# plot distributions of total scores, team scores etc
-# plot total scores against vs team A and team B scores, and all player scores based on those from team tasks
-# plot correlation plots
-# Determine correlations and R_squared values for above plots

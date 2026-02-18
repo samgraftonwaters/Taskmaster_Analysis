@@ -9,6 +9,18 @@ from matplotlib.cm import ScalarMappable
 import seaborn as sns
 
 def normal_variables(data_table):
+    """
+    determines which variables in the full contestent datatable are normally distributed or not.
+    Takes the p-value to be less than 0.01 to be defined as non-normal
+
+    Parameters:
+    ----------
+        data_table (DataFrame): full contestent data table (with numerical values)
+    
+    Returns:
+        normal and non-normal Dataframes. This file also saves the tables as csv files. 
+    
+    """
     columns = data_table.columns
 
     non_normal = []
@@ -34,6 +46,18 @@ def normal_variables(data_table):
     return(normal, non_normal)
 
 def group_corr_variables(correlations):
+    """
+    Takes the full correlation table and pairs variables together with their respective correlation values.
+
+    Parameters:
+    ----------
+        correlation: correlation table
+
+    Returns:
+    -------
+        dataframe with paired variables and their respective correlations
+    
+    """
     corr = (
         correlations.where(np.triu(np.ones(correlations.shape), k=1).astype(bool))  # keep upper triangle only
         .stack()                                                 # convert to pairs
@@ -131,3 +155,42 @@ def corr_subplots(data_table, corr_table):
     if len(corr_table) == 5:
         fig.delaxes(axes[1][2])
     plt.show()
+
+
+def slope(y1, y2, x1, x2):
+
+    """"
+    Determines the slope of a straight line
+
+    Parameters:
+    -----------
+        x1, x2 (int): min and max x values
+        y1, y2 (int): min and max y values
+
+    Returns:
+    --------
+        slope of a line
+    
+    """
+    y = y2 - y1
+    x = x2 - x1
+    m = y/x
+    return(m)
+
+def intercept(y1, x1, slope):
+    """"
+    Determines the intercept of a straight line
+
+    Parameters:
+    -----------
+        x1 (int): min x value
+        y1 (int): min y value
+        slope (int): slope of the line (see function above)
+
+    Returns:
+    --------
+        y-intercept of a line
+    
+    """
+    b = y1 - x1*slope
+    return(b)
