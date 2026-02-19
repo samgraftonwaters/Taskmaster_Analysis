@@ -42,9 +42,30 @@ X_scaled = preprocessor.fit_transform(data)
 kmeans = KMeans(n_clusters=3, random_state=42, n_init='auto')
 kmeans.fit(X_scaled)
 
-data['cluster'] = kmeans.labels_
+data['Group'] = kmeans.labels_
+centers = kmeans.cluster_centers_
+print(centers)
 
 print(data)
+
+class0 = data[data['Group']==0]
+class1 = data[data['Group']==1]
+class2 = data[data['Group']==2]
+
+
+fig = plt.subplots(figsize = (10, 8))
+plt.scatter(class0['runs_scored'], class0['average'], label = 'class 0')
+plt.scatter(class1['runs_scored'], class1['average'], label = 'class 1')
+plt.scatter(class2['runs_scored'], class2['average'], label = 'class 2')
+#plt.scatter(cricket_data['runs_scored'], cricket_data['average'], c=kmeans_fit_all, label = 'class 0')
+
+plt.scatter(kmeans_analysis_all.cluster_centers_[:,5],kmeans_analysis_all.cluster_centers_[:,3], 
+            marker ='*',color='black')
+
+plt.legend(fontsize = 15)
+plt.xlabel("Runs Scored")
+plt.ylabel("Batting Average")
+plt.show()
 
 
 
