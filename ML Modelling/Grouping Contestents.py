@@ -106,9 +106,8 @@ plt.xlabel("Number of clusters")
 plt.ylabel("Calinski–Harabasz Index")
 plt.show()
 
-
-sil_max_K_value = sil_values_kmeans.index(max(sil_values_kmeans))
-ch_max_K_value = ch_scores_kmeans.index(max(ch_scores_kmeans))
+sil_max_K_value = max(zip(k_values, sil_values_kmeans), key=lambda x: x[1])[0]
+ch_max_K_value = max(zip(k_values, ch_scores_kmeans), key=lambda x: x[1])[0]
 
 print("Best Sillhouette K:", sil_max_K_value)
 print("Best Calinski–Harabasz K:", ch_max_K_value)
