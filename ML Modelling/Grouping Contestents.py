@@ -61,11 +61,64 @@ preprocessor = ColumnTransformer(
 
 X_scaled = preprocessor.fit_transform(data)
 
+k_values = range(2, 12)
+
+def determine_sil_values(k_range, X_data):
+    sil_values = []
+
+    for k in k_range:
+        km_clusterer = KMeans(n_clusters=k, init="random", 
+                            max_iter=300, random_state=123)
+        labels_pred = km_clusterer.fit_predict(X_data)
+        eucl_sil_score = silhouette_score(X_data, labels_pred, metric="euclidean")
+        man_sil_score = silhouette_score(X_data, labels_pred, metric="manhattan")
+        sil_score_avg = (eucl_sil_score + man_sil_score)/2
+        sil_values.append(sil_score_avg)
+    return(sil_values)
+
+sil_values_kmeans = determine_sil_values(k_range = k_values, X_data = X_scaled)
+
+fig, ax = plt.subplots(figsize=(6,4))
+
+plt.plot(k_values, sil_values_kmeans, c="darkgreen", marker='o')
+
+ax.set_title("Silhouette Score for different K")
+ax.set_xlabel("K")
+ax.set_ylabel("Euclidean Silhoette Score")
+plt.show()
+
+#Calinski–Harabasz Index
+
+def CH_Index_scores(k_range, X_data):
+    scores = []
+
+    for k in k_range:
+        kmeans = KMeans(n_clusters=k, random_state=42, n_init='auto')
+        labels = kmeans.fit_predict(X_data)
+        score = calinski_harabasz_score(X_data, labels)
+        scores.append(score)
+    return(scores)
+
+ch_scores_kmeans = CH_Index_scores(k_range = k_values, X_data = X_scaled)
+
+plt.plot(k_values, ch_scores_kmeans, marker='o')
+plt.xlabel("Number of clusters")
+plt.ylabel("Calinski–Harabasz Index")
+plt.show()
+
+
+sil_max_K_value = sil_values_kmeans.index(max(sil_values_kmeans))
+ch_max_K_value = ch_scores_kmeans.index(max(ch_scores_kmeans))
+
+print("Best Sillhouette K:", sil_max_K_value)
+print("Best Calinski–Harabasz K:", ch_max_K_value)
+
 # ---- Run KMeans ----
-kmeans = KMeans(n_clusters=3, random_state=42, n_init='auto')
+kmeans = KMeans(n_clusters=sil_max_K_value, random_state=42, n_init='auto')
 kmeans.fit(X_scaled)
 
 data['Group (kmeans)'] = kmeans.labels_
+kmeans_labels = kmeans.labels_
 centers_scaled = kmeans.cluster_centers_
 
 feature_names = scaled_cols + ohe_cols + cat_cols
@@ -76,11 +129,11 @@ centers_df[scaled_cols] = scaler.inverse_transform(centers_df[scaled_cols])
 
 print(centers_df)
 print(centers_df.iloc[[0]])
-# print(centers_df.iloc[[2]])
+print(centers_df.iloc[[2]])
 
-class0 = data[data['Group']==0]
-class1 = data[data['Group']==1]
-class2 = data[data['Group']==2]
+class0 = data[data['Group (kmeans)']==0]
+class1 = data[data['Group (kmeans)']==1]
+class2 = data[data['Group (kmeans)']==2]
 
 
 fig = plt.subplots(figsize = (10, 8))
@@ -119,66 +172,9 @@ plt.xlabel('Tie Breaks per series')
 plt.ylabel('Episode Percentage Lossses')
 plt.show()
 
-
-cluster_labels = kmeans.fit_predict(X_scaled)
-
-
 # Produce baseline true value silhouette scores
-sil_score_eucl = silhouette_score(X_scaled, cluster_labels , metric="euclidean")
-sil_score_manhat = silhouette_score(X_scaled, cluster_labels , metric="manhattan")
+sil_score_eucl = silhouette_score(X_scaled, kmeans_labels, metric="euclidean")
+sil_score_manhat = silhouette_score(X_scaled, kmeans_labels, metric="manhattan")
 
 print("Euclidean Silhouette Score: ", round(sil_score_eucl, 4))
 print("Manhattan Silhouette Score: ", round(sil_score_manhat, 4))
-
-k_values = list(range(2, 12))
-
-
-def determine_sil_values(k_range, X_data):
-    sil_values = []
-
-    for k in k_range:
-        km_clusterer = KMeans(n_clusters=k, init="random", 
-                            max_iter=300, random_state=123)
-        labels_pred = km_clusterer.fit_predict(X_data)
-        eucl_sil_score = silhouette_score(X_data, labels_pred, metric="euclidean")
-        man_sil_score = silhouette_score(X_data, labels_pred, metric="manhattan")
-        sil_score_avg = np.mean(eucl_sil_score, man_sil_score)
-        sil_values.append(sil_score_avg)
-    return(sil_values)
-
-sil_vlues_kmeans = determine_sil_values(k_range = k_values, X_data = X_scaled)
-
-fig, ax = plt.subplots(figsize=(6,4))
-
-plt.plot(k_values, sil_vlues_kmeans, c="darkgreen")
-plt.hlines(sil_score_eucl, 0, 11, lw=3)
-plt.hlines(sil_score_manhat,0, 11, lw=3)
-
-ax.set_title("Silhouette Score for different K")
-ax.set_xlabel("K")
-ax.set_ylabel("Euclidean Silhoette Score")
-plt.show()
-
-#Calinski–Harabasz Index
-
-def CH_Index_scores(k_range, X_data):
-    scores = []
-
-    for k in k_range:
-        kmeans = KMeans(n_clusters=k, random_state=42, n_init='auto')
-        labels = kmeans.fit_predict(X_data)
-        score = calinski_harabasz_score(X_data, labels)
-        scores.append(score)
-    return(scores)
-
-ch_scores_kmeans = CH_Index_scores(k_range = k_values, X_data = X_scaled)
-
-plt.plot(range(2, 11), ch_scores_kmeans, marker='o')
-plt.xlabel("Number of clusters")
-plt.ylabel("Inertia")
-plt.show()
-
-best_k_sil = max(range(2, 11), key=sil_vlues_kmeans)
-best_k_CI = max(range(2, 11), key=ch_scores_kmeans)
-print("Best Sillhouette K:", sil_vlues_kmeans)
-print("Best Calinski–Harabasz K:", best_k_CI)
