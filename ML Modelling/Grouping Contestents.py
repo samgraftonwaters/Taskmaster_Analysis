@@ -1,5 +1,6 @@
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler, RobustScaler
+from sklearn.metrics import silhouette_score
 from sklearn.compose import ColumnTransformer
 import pandas as pd
 import numpy as np
@@ -67,13 +68,51 @@ plt.scatter(class1['Number 5s Scored'], class1['Score'], label = 'class 1')
 plt.scatter(class2['Number 5s Scored'], class2['Score'], label = 'class 2')
 #plt.scatter(cricket_data['Number 5s Scored'], cricket_data['score'], c=kmeans_fit_all, label = 'class 0')
 
-plt.scatter(centers_df['Number 5s Scored'], centers_df['Score'], marker ='*', 
-            s = 300, color='black')
+plt.scatter(centers_df.iloc[[0]]['Number 5s Scored'], centers_df.iloc[[0]]['Score'], marker ='*', 
+            s = 300, color='blue')
+plt.scatter(centers_df.iloc[[1]]['Number 5s Scored'], centers_df.iloc[[1]]['Score'], marker ='*', 
+            s = 300, color='darkorange')
+plt.scatter(centers_df.iloc[[2]]['Number 5s Scored'], centers_df.iloc[[2]]['Score'], marker ='*', 
+            s = 300, color='green')
 
 plt.legend(fontsize = 15)
 plt.xlabel("Number of 5s Scored")
 plt.ylabel("Total Score")
 plt.show()
 
+
+
+
+# Produce baseline true value silhouette scores
+sil_score_eucl = silhouette_score(X_scaled, data['Group'], metric="euclidean")
+sil_score_manhat = silhouette_score(X_scaled, data['Group'], metric="manhattan")
+
+print("Euclidean Silhouette Score: ", round(sil_score_eucl, 4))
+print("Manhattan Silhouette Score: ", round(sil_score_manhat, 4))
+
+k_values = list(range(2, 10))
+
+sil_values = []
+
+for k in k_values:
+    # Perform the clustering for a given value of K
+    km_clusterer = KMeans(n_clusters=k, init="random", 
+                          max_iter=5, random_state=123).fit(X_scaled)
+    
+    labels_pred = km_clusterer.labels_
+    # Calculate the silhouette score for associated k clusters
+    eucl_sil_score = silhouette_score(X_scaled, labels_pred, metric="euclidean")
+    # Add the score the list of scores
+    sil_values.append(eucl_sil_score)
+
+
+fig, ax = plt.subplots(figsize=(6,4))
+
+plt.plot(k_values, sil_values, c="darkgreen")
+
+ax.set_title("Silhouette Score for different K")
+ax.set_xlabel("K")
+ax.set_ylabel("Euclidean Silhoette Score")
+plt.show()
 
 
