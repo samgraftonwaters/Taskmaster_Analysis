@@ -66,7 +66,6 @@ fig = plt.subplots(figsize = (10, 8))
 plt.scatter(class0['Number 5s Scored'], class0['Score'], label = 'class 0')
 plt.scatter(class1['Number 5s Scored'], class1['Score'], label = 'class 1')
 plt.scatter(class2['Number 5s Scored'], class2['Score'], label = 'class 2')
-#plt.scatter(cricket_data['Number 5s Scored'], cricket_data['score'], c=kmeans_fit_all, label = 'class 0')
 
 plt.scatter(centers_df.iloc[[0]]['Number 5s Scored'], centers_df.iloc[[0]]['Score'], marker ='*', 
             s = 300, color='blue')
@@ -109,6 +108,8 @@ for k in k_values:
 fig, ax = plt.subplots(figsize=(6,4))
 
 plt.plot(k_values, sil_values, c="darkgreen")
+plt.hlines(sil_score_eucl, 0, 11, lw=3)
+plt.hlines(sil_score_manhat,0, 11, lw=3)
 
 ax.set_title("Silhouette Score for different K")
 ax.set_xlabel("K")
@@ -119,7 +120,7 @@ plt.show()
 X_scaled = RobustScaler().fit_transform(data[scaled_cols])
 
 # ---- Run KMeans ----
-kmeans = KMeans(n_clusters=3, random_state=42, n_init='auto')
+kmeans = KMeans(n_clusters=2, random_state=42, n_init='auto')
 kmeans.fit(X_scaled)
 
 
@@ -149,6 +150,8 @@ for k in k_values:
 fig, ax = plt.subplots(figsize=(6,4))
 
 plt.plot(k_values, sil_values, c="darkgreen")
+plt.hlines(sil_score_eucl, 0, 11, lw=3)
+plt.hlines(sil_score_manhat,0, 11, lw=3)
 
 ax.set_title("Silhouette Score for different K")
 ax.set_xlabel("K")
