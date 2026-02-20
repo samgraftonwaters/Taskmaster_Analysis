@@ -1,7 +1,8 @@
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler, RobustScaler
-from sklearn.metrics import silhouette_score
+from sklearn.metrics import silhouette_score, calinski_harabasz_score
 from sklearn.compose import ColumnTransformer
+from sklearn.model_selection import GridSearchCV
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -79,12 +80,12 @@ plt.xlabel("Number of 5s Scored")
 plt.ylabel("Total Score")
 plt.show()
 
-
+cluster_labels = kmeans.fit_predict(X_scaled)
 
 
 # Produce baseline true value silhouette scores
-sil_score_eucl = silhouette_score(X_scaled, kmeans.labels_, metric="euclidean")
-sil_score_manhat = silhouette_score(X_scaled, kmeans.labels_, metric="manhattan")
+sil_score_eucl = silhouette_score(X_scaled, cluster_labels , metric="euclidean")
+sil_score_manhat = silhouette_score(X_scaled, cluster_labels , metric="manhattan")
 
 print("Euclidean Silhouette Score: ", round(sil_score_eucl, 4))
 print("Manhattan Silhouette Score: ", round(sil_score_manhat, 4))
@@ -96,9 +97,9 @@ sil_values = []
 for k in k_values:
     # Perform the clustering for a given value of K
     km_clusterer = KMeans(n_clusters=k, init="random", 
-                          max_iter=5, random_state=123).fit(X_scaled)
+                          max_iter=5, random_state=123)
     
-    labels_pred = km_clusterer.labels_
+    labels_pred = km_clusterer.fit_predict(X_scaled)
     # Calculate the silhouette score for associated k clusters
     eucl_sil_score = silhouette_score(X_scaled, labels_pred, metric="euclidean")
     # Add the score the list of scores
@@ -117,11 +118,65 @@ ax.set_ylabel("Euclidean Silhoette Score")
 plt.show()
 
 
-X_scaled = RobustScaler().fit_transform(data[scaled_cols])
+#Inertias
 
-# ---- Run KMeans ----
-kmeans = KMeans(n_clusters=2, random_state=42, n_init='auto')
-kmeans.fit(X_scaled)
+inertias = []
+
+for k in range(1, 11):
+    kmeans = KMeans(n_clusters=k, random_state=42, n_init='auto')
+    kmeans.fit(X_scaled)
+    inertias.append(kmeans.inertia_)
+
+plt.plot(range(1, 11), inertias, marker='o')
+plt.xlabel("Number of clusters")
+plt.ylabel("Inertia")
+plt.show()
+
+#Calinski–Harabasz Index
+
+scores = []
+
+for k in range(2, 11):
+    kmeans = KMeans(n_clusters=k, random_state=42, n_init='auto')
+    labels = kmeans.fit_predict(X_scaled)
+    score = calinski_harabasz_score(X_scaled, labels)
+    scores.append(score)
+
+plt.plot(range(2, 11), scores, marker='o')
+plt.xlabel("Number of clusters")
+plt.ylabel("Inertia")
+plt.show()
 
 
+def evaluate_kmeans(k):
+    kmeans = KMeans(n_clusters=k, random_state=42, n_init='auto')
+    labels = kmeans.fit_predict(X_scaled)
+    return silhouette_score(X_scaled, labels)
 
+best_k = max(range(2, 11), key=evaluate_kmeans)
+
+print("Best k:", best_k)
+
+# params = {
+#     'n_clusters': range(2, 10),
+#     'init': ['k-means++', 'random'],
+#     'n_init': [0, 5, 10, 15],
+#     'max_iter': [100, 200, 300, 400, 500],
+#     'tol': [0.0001, 0.001, 0.01],
+#     'algorithm': ['lloyd', 'elkan'],
+# }
+
+# # Create the KMeans object
+# kmeans = KMeans(random_state=42)
+
+# # Perform grid search
+# grid_search = GridSearchCV(kmeans, param_grid=params, cv=5)
+
+# # Fit the grid search to the data
+# grid_search.fit(X_scaled)
+
+# # Print the best hyperparameters
+# print("Best hyperparameters: ", grid_search.best_params_)
+# print('Optimal number of clusters based on parameter grid: ' + str(grid_search.best_params_['n_clusters']))
+
+# silhouette = silhouette_score(X_scaled, grid_search.labels_)
