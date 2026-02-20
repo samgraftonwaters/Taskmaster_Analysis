@@ -116,3 +116,41 @@ ax.set_ylabel("Euclidean Silhoette Score")
 plt.show()
 
 
+X_scaled = RobustScaler().fit_transform(data[scaled_cols])
+
+# ---- Run KMeans ----
+kmeans = KMeans(n_clusters=3, random_state=42, n_init='auto')
+kmeans.fit(X_scaled)
+
+
+# Produce baseline true value silhouette scores
+sil_score_eucl = silhouette_score(X_scaled, data['Group'], metric="euclidean")
+sil_score_manhat = silhouette_score(X_scaled, data['Group'], metric="manhattan")
+
+print("Euclidean Silhouette Score: ", round(sil_score_eucl, 4))
+print("Manhattan Silhouette Score: ", round(sil_score_manhat, 4))
+
+k_values = list(range(2, 10))
+
+sil_values = []
+
+for k in k_values:
+    # Perform the clustering for a given value of K
+    km_clusterer = KMeans(n_clusters=k, init="random", 
+                          max_iter=5, random_state=123).fit(X_scaled)
+    
+    labels_pred = km_clusterer.labels_
+    # Calculate the silhouette score for associated k clusters
+    eucl_sil_score = silhouette_score(X_scaled, labels_pred, metric="euclidean")
+    # Add the score the list of scores
+    sil_values.append(eucl_sil_score)
+
+
+fig, ax = plt.subplots(figsize=(6,4))
+
+plt.plot(k_values, sil_values, c="darkgreen")
+
+ax.set_title("Silhouette Score for different K")
+ax.set_xlabel("K")
+ax.set_ylabel("Euclidean Silhoette Score")
+plt.show()
