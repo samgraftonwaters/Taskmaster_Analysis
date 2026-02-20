@@ -20,22 +20,25 @@ data = model_data.drop(['Series', 'Name'], axis = 1)
 
 data = pd.DataFrame(data)
 
-scaled_cols = ['Score', 'Position', 'Avg Score per Episodes',
+scaled_cols = ['Score', 'Avg Score per Episodes',
        'Avg Score per Tasks', 'Number 5s Scored', 'Number 1s Scored',
        'Tie Break Wins', 'Tie Break Losses', 'Tie Breaks per Person',
-       'Tie Breaks per series', 'Disqualifications', 'Number_Episodes',
+       'Tie Breaks per series', 'Disqualifications', 
        'Episode Percentage Wins', 'Episode Percentage Lossses',
        'Number Team Tasks', 'Team Total', 'Team Score per Person Task']
 
-ohe_cols = [ 'Team_A', 'Team_B', 'Age_Ranges_20 - 29', 'Age_Ranges_30 - 39',
+cat_cols= ['Position']
+
+ohe_cols = ['Team_A', 'Team_B', 'Age_Ranges_20 - 29', 'Age_Ranges_30 - 39',
        'Age_Ranges_40 - 49', 'Age_Ranges_50 - 59', 'Age_Ranges_60 - 69',
        'Gender_Female', 'Gender_Male', 'Gender_Non-Binary', 'Seat_Seat 1',
        'Seat_Seat 2', 'Seat_Seat 3', 'Seat_Seat 4', 'Seat_Seat 5']
 
 preprocessor = ColumnTransformer(
     transformers=[
-        ('num', RobustScaler(), scaled_cols),
-        ('ohe', 'passthrough', ohe_cols)
+        ('num', RobustScaler(), scaled_cols),              # numeric → scale
+        ('cat', 'passthrough', cat_cols),  # raw categorical → OHE
+        ('ohe', 'passthrough', ohe_cols)                  # already OHE → keep
     ]
 )
 
@@ -48,7 +51,7 @@ kmeans.fit(X_scaled)
 data['Group'] = kmeans.labels_
 centers_scaled = kmeans.cluster_centers_
 
-feature_names = scaled_cols + ohe_cols
+feature_names = scaled_cols + ohe_cols + cat_cols
 centers_df = pd.DataFrame(centers_scaled, columns=feature_names)
 
 scaler = preprocessor.named_transformers_['num']
@@ -56,7 +59,7 @@ centers_df[scaled_cols] = scaler.inverse_transform(centers_df[scaled_cols])
 
 print(centers_df)
 print(centers_df.iloc[[0]])
-print(centers_df.iloc[[2]])
+# print(centers_df.iloc[[2]])
 
 class0 = data[data['Group']==0]
 class1 = data[data['Group']==1]
@@ -79,6 +82,26 @@ plt.legend(fontsize = 15)
 plt.xlabel("Number of 5s Scored")
 plt.ylabel("Total Score")
 plt.show()
+
+
+
+fig = plt.subplots(figsize = (10, 8))
+plt.scatter(class0['Tie Breaks per series'], class0['Episode Percentage Lossses'], label = 'class 0')
+plt.scatter(class1['Tie Breaks per series'], class1['Episode Percentage Lossses'], label = 'class 1')
+plt.scatter(class2['Tie Breaks per series'], class2['Episode Percentage Lossses'], label = 'class 2')
+
+plt.scatter(centers_df.iloc[[0]]['Tie Breaks per series'], centers_df.iloc[[0]]['Episode Percentage Lossses'], marker ='*', 
+            s = 300, color='blue')
+plt.scatter(centers_df.iloc[[1]]['Tie Breaks per series'], centers_df.iloc[[1]]['Episode Percentage Lossses'], marker ='*', 
+            s = 300, color='darkorange')
+plt.scatter(centers_df.iloc[[2]]['Tie Breaks per series'], centers_df.iloc[[2]]['Episode Percentage Lossses'], marker ='*', 
+            s = 300, color='green')
+
+plt.legend(fontsize = 15)
+plt.xlabel('Tie Breaks per series')
+plt.ylabel('Episode Percentage Lossses')
+plt.show()
+
 
 cluster_labels = kmeans.fit_predict(X_scaled)
 
