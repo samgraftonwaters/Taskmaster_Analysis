@@ -7,6 +7,12 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
+import sys
+sys.path.append('/Users/SamWaters/Documents/Data Science/Taskmaster/')
+# sys.path.append("../..")
+from Correlations import Correlation_Functions as CF
+# from Correlations.Correlation_Functions import Correlation_Functions as CF
+
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
 model_data = pd.read_csv(file_path + 'Full Contestent Table for Modelling.csv')
 
@@ -20,19 +26,30 @@ data = model_data.drop(['Series', 'Name'], axis = 1)
 
 data = pd.DataFrame(data)
 
+data_nums = data.select_dtypes(include=[float, int])
+
+correlations = data_nums.corr(method = 'spearman')
+grouped_variables = CF.group_corr_variables(correlations = correlations)
+print('Correlation > 0.7:')
+print(CF.set_corr_thresholds(corr_data = grouped_variables, range = False, threshold = 0.7))
+print('\nCorrelation > 0.9:')
+print(CF.set_corr_thresholds(corr_data = grouped_variables, range = False, threshold = 0.9))
+
 scaled_cols = ['Score', 'Avg Score per Episodes',
        'Avg Score per Tasks', 'Number 5s Scored', 'Number 1s Scored',
-       'Tie Break Wins', 'Tie Break Losses', 'Tie Breaks per Person',
-       'Tie Breaks per series', 'Disqualifications', 
+       'Tie Break Wins', 'Tie Break Losses', 
+       'Tie Breaks per series', 'Disqualifications', 'Number_Episodes',
        'Episode Percentage Wins', 'Episode Percentage Lossses',
        'Number Team Tasks', 'Team Total', 'Team Score per Person Task']
 
 cat_cols= ['Position']
 
-ohe_cols = ['Team_A', 'Team_B', 'Age_Ranges_20 - 29', 'Age_Ranges_30 - 39',
+ohe_cols = ['Team_A', 'Age_Ranges_20 - 29', 'Age_Ranges_30 - 39',
        'Age_Ranges_40 - 49', 'Age_Ranges_50 - 59', 'Age_Ranges_60 - 69',
-       'Gender_Female', 'Gender_Male', 'Gender_Non-Binary', 'Seat_Seat 1',
+       'Gender_Female', 'Gender_Non-Binary', 'Seat_Seat 1',
        'Seat_Seat 2', 'Seat_Seat 3', 'Seat_Seat 4', 'Seat_Seat 5']
+
+#Removed Team_B, Tie Breaks per Person and Gender_male as these are highly correlated
 
 preprocessor = ColumnTransformer(
     transformers=[
