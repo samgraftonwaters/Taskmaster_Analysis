@@ -177,6 +177,8 @@ data['Group (kmeans)'] = kmeans.labels_
 kmeans_labels = kmeans.labels_
 centers_scaled = kmeans.cluster_centers_
 
+print(data['Group (kmeans)'])
+
 feature_names = scaled_cols + ohe_cols + cat_cols
 centers_df = pd.DataFrame(centers_scaled, columns=feature_names)
 
@@ -329,27 +331,6 @@ plt.show()
 #Hierarchical Clustering
 
 #Create model for each linkage method
-single_linkage_model = AgglomerativeClustering(n_clusters=4, linkage="single", metric = 'euclidean').fit(X_scaled)
-complete_linkage_model = AgglomerativeClustering(n_clusters=4, linkage="complete", metric = 'euclidean').fit(X_scaled)
-average_linkage_model = AgglomerativeClustering(n_clusters=4, linkage="average", metric = 'euclidean').fit(X_scaled)
-ward_linkage_model = AgglomerativeClustering(n_clusters=4, linkage="ward", metric = 'euclidean').fit(X_scaled)
-
- #Access labels assigned for each method
-single_clusters = single_linkage_model.labels_
-complete_clusters = complete_linkage_model.labels_
-average_clusters = average_linkage_model.labels_
-ward_clusters = ward_linkage_model.labels_
-
-#Evaluate performance of each model and ground truth
-single_silhouette = silhouette_score(X_scaled, single_clusters)
-complete_silhouette = silhouette_score(X_scaled, complete_clusters)
-average_silhouette = silhouette_score(X_scaled, average_clusters)
-ward_silhouette = silhouette_score(X_scaled, ward_clusters)
-
-print("Single score:", round(single_silhouette, 4))
-print("Complete score:", round(complete_silhouette, 4))
-print("Average score:", round(average_silhouette, 4))
-print("Ward score:", round(ward_silhouette, 4))
 
 k_values = range(2, 11)
 
@@ -432,4 +413,61 @@ plt.ylabel("Silhoette Score (Manhattan)", fontsize = 16)
 plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
 plt.legend(fontsize = 16)
+plt.show()
+
+single_eucl = max(zip(k_values, single[0]), key=lambda x: x[1])[0]
+single_man = max(zip(k_values, single[1]), key=lambda x: x[1])[0]
+
+print(r"Best Sillhouette Single Agg Euclidean", single_eucl, max(single[0]))
+print(r"Best Sillhouette Single Agg Manhattan", single_man, max(single[1]))
+
+complete_eucl = max(zip(k_values, complete[0]), key=lambda x: x[1])[0]
+complete_man = max(zip(k_values, complete[1]), key=lambda x: x[1])[0]
+
+print(r"Best Sillhouette complete Agg Euclidean", complete_eucl, max(complete[0]))
+print(r"Best Sillhouette complete Agg Manhattan", complete_man, max(complete[1]))
+
+average_eucl = max(zip(k_values, average[0]), key=lambda x: x[1])[0]
+average_man = max(zip(k_values, average[1]), key=lambda x: x[1])[0]
+
+print(r"Best Sillhouette average Agg Euclidean", average_eucl, max(average[0]))
+print(r"Best Sillhouette average Agg Manhattan", average_man, max(average[1]))
+
+ward_eucl = max(zip(k_values, ward[0]), key=lambda x: x[1])[0]
+print(r"Best Sillhouette ward Agg Euclidean", ward_eucl, max(ward[0]))
+
+
+dbscan_eucl = DBSCAN(eps=eucl_eps_max, metric="euclidean", min_samples=20)
+dbscan_eucl.fit(X_scaled)
+
+data['Group (dbscan eucl)'] = dbscan_eucl.labels_
+dbscan_labels = dbscan_eucl.labels_
+
+agg_model = AgglomerativeClustering(n_clusters=complete_man, linkage="complete", 
+                                    metric = 'manhattan').fit(X_scaled)
+
+ #Access labels assigned for each method
+clusters = agg_model.labels_
+data['Group (Agg Man Complete)'] = clusters
+
+#Evaluate performance of each model and ground truth
+silhouette = silhouette_score(X_scaled, clusters)
+
+print("Sillhouette score:", round(silhouette, 4))
+
+class0 = data[data['Group (Agg Man Complete)']==0]
+class1 = data[data['Group (Agg Man Complete)']==1]
+
+
+fig, ax = plt.subplots()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
+plt.scatter(class0['Number 5s Scored'], class0['Score'], label = 'class 0')
+plt.scatter(class1['Number 5s Scored'], class1['Score'], label = 'class 1')
+
+plt.legend(fontsize = 15)
+plt.title('Comparing Agglomerative clusters for Total Score against Number of 5s Scored \n with "Complete" Linkage and "Manhattan" Method', fontsize = 22)
+plt.xlabel("Number of 5s Scored", fontsize = 16)
+plt.ylabel("Total Score", fontsize = 16)
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
 plt.show()
