@@ -343,6 +343,7 @@ def determine_sil_values_agg(k_range, X_data, link_type):
     -----------
         k_range: range of K clusters. Should start on 2.
         X_data: scaled data
+        link_type (str): type of link method
     
     Returns
     -------
