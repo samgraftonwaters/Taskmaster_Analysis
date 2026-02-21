@@ -1,4 +1,4 @@
-from sklearn.cluster import KMeans
+from sklearn.cluster import KMeans, DBSCAN
 from sklearn.preprocessing import StandardScaler, RobustScaler
 from sklearn.metrics import silhouette_score, calinski_harabasz_score
 from sklearn.compose import ColumnTransformer
@@ -11,7 +11,8 @@ import sys
 sys.path.append('/Users/SamWaters/Documents/Data Science/Taskmaster/')
 # sys.path.append("../..")
 from Correlations import Correlation_Functions as CF
-# from Correlations.Correlation_Functions import Correlation_Functions as CF
+
+plt.rcParams['figure.figsize'] = (13, 7)
 
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
 model_data = pd.read_csv(file_path + 'Full Contestent Table for Modelling.csv')
@@ -96,13 +97,16 @@ def determine_sil_values(k_range, X_data):
 
 sil_values_kmeans = determine_sil_values(k_range = k_values, X_data = X_scaled)
 
-fig, ax = plt.subplots(figsize=(6,4))
+fig, ax = plt.subplots()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
 
 plt.plot(k_values, sil_values_kmeans, c="darkgreen", marker='o')
 
-ax.set_title("Silhouette Score for different K")
-ax.set_xlabel("K")
-ax.set_ylabel("Euclidean Silhoette Score")
+plt.title("Silhouette Score for different K", fontsize = 22)
+plt.xlabel("Number of Clusters (K)", fontsize = 16)
+plt.ylabel("Euclidean Silhoette Score", fontsize = 16)
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
 plt.show()
 
 #Calinski–Harabasz Index
@@ -131,9 +135,15 @@ def CH_Index_scores(k_range, X_data):
 
 ch_scores_kmeans = CH_Index_scores(k_range = k_values, X_data = X_scaled)
 
+fig, ax = plt.subplots()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
+
 plt.plot(k_values, ch_scores_kmeans, marker='o')
-plt.xlabel("Number of clusters")
-plt.ylabel("Calinski–Harabasz Index")
+plt.title("Calinski–Harabasz Index for different K", fontsize = 22)
+plt.xlabel("Number of clusters (K)", fontsize = 16)
+plt.ylabel("Calinski–Harabasz Index", fontsize = 16)
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
 plt.show()
 
 sil_max_K_value = max(zip(k_values, sil_values_kmeans), key=lambda x: x[1])[0]
@@ -164,7 +174,8 @@ class0 = data[data['Group (kmeans)']==0]
 class1 = data[data['Group (kmeans)']==1]
 class2 = data[data['Group (kmeans)']==2]
 
-fig = plt.subplots(figsize = (10, 8))
+fig, ax = plt.subplots()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
 plt.scatter(class0['Number 5s Scored'], class0['Score'], label = 'class 0')
 plt.scatter(class1['Number 5s Scored'], class1['Score'], label = 'class 1')
 plt.scatter(class2['Number 5s Scored'], class2['Score'], label = 'class 2')
@@ -177,8 +188,11 @@ plt.scatter(centers_df.iloc[[2]]['Number 5s Scored'], centers_df.iloc[[2]]['Scor
             s = 300, color='green')
 
 plt.legend(fontsize = 15)
-plt.xlabel("Number of 5s Scored")
-plt.ylabel("Total Score")
+plt.title('Comparing clusters for Total Score against Number of 5s Scored', fontsize = 22)
+plt.xlabel("Number of 5s Scored", fontsize = 16)
+plt.ylabel("Total Score", fontsize = 16)
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
 plt.show()
 
 plt.show()
@@ -192,3 +206,33 @@ print("Manhattan Silhouette Score: ", round(sil_score_manhat, 4))
 
 
 #DBSCAN Method
+possible_eps_values = np.linspace(start=0.1, stop=15, num=100)
+print(possible_eps_values)
+
+eps_values = []
+dbscan_eucl_sil_values = []
+dbscan_man_sil_values = []
+
+for reach_dist in possible_eps_values:
+    
+    dbscan_clusterer = DBSCAN(eps=reach_dist, metric="manhattan").fit(X_scaled)
+    labels_pred = dbscan_clusterer.labels_
+    
+    if len(np.unique(labels_pred)) > 1:
+        eucl_sil_score = silhouette_score(X_scaled, labels_pred, metric="euclidean")
+        man_sil_score = silhouette_score(X_scaled, labels_pred, metric="manhattan")
+        eps_values.append(reach_dist)
+        dbscan_eucl_sil_values.append(eucl_sil_score)
+        dbscan_man_sil_values.append(man_sil_score)
+
+fig, ax = plt.subplots()
+plt.plot(eps_values, dbscan_eucl_sil_values, c="blueviolet", label = 'Euclidean')
+plt.plot(eps_values, dbscan_man_sil_values, c="dodgerblue", label = 'Manhattan')
+plt.title("Silhouette Score for different Reach Distances")
+plt.xlabel("Reach Distatance ($\epsilon$)")
+plt.ylabel("Silhoette Score")
+plt.legend()
+plt.show()
+
+
+
