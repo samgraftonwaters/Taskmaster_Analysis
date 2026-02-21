@@ -1,4 +1,4 @@
-from sklearn.cluster import KMeans, DBSCAN
+from sklearn.cluster import KMeans, DBSCAN, AgglomerativeClustering
 from sklearn.preprocessing import StandardScaler, RobustScaler
 from sklearn.metrics import silhouette_score, calinski_harabasz_score
 from sklearn.compose import ColumnTransformer
@@ -317,3 +317,30 @@ plt.ylabel("Total Score", fontsize = 16)
 plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
 plt.show()
+
+
+#######
+#Hierarchical Clustering
+
+#Create model for each linkage method
+single_linkage_model = AgglomerativeClustering(n_clusters=3, linkage="single", metric = 'euclidean').fit(X_scaled)
+complete_linkage_model = AgglomerativeClustering(n_clusters=3, linkage="complete", metric = 'euclidean').fit(X_scaled)
+average_linkage_model = AgglomerativeClustering(n_clusters=3, linkage="average", metric = 'euclidean').fit(X_scaled)
+ward_linkage_model = AgglomerativeClustering(n_clusters=3, linkage="ward", metric = 'euclidean').fit(X_scaled)
+
+ #Access labels assigned for each method
+single_clusters = single_linkage_model.labels_
+complete_clusters = complete_linkage_model.labels_
+average_clusters = average_linkage_model.labels_
+ward_clusters = ward_linkage_model.labels_
+
+#Evaluate performance of each model and ground truth
+single_silhouette = silhouette_score(X_scaled, single_clusters)
+complete_silhouette = silhouette_score(X_scaled, complete_clusters)
+average_silhouette = silhouette_score(X_scaled, average_clusters)
+ward_silhouette = silhouette_score(X_scaled, ward_clusters)
+
+print("Single score:", round(single_silhouette, 4))
+print("Complete score:", round(complete_silhouette, 4))
+print("Average score:", round(average_silhouette, 4))
+print("Ward score:", round(ward_silhouette, 4))
