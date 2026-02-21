@@ -26,8 +26,10 @@ data = model_data.drop(['Series', 'Name'], axis = 1)
 
 data = pd.DataFrame(data)
 
+#Selecting only Numerical Data
 data_nums = data.select_dtypes(include=[float, int])
 
+#Determining Correlations
 correlations = data_nums.corr(method = 'spearman')
 grouped_variables = CF.group_corr_variables(correlations = correlations)
 print('Correlation > 0.7:')
@@ -35,6 +37,7 @@ print(CF.set_corr_thresholds(corr_data = grouped_variables, range = False, thres
 print('\nCorrelation > 0.9:')
 print(CF.set_corr_thresholds(corr_data = grouped_variables, range = False, threshold = 0.9))
 
+#Splitting variables into scalable or not
 scaled_cols = ['Score', 'Avg Score per Episodes',
        'Avg Score per Tasks', 'Number 5s Scored', 'Number 1s Scored',
        'Tie Break Wins', 'Tie Break Losses', 
@@ -59,11 +62,26 @@ preprocessor = ColumnTransformer(
     ]
 )
 
+#Transform the data
 X_scaled = preprocessor.fit_transform(data)
 
 k_values = range(2, 12)
 
+#Silhouette Scores
 def determine_sil_values(k_range, X_data):
+
+    """
+    Calculates the set of silhouette score for Kmeans based on range of K clusters
+
+    Parameters:
+    -----------
+        k_range: range of K clusters. Should start on 2.
+        X_data: scaled data
+    
+    Returns
+    -------
+        list of solhouette scores based on number of clusters K.
+    """
     sil_values = []
 
     for k in k_range:
@@ -90,6 +108,18 @@ plt.show()
 #Calinski–Harabasz Index
 
 def CH_Index_scores(k_range, X_data):
+    """
+    Calculates the set of Calinski–Harabasz Index scores for Kmeans based on range of K clusters
+
+    Parameters:
+    -----------
+        k_range: range of K clusters. Should start on 2.
+        X_data: scaled data
+    
+    Returns
+    -------
+        list of Calinski–Harabasz Index scores based on number of clusters K.
+    """
     scores = []
 
     for k in k_range:
@@ -134,7 +164,6 @@ class0 = data[data['Group (kmeans)']==0]
 class1 = data[data['Group (kmeans)']==1]
 class2 = data[data['Group (kmeans)']==2]
 
-
 fig = plt.subplots(figsize = (10, 8))
 plt.scatter(class0['Number 5s Scored'], class0['Score'], label = 'class 0')
 plt.scatter(class1['Number 5s Scored'], class1['Score'], label = 'class 1')
@@ -152,23 +181,6 @@ plt.xlabel("Number of 5s Scored")
 plt.ylabel("Total Score")
 plt.show()
 
-
-
-fig = plt.subplots(figsize = (10, 8))
-plt.scatter(class0['Tie Breaks per series'], class0['Episode Percentage Lossses'], label = 'class 0')
-plt.scatter(class1['Tie Breaks per series'], class1['Episode Percentage Lossses'], label = 'class 1')
-plt.scatter(class2['Tie Breaks per series'], class2['Episode Percentage Lossses'], label = 'class 2')
-
-plt.scatter(centers_df.iloc[[0]]['Tie Breaks per series'], centers_df.iloc[[0]]['Episode Percentage Lossses'], marker ='*', 
-            s = 300, color='blue')
-plt.scatter(centers_df.iloc[[1]]['Tie Breaks per series'], centers_df.iloc[[1]]['Episode Percentage Lossses'], marker ='*', 
-            s = 300, color='darkorange')
-plt.scatter(centers_df.iloc[[2]]['Tie Breaks per series'], centers_df.iloc[[2]]['Episode Percentage Lossses'], marker ='*', 
-            s = 300, color='green')
-
-plt.legend(fontsize = 15)
-plt.xlabel('Tie Breaks per series')
-plt.ylabel('Episode Percentage Lossses')
 plt.show()
 
 # Produce baseline true value silhouette scores
@@ -177,3 +189,6 @@ sil_score_manhat = silhouette_score(X_scaled, kmeans_labels, metric="manhattan")
 
 print("Euclidean Silhouette Score: ", round(sil_score_eucl, 4))
 print("Manhattan Silhouette Score: ", round(sil_score_manhat, 4))
+
+
+#DBSCAN Method
