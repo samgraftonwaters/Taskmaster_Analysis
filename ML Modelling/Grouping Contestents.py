@@ -38,6 +38,12 @@ print(CF.set_corr_thresholds(corr_data = grouped_variables, range = False, thres
 print('\nCorrelation > 0.9:')
 print(CF.set_corr_thresholds(corr_data = grouped_variables, range = False, threshold = 0.9))
 
+no_corr = CF.set_corr_thresholds(corr_data = grouped_variables, range = True, threshold = [0, 0.4])
+print(no_corr['var_1'].value_counts())
+print(no_corr['var_2'].value_counts())
+
+print(CF.set_corr_thresholds(corr_data = grouped_variables, range = False, threshold = 0.7)['var_1'].value_counts())
+print(CF.set_corr_thresholds(corr_data = grouped_variables, range = False, threshold = 0.7)['var_2'].value_counts())
 #Splitting variables into scalable or not
 scaled_cols = ['Score', 'Avg Score per Episodes',
        'Avg Score per Tasks', 'Number 5s Scored', 'Number 1s Scored',
@@ -49,11 +55,13 @@ scaled_cols = ['Score', 'Avg Score per Episodes',
 cat_cols= ['Position']
 
 ohe_cols = ['Team_A', 'Age_Ranges_20 - 29', 'Age_Ranges_30 - 39',
-       'Age_Ranges_40 - 49', 'Age_Ranges_50 - 59', 'Age_Ranges_60 - 69',
-       'Gender_Female', 'Gender_Non-Binary', 'Seat_Seat 1',
-       'Seat_Seat 2', 'Seat_Seat 3', 'Seat_Seat 4', 'Seat_Seat 5']
+       'Age_Ranges_40 - 49', 'Age_Ranges_50 - 59', 
+       'Gender_Female', 'Seat_Seat 1',
+       'Seat_Seat 2', 'Seat_Seat 3', 'Seat_Seat 4']
 
 #Removed Team_B, Tie Breaks per Person and Gender_male as these are highly correlated
+#removed 'Seat_Seat 5' and 'Age_Ranges_60 - 69' as these are the last categories in each group.
+#removed 'Gender_Non-Binary', as only one person identifies  as non-binary
 
 preprocessor = ColumnTransformer(
     transformers=[
@@ -65,6 +73,8 @@ preprocessor = ColumnTransformer(
 
 #Transform the data
 X_scaled = preprocessor.fit_transform(data)
+# scaler = RobustScaler()
+# X_scaled = scaler.fit_transform(data[scaled_cols])
 
 k_values = range(2, 12)
 
@@ -172,10 +182,6 @@ centers_df = pd.DataFrame(centers_scaled, columns=feature_names)
 
 scaler = preprocessor.named_transformers_['num']
 centers_df[scaled_cols] = scaler.inverse_transform(centers_df[scaled_cols])
-
-print(centers_df)
-print(centers_df.iloc[[0]])
-print(centers_df.iloc[[2]])
 
 class0 = data[data['Group (kmeans)']==0]
 class1 = data[data['Group (kmeans)']==1]
@@ -323,10 +329,10 @@ plt.show()
 #Hierarchical Clustering
 
 #Create model for each linkage method
-single_linkage_model = AgglomerativeClustering(n_clusters=3, linkage="single", metric = 'euclidean').fit(X_scaled)
-complete_linkage_model = AgglomerativeClustering(n_clusters=3, linkage="complete", metric = 'euclidean').fit(X_scaled)
-average_linkage_model = AgglomerativeClustering(n_clusters=3, linkage="average", metric = 'euclidean').fit(X_scaled)
-ward_linkage_model = AgglomerativeClustering(n_clusters=3, linkage="ward", metric = 'euclidean').fit(X_scaled)
+single_linkage_model = AgglomerativeClustering(n_clusters=4, linkage="single", metric = 'euclidean').fit(X_scaled)
+complete_linkage_model = AgglomerativeClustering(n_clusters=4, linkage="complete", metric = 'euclidean').fit(X_scaled)
+average_linkage_model = AgglomerativeClustering(n_clusters=4, linkage="average", metric = 'euclidean').fit(X_scaled)
+ward_linkage_model = AgglomerativeClustering(n_clusters=4, linkage="ward", metric = 'euclidean').fit(X_scaled)
 
  #Access labels assigned for each method
 single_clusters = single_linkage_model.labels_
@@ -344,3 +350,86 @@ print("Single score:", round(single_silhouette, 4))
 print("Complete score:", round(complete_silhouette, 4))
 print("Average score:", round(average_silhouette, 4))
 print("Ward score:", round(ward_silhouette, 4))
+
+k_values = range(2, 11)
+
+def determine_sil_values_agg(k_range, X_data, link_type):
+
+    """
+    Calculates the set of silhouette score for Kmeans based on range of K clusters
+
+    Parameters:
+    -----------
+        k_range: range of K clusters. Should start on 2.
+        X_data: scaled data
+    
+    Returns
+    -------
+        list of solhouette scores for Euclidean and Manhatten methods,
+        based on number of clusters K.
+    """
+    eucl_sil_values = []
+    man_sil_values = []
+
+    for k in k_range:
+        km_clusterer_eucl = AgglomerativeClustering(n_clusters=k, linkage=link_type, 
+                                               metric = 'euclidean').fit(X_data)
+        labels_pred_eucl = km_clusterer_eucl.fit_predict(X_data)
+
+        eucl_sil_score = silhouette_score(X_data, labels_pred_eucl, metric="euclidean")
+        eucl_sil_values.append(eucl_sil_score)
+
+        if link_type != 'ward':
+            km_clusterer_man = AgglomerativeClustering(n_clusters=k, linkage=link_type, 
+                                                metric = 'manhattan').fit(X_data)
+            labels_pred_man = km_clusterer_man.fit_predict(X_data)
+            
+            man_sil_score = silhouette_score(X_data, labels_pred_man, metric="manhattan")
+            man_sil_values.append(man_sil_score)
+        
+    return(eucl_sil_values, man_sil_values)
+
+single = determine_sil_values_agg(k_range = k_values, X_data = X_scaled, link_type = 'single')
+complete = determine_sil_values_agg(k_range = k_values, X_data = X_scaled, link_type = 'complete')
+average = determine_sil_values_agg(k_range = k_values, X_data = X_scaled, link_type = 'average')
+ward = determine_sil_values_agg(k_range = k_values, X_data = X_scaled, link_type = 'ward')
+
+
+fig, ax = plt.subplots()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
+
+plt.plot(k_values, single[0], c="darkgreen", marker='o', label = 'single',
+          lw = 3, markersize = 10)
+plt.plot(k_values, complete[0], c="dodgerblue", marker='o', label = 'complete', 
+         lw = 3, markersize = 10)
+plt.plot(k_values, average[0], c="blueviolet", marker='o', label = 'average',
+          lw = 3, markersize = 10)
+plt.plot(k_values, ward[0], c="darkorange", marker='o', label = 'ward', 
+         lw = 3, markersize = 10)
+
+plt.title("Silhouette Score for different K using Euclidean method", fontsize = 22)
+plt.xlabel("Number of Clusters (K)", fontsize = 16)
+plt.ylabel("Silhoette Score (Euclidean)", fontsize = 16)
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.legend(fontsize = 16)
+plt.show()
+
+
+fig, ax = plt.subplots()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
+
+plt.plot(k_values, single[1], c="darkgreen", marker='o', label = 'single',
+          lw = 3, markersize = 10)
+plt.plot(k_values, complete[1], c="dodgerblue", marker='o', label = 'complete', 
+         lw = 3, markersize = 10)
+plt.plot(k_values, average[1], c="blueviolet", marker='o', label = 'average',
+          lw = 3, markersize = 10)
+
+plt.title("Silhouette Score for different K using Manhattan method", fontsize = 22)
+plt.xlabel("Number of Clusters (K)", fontsize = 16)
+plt.ylabel("Silhoette Score (Manhattan)", fontsize = 16)
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.legend(fontsize = 16)
+plt.show()
