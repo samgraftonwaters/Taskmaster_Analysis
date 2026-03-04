@@ -101,29 +101,85 @@ def plot_confusion_matrix(model_matrix):
 
 #Logistic Regression Model
 
-parameters_to_search = {"solver":["lbfgs", "liblinear", "newton-cg"], "C":[0.1, 1, 10, 100],
-                        "tol":[0.001, 0.001, 0.01, 0.1], "penalty":['l1', 'l2', 'elasticnet', None]}
+# parameters_to_search = {"solver":["lbfgs", "liblinear", "newton-cg"], "C":[0.1, 1, 10, 100],
+#                         "tol":[0.001, 0.001, 0.01, 0.1], "penalty":['l1', 'l2', 'elasticnet', None]}
+
+parameters_to_search = [
+    {
+        "solver": ["lbfgs", "newton-cg"],
+        "penalty": ["l2", None],
+        "C": [0.1, 1, 10, 100],
+        "tol": [0.0001, 0.001, 0.01, 0.1]
+    },
+    {
+        "solver": ["liblinear"],
+        "penalty": ["l1", "l2"],
+        "C": [0.1, 1, 10, 100],
+        "tol": [0.0001, 0.001, 0.01, 0.1]
+    },
+    {
+        "solver": ["saga"],
+        "penalty": ["l1", "l2", "elasticnet"],
+        "C": [0.1, 1, 10, 100],
+        "tol": [0.0001, 0.001, 0.01, 0.1],
+        "l1_ratio": [0.5]  # required for elasticnet
+    }
+]
 
 logistic_regression_model = LogisticRegression(class_weight="balanced")
 
-# Define our grid to find optimal model.
 optimised_model = GridSearchCV(estimator=logistic_regression_model, \
                                param_grid=parameters_to_search, scoring="f1", cv=5)
 
-# Fit the parameter search model.
 optimised_model.fit(X_train, y_train)
 
-print("The original parameters were: \n\n", logistic_regression_model.get_params())
 print("\nThe best parameters found are: \n\n", optimised_model.best_params_)
 
-# Predict target based on best model found.
 y_pred = optimised_model.best_estimator_.predict(X_test)
 
-# Generate the report using the target test and prediction values.
 classif_report_new = classification_report(y_test, y_pred, target_names=tick_labels)
 
 print("Optimised parameter report: \n", classif_report_new)
 
 logistic_regression_conf_matrix = calculate_conf_matrix(y_test = y_test, y_pred = y_pred)
+
+plot_confusion_matrix(model_matrix = logistic_regression_conf_matrix)
+
+
+best_params = optimised_model.best_params_
+
+logistic_regression_best = LogisticRegression(
+    class_weight="balanced",
+    **best_params
+)
+
+logistic_regression_best.fit(X_train, y_train)
+
+y_pred = logistic_regression_best.predict(X_test)
+
+logistic_regression_conf_matrix = calculate_conf_matrix(y_test = y_test, y_pred = y_pred)
+
+plot_confusion_matrix(model_matrix = logistic_regression_conf_matrix)
+
+y_probs = logistic_regression_best.predict_proba(X_test)[:, 1]
+
+thresholds = np.arange(0.1, 0.9, 0.01)
+f1_scores = []
+
+for t in thresholds:
+    preds = (y_probs >= t).astype(int)
+    f1_scores.append(f1_score(y_test, preds))
+
+best_threshold = thresholds[np.argmax(f1_scores)]
+print("Best threshold:", best_threshold)
+
+
+def predict_with_threshold(model, X, threshold):
+    probs = model.predict_proba(X)[:, 1]
+    return (probs >= threshold).astype(int)
+
+y_pred_custom = predict_with_threshold(logistic_regression_best, X_test, best_threshold)
+
+logistic_regression_conf_matrix = calculate_conf_matrix(y_test = y_test, y_pred = y_pred_custom )
 
 plot_confusion_matrix(model_matrix = logistic_regression_conf_matrix)
