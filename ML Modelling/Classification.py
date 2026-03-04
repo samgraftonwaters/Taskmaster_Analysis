@@ -97,7 +97,7 @@ def plot_confusion_matrix(model_matrix):
     plt.show()
 
 def determine_best_threshold(y, y_probs):
-    thresholds = np.arange(0.05, 0.95, 0.01)
+    thresholds = np.arange(0.1, 0.9, 0.01)
     f1_scores = []
 
     for t in thresholds:
@@ -113,12 +113,6 @@ def predict_with_threshold(model, X, threshold):
     probs = model.predict_proba(X)[:, 1]
     return (probs >= threshold).astype(int)
 
-
-#Logistic Regression Model
-
-# parameters_to_search = {"solver":["lbfgs", "liblinear", "newton-cg"], "C":[0.1, 1, 10, 100],
-#                         "tol":[0.001, 0.001, 0.01, 0.1], "penalty":['l1', 'l2', 'elasticnet', None]}
-
 parameters_to_search = [
     {
         "solver": ["lbfgs", "newton-cg"],
@@ -133,54 +127,33 @@ parameters_to_search = [
         "tol": [0.0001, 0.001, 0.01, 0.1]
     },
     {
-        "solver": ["saga"],
-        "penalty": ["l1", "l2", "elasticnet"],
-        "C": [0.1, 1, 10, 100],
-        "tol": [0.0001, 0.001, 0.01, 0.1],
-        "l1_ratio": [0.5]  # required for elasticnet
+    "solver": ["saga"],
+    "penalty": ["l1", "l2"],
+    "C": [0.1, 1, 10, 100],
+    "tol": [0.0001, 0.001, 0.01, 0.1]
+    },
+    {
+    "solver": ["saga"],
+    "penalty": ["elasticnet"],
+    "C": [0.1, 1, 10, 100],
+    "tol": [0.0001, 0.001, 0.01, 0.1],
+    "l1_ratio": [0.5]
     }
 ]
 
 
-logistic_regression_model = LogisticRegression(class_weight="balanced")
 
-optimised_model = GridSearchCV(estimator=logistic_regression_model, \
+#Hyperparameter grid search
+
+optimised_model = GridSearchCV(estimator=LogisticRegression(class_weight="balanced"),
                                param_grid=parameters_to_search, scoring="f1", cv=5)
 
 optimised_model.fit(X_train, y_train)
 
-print("\nThe best parameters found are: \n\n", optimised_model.best_params_)
+print("\nBest parameters: \n\n", optimised_model.best_params_)
 
-y_pred = optimised_model.best_estimator_.predict(X_test)
-
-classif_report = classification_report(y_test, y_pred, target_names=tick_labels)
-
-print("Optimised parameter report: \n", classif_report)
-
-logistic_regression_conf_matrix = calculate_conf_matrix(y_test = y_test, y_pred = y_pred)
-
-plot_confusion_matrix(model_matrix = logistic_regression_conf_matrix)
-
-best_params = optimised_model.best_params_
-
-logistic_regression_best = LogisticRegression(
-    class_weight="balanced",
-    **best_params
-)
-
-logistic_regression_best.fit(X_train, y_train)
-
-# y_pred = logistic_regression_best.predict(X_test)
-
-# classif_report = classification_report(y_test, y_pred, target_names=tick_labels)
-
-# print("Optimised parameter report: \n", classif_report)
-
-# logistic_regression_conf_matrix = calculate_conf_matrix(y_test = y_test, y_pred = y_pred)
-
-# plot_confusion_matrix(model_matrix = logistic_regression_conf_matrix)
-
-# y_probs = logistic_regression_best.predict_proba(X_test)[:, 1]
+#fit the model with best parameters
+logistic_regression_best = optimised_model.best_estimator_
 
 #find best threshold
 y_train_probs = cross_val_predict(
@@ -204,4 +177,48 @@ plot_confusion_matrix(model_matrix = logistic_regression_conf_matrix)
 
 classif_report = classification_report(y_test, y_test_pred, target_names=tick_labels)
 
-print("Optimised parameter report: \n", classif_report)
+print("Final Model Report: \n", classif_report)
+
+
+
+
+
+
+# -----------------------------
+# 2. Threshold tuning (NO LEAKAGE)
+# -----------------------------
+y_train_probs = cross_val_predict(
+    logistic_regression_best,
+    X_train,
+    y_train,
+    cv=5,
+    method="predict_proba"
+)[:, 1]
+
+best_threshold_train = determine_best_threshold(y_train, y_train_probs)
+
+# -----------------------------
+# 3. Retrain on full training set
+# -----------------------------
+logistic_regression_best.fit(X_train, y_train)
+
+# -----------------------------
+# 4. Final test evaluation (ONLY ONCE)
+# -----------------------------
+y_test_probs = logistic_regression_best.predict_proba(X_test)[:, 1]
+y_test_pred = (y_test_probs >= best_threshold_train).astype(int)
+
+logistic_regression_conf_matrix = calculate_conf_matrix(
+    y_test=y_test,
+    y_pred=y_test_pred
+)
+
+plot_confusion_matrix(model_matrix=logistic_regression_conf_matrix)
+
+classif_report = classification_report(
+    y_test,
+    y_test_pred,
+    target_names=tick_labels
+)
+
+print("Final model report:\n", classif_report)
