@@ -23,9 +23,7 @@ print(model_data.info())
 
 print(model_data.columns)
 
-data = model_data.drop(['Series', 'Name'], axis = 1)
-
-data = pd.DataFrame(data)
+data = pd.DataFrame(model_data)
 
 #Selecting only Numerical Data
 data_nums = data.select_dtypes(include=[float, int])
@@ -378,7 +376,7 @@ ward = determine_sil_values_agg(k_range = k_values, X_data = X_scaled, link_type
 
 
 fig, ax = plt.subplots()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.1, right = 0.98)
 
 plt.plot(k_values, single[0], c="darkgreen", marker='o', label = 'single',
           lw = 3, markersize = 10)
@@ -399,7 +397,7 @@ plt.show()
 
 
 fig, ax = plt.subplots()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.1, right = 0.98)
 
 plt.plot(k_values, single[1], c="darkgreen", marker='o', label = 'single',
           lw = 3, markersize = 10)
@@ -419,30 +417,23 @@ plt.show()
 single_eucl = max(zip(k_values, single[0]), key=lambda x: x[1])[0]
 single_man = max(zip(k_values, single[1]), key=lambda x: x[1])[0]
 
-print(r"Best Sillhouette Single Agg Euclidean", single_eucl, max(single[0]))
-print(r"Best Sillhouette Single Agg Manhattan", single_man, max(single[1]))
+print("Best Sillhouette Single Agg Euclidean", single_eucl, max(single[0]))
+print("Best Sillhouette Single Agg Manhattan", single_man, max(single[1]))
 
 complete_eucl = max(zip(k_values, complete[0]), key=lambda x: x[1])[0]
 complete_man = max(zip(k_values, complete[1]), key=lambda x: x[1])[0]
 
-print(r"Best Sillhouette complete Agg Euclidean", complete_eucl, max(complete[0]))
-print(r"Best Sillhouette complete Agg Manhattan", complete_man, max(complete[1]))
+print("Best Sillhouette complete Agg Euclidean", complete_eucl, max(complete[0]))
+print("Best Sillhouette complete Agg Manhattan", complete_man, max(complete[1]))
 
 average_eucl = max(zip(k_values, average[0]), key=lambda x: x[1])[0]
 average_man = max(zip(k_values, average[1]), key=lambda x: x[1])[0]
 
-print(r"Best Sillhouette average Agg Euclidean", average_eucl, max(average[0]))
-print(r"Best Sillhouette average Agg Manhattan", average_man, max(average[1]))
+print("Best Sillhouette average Agg Euclidean", average_eucl, max(average[0]))
+print("Best Sillhouette average Agg Manhattan", average_man, max(average[1]))
 
 ward_eucl = max(zip(k_values, ward[0]), key=lambda x: x[1])[0]
-print(r"Best Sillhouette ward Agg Euclidean", ward_eucl, max(ward[0]))
-
-
-dbscan_eucl = DBSCAN(eps=eucl_eps_max, metric="euclidean", min_samples=20)
-dbscan_eucl.fit(X_scaled)
-
-data['Group (dbscan eucl)'] = dbscan_eucl.labels_
-dbscan_labels = dbscan_eucl.labels_
+print("Best Sillhouette ward Agg Euclidean", ward_eucl, max(ward[0]))
 
 agg_model = AgglomerativeClustering(n_clusters=complete_man, linkage="complete", 
                                     metric = 'manhattan').fit(X_scaled)
@@ -472,3 +463,14 @@ plt.ylabel("Total Score", fontsize = 16)
 plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
 plt.show()
+
+
+print(data.head())
+print(data.columns)
+
+data_grouped = data[['Series', 'Name', 'Score', 'Position', 'Group (kmeans)',
+                     'Group (Agg Man Complete)']]
+
+print(data_grouped.head())
+
+data_grouped.to_csv(file_path + 'Grouped Contestents.csv', sep = ',', index = False)
