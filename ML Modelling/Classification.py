@@ -42,33 +42,26 @@ print(y)
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=123)
 
-#Logistic Regression Model
 
+# # Fit the model
+# logistic_regression_model.fit(X_train, y_train)
 
-logistic_regression_model = LogisticRegression(solver="liblinear",  
-                                               C=0.001, 
-                                               random_state=123, 
-                                               class_weight="balanced")
+# # Predict values using the test data.
+# y_pred = logistic_regression_model.predict(X_test)
 
-# Fit the model
-logistic_regression_model.fit(X_train, y_train)
+# # Compare predicted and true values to yield the accuracy.
+# logistic_regression_acc = f1_score(y_test, y_pred)
 
-# Predict values using the test data.
-y_pred = logistic_regression_model.predict(X_test)
+# print("Logistic Regression Model F1-Score: \n", logistic_regression_acc)
 
-# Compare predicted and true values to yield the accuracy.
-logistic_regression_acc = f1_score(y_test, y_pred)
+# # Predicting Probabilities
+# y_pred_prob = logistic_regression_model.predict_proba(X_test)
+# print(y_pred_prob[:5])
+# print(y_pred[:5])
 
-print("Logistic Regression Model F1-Score: \n", logistic_regression_acc)
+# classif_report = classification_report(y_test, y_pred)
 
-# Predicting Probabilities
-y_pred_prob = logistic_regression_model.predict_proba(X_test)
-print(y_pred_prob[:5])
-print(y_pred[:5])
-
-classif_report = classification_report(y_test, y_pred)
-
-print(classif_report)
+# print(classif_report)
 
 labels = [1, 0]
 tick_labels = ["Winner", "Non-Winner"]
@@ -79,8 +72,6 @@ def calculate_conf_matrix( y_test, y_pred):
     print("Confusion matrix (count): \n", conf_matrix_values)
 
     return(conf_matrix_values)
-
-logistic_regression_conf_matrix = calculate_conf_matrix(y_test = y_test, y_pred = y_pred)
 
 def plot_confusion_matrix(model_matrix):
     fig, ax = plt.subplots()
@@ -104,5 +95,35 @@ def plot_confusion_matrix(model_matrix):
     ax.xaxis.set_label_position('top') 
 
     plt.show()
+
+
+
+
+#Logistic Regression Model
+
+parameters_to_search = {"solver":["lbfgs", "liblinear", "newton-cg"], "C":[0.1, 1, 10, 100],
+                        "tol":[0.001, 0.001, 0.01, 0.1], "penalty":['l1', 'l2', 'elasticnet', None]}
+
+logistic_regression_model = LogisticRegression(class_weight="balanced")
+
+# Define our grid to find optimal model.
+optimised_model = GridSearchCV(estimator=logistic_regression_model, \
+                               param_grid=parameters_to_search, scoring="f1", cv=5)
+
+# Fit the parameter search model.
+optimised_model.fit(X_train, y_train)
+
+print("The original parameters were: \n\n", logistic_regression_model.get_params())
+print("\nThe best parameters found are: \n\n", optimised_model.best_params_)
+
+# Predict target based on best model found.
+y_pred = optimised_model.best_estimator_.predict(X_test)
+
+# Generate the report using the target test and prediction values.
+classif_report_new = classification_report(y_test, y_pred, target_names=tick_labels)
+
+print("Optimised parameter report: \n", classif_report_new)
+
+logistic_regression_conf_matrix = calculate_conf_matrix(y_test = y_test, y_pred = y_pred)
 
 plot_confusion_matrix(model_matrix = logistic_regression_conf_matrix)
