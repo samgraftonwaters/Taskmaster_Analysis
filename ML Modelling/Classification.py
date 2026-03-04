@@ -1,16 +1,25 @@
 from sklearn.model_selection import GridSearchCV
+from sklearn.preprocessing import StandardScaler, RobustScaler
 import pandas as pd
 import numpy as np
+import seaborn as sns
 import matplotlib.pyplot as plt
+
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, f1_score, classification_report
+from sklearn.metrics import confusion_matrix, roc_auc_score, roc_curve
+from sklearn.linear_model import LogisticRegression
+
+
 
 plt.rcParams['figure.figsize'] = (13, 7)
 
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
-model_data = pd.read_csv(file_path + 'Full Contestent Table for Modelling.csv')
+data = pd.read_csv(file_path + 'Full Contestent Table for Modelling.csv')
 
-print(model_data.head())
+print(data.head())
 
-data = model_data[['Series', 'Name', 'Position', 'Number_Episodes', 'Team_A', 'Team_B', 'Age_Ranges_20 - 29', 
+data = data[['Series', 'Name', 'Position', 'Number_Episodes', 'Team_A', 'Team_B', 'Age_Ranges_20 - 29', 
                    'Age_Ranges_30 - 39', 'Age_Ranges_40 - 49', 'Age_Ranges_50 - 59', 
                    'Age_Ranges_60 - 69', 'Gender_Female', 'Gender_Male', 'Gender_Non-Binary', 
                    'Seat_Seat 1', 'Seat_Seat 2', 'Seat_Seat 3', 'Seat_Seat 4', 'Seat_Seat 5']]
@@ -18,3 +27,82 @@ data = model_data[['Series', 'Name', 'Position', 'Number_Episodes', 'Team_A', 'T
 data['Winner'] = np.where(data['Position'] == 1, 1, 0)
 
 print(data.head())
+
+model_data = data[['Number_Episodes', 'Team_A', 'Team_B', 'Age_Ranges_20 - 29', 
+                   'Age_Ranges_30 - 39', 'Age_Ranges_40 - 49', 'Age_Ranges_50 - 59', 
+                   'Age_Ranges_60 - 69', 'Gender_Female', 'Gender_Male', 'Gender_Non-Binary', 
+                   'Seat_Seat 1', 'Seat_Seat 2', 'Seat_Seat 3', 'Seat_Seat 4', 'Seat_Seat 5', 
+                   'Winner']]
+
+X = model_data.iloc[:,:-1]
+y = model_data['Winner']
+
+print(X)
+print(y)
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=123)
+
+#Logistic Regression Model
+
+
+logistic_regression_model = LogisticRegression(solver="liblinear",  
+                                               C=0.001, 
+                                               random_state=123, 
+                                               class_weight="balanced")
+
+# Fit the model
+logistic_regression_model.fit(X_train, y_train)
+
+# Predict values using the test data.
+y_pred = logistic_regression_model.predict(X_test)
+
+# Compare predicted and true values to yield the accuracy.
+logistic_regression_acc = f1_score(y_test, y_pred)
+
+print("Logistic Regression Model F1-Score: \n", logistic_regression_acc)
+
+# Predicting Probabilities
+y_pred_prob = logistic_regression_model.predict_proba(X_test)
+print(y_pred_prob[:5])
+print(y_pred[:5])
+
+classif_report = classification_report(y_test, y_pred)
+
+print(classif_report)
+
+labels = [1, 0]
+tick_labels = ["Winner", "Non-Winner"]
+
+def calculate_conf_matrix( y_test, y_pred):
+
+    conf_matrix_values = confusion_matrix(y_test, y_pred, labels=labels)
+    print("Confusion matrix (count): \n", conf_matrix_values)
+
+    return(conf_matrix_values)
+
+logistic_regression_conf_matrix = calculate_conf_matrix(y_test = y_test, y_pred = y_pred)
+
+def plot_confusion_matrix(model_matrix):
+    fig, ax = plt.subplots()
+    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.1, right = 0.95)
+
+    sns.heatmap(
+        model_matrix, annot=True, fmt="d", cmap="coolwarm", xticklabels=tick_labels,
+        yticklabels=tick_labels, annot_kws={"size": 16}, cbar_kws={"shrink": 1.0},
+        linewidths=1, linecolor="black")
+
+    ax.xaxis.tick_top()
+    ax.xaxis.set_label_position('top')
+
+    cbar = ax.collections[0].colorbar
+    cbar.ax.tick_params(labelsize=14)
+
+    plt.xlabel('Predicted', fontsize = 16)
+    plt.ylabel('True', fontsize = 16)
+    plt.xticks(fontsize=14)
+    plt.yticks(fontsize=14)
+    ax.xaxis.set_label_position('top') 
+
+    plt.show()
+
+plot_confusion_matrix(model_matrix = logistic_regression_conf_matrix)
