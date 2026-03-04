@@ -5,7 +5,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, cross_val_predict
 from sklearn.metrics import accuracy_score, f1_score, classification_report
 from sklearn.metrics import confusion_matrix, roc_auc_score, roc_curve
 from sklearn.linear_model import LogisticRegression
@@ -163,16 +163,28 @@ plot_confusion_matrix(model_matrix = logistic_regression_conf_matrix)
 
 y_probs = logistic_regression_best.predict_proba(X_test)[:, 1]
 
-thresholds = np.arange(0.1, 0.9, 0.01)
-f1_scores = []
+y_train_probs = cross_val_predict(
+    logistic_regression_best,
+    X_train,
+    y_train,
+    cv=5,
+    method="predict_proba"
+)[:, 1]
 
-for t in thresholds:
-    preds = (y_probs >= t).astype(int)
-    f1_scores.append(f1_score(y_test, preds))
+def determine_best_threshold(y, y_probs):
+    thresholds = np.arange(0.05, 0.95, 0.01)
+    f1_scores = []
 
-best_threshold = thresholds[np.argmax(f1_scores)]
-print("Best threshold:", best_threshold)
+    for t in thresholds:
+        preds = (y_probs >= t).astype(int)
+        f1_scores.append(f1_score(y, preds))
 
+    best_threshold = thresholds[np.argmax(f1_scores)]
+    print("Best threshold:", best_threshold)
+
+    return(best_threshold)
+
+best_threshold = determine_best_threshold(y_test, y_probs)
 
 def predict_with_threshold(model, X, threshold):
     probs = model.predict_proba(X)[:, 1]
