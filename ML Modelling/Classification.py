@@ -25,6 +25,7 @@ X = model_data.iloc[:,:-1]
 y = model_data['Winner']
 
 X_train, X_test, y_train, y_test = CF.train_test_split(X, y, test_size=0.2, random_state=123)
+                                                        #stratify=y)
 
 labels = [1, 0]
 tick_labels = ["Winner", "Non-Winner"]
@@ -109,8 +110,22 @@ CF.plot_precision_recall_curve(y_true = y_test, y_prob_scores = y_test_probs,
 ######
 #2. Naive Bayes
 ######
+param_grid = {
+    "alpha": [0.001, 0.01, 0.1, 0.5, 1, 2]
+}
 
-nb_model = CF.MultinomialNB(priors=[0.8, 0.2])
+#Hyperparameter grid search
+optimised_model = CF.GridSearchCV(estimator=CF.MultinomialNB(),
+                               param_grid=param_grid, scoring="f1", cv=5)
+
+optimised_model.fit(X_train, y_train)
+
+print("\nBest parameters: \n\n", optimised_model.best_params_)
+
+nb_model = optimised_model.best_estimator_
+
+# multi_nb_model = CF.MultinomialNB()
+# bern_nb_model = CF.BernoulliNB(alpha=1.0, binarize=None)
 
 y_train_probs = CF.cross_val_predict(nb_model, X_train, y_train, cv=5,
                                   method="predict_proba")[:, 1]
