@@ -6,8 +6,8 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 from sklearn.model_selection import train_test_split, cross_val_predict
-from sklearn.metrics import accuracy_score, f1_score, classification_report
-from sklearn.metrics import confusion_matrix, roc_auc_score, roc_curve
+from sklearn.metrics import accuracy_score, f1_score, classification_report, precision_score, recall_score
+from sklearn.metrics import confusion_matrix, roc_auc_score, roc_curve, precision_recall_curve, auc
 from sklearn.linear_model import LogisticRegression
 
 
@@ -113,6 +113,54 @@ def predict_with_threshold(model, X, threshold):
     probs = model.predict_proba(X)[:, 1]
     return (probs >= threshold).astype(int)
 
+def return_model_metrics(y_true, y_pred):
+    print('The Precision, Recall and F1 Score values are:\n')
+    print('Precision: ', round(precision_score(y_true, y_pred), 2))
+    print('Recall: ', round(recall_score(y_true, y_pred), 2))
+    print('F1 Score: ', round(f1_score(y_true, y_pred), 2))
+
+def plot_ROC_curve(y_true, y_scores, title):
+
+    fpr, tpr, _thresholds = roc_curve(y_true, y_scores, pos_label=1)
+
+    AUC_score = roc_auc_score(y_true, y_scores)
+
+    fig, ax = plt.subplots()
+    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.1, right = 0.95)
+
+    plt.plot(fpr, tpr, color='firebrick', lw = 3, label="ROC curve area: {:.3f}".format(AUC_score))
+    plt.plot([0, 1], [0, 1], color='dodgerblue', linestyle='--', lw = 3, label="Expected Random Model")
+    plt.title(title, fontsize = 20)
+    plt.legend(loc="best", fontsize = 18)
+    plt.xlabel('False Positive Rate', fontsize = 16)
+    plt.ylabel('True Positive Rate', fontsize = 16)
+    plt.xticks(fontsize = 14)
+    plt.yticks(fontsize = 14)
+    plt.show()
+
+def plot_precision_recall_curve(y_true, y_prob_scores, title, model_precision, model_recall):
+
+    precision, recall, _thresholds = precision_recall_curve(y_true, y_prob_scores)
+
+    AUC_score = auc(recall, precision)
+
+    fig, ax = plt.subplots()
+    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.1, right = 0.95)
+
+    plt.plot(recall, precision, color='dodgerblue', lw = 3, label="PR AUC: {:.3f}".format(AUC_score))
+    plt.plot(model_recall, model_precision, 'o', color='firebrick', markersize = 16, label="Model Precision-Recall")
+    plt.title(title, fontsize = 20)
+    plt.legend(loc="best", fontsize = 18)
+    plt.xlabel('Recall', fontsize = 16)
+    plt.ylabel('Precision', fontsize = 16)
+    plt.xticks(fontsize = 14)
+    plt.yticks(fontsize = 14)
+    plt.show()
+
+
+######
+#1. Logistic Regression Model
+######
 parameters_to_search = [
     {
         "solver": ["lbfgs", "newton-cg"],
@@ -142,9 +190,7 @@ parameters_to_search = [
 ]
 
 
-
 #Hyperparameter grid search
-
 optimised_model = GridSearchCV(estimator=LogisticRegression(class_weight="balanced"),
                                param_grid=parameters_to_search, scoring="f1", cv=5)
 
@@ -152,17 +198,11 @@ optimised_model.fit(X_train, y_train)
 
 print("\nBest parameters: \n\n", optimised_model.best_params_)
 
-#fit the model with best parameters
 logistic_regression_best = optimised_model.best_estimator_
 
 #find best threshold
-y_train_probs = cross_val_predict(
-    logistic_regression_best,
-    X_train,
-    y_train,
-    cv=5,
-    method="predict_proba"
-)[:, 1]
+y_train_probs = cross_val_predict(logistic_regression_best, X_train, y_train, cv=5,
+                                  method="predict_proba")[:, 1]
 
 best_threshold_train = determine_best_threshold(y_train, y_train_probs)
 
@@ -179,46 +219,33 @@ classif_report = classification_report(y_test, y_test_pred, target_names=tick_la
 
 print("Final Model Report: \n", classif_report)
 
+return_model_metrics(y_true = y_test, y_pred = y_test_pred)
+
+y_pred_scores = logistic_regression_best.decision_function(X_test)
+
+plot_ROC_curve(y_true = y_test, y_scores = y_test_pred, title = 'Logistic Regression Model ROC Curve')
+
+plot_precision_recall_curve(y_true = y_test, y_prob_scores = y_test_probs, 
+                            title = 'Logistic Regression Model Precision Recall Curve',
+                            model_precision = precision_score(y_test, y_test_pred), 
+                            model_recall = recall_score(y_test, y_test_pred))
+
+
+
+######
+#2. Naive Bayes
+######
 
 
 
 
 
-# -----------------------------
-# 2. Threshold tuning (NO LEAKAGE)
-# -----------------------------
-y_train_probs = cross_val_predict(
-    logistic_regression_best,
-    X_train,
-    y_train,
-    cv=5,
-    method="predict_proba"
-)[:, 1]
 
-best_threshold_train = determine_best_threshold(y_train, y_train_probs)
 
-# -----------------------------
-# 3. Retrain on full training set
-# -----------------------------
-logistic_regression_best.fit(X_train, y_train)
 
-# -----------------------------
-# 4. Final test evaluation (ONLY ONCE)
-# -----------------------------
-y_test_probs = logistic_regression_best.predict_proba(X_test)[:, 1]
-y_test_pred = (y_test_probs >= best_threshold_train).astype(int)
 
-logistic_regression_conf_matrix = calculate_conf_matrix(
-    y_test=y_test,
-    y_pred=y_test_pred
-)
 
-plot_confusion_matrix(model_matrix=logistic_regression_conf_matrix)
 
-classif_report = classification_report(
-    y_test,
-    y_test_pred,
-    target_names=tick_labels
-)
-
-print("Final model report:\n", classif_report)
+######
+#3. SVM
+######
