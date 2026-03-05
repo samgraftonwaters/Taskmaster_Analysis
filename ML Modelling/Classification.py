@@ -110,8 +110,35 @@ CF.plot_precision_recall_curve(y_true = y_test, y_prob_scores = y_test_probs,
 #2. Naive Bayes
 ######
 
+nb_model = CF.MultinomialNB(priors=[0.8, 0.2])
 
+y_train_probs = CF.cross_val_predict(nb_model, X_train, y_train, cv=5,
+                                  method="predict_proba")[:, 1]
 
+best_threshold_train = CF.determine_best_threshold(y_train, y_train_probs)
+
+nb_model.fit(X_train, y_train)
+
+y_test_probs = nb_model.predict_proba(X_test)[:, 1]
+y_test_pred = (y_test_probs >= best_threshold_train).astype(int)
+
+naive_bayes_conf_matrix = CF.calculate_conf_matrix(y_test = y_test, y_pred = y_test_pred,
+                                                           labels = labels)
+
+CF.plot_confusion_matrix(model_matrix = naive_bayes_conf_matrix, tick_labels = tick_labels)
+
+classif_report = CF.classification_report(y_test, y_test_pred, target_names=tick_labels)
+
+print("Final Model Report: \n", classif_report)
+
+CF.return_model_metrics(y_true = y_test, y_pred = y_test_pred)
+
+CF.plot_ROC_curve(y_true = y_test, y_scores = y_test_probs, title = 'Naive Bayes Model ROC Curve')
+
+CF.plot_precision_recall_curve(y_true = y_test, y_prob_scores = y_test_probs, 
+                            title = 'Naive Bayes Model Precision Recall Curve',
+                            model_precision = CF.precision_score(y_test, y_test_pred), 
+                            model_recall = CF.recall_score(y_test, y_test_pred))
 
 
 
@@ -122,4 +149,16 @@ CF.plot_precision_recall_curve(y_true = y_test, y_prob_scores = y_test_probs,
 
 ######
 #3. SVM
+######
+
+
+
+
+
+
+
+
+
+######
+#4. Decision Tree
 ######
