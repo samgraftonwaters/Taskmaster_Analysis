@@ -188,50 +188,96 @@ svm_linear_parameters_grid = [
     }
 ]
 
+svc_parameters_grid = [
+    {"C" :  [0.1, 1, 10, 100],
+     "tol": [0.0001, 0.001, 0.01, 0.1, 1],
+     "kernel" : ["linear", "poly", "rbf", "sigmoid"],
+     "gamma": ["scale", "auto"]
+    }
+]
+
+nu_svc_parameter_grid = [
+    {"tol": [0.0001, 0.001, 0.01, 0.1, 1],
+     "nu": [0, 0.2, 0.4, 0.6, 0.8, 1],
+     "kernel" : ["linear", "poly", "rbf", "sigmoid"],
+      "gamma": ["scale", "auto"]
+    }
+]
+
+
+
 #Hyperparameter grid search
-svm_liniear_optimised_model = CF.GridSearchCV(estimator=CF.LinearSVC(class_weight = 'balanced'),
+svm_linear_optimised_model = CF.GridSearchCV(estimator=CF.LinearSVC(class_weight = 'balanced'),
                                param_grid=svm_linear_parameters_grid, scoring="f1", cv=5)
 
-svm_liniear_optimised_model.fit(X_train, y_train)
+svm_linear_optimised_model.fit(X_train, y_train)
 
-print("Best parameters for MultinomialNB: \n", svm_liniear_optimised_model.best_params_)
+print("Best parameters for MultinomialNB: \n", svm_linear_optimised_model.best_params_)
 
-print("Best CV MultinomialNB F1: ", svm_liniear_optimised_model.best_score_)
+print("Best CV MultinomialNB F1: ", svm_linear_optimised_model.best_score_)
 
 svm_linear_best = optimised_model.best_estimator_
 
-#find best threshold
-y_train_probs = CF.cross_val_predict(svm_linear_best, X_train, y_train, cv=5,
-                                  method="predict_proba")[:, 1]
+svc_optimised_model = CF.GridSearchCV(estimator=CF.SVC(class_weight = 'balanced'),
+                               param_grid=svc_parameters_grid, scoring="f1", cv=5)
 
-best_threshold_train = CF.determine_best_threshold(y_train, y_train_probs)
+svc_optimised_model.fit(X_train, y_train)
 
-svm_linear_best.fit(X_train, y_train)
+print("Best parameters for MultinomialNB: \n", svc_optimised_model.best_params_)
 
-y_test_probs = svm_linear_best.predict_proba(X_test)[:, 1]
-y_test_pred = (y_test_probs >= best_threshold_train).astype(int)
+print("Best CV MultinomialNB F1: ", svc_optimised_model.best_score_)
 
-logistic_regression_conf_matrix = CF.calculate_conf_matrix(y_test = y_test, y_pred = y_test_pred,
-                                                           labels = labels)
+svc_best = optimised_model.best_estimator_
 
-CF.plot_confusion_matrix(model_matrix = logistic_regression_conf_matrix, tick_labels = tick_labels)
 
-classif_report = CF.classification_report(y_test, y_test_pred, target_names=tick_labels,
-                                          labels=labels)
+nu_svc_optimised_model = CF.GridSearchCV(estimator=CF.NuSVC(class_weight = 'balanced'),
+                               param_grid=nu_svc_parameter_grid, scoring="f1", cv=5)
 
-print("Final Model Report: \n", classif_report)
+nu_svc_optimised_model.fit(X_train, y_train)
 
-CF.return_model_metrics(y_true = y_test, y_pred = y_test_pred)
+print("Best parameters for MultinomialNB: \n", nu_svc_optimised_model.best_params_)
 
-y_pred_scores = svm_linear_best.decision_function(X_test)
+print("Best CV MultinomialNB F1: ", nu_svc_optimised_model.best_score_)
 
-CF.plot_ROC_curve(y_true = y_test, y_scores = y_test_pred, title = 'Logistic Regression Model ROC Curve')
+nu_svc_best = optimised_model.best_estimator_
 
-CF.plot_precision_recall_curve(y_true = y_test, y_prob_scores = y_test_probs, 
-                            title = 'Logistic Regression Model Precision Recall Curve',
-                            model_precision = CF.precision_score(y_test, y_test_pred), 
-                            model_recall = CF.recall_score(y_test, y_test_pred))
+###
 
+svm_models = [svm_linear_optimised_model.best_estimator_, 
+              svc_optimised_model.best_estimator_,
+              nu_svc_optimised_model.best_estimator_
+              ]
+svm_model_names = ['SVM Linear', 'SVC', 'NuSVC']
+
+for nb_model, nb_name in zip(svm_models, svm_model_names):
+    y_train_probs = CF.cross_val_predict(nb_model, X_train, y_train, cv=5,
+                                    method="predict_proba")[:, 1]
+
+    best_threshold_train = CF.determine_best_threshold(y_train, y_train_probs)
+
+    nb_model.fit(X_train, y_train)
+
+    y_test_probs = nb_model.predict_proba(X_test)[:, 1]
+    y_test_pred = (y_test_probs >= best_threshold_train).astype(int)
+
+    naive_bayes_conf_matrix = CF.calculate_conf_matrix(y_test = y_test, y_pred = y_test_pred,
+                                                            labels = labels)
+
+    CF.plot_confusion_matrix(model_matrix = naive_bayes_conf_matrix, tick_labels = tick_labels)
+
+    classif_report = CF.classification_report(y_test, y_test_pred, target_names=tick_labels,
+                                            labels=labels)
+
+    print(f"Final {nb_name} Model Report: \n", classif_report)
+
+    CF.return_model_metrics(y_true = y_test, y_pred = y_test_pred)
+
+    CF.plot_ROC_curve(y_true = y_test, y_scores = y_test_probs, title = f'{nb_name} Model ROC Curve')
+
+    CF.plot_precision_recall_curve(y_true = y_test, y_prob_scores = y_test_probs, 
+                                title = f'{nb_name} Model Precision Recall Curve',
+                                model_precision = CF.precision_score(y_test, y_test_pred), 
+                                model_recall = CF.recall_score(y_test, y_test_pred))
 
 
 
