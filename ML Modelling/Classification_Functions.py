@@ -39,7 +39,6 @@ def plot_confusion_matrix(model_matrix, tick_labels):
     plt.ylabel('True', fontsize = 16)
     plt.xticks(fontsize=14)
     plt.yticks(fontsize=14)
-    ax.xaxis.set_label_position('top') 
 
     plt.show()
 

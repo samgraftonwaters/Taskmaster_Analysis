@@ -35,6 +35,9 @@ tick_labels = ["Winner", "Non-Winner"]
 ######
 #1. Logistic Regression Model
 ######
+
+print('\n Logistic Regression Method: \n')
+
 parameters_to_search = [
     {
         "solver": ["lbfgs", "newton-cg"],
@@ -90,7 +93,8 @@ logistic_regression_conf_matrix = CF.calculate_conf_matrix(y_test = y_test, y_pr
 
 CF.plot_confusion_matrix(model_matrix = logistic_regression_conf_matrix, tick_labels = tick_labels)
 
-classif_report = CF.classification_report(y_test, y_test_pred, target_names=tick_labels)
+classif_report = CF.classification_report(y_test, y_test_pred, target_names=tick_labels,
+                                          labels=labels)
 
 print("Final Model Report: \n", classif_report)
 
@@ -110,50 +114,72 @@ CF.plot_precision_recall_curve(y_true = y_test, y_prob_scores = y_test_probs,
 ######
 #2. Naive Bayes
 ######
+
+print('\n Naive Bayes Method: \n')
 param_grid = {
     "alpha": [0.001, 0.01, 0.1, 0.5, 1, 2]
 }
 
 #Hyperparameter grid search
-optimised_model = CF.GridSearchCV(estimator=CF.MultinomialNB(),
+multi_optimised_model = CF.GridSearchCV(estimator=CF.MultinomialNB(),
                                param_grid=param_grid, scoring="f1", cv=5)
 
-optimised_model.fit(X_train, y_train)
+multi_optimised_model.fit(X_train, y_train)
 
-print("\nBest parameters: \n\n", optimised_model.best_params_)
+print("Best parameters for MultinomialNB: \n", multi_optimised_model.best_params_)
 
-nb_model = optimised_model.best_estimator_
+print("Best CV MultinomialNB F1: ", multi_optimised_model.best_score_)
+
+
+bern_optimised_model = CF.GridSearchCV(estimator=CF.BernoulliNB(),
+                               param_grid=param_grid, scoring="f1", cv=5)
+
+bern_optimised_model.fit(X_train, y_train)
+
+print("\nBest parameters for BernoulliNB: \n\n", bern_optimised_model.best_params_)
+
+print("Best CV BernoulliNB F1: ", bern_optimised_model.best_score_)
+
+if bern_optimised_model.best_score_ > multi_optimised_model.best_score_:
+    nb_model = bern_optimised_model.best_estimator_
+else:
+    nb_model = multi_optimised_model.best_estimator_
 
 # multi_nb_model = CF.MultinomialNB()
 # bern_nb_model = CF.BernoulliNB(alpha=1.0, binarize=None)
 
-y_train_probs = CF.cross_val_predict(nb_model, X_train, y_train, cv=5,
-                                  method="predict_proba")[:, 1]
+nb_models = [bern_optimised_model.best_estimator_, multi_optimised_model.best_estimator_]
+nb_model_names = ['Bernoulli', 'Multinomial']
 
-best_threshold_train = CF.determine_best_threshold(y_train, y_train_probs)
+for nb_model, nb_name in zip(nb_models, nb_model_names):
+    y_train_probs = CF.cross_val_predict(nb_model, X_train, y_train, cv=5,
+                                    method="predict_proba")[:, 1]
 
-nb_model.fit(X_train, y_train)
+    best_threshold_train = CF.determine_best_threshold(y_train, y_train_probs)
 
-y_test_probs = nb_model.predict_proba(X_test)[:, 1]
-y_test_pred = (y_test_probs >= best_threshold_train).astype(int)
+    nb_model.fit(X_train, y_train)
 
-naive_bayes_conf_matrix = CF.calculate_conf_matrix(y_test = y_test, y_pred = y_test_pred,
-                                                           labels = labels)
+    y_test_probs = nb_model.predict_proba(X_test)[:, 1]
+    y_test_pred = (y_test_probs >= best_threshold_train).astype(int)
 
-CF.plot_confusion_matrix(model_matrix = naive_bayes_conf_matrix, tick_labels = tick_labels)
+    naive_bayes_conf_matrix = CF.calculate_conf_matrix(y_test = y_test, y_pred = y_test_pred,
+                                                            labels = labels)
 
-classif_report = CF.classification_report(y_test, y_test_pred, target_names=tick_labels)
+    CF.plot_confusion_matrix(model_matrix = naive_bayes_conf_matrix, tick_labels = tick_labels)
 
-print("Final Model Report: \n", classif_report)
+    classif_report = CF.classification_report(y_test, y_test_pred, target_names=tick_labels,
+                                            labels=labels)
 
-CF.return_model_metrics(y_true = y_test, y_pred = y_test_pred)
+    print(f"Final {nb_name} Model Report: \n", classif_report)
 
-CF.plot_ROC_curve(y_true = y_test, y_scores = y_test_probs, title = 'Naive Bayes Model ROC Curve')
+    CF.return_model_metrics(y_true = y_test, y_pred = y_test_pred)
 
-CF.plot_precision_recall_curve(y_true = y_test, y_prob_scores = y_test_probs, 
-                            title = 'Naive Bayes Model Precision Recall Curve',
-                            model_precision = CF.precision_score(y_test, y_test_pred), 
-                            model_recall = CF.recall_score(y_test, y_test_pred))
+    CF.plot_ROC_curve(y_true = y_test, y_scores = y_test_probs, title = f'Naive Bayes {nb_name} Model ROC Curve')
+
+    CF.plot_precision_recall_curve(y_true = y_test, y_prob_scores = y_test_probs, 
+                                title = f'Naive Bayes {nb_name} Model Precision Recall Curve',
+                                model_precision = CF.precision_score(y_test, y_test_pred), 
+                                model_recall = CF.recall_score(y_test, y_test_pred))
 
 
 
