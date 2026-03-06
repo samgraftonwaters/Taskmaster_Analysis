@@ -43,25 +43,25 @@ parameters_to_search = [
         "solver": ["lbfgs", "newton-cg"],
         "penalty": ["l2", None],
         "C": [0.1, 1, 10, 100],
-        "tol": [0.0001, 0.001, 0.01, 0.1]
+        "tol": [0.0001, 0.001, 0.01, 0.1, 1]
     },
     {
         "solver": ["liblinear"],
         "penalty": ["l1", "l2"],
         "C": [0.1, 1, 10, 100],
-        "tol": [0.0001, 0.001, 0.01, 0.1]
+        "tol": [0.0001, 0.001, 0.01, 0.1, 1]
     },
     {
     "solver": ["saga"],
     "penalty": ["l1", "l2"],
     "C": [0.1, 1, 10, 100],
-    "tol": [0.0001, 0.001, 0.01, 0.1]
+    "tol": [0.0001, 0.001, 0.01, 0.1, 1]
     },
     {
     "solver": ["saga"],
     "penalty": ["elasticnet"],
     "C": [0.1, 1, 10, 100],
-    "tol": [0.0001, 0.001, 0.01, 0.1],
+    "tol": [0.0001, 0.001, 0.01, 0.1, 1],
     "l1_ratio": [0.5]
     }
 ]
@@ -73,7 +73,9 @@ optimised_model = CF.GridSearchCV(estimator=CF.LogisticRegression(class_weight="
 
 optimised_model.fit(X_train, y_train)
 
-print("\nBest parameters: \n\n", optimised_model.best_params_)
+print("\nBest parameters: \n", optimised_model.best_params_)
+
+print("\nBest CV Logistic regression F1: \n", optimised_model.best_score_)
 
 logistic_regression_best = optimised_model.best_estimator_
 
@@ -140,14 +142,6 @@ print("\nBest parameters for BernoulliNB: \n\n", bern_optimised_model.best_param
 
 print("Best CV BernoulliNB F1: ", bern_optimised_model.best_score_)
 
-if bern_optimised_model.best_score_ > multi_optimised_model.best_score_:
-    nb_model = bern_optimised_model.best_estimator_
-else:
-    nb_model = multi_optimised_model.best_estimator_
-
-# multi_nb_model = CF.MultinomialNB()
-# bern_nb_model = CF.BernoulliNB(alpha=1.0, binarize=None)
-
 nb_models = [bern_optimised_model.best_estimator_, multi_optimised_model.best_estimator_]
 nb_model_names = ['Bernoulli', 'Multinomial']
 
@@ -182,19 +176,61 @@ for nb_model, nb_name in zip(nb_models, nb_model_names):
                                 model_recall = CF.recall_score(y_test, y_test_pred))
 
 
-
-
-
-
-
-
 ######
 #3. SVM
 ######
 
+svm_linear_parameters_grid = [
+    { "C" :  [0.1, 1, 10, 100],
+     "tol": [0.0001, 0.001, 0.01, 0.1, 1],
+     "penalty" : ["l1", "l2"],
+     "loss": ["hinge",  "squared_hinge"],
+    }
+]
 
+#Hyperparameter grid search
+svm_liniear_optimised_model = CF.GridSearchCV(estimator=CF.LinearSVC(class_weight = 'balanced'),
+                               param_grid=svm_linear_parameters_grid, scoring="f1", cv=5)
 
+svm_liniear_optimised_model.fit(X_train, y_train)
 
+print("Best parameters for MultinomialNB: \n", svm_liniear_optimised_model.best_params_)
+
+print("Best CV MultinomialNB F1: ", svm_liniear_optimised_model.best_score_)
+
+svm_linear_best = optimised_model.best_estimator_
+
+#find best threshold
+y_train_probs = CF.cross_val_predict(svm_linear_best, X_train, y_train, cv=5,
+                                  method="predict_proba")[:, 1]
+
+best_threshold_train = CF.determine_best_threshold(y_train, y_train_probs)
+
+svm_linear_best.fit(X_train, y_train)
+
+y_test_probs = svm_linear_best.predict_proba(X_test)[:, 1]
+y_test_pred = (y_test_probs >= best_threshold_train).astype(int)
+
+logistic_regression_conf_matrix = CF.calculate_conf_matrix(y_test = y_test, y_pred = y_test_pred,
+                                                           labels = labels)
+
+CF.plot_confusion_matrix(model_matrix = logistic_regression_conf_matrix, tick_labels = tick_labels)
+
+classif_report = CF.classification_report(y_test, y_test_pred, target_names=tick_labels,
+                                          labels=labels)
+
+print("Final Model Report: \n", classif_report)
+
+CF.return_model_metrics(y_true = y_test, y_pred = y_test_pred)
+
+y_pred_scores = svm_linear_best.decision_function(X_test)
+
+CF.plot_ROC_curve(y_true = y_test, y_scores = y_test_pred, title = 'Logistic Regression Model ROC Curve')
+
+CF.plot_precision_recall_curve(y_true = y_test, y_prob_scores = y_test_probs, 
+                            title = 'Logistic Regression Model Precision Recall Curve',
+                            model_precision = CF.precision_score(y_test, y_test_pred), 
+                            model_recall = CF.recall_score(y_test, y_test_pred))
 
 
 

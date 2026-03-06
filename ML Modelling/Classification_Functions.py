@@ -10,6 +10,7 @@ from sklearn.metrics import accuracy_score, f1_score, classification_report, pre
 from sklearn.metrics import confusion_matrix, roc_auc_score, roc_curve, precision_recall_curve, auc
 from sklearn.linear_model import LogisticRegression
 from sklearn.naive_bayes import MultinomialNB, BernoulliNB
+from sklearn.svm import LinearSVC, SVC, NuSVC
 
 plt.rcParams['figure.figsize'] = (13, 7)
 
