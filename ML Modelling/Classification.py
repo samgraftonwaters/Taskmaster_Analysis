@@ -93,7 +93,8 @@ y_test_pred = (y_test_probs >= best_threshold_train).astype(int)
 logistic_regression_conf_matrix = CF.calculate_conf_matrix(y_test = y_test, y_pred = y_test_pred,
                                                            labels = labels)
 
-CF.plot_confusion_matrix(model_matrix = logistic_regression_conf_matrix, tick_labels = tick_labels)
+CF.plot_confusion_matrix(model_matrix = logistic_regression_conf_matrix, tick_labels = tick_labels,
+                         title = f'Logistic Regression Model Confusion Matrix')
 
 classif_report = CF.classification_report(y_test, y_test_pred, target_names=tick_labels,
                                           labels=labels)
@@ -159,7 +160,8 @@ for nb_model, nb_name in zip(nb_models, nb_model_names):
     naive_bayes_conf_matrix = CF.calculate_conf_matrix(y_test = y_test, y_pred = y_test_pred,
                                                             labels = labels)
 
-    CF.plot_confusion_matrix(model_matrix = naive_bayes_conf_matrix, tick_labels = tick_labels)
+    CF.plot_confusion_matrix(model_matrix = naive_bayes_conf_matrix, tick_labels = tick_labels,
+                             title = f'Naive Bayes {nb_name} Model Confusion Matrix')
 
     classif_report = CF.classification_report(y_test, y_test_pred, target_names=tick_labels,
                                             labels=labels)
@@ -260,10 +262,11 @@ for nb_model, nb_name in zip(svm_models, svm_model_names):
     y_test_probs = nb_model.predict_proba(X_test)[:, 1]
     y_test_pred = (y_test_probs >= best_threshold_train).astype(int)
 
-    naive_bayes_conf_matrix = CF.calculate_conf_matrix(y_test = y_test, y_pred = y_test_pred,
+    svm_model_conf_matrix = CF.calculate_conf_matrix(y_test = y_test, y_pred = y_test_pred,
                                                             labels = labels)
 
-    CF.plot_confusion_matrix(model_matrix = naive_bayes_conf_matrix, tick_labels = tick_labels)
+    CF.plot_confusion_matrix(model_matrix = svm_model_conf_matrix, tick_labels = tick_labels,
+                             title = f'{nb_name} Model Confusion Matrix')
 
     classif_report = CF.classification_report(y_test, y_test_pred, target_names=tick_labels,
                                             labels=labels)
@@ -320,10 +323,11 @@ tree_best.fit(X_train, y_train)
 y_test_probs = tree_best.predict_proba(X_test)[:, 1]
 y_test_pred = (y_test_probs >= best_threshold_train).astype(int)
 
-naive_bayes_conf_matrix = CF.calculate_conf_matrix(y_test = y_test, y_pred = y_test_pred,
+tree_conf_matrix = CF.calculate_conf_matrix(y_test = y_test, y_pred = y_test_pred,
                                                         labels = labels)
 
-CF.plot_confusion_matrix(model_matrix = naive_bayes_conf_matrix, tick_labels = tick_labels)
+CF.plot_confusion_matrix(model_matrix = tree_conf_matrix, tick_labels = tick_labels,
+                         title = 'Decision Tree Model Confusion Matrix')
 
 classif_report = CF.classification_report(y_test, y_test_pred, target_names=tick_labels,
                                         labels=labels)

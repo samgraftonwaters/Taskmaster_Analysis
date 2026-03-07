@@ -22,9 +22,9 @@ def calculate_conf_matrix( y_test, y_pred, labels):
 
     return(conf_matrix_values)
 
-def plot_confusion_matrix(model_matrix, tick_labels):
+def plot_confusion_matrix(model_matrix, tick_labels, title):
     fig, ax = plt.subplots()
-    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.1, right = 0.95)
+    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.05, top = 0.85, left = 0.1, right = 0.95)
 
     sns.heatmap(
         model_matrix, annot=True, fmt="d", cmap="coolwarm", xticklabels=tick_labels,
@@ -39,6 +39,7 @@ def plot_confusion_matrix(model_matrix, tick_labels):
 
     plt.xlabel('Predicted', fontsize = 16)
     plt.ylabel('True', fontsize = 16)
+    plt.title(title, fontsize = 20)
     plt.xticks(fontsize=14)
     plt.yticks(fontsize=14)
 
