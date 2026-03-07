@@ -306,9 +306,9 @@ tree_optimised_model = CF.GridSearchCV(estimator=CF.DecisionTreeClassifier(class
 
 tree_optimised_model.fit(X_train, y_train)
 
-print("Best parameters for MultinomialNB: \n", tree_optimised_model.best_params_)
+print("Best parameters for Decision Tree: \n", tree_optimised_model.best_params_)
 
-print("Best CV MultinomialNB F1: ", tree_optimised_model.best_score_)
+print("Best CV Decision Tree F1: ", tree_optimised_model.best_score_)
 
 tree_best = tree_optimised_model.best_estimator_
 
