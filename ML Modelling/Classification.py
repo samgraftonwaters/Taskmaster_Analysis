@@ -206,8 +206,6 @@ nu_svc_parameter_grid = [
     }
 ]
 
-
-
 #Hyperparameter grid search
 svm_linear_optimised_model = CF.GridSearchCV(estimator=CF.LinearSVC(class_weight = 'balanced'),
                                param_grid=svm_linear_parameters_grid, scoring="f1", cv=5)
@@ -220,7 +218,7 @@ print("Best CV MultinomialNB F1: ", svm_linear_optimised_model.best_score_)
 
 svm_linear_best = svm_linear_optimised_model.best_estimator_
 
-svc_optimised_model = CF.GridSearchCV(estimator=CF.SVC(class_weight = 'balanced'),
+svc_optimised_model = CF.GridSearchCV(estimator=CF.SVC(class_weight = 'balanced', probability=True),
                                param_grid=svc_parameters_grid, scoring="f1", cv=5)
 
 svc_optimised_model.fit(X_train, y_train)
@@ -232,7 +230,7 @@ print("Best CV MultinomialNB F1: ", svc_optimised_model.best_score_)
 svc_best = svc_optimised_model.best_estimator_
 
 
-nu_svc_optimised_model = CF.GridSearchCV(estimator=CF.NuSVC(class_weight = 'balanced'),
+nu_svc_optimised_model = CF.GridSearchCV(estimator=CF.NuSVC(class_weight = 'balanced', probability=True),
                                param_grid=nu_svc_parameter_grid, scoring="f1", cv=5)
 
 nu_svc_optimised_model.fit(X_train, y_train)
@@ -245,40 +243,47 @@ nu_svc_best = nu_svc_optimised_model.best_estimator_
 
 ###
 
-svm_models = [svm_linear_optimised_model.best_estimator_, 
+linear_model = CF.CalibratedClassifierCV(
+    svm_linear_optimised_model.best_estimator_,
+    method="sigmoid",
+    cv=5
+)
+
+svm_models = [linear_model, 
               svc_optimised_model.best_estimator_,
               nu_svc_optimised_model.best_estimator_
               ]
 svm_model_names = ['SVM Linear', 'SVC', 'NuSVC']
 
-for nb_model, nb_name in zip(svm_models, svm_model_names):
-    y_train_probs = CF.cross_val_predict(nb_model, X_train, y_train, cv=5,
+for svm_model, svm_name in zip(svm_models, svm_model_names):
+
+    y_train_probs = CF.cross_val_predict(svm_model, X_train, y_train, cv=5,
                                     method="predict_proba")[:, 1]
 
     best_threshold_train = CF.determine_best_threshold(y_train, y_train_probs)
 
-    nb_model.fit(X_train, y_train)
+    svm_model.fit(X_train, y_train)
 
-    y_test_probs = nb_model.predict_proba(X_test)[:, 1]
+    y_test_probs = svm_model.predict_proba(X_test)[:, 1]
     y_test_pred = (y_test_probs >= best_threshold_train).astype(int)
 
     svm_model_conf_matrix = CF.calculate_conf_matrix(y_test = y_test, y_pred = y_test_pred,
                                                             labels = labels)
 
     CF.plot_confusion_matrix(model_matrix = svm_model_conf_matrix, tick_labels = tick_labels,
-                             title = f'{nb_name} Model Confusion Matrix')
+                             title = f'{svm_name} Model Confusion Matrix')
 
     classif_report = CF.classification_report(y_test, y_test_pred, target_names=tick_labels,
                                             labels=labels)
 
-    print(f"Final {nb_name} Model Report: \n", classif_report)
+    print(f"Final {svm_name} Model Report: \n", classif_report)
 
     CF.return_model_metrics(y_true = y_test, y_pred = y_test_pred)
 
-    CF.plot_ROC_curve(y_true = y_test, y_scores = y_test_probs, title = f'{nb_name} Model ROC Curve')
+    CF.plot_ROC_curve(y_true = y_test, y_scores = y_test_probs, title = f'{svm_name} Model ROC Curve')
 
     CF.plot_precision_recall_curve(y_true = y_test, y_prob_scores = y_test_probs, 
-                                title = f'{nb_name} Model Precision Recall Curve',
+                                title = f'{svm_name} Model Precision Recall Curve',
                                 model_precision = CF.precision_score(y_test, y_test_pred), 
                                 model_recall = CF.recall_score(y_test, y_test_pred))
 
@@ -291,13 +296,8 @@ for nb_model, nb_name in zip(svm_models, svm_model_names):
 
 decision_tree_param_grid = {
     "criterion": ["gini", "entropy", "log_loss"],
-    "max_depth": [None, 5, 10, 20],
-    "min_samples_split": [2, 5, 10],
-    "min_samples_leaf": [1, 2, 5],
-    "max_features": [None, "sqrt", "log2"],
-    "max_leaf_nodes": [None, 5, 10, 20],
-    "min_impurity_decrease": [0.0, 0.0001, 0.001, 0.01],
-    "ccp_alpha": [0.0001, 0.001, 0.01, 0.1]
+    "splitter" : ['best', 'random'],
+    "max_features": [None, "sqrt", "log2"]
 }
 
 #Hyperparameter grid search
