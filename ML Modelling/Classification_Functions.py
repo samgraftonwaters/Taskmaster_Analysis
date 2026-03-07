@@ -87,6 +87,7 @@ def plot_ROC_curve(y_true, y_scores, title):
     plt.xticks(fontsize = 14)
     plt.yticks(fontsize = 14)
     plt.show()
+    return(AUC_score)
 
 def plot_precision_recall_curve(y_true, y_prob_scores, title, model_precision, model_recall):
 
@@ -106,3 +107,4 @@ def plot_precision_recall_curve(y_true, y_prob_scores, title, model_precision, m
     plt.xticks(fontsize = 14)
     plt.yticks(fontsize = 14)
     plt.show()
+    return(AUC_score)

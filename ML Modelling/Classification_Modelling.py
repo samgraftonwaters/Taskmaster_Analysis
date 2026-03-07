@@ -104,6 +104,9 @@ classification_models = [CF.LogisticRegression(class_weight="balanced"), CF.Bern
           CF.NuSVC(class_weight = 'balanced', probability=True),
           CF.DecisionTreeClassifier(class_weight = 'balanced')]
 
+F1_Score = []
+ROC_AUC = []
+Precision_Recall_AUC = []
 
 for model, model_name, parameters_to_search in zip(classification_models, model_names, hyperparameters):
 
@@ -112,9 +115,11 @@ for model, model_name, parameters_to_search in zip(classification_models, model_
 
     grid_search .fit(X_train, y_train)
 
-    print(f"\n{model_name} Best parameters: \n", grid_search .best_params_)
+    print(f"\n{model_name} Best parameters: \n", grid_search.best_params_)
 
-    print(f"\nBest CV {model_name} F1: \n", grid_search .best_score_)
+    print(f"\nBest CV {model_name} F1: \n", grid_search.best_score_)
+
+    F1_Score.append(grid_search.best_score_)
 
     optimised_model = grid_search.best_estimator_
 
@@ -145,10 +150,13 @@ for model, model_name, parameters_to_search in zip(classification_models, model_
 
     CF.return_model_metrics(y_true = y_test, y_pred = y_test_pred)
 
-    CF.plot_ROC_curve(y_true = y_test, y_scores = y_test_pred, 
+    roc_auc = CF.plot_ROC_curve(y_true = y_test, y_scores = y_test_pred, 
                       title = f'{model_name} Model ROC Curve')
 
-    CF.plot_precision_recall_curve(y_true = y_test, y_prob_scores = y_test_probs, 
+    pr_auc = CF.plot_precision_recall_curve(y_true = y_test, y_prob_scores = y_test_probs, 
                                 title = f'{model_name} Model Precision Recall Curve',
                                 model_precision = CF.precision_score(y_test, y_test_pred), 
                                 model_recall = CF.recall_score(y_test, y_test_pred))
+    
+    ROC_AUC.append(roc_auc)
+    Precision_Recall_AUC.append(pr_auc)
