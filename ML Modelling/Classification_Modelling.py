@@ -202,13 +202,16 @@ best_classification_model.set_params(**best_model_table['Best Hyperparameters'])
 
 best_classification_model.fit(X_train, y_train)
 
-y_predict_probs = best_classification_model.predict_proba(X_test)[:, 1]
-y_predict_pred = (y_test_probs >= best_model_table['Threshold']).astype(int)
+series_21_contestents = CF.pd.read_csv('/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Series 21 Predictions Table.csv')
+
+predict_data = series_21_contestents.iloc[:, 2:]
+
+y_predict_probs = best_classification_model.predict_proba(predict_data)[:, 1]
+y_predict_pred = (y_predict_probs >= best_model_table['Threshold']).astype(int)
 
 print(y_predict_probs)
 print(y_predict_pred)
 
+series_21_contestents['Prediction'] = y_predict_pred
 
-
-
-
+print(series_21_contestents[series_21_contestents['Prediction'] == 1]['Name'])
