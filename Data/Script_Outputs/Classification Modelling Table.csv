@@ -1,8 +1,8 @@
-Model Name,Classification Model,Best Hyperparameters,Threshold,F1_Score,precision,Recall,Calculated F1,ROC AUC,Precision Recall AUC
-Logistic Regression,LogisticRegression(class_weight='balanced'),"{'C': 10, 'penalty': 'l1', 'solver': 'liblinear', 'tol': 1}",0.47999999999999976,0.3316161616161616,0.44,1.0,0.62,0.84375,0.37440476190476196
-Bernoulli NB,BernoulliNB(),{'alpha': 0.001},0.45999999999999985,0.2,0.33,0.25,0.29,0.5625,0.32708333333333334
-Multinomial NB,MultinomialNB(),{'alpha': 0.001},0.1,0.0,0.33,1.0,0.5,0.75,0.37083333333333335
-SVM Linear,LinearSVC(class_weight='balanced'),"{'C': 0.1, 'loss': 'squared_hinge', 'penalty': 'l1', 'tol': 0.0001}",0.1,0.38945054945054947,0.2,1.0,0.33,0.5,0.234375
-SVC,"SVC(class_weight='balanced', probability=True)","{'C': 0.1, 'gamma': 'auto', 'kernel': 'poly', 'tol': 0.1}",0.1,0.3704761904761905,0.2,1.0,0.33,0.5,0.11706333849329204
-NuSVC,"NuSVC(class_weight='balanced', probability=True)","{'gamma': 'scale', 'kernel': 'sigmoid', 'nu': 0.2, 'tol': 0.01}",0.1,0.3423076923076923,0.2,1.0,0.33,0.5,0.12315423976608186
-Decision Tree,DecisionTreeClassifier(class_weight='balanced'),"{'criterion': 'entropy', 'max_features': 'sqrt', 'splitter': 'random'}",0.8199999999999996,0.25272727272727274,0.5,0.5,0.5,0.6875,0.6125
+Model Name,Classification Model,Best Hyperparameters,Threshold,F1 Score,precision,Recall,ROC AUC,Precision Recall AUC
+Logistic Regression,LogisticRegression(class_weight='balanced'),"{'C': 1, 'penalty': 'l1', 'solver': 'saga', 'tol': 1}",0.2699999999999999,0.33,0.2,1.0,0.5,0.3843344155844156
+Bernoulli NB,BernoulliNB(),{'alpha': 0.001},0.45999999999999985,0.29,0.33,0.25,0.5625,0.32708333333333334
+Multinomial NB,MultinomialNB(),{'alpha': 0.001},0.1,0.5,0.33,1.0,0.75,0.37083333333333335
+SVM Linear,LinearSVC(class_weight='balanced'),"{'C': 0.1, 'loss': 'squared_hinge', 'penalty': 'l1', 'tol': 0.0001}",0.1,0.33,0.2,1.0,0.5,0.234375
+SVC,"SVC(class_weight='balanced', probability=True)","{'C': 0.1, 'gamma': 'auto', 'kernel': 'poly', 'tol': 0.1}",0.11,0.33,0.2,1.0,0.5,0.11706333849329204
+NuSVC,"NuSVC(class_weight='balanced', probability=True)","{'gamma': 'scale', 'kernel': 'sigmoid', 'nu': 0.2, 'tol': 0.01}",0.1,0.38,0.24,1.0,0.59375,0.6976190476190476
+Decision Tree,DecisionTreeClassifier(class_weight='balanced'),"{'criterion': 'log_loss', 'max_features': 'sqrt', 'splitter': 'random'}",0.1,0.67,0.6,0.75,0.8125,0.6749999999999999

@@ -108,7 +108,6 @@ Threshold = []
 F1_Score = []
 Precision = []
 Recall = []
-F1_calc = []
 ROC_AUC = []
 Precision_Recall_AUC = []
 
@@ -124,7 +123,6 @@ for model, model_name, parameters_to_search in zip(classification_models, model_
     print(f"\nBest CV {model_name} F1: \n", grid_search.best_score_)
 
     Best_Params.append(grid_search.best_params_)
-    F1_Score.append(grid_search.best_score_)
 
     optimised_model = grid_search.best_estimator_
 
@@ -159,7 +157,7 @@ for model, model_name, parameters_to_search in zip(classification_models, model_
 
     Precision.append(precision)
     Recall.append(recall)
-    F1_calc.append(f1)
+    F1_Score.append(f1)
 
     roc_auc = CF.plot_ROC_curve(y_true = y_test, y_scores = y_test_pred, 
                       title = f'{model_name} Model ROC Curve')
@@ -177,15 +175,40 @@ model_table = CF.pd.DataFrame({
     "Classification Model" : classification_models,
     "Best Hyperparameters" : Best_Params,
     "Threshold" : Threshold,
-    "F1_Score" : F1_Score,
+    "F1 Score" : F1_Score,
     "precision" : Precision,
     "Recall" : Recall,
-    "Calculated F1" : F1_calc,
     "ROC AUC" : ROC_AUC, 
     "Precision Recall AUC" : Precision_Recall_AUC
     }
 )
 
 print(model_table)
+print(model_table.info())
 
 model_table.to_csv(file_path + "Classification Modelling Table.csv", sep = ',', index = False)
+
+# best_model = model_table[model_table['F1 Score'].max()]
+
+best_model_index = model_table["F1 Score"].idxmax()
+
+best_model_table = model_table.loc[best_model_index]
+
+print(best_model_table.head())
+
+best_classification_model = classification_models[best_model_index]
+
+best_classification_model.set_params(**best_model_table['Best Hyperparameters'])
+
+best_classification_model.fit(X_train, y_train)
+
+y_test_probs = best_classification_model.predict_proba(X_test)[:, 1]
+y_test_pred = (y_test_probs >= best_threshold_train).astype(int)
+
+print(y_test_probs)
+print(y_test_pred)
+
+
+
+
+
