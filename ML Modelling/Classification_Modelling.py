@@ -25,7 +25,6 @@ X = model_data.iloc[:,:-1]
 y = model_data['Winner']
 
 X_train, X_test, y_train, y_test = CF.train_test_split(X, y, test_size=0.2, random_state=123)
-                                                        #stratify=y)
 
 labels = [1, 0]
 tick_labels = ["Winner", "Non-Winner"]
@@ -104,7 +103,12 @@ classification_models = [CF.LogisticRegression(class_weight="balanced"), CF.Bern
           CF.NuSVC(class_weight = 'balanced', probability=True),
           CF.DecisionTreeClassifier(class_weight = 'balanced')]
 
+Best_Params = []
+Threshold = []
 F1_Score = []
+Precision = []
+Recall = []
+F1_calc = []
 ROC_AUC = []
 Precision_Recall_AUC = []
 
@@ -113,12 +117,13 @@ for model, model_name, parameters_to_search in zip(classification_models, model_
     grid_search = CF.GridSearchCV(estimator=model, param_grid=parameters_to_search, 
                                       scoring="f1", cv=5)
 
-    grid_search .fit(X_train, y_train)
+    grid_search.fit(X_train, y_train)
 
     print(f"\n{model_name} Best parameters: \n", grid_search.best_params_)
 
     print(f"\nBest CV {model_name} F1: \n", grid_search.best_score_)
 
+    Best_Params.append(grid_search.best_params_)
     F1_Score.append(grid_search.best_score_)
 
     optimised_model = grid_search.best_estimator_
@@ -131,6 +136,8 @@ for model, model_name, parameters_to_search in zip(classification_models, model_
                                     method="predict_proba")[:, 1]
 
     best_threshold_train = CF.determine_best_threshold(y_train, y_train_probs)
+
+    Threshold.append(best_threshold_train)
 
     optimised_model.fit(X_train, y_train)
 
@@ -148,7 +155,11 @@ for model, model_name, parameters_to_search in zip(classification_models, model_
 
     print(f"Final {model_name} Model Report: \n", classif_report)
 
-    CF.return_model_metrics(y_true = y_test, y_pred = y_test_pred)
+    precision, recall, f1 = CF.return_model_metrics(y_true = y_test, y_pred = y_test_pred)
+
+    Precision.append(precision)
+    Recall.append(recall)
+    F1_calc.append(f1)
 
     roc_auc = CF.plot_ROC_curve(y_true = y_test, y_scores = y_test_pred, 
                       title = f'{model_name} Model ROC Curve')
@@ -160,3 +171,21 @@ for model, model_name, parameters_to_search in zip(classification_models, model_
     
     ROC_AUC.append(roc_auc)
     Precision_Recall_AUC.append(pr_auc)
+
+model_table = CF.pd.DataFrame({
+    "Model Name" : model_names,
+    "Classification Model" : classification_models,
+    "Best Hyperparameters" : Best_Params,
+    "Threshold" : Threshold,
+    "F1_Score" : F1_Score,
+    "precision" : Precision,
+    "Recall" : Recall,
+    "Calculated F1" : F1_calc,
+    "ROC AUC" : ROC_AUC, 
+    "Precision Recall AUC" : Precision_Recall_AUC
+    }
+)
+
+print(model_table)
+
+model_table.to_csv(file_path + "Classification Modelling Table.csv", sep = ',', index = False)

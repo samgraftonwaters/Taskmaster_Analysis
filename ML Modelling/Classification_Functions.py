@@ -65,9 +65,15 @@ def predict_with_threshold(model, X, threshold):
 
 def return_model_metrics(y_true, y_pred):
     print('The Precision, Recall and F1 Score values are:\n')
-    print('Precision: ', round(precision_score(y_true, y_pred), 2))
-    print('Recall: ', round(recall_score(y_true, y_pred), 2))
-    print('F1 Score: ', round(f1_score(y_true, y_pred), 2))
+    precision = round(precision_score(y_true, y_pred), 2)
+    recall = round(recall_score(y_true, y_pred), 2)
+    f1 = round(f1_score(y_true, y_pred), 2)
+
+    print('Precision: ', precision)
+    print('Recall: ', recall)
+    print('F1 Score: ', f1)
+
+    return(precision, recall, f1)
 
 def plot_ROC_curve(y_true, y_scores, title):
 
