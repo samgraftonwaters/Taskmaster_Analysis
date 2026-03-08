@@ -8,7 +8,7 @@ print(data.head())
 
 data = data[['Series', 'Name', 'Position', 'Number_Episodes', 'Team_A', 'Team_B', 'Age_Ranges_20 - 29', 
                    'Age_Ranges_30 - 39', 'Age_Ranges_40 - 49', 'Age_Ranges_50 - 59', 
-                   'Age_Ranges_60 - 69', 'Gender_Female', 'Gender_Male', 'Gender_Non-Binary', 
+                   'Age_Ranges_60 - 69', 'Gender_Female', 'Gender_Male', 
                    'Seat_Seat 1', 'Seat_Seat 2', 'Seat_Seat 3', 'Seat_Seat 4', 'Seat_Seat 5']]
 
 data['Winner'] = CF.np.where(data['Position'] == 1, 1, 0)
@@ -17,7 +17,7 @@ print(data.head())
 
 model_data = data[['Number_Episodes', 'Team_A', 'Team_B', 'Age_Ranges_20 - 29', 
                    'Age_Ranges_30 - 39', 'Age_Ranges_40 - 49', 'Age_Ranges_50 - 59', 
-                   'Age_Ranges_60 - 69', 'Gender_Female', 'Gender_Male', 'Gender_Non-Binary', 
+                   'Age_Ranges_60 - 69', 'Gender_Female', 'Gender_Male',
                    'Seat_Seat 1', 'Seat_Seat 2', 'Seat_Seat 3', 'Seat_Seat 4', 'Seat_Seat 5', 
                    'Winner']]
 
@@ -194,7 +194,7 @@ best_model_index = model_table["F1 Score"].idxmax()
 
 best_model_table = model_table.loc[best_model_index]
 
-print(best_model_table.head())
+print(best_model_table)
 
 best_classification_model = classification_models[best_model_index]
 
@@ -202,11 +202,11 @@ best_classification_model.set_params(**best_model_table['Best Hyperparameters'])
 
 best_classification_model.fit(X_train, y_train)
 
-y_test_probs = best_classification_model.predict_proba(X_test)[:, 1]
-y_test_pred = (y_test_probs >= best_threshold_train).astype(int)
+y_predict_probs = best_classification_model.predict_proba(X_test)[:, 1]
+y_predict_pred = (y_test_probs >= best_model_table['Threshold']).astype(int)
 
-print(y_test_probs)
-print(y_test_pred)
+print(y_predict_probs)
+print(y_predict_pred)
 
 
 
