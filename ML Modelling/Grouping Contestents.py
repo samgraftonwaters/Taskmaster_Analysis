@@ -63,9 +63,9 @@ ohe_cols = ['Team_A', 'Age_Ranges_20 - 29', 'Age_Ranges_30 - 39',
 
 preprocessor = ColumnTransformer(
     transformers=[
-        ('num', RobustScaler(), scaled_cols),              # numeric → scale
-        ('cat', 'passthrough', cat_cols),  # raw categorical → OHE
-        ('ohe', 'passthrough', ohe_cols)                  # already OHE → keep
+        ('num', RobustScaler(), scaled_cols),             
+        ('cat', 'passthrough', cat_cols), 
+        ('ohe', 'passthrough', ohe_cols)          
     ]
 )
 
