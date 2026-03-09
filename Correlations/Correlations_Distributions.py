@@ -61,7 +61,7 @@ data_scaled.to_csv(input_path + 'Full Contestent Table for Modelling Scaled.csv'
 
 print(data_scaled)
 
-correlations = data_nums_scaled.corr(method = 'spearman')
+correlations = data_nums.corr(method = 'spearman')
 print(correlations)
 print(correlations.columns)
 
