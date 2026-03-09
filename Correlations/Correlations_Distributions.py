@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 from matplotlib.cm import ScalarMappable
 import seaborn as sns
+from sklearn.preprocessing import StandardScaler, RobustScaler
 
 import Correlation_Functions as CF
 
@@ -32,7 +33,35 @@ normal_variables, non_normal_variables = CF.normal_variables(data_table = data_n
 normal_variables.to_csv(input_path + 'Normal Variable Comparison Table.csv', sep = ',', index = False)
 non_normal_variables.to_csv(input_path + 'Non-Normal Variable Comparison Table.csv', sep = ',', index = False)
 
-correlations = data_nums.corr(method = 'spearman')
+print(data_nums[normal_variables['Normal Variable']])
+
+standard_scaling = StandardScaler()
+robust_scaling = RobustScaler()
+
+normal_variables_scaled = standard_scaling.fit_transform(data_nums[normal_variables['Normal Variable']])
+non_normal_variables_scaled = robust_scaling.fit_transform(data_nums[non_normal_variables['Non Normal Variable']])
+
+
+normal_cols = normal_variables['Normal Variable']
+non_normal_cols = non_normal_variables['Non Normal Variable']
+
+normal_variables_scaled = pd.DataFrame(normal_variables_scaled, columns=normal_cols, 
+                                       index=data_nums.index)
+
+non_normal_variables_scaled = pd.DataFrame(non_normal_variables_scaled, columns=non_normal_cols, 
+                                           index=data_nums.index)
+data_non_nums = data.select_dtypes(exclude=[float, int])
+
+data_nums_scaled = pd.concat([normal_variables_scaled, 
+                              non_normal_variables_scaled], axis = 1)
+
+data_scaled = pd.concat([data_non_nums, data_nums_scaled], axis = 1)
+
+data_scaled.to_csv(input_path + 'Full Contestent Table for Modelling Scaled.csv', sep = ',', index = False)
+
+print(data_scaled)
+
+correlations = data_nums_scaled.corr(method = 'spearman')
 print(correlations)
 print(correlations.columns)
 
