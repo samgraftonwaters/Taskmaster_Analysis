@@ -176,6 +176,8 @@ kmeans_labels = kmeans.labels_
 centers_scaled = kmeans.cluster_centers_
 
 print(data['Group (kmeans)'])
+groups = np.unique(kmeans.labels_)
+print(groups)
 
 feature_names = scaled_cols + ohe_cols + cat_cols
 centers_df = pd.DataFrame(centers_scaled, columns=feature_names)
@@ -183,22 +185,18 @@ centers_df = pd.DataFrame(centers_scaled, columns=feature_names)
 scaler = preprocessor.named_transformers_['num']
 centers_df[scaled_cols] = scaler.inverse_transform(centers_df[scaled_cols])
 
-class0 = data[data['Group (kmeans)']==0]
-class1 = data[data['Group (kmeans)']==1]
-class2 = data[data['Group (kmeans)']==2]
+colours = ['blue', 'darkorange', 'green']
 
 fig, ax = plt.subplots()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
-plt.scatter(class0['Number 5s Scored'], class0['Score'], label = 'class 0')
-plt.scatter(class1['Number 5s Scored'], class1['Score'], label = 'class 1')
-plt.scatter(class2['Number 5s Scored'], class2['Score'], label = 'class 2')
 
-plt.scatter(centers_df.iloc[[0]]['Number 5s Scored'], centers_df.iloc[[0]]['Score'], marker ='*', 
-            s = 300, color='blue')
-plt.scatter(centers_df.iloc[[1]]['Number 5s Scored'], centers_df.iloc[[1]]['Score'], marker ='*', 
-            s = 300, color='darkorange')
-plt.scatter(centers_df.iloc[[2]]['Number 5s Scored'], centers_df.iloc[[2]]['Score'], marker ='*', 
-            s = 300, color='green')
+for group, colour in zip(groups, colours):
+    plt.scatter(data[data['Group (kmeans)']==group]['Number 5s Scored'], 
+                data[data['Group (kmeans)']==group]['Score'], label = f'Class {group}')
+
+    plt.scatter(centers_df.iloc[[group]]['Number 5s Scored'], centers_df.iloc[[group]]['Score'], 
+                marker ='*', s = 300, color=colour)
+
 
 plt.legend(fontsize = 15)
 plt.title('Comparing Kmeans clusters for Total Score against Number of 5s Scored', fontsize = 22)
