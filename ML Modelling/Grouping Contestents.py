@@ -47,8 +47,10 @@ print(CF.set_corr_thresholds(corr_data = grouped_variables, range = False, thres
 #removed 'Seat_Seat 5' and 'Age_Ranges_60 - 69' as these are the last categories in each group.
 #removed 'Gender_Non-Binary', as only one person identifies  as non-binary
 
-X_scaled = data_nums.drop(['Team_B', 'Tie Breaks per Person', 'Gender_male', 'Seat_Seat 5',
+data_nums = data_nums.drop(['Team_B', 'Tie Breaks per Person', 'Gender_Male', 'Seat_Seat 5',
                             'Age_Ranges_60 - 69', 'Gender_Non-Binary'], axis = 1)
+
+X_scaled = data_nums
 
 k_values = range(2, 12)
 
@@ -189,13 +191,6 @@ print("Manhattan Silhouette Score: ", round(sil_score_manhat, 4))
 
 
 #DBSCAN Method
-X_numeric = data[scaled_cols]
-X_scaled = RobustScaler().fit_transform(X_numeric)
-
-# from sklearn.decomposition import PCA
-
-# pca = PCA(n_components=5)
-# X_scaled = pca.fit_transform(X_scaled)
 
 possible_eps_values = np.linspace(start=0.1, stop=15, num=100)
 
