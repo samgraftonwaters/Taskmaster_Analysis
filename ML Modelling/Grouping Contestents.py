@@ -15,7 +15,7 @@ from Correlations import Correlation_Functions as CF
 plt.rcParams['figure.figsize'] = (13, 7)
 
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
-model_data = pd.read_csv(file_path + 'Full Contestent Table for Modelling.csv')
+model_data = pd.read_csv(file_path + 'Full Contestent Table for Modelling Scaled.csv')
 
 print(model_data.head())
 
@@ -42,37 +42,13 @@ print(no_corr['var_2'].value_counts())
 
 print(CF.set_corr_thresholds(corr_data = grouped_variables, range = False, threshold = 0.7)['var_1'].value_counts())
 print(CF.set_corr_thresholds(corr_data = grouped_variables, range = False, threshold = 0.7)['var_2'].value_counts())
-#Splitting variables into scalable or not
-scaled_cols = ['Score', 'Avg Score per Episodes',
-       'Avg Score per Tasks', 'Number 5s Scored', 'Number 1s Scored',
-       'Tie Break Wins', 'Tie Break Losses', 
-       'Tie Breaks per series', 'Disqualifications', 'Number_Episodes',
-       'Episode Percentage Wins', 'Episode Percentage Lossses',
-       'Number Team Tasks', 'Team Total', 'Team Score per Person Task']
-
-cat_cols= ['Position']
-
-ohe_cols = ['Team_A', 'Age_Ranges_20 - 29', 'Age_Ranges_30 - 39',
-       'Age_Ranges_40 - 49', 'Age_Ranges_50 - 59', 
-       'Gender_Female', 'Seat_Seat 1',
-       'Seat_Seat 2', 'Seat_Seat 3', 'Seat_Seat 4']
 
 #Removed Team_B, Tie Breaks per Person and Gender_male as these are highly correlated
 #removed 'Seat_Seat 5' and 'Age_Ranges_60 - 69' as these are the last categories in each group.
 #removed 'Gender_Non-Binary', as only one person identifies  as non-binary
 
-preprocessor = ColumnTransformer(
-    transformers=[
-        ('num', RobustScaler(), scaled_cols),             
-        ('cat', 'passthrough', cat_cols), 
-        ('ohe', 'passthrough', ohe_cols)          
-    ]
-)
-
-#Transform the data
-X_scaled = preprocessor.fit_transform(data)
-# scaler = RobustScaler()
-# X_scaled = scaler.fit_transform(data[scaled_cols])
+X_scaled = data_nums.drop(['Team_B', 'Tie Breaks per Person', 'Gender_male', 'Seat_Seat 5',
+                            'Age_Ranges_60 - 69', 'Gender_Non-Binary'], axis = 1)
 
 k_values = range(2, 12)
 
@@ -179,11 +155,8 @@ print(data['Group (kmeans)'])
 groups = np.unique(kmeans.labels_)
 print(groups)
 
-feature_names = scaled_cols + ohe_cols + cat_cols
+feature_names = data_nums.columns
 centers_df = pd.DataFrame(centers_scaled, columns=feature_names)
-
-scaler = preprocessor.named_transformers_['num']
-centers_df[scaled_cols] = scaler.inverse_transform(centers_df[scaled_cols])
 
 colours = ['blue', 'darkorange', 'green']
 
@@ -200,8 +173,8 @@ for group, colour in zip(groups, colours):
 
 plt.legend(fontsize = 15)
 plt.title('Comparing Kmeans clusters for Total Score against Number of 5s Scored', fontsize = 22)
-plt.xlabel("Number of 5s Scored", fontsize = 16)
-plt.ylabel("Total Score", fontsize = 16)
+plt.xlabel("Number of 5s Scored (Scaled)", fontsize = 16)
+plt.ylabel("Total Score (Scaled)", fontsize = 16)
 plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
 plt.show()
@@ -316,8 +289,8 @@ plt.scatter(class3_man['Number 5s Scored'], class3_man['Score'], label = 'class 
 
 plt.legend(fontsize = 15)
 plt.title('Comparing DBSCAN clusters for Total Score against Number of 5s Scored \n with "Manhattan" Method', fontsize = 22)
-plt.xlabel("Number of 5s Scored", fontsize = 16)
-plt.ylabel("Total Score", fontsize = 16)
+plt.xlabel("Number of 5s Scored (Scaled)", fontsize = 16)
+plt.ylabel("Total Score (Scaled)", fontsize = 16)
 plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
 plt.show()
@@ -456,8 +429,8 @@ plt.scatter(class1['Number 5s Scored'], class1['Score'], label = 'class 1')
 
 plt.legend(fontsize = 15)
 plt.title('Comparing Agglomerative clusters for Total Score against Number of 5s Scored \n with "Complete" Linkage and "Manhattan" Method', fontsize = 22)
-plt.xlabel("Number of 5s Scored", fontsize = 16)
-plt.ylabel("Total Score", fontsize = 16)
+plt.xlabel("Number of 5s Scored (Scaled)", fontsize = 16)
+plt.ylabel("Total Score (Scaled)", fontsize = 16)
 plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
 plt.show()

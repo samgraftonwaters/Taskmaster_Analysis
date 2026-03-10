@@ -60,13 +60,6 @@ non_normal_variables = pd.read_csv(input_path + 'Non-Normal Variable Comparison 
 non_normal_variables['Non Normal Variable'] = non_normal_variables['Non Normal Variable'].str.replace("Number Episodes", "Number_Episodes")
 non_normal_variables = non_normal_variables[~non_normal_variables['Non Normal Variable'].isin(['Series Number', 'Seat Num'])]
 
-print(normal_variables['Normal Variable'])
-print(non_normal_variables['Non Normal Variable'])
-print(data.columns)
-
-print(data_modelling[normal_variables['Normal Variable']])
-
-print(data_modelling[non_normal_variables['Non Normal Variable']])
 
 standard_scaling = StandardScaler()
 robust_scaling = RobustScaler()
@@ -87,8 +80,5 @@ data_non_nums = data_modelling.select_dtypes(exclude=[float, int])
 
 data_modelling_scaled = pd.concat([data_non_nums, non_normal_variables_scaled, 
                          normal_variables_scaled, concat_ohe_data], axis = 1)
-
-print(data_modelling_scaled.head())
-print(data_modelling_scaled.columns)
 
 data_modelling_scaled.to_csv(input_path + 'Full Contestent Table for Modelling Scaled.csv', sep = ',', index = False)
