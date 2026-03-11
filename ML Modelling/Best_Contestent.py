@@ -71,6 +71,7 @@ def get_entropy_weights(data):
     
     return(weights)
 
+
 ent_weights = get_entropy_weights(data = X_norm)
 
 model_data["entropy_score"] = (X_norm * ent_weights).sum(axis=1)
@@ -93,50 +94,66 @@ model_data["final_score_shift"] = get_shift_score(data = model_data, score_colum
 
 model_data["final_score_rescale"] = get_scale_score(data = model_data, score_column_name = 'final_score')
 
-
+model_data["Contestent Rank"] = model_data["final_score"].rank(ascending=False, method="min").astype(int)
 print(model_data.head())
 
 # ###
 
-# n_sim = 5000
-# contestants = model_data["Name"]
 
-# rank_results = []
+n_sim = 5000
+contestants = model_data["Name"]
 
-# for i in range(n_sim):
+rank_results = []
 
-#     # resample rows (tasks) with replacement
-#     sample_idx = np.random.choice(X_norm.index, size=len(X_norm), replace=True)
-#     X_sample = X_norm.loc[sample_idx].reset_index(drop=True)
+for i in range(n_sim):
 
-#     # recompute scores
-#     scores = X_sample @ final_weights
+    # resample rows (tasks) with replacement
+    sample_idx = np.random.choice(X_norm.index, size=len(X_norm), replace=True)
+    X_sample = X_norm.loc[sample_idx].reset_index(drop=True)
 
-#     # aggregate per contestant
-#     score_df = pd.DataFrame({
-#         "Name": model_data["Name"],
-#         "Score": scores
-#     })
+    # recompute scores
+    scores = X_sample @ final_weights
 
-#     ranking = score_df.sort_values("Score", ascending=False)
-#     ranking["Rank"] = range(1, len(ranking)+1)
+    # aggregate per contestant
+    score_df = pd.DataFrame({
+        "Name": model_data["Name"],
+        "Score": scores
+    })
 
-#     rank_results.append(ranking[["Name","Rank"]])
+    ranking = score_df.sort_values("Score", ascending=False)
+    ranking["Rank"] = range(1, len(ranking)+1)
 
-# rank_df = pd.concat(rank_results)
+    rank_results.append(ranking[["Name","Rank"]])
 
-# rank_probs = (
-#     rank_df
-#     .groupby(["Name","Rank"])
-#     .size()
-#     .div(n_sim)
-#     .unstack(fill_value=0)
-# )
-# print(rank_df)
-# print(rank_probs)
+rank_df = pd.concat(rank_results).reset_index(drop = True)
 
-# expected_rank = (rank_probs * rank_probs.columns).sum(axis=1)
-# print(expected_rank)
+rank_probs = (
+    rank_df
+    .groupby(["Name","Rank"])
+    .size()
+    .div(n_sim)
+    .unstack(fill_value=0)
+)
+print(rank_df)
+print(rank_probs)
+
+model_data["Confidence"] = model_data.apply(
+    lambda row: rank_probs.loc[row["Name"], row["Contestent Rank"]],
+    axis=1
+)
+
+model_data["Confidence_%"] = model_data["Confidence"] * 100
+
+# model_data["Top Three"] = 
+print(rank_probs[[1,2,3]].sum(axis=1))
+
+expected_rank = (rank_probs * rank_probs.columns).sum(axis=1)
+model_data["Expected_Rank"] = model_data["Name"].map(expected_rank)
+print(expected_rank)
+
+print(model_data.sample(30))
+
+
 
 
 # # X_scaled = StandardScaler().fit_transform(X)
