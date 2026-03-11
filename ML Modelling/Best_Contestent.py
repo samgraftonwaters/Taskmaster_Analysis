@@ -99,33 +99,32 @@ print(model_data.head())
 
 # ###
 
-
 n_sim = 5000
-contestants = model_data["Name"]
-
 rank_results = []
+
+weights_series = pd.Series(final_weights, index=X_norm.columns)
 
 for i in range(n_sim):
 
-    # resample rows (tasks) with replacement
-    sample_idx = np.random.choice(X_norm.index, size=len(X_norm), replace=True)
-    X_sample = X_norm.loc[sample_idx].reset_index(drop=True)
+    # sample contestants WITH their features
+    sample = model_data.sample(n=len(model_data), replace=True)
 
-    # recompute scores
-    scores = X_sample @ final_weights
+    X_sample = sample[X_norm.columns]
 
-    # aggregate per contestant
-    score_df = pd.DataFrame({
-        "Name": model_data["Name"],
+    scores = X_sample @ weights_series
+
+    ranking = pd.DataFrame({
+        "Name": sample["Name"],
         "Score": scores
     })
 
-    ranking = score_df.sort_values("Score", ascending=False)
+    ranking = ranking.sort_values("Score", ascending=False)
     ranking["Rank"] = range(1, len(ranking)+1)
 
     rank_results.append(ranking[["Name","Rank"]])
 
 rank_df = pd.concat(rank_results).reset_index(drop = True)
+print(rank_df.groupby("Name")["Rank"].mean())
 
 rank_probs = (
     rank_df
@@ -144,15 +143,15 @@ model_data["Confidence"] = model_data.apply(
 
 model_data["Confidence_%"] = model_data["Confidence"] * 100
 
-# model_data["Top Three"] = 
-print(rank_probs[[1,2,3]].sum(axis=1))
-
 expected_rank = (rank_probs * rank_probs.columns).sum(axis=1)
 model_data["Expected_Rank"] = model_data["Name"].map(expected_rank)
+
+standard_deviation_rank = rank_df.groupby("Name")["Rank"].std()
+model_data['Rank Stability'] = model_data["Name"].map(standard_deviation_rank)
+
 print(expected_rank)
 
-print(model_data.sample(30))
-
+print(model_data.head(30))
 
 
 
