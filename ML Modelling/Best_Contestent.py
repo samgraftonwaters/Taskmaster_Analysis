@@ -10,23 +10,37 @@ X = model_data.select_dtypes(include=[float, int])
 print(len(X.columns))
 
 # PCA ("Which combination of metrics best explains differences between contestants?")
-pca = PCA(n_components=1)
-pca.fit(X)
 
-weights = pd.Series(pca.components_[0], index=X.columns)
+def get_pca_weights(data):
+    pca = PCA(n_components=1)
+    pca.fit(data)
 
-# normalize weights
-pca_weights = weights / weights.abs().sum()
+    weights = pd.Series(pca.components_[0], index=data.columns)
 
+    # normalize weights
+    weights = weights / weights.abs().sum()
+
+    return(weights)
+
+def get_shift_score(data, score_column_name:str):
+    shift_score = data[score_column_name] - data[score_column_name].min()
+    return(shift_score)
+
+def get_scale_score(data, score_column_name:str):
+    scale_score = (
+        (data[score_column_name] - data[score_column_name].min()) /
+        (data[score_column_name].max() - data[score_column_name].min())
+    ) * 100
+    return(scale_score)
+
+pca_weights = get_pca_weights(data = X)
 # composite score
 model_data["pca_score"] = X @ pca_weights
 
-model_data["pca_score_shift"] = model_data["pca_score"] - model_data["pca_score"].min()
+model_data["pca_score_shift"] = get_shift_score(data = model_data, score_column_name = 'pca_score')
 
-model_data["pca_score_rescale"] = (
-    (model_data["pca_score"] - model_data["pca_score"].min()) /
-    (model_data["pca_score"].max() - model_data["pca_score"].min())
-) * 100
+model_data["pca_score_rescale"] = get_scale_score(data = model_data, score_column_name = 'pca_score')
+
 
 print(pca_weights)
 print(model_data["pca_score"])
@@ -40,81 +54,94 @@ print(model_data["pca_score_rescale"])
 # normalize X (0-1)
 X_norm = (X - X.min()) / (X.max() - X.min())
 
-# convert to probabilities
-P = X_norm / X_norm.sum()
+def get_entropy_weights(data):
 
-# entropy
-k = 1 / np.log(len(model_data))
-entropy = -k * (P * np.log(P + 1e-9)).sum()
+    # convert to probabilities
+    P = X_norm / X_norm.sum()
 
-# diversification
-d = 1 - entropy
+    # entropy
+    k = 1 / np.log(len(model_data))
+    entropy = -k * (P * np.log(P + 1e-9)).sum()
 
-# weights
-weights = d / d.sum()
+    # diversification
+    d = 1 - entropy
 
-ent_weights = pd.Series(weights, index=X.columns)
+    # weights
+    weights = d / d.sum()
+    
+    return(weights)
 
-# composite score
+ent_weights = get_entropy_weights(data = X_norm)
+
 model_data["entropy_score"] = (X_norm * ent_weights).sum(axis=1)
 
-print(ent_weights)
+model_data["entropy_score_shift"] = get_shift_score(data = model_data, score_column_name = 'entropy_score')
+
+model_data["entropy_score_rescale"] = get_scale_score(data = model_data, score_column_name = 'entropy_score')
 
 print(model_data["entropy_score"])
+print(model_data["entropy_score_shift"])
+print(model_data["entropy_score_rescale"])
+
+# ####
 
 final_weights = (pca_weights + ent_weights) / 2
 final_weights = final_weights / final_weights.sum()
 model_data["final_score"] = X_norm @ final_weights
-print(model_data["final_score"])
+
+model_data["final_score_shift"] = get_shift_score(data = model_data, score_column_name = 'final_score')
+
+model_data["final_score_rescale"] = get_scale_score(data = model_data, score_column_name = 'final_score')
+
 
 print(model_data.head())
 
-###
+# ###
 
-n_sim = 5000
-contestants = model_data["Name"]
+# n_sim = 5000
+# contestants = model_data["Name"]
 
-rank_results = []
+# rank_results = []
 
-for i in range(n_sim):
+# for i in range(n_sim):
 
-    # resample rows (tasks) with replacement
-    sample_idx = np.random.choice(X_norm.index, size=len(X_norm), replace=True)
-    X_sample = X_norm.loc[sample_idx].reset_index(drop=True)
+#     # resample rows (tasks) with replacement
+#     sample_idx = np.random.choice(X_norm.index, size=len(X_norm), replace=True)
+#     X_sample = X_norm.loc[sample_idx].reset_index(drop=True)
 
-    # recompute scores
-    scores = X_sample @ final_weights
+#     # recompute scores
+#     scores = X_sample @ final_weights
 
-    # aggregate per contestant
-    score_df = pd.DataFrame({
-        "Name": model_data["Name"],
-        "Score": scores
-    })
+#     # aggregate per contestant
+#     score_df = pd.DataFrame({
+#         "Name": model_data["Name"],
+#         "Score": scores
+#     })
 
-    ranking = score_df.sort_values("Score", ascending=False)
-    ranking["Rank"] = range(1, len(ranking)+1)
+#     ranking = score_df.sort_values("Score", ascending=False)
+#     ranking["Rank"] = range(1, len(ranking)+1)
 
-    rank_results.append(ranking[["Name","Rank"]])
+#     rank_results.append(ranking[["Name","Rank"]])
 
-rank_df = pd.concat(rank_results)
+# rank_df = pd.concat(rank_results)
 
-rank_probs = (
-    rank_df
-    .groupby(["Name","Rank"])
-    .size()
-    .div(n_sim)
-    .unstack(fill_value=0)
-)
-print(rank_df)
-print(rank_probs)
+# rank_probs = (
+#     rank_df
+#     .groupby(["Name","Rank"])
+#     .size()
+#     .div(n_sim)
+#     .unstack(fill_value=0)
+# )
+# print(rank_df)
+# print(rank_probs)
 
-expected_rank = (rank_probs * rank_probs.columns).sum(axis=1)
-print(expected_rank)
+# expected_rank = (rank_probs * rank_probs.columns).sum(axis=1)
+# print(expected_rank)
 
 
-# X_scaled = StandardScaler().fit_transform(X)
-# pca = PCA(n_components=2)
-# X_pca = pca.fit_transform(X_scaled)
+# # X_scaled = StandardScaler().fit_transform(X)
+# # pca = PCA(n_components=2)
+# # X_pca = pca.fit_transform(X_scaled)
 
-# model_data["PCA1"] = X_pca[:,0]
-# model_data["PCA2"] = X_pca[:,1]
+# # model_data["PCA1"] = X_pca[:,0]
+# # model_data["PCA2"] = X_pca[:,1]
