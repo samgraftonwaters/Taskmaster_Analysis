@@ -54,6 +54,47 @@ X_scaled = data_nums
 
 k_values = range(2, 12)
 
+
+
+# from sklearn.preprocessing import StandardScaler
+# from sklearn.decomposition import PCA
+# from sklearn.cluster import KMeans
+
+# # scale
+# X_scaled = StandardScaler().fit_transform(X)
+
+# # PCA
+# pca = PCA(n_components=2)
+# pca_90 = PCA(n_components=0.9) # accounts for 90% of the variability
+# X_pca = pca.fit_transform(X_scaled)
+
+# # clustering
+# kmeans = KMeans(n_clusters=3, random_state=42)
+# clusters = kmeans.fit_predict(X_pca)
+
+# # store results
+# model_data["PCA1"] = X_pca[:,0]
+# model_data["PCA2"] = X_pca[:,1]
+# model_data["Cluster"] = clusters
+
+# import matplotlib.pyplot as plt
+
+# plt.scatter(model_data["PCA1"], model_data["PCA2"], c=model_data["Cluster"])
+
+# for i, name in enumerate(model_data["Contestant"]):
+#     plt.text(model_data["PCA1"][i], model_data["PCA2"][i], name)
+
+# plt.xlabel("PC1")
+# plt.ylabel("PC2")
+# plt.show()
+
+# centers_pca = kmeans.cluster_centers_
+
+# centers_scaled = pca.inverse_transform(centers_pca)
+# centers_raw = scaler.inverse_transform(centers_scaled)
+
+# centers_df = pd.DataFrame(centers_raw, columns=X.columns)
+
 #Silhouette Scores
 def determine_sil_values(k_range, X_data):
 
