@@ -68,6 +68,9 @@ k_values = range(2, 12)
 # pca_90 = PCA(n_components=0.9) # accounts for 90% of the variability
 # X_pca = pca.fit_transform(X_scaled)
 
+# # model_data["PCA1"] = X_pca[:,0]
+# # model_data["PCA2"] = X_pca[:,1]
+
 # # clustering
 # kmeans = KMeans(n_clusters=3, random_state=42)
 # clusters = kmeans.fit_predict(X_pca)

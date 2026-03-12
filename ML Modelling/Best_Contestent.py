@@ -104,9 +104,3 @@ print('Top 5: ', top_5_contestents)
 print('Bottom  5: ', bottom_5_contestents)
 
 overall_performance.to_csv(file_path + 'Overall Contestent Performance.csv', index = False, sep = ',')
-# # X_scaled = StandardScaler().fit_transform(X)
-# # pca = PCA(n_components=2)
-# # X_pca = pca.fit_transform(X_scaled)
-
-# # model_data["PCA1"] = X_pca[:,0]
-# # model_data["PCA2"] = X_pca[:,1]
