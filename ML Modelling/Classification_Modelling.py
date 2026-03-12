@@ -29,7 +29,6 @@ X_train, X_test, y_train, y_test = CF.train_test_split(X, y, test_size=0.2, rand
 labels = [1, 0]
 tick_labels = ["Winner", "Non-Winner"]
 
-
 log_reg_param_grid = [
     {
         "solver": ["lbfgs", "newton-cg"],

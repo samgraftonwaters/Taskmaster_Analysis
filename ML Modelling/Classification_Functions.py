@@ -16,14 +16,42 @@ from sklearn.tree import DecisionTreeClassifier
 
 plt.rcParams['figure.figsize'] = (13, 7)
 
-def calculate_conf_matrix( y_test, y_pred, labels):
+def calculate_conf_matrix(y_test, y_pred):
 
-    conf_matrix_values = confusion_matrix(y_test, y_pred, labels=labels)
+    """
+    Calculates the confidence matrix of a classfication model
+
+    Parameters:
+    -----------
+        y_test (): array of target values from the test portion of the train_test_split method
+        y_pred (): predicted target values based on the X_test and classification model
+    
+    Returns:
+    --------
+        Returns the confusion matrix of the classification model. 
+    """
+
+    conf_matrix_values = confusion_matrix(y_test, y_pred, labels=[1,0])
     print("Confusion matrix (count): \n", conf_matrix_values)
 
     return(conf_matrix_values)
 
-def plot_confusion_matrix(model_matrix, tick_labels, title):
+def plot_confusion_matrix(model_matrix, tick_labels, title : str):
+
+    """
+   Plots the confidence matrix of a classfication model
+
+    Parameters:
+    -----------
+        model_matrix: confusion matrix calculated from previous function. 
+        tick_labels: names of the classes
+        title (str): Title of confusion matrix
+    
+    Returns:
+    --------
+        Returns the confusion matrix plot of the classification model. 
+    """
+
     fig, ax = plt.subplots()
     plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.05, top = 0.85, left = 0.1, right = 0.95)
 
@@ -47,6 +75,19 @@ def plot_confusion_matrix(model_matrix, tick_labels, title):
     plt.show()
 
 def determine_best_threshold(y, y_probs):
+
+    """
+    Determines the best threshold for the given model
+
+    Parameters:
+    -----------
+        y: target variables from training data
+        y_probs: model probabilities for y data
+
+    Returns:
+    --------
+        Best threshold value for classification model
+    """
     thresholds = np.arange(0.1, 0.9, 0.01)
     f1_scores = []
 
@@ -64,6 +105,19 @@ def predict_with_threshold(model, X, threshold):
     return (probs >= threshold).astype(int)
 
 def return_model_metrics(y_true, y_pred):
+    """
+    Prints and returns Precision, Recall and F1 Score classification model
+
+    Parameters:
+    -----------
+        y_true: actual class values
+        y_pred: predicted class values
+    
+    Returns:
+    --------
+        precision, recall, f1
+    """
+
     print('The Precision, Recall and F1 Score values are:\n')
     precision = round(precision_score(y_true, y_pred), 2)
     recall = round(recall_score(y_true, y_pred), 2)
