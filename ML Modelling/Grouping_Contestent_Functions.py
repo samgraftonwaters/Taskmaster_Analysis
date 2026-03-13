@@ -59,6 +59,38 @@ def CH_Index_scores(k_range, X_data):
         scores.append(score)
     return(scores)
 
+def plot_silhouette_scores(k, silhouette_values, labels, colours, title):
+
+    """
+    Plots line graphs of silhouette score for each cluster value
+
+    Parameters:
+    -----------
+        k: number of clusters (range)
+        silhouette_values: silhouette scores for each k value
+        labels: list of labels for each line
+        colours: list of colours for each line
+        title (str): plot title
+
+    Results:
+    --------
+        Plot of silhouette score against number of clusters
+    """
+    fig, ax = plt.subplots()
+    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
+
+    for sil_values, colour, label in zip(silhouette_values, colours, labels):
+        plt.plot(k, sil_values, color = colour, label = label, 
+                 marker = 'o', lw = 3, markersize = 10)
+
+    plt.title(title, fontsize = 22)
+    plt.xlabel("Number of Clusters (K)", fontsize = 16)
+    plt.ylabel("Silhoette Score", fontsize = 16)
+    plt.xticks(fontsize = 14)
+    plt.yticks(fontsize = 14)
+    plt.legend(fontsize = 16)
+    plt.show()
+
 
 def determine_sil_values_agg(k_range, X_data, link_type):
 
