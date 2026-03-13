@@ -77,7 +77,7 @@ def plot_confusion_matrix(model_matrix, tick_labels, title : str):
 def determine_best_threshold(y, y_probs):
 
     """
-    Determines the best threshold for the given model
+    Determines the best threshold from the F1 score for the given classification model
 
     Parameters:
     -----------
@@ -101,6 +101,21 @@ def determine_best_threshold(y, y_probs):
     return(best_threshold)
 
 def predict_with_threshold(model, X, threshold):
+    """
+    Classification model predictions based on new "best" threshold value
+
+    Parameters:
+    -----------
+        model: best fit classification model
+        X: test variables to calculate the probabilities of y
+        threshold: best threshold value from the previous function
+
+    Returns:
+    --------
+        list of probabilities that are greater than or equal to the new threshold value
+    
+    """
+
     probs = model.predict_proba(X)[:, 1]
     return (probs >= threshold).astype(int)
 
@@ -131,6 +146,21 @@ def return_model_metrics(y_true, y_pred):
 
 def plot_ROC_curve(y_true, y_scores, title):
 
+    """
+    Plots an ROC curve for the given classification model
+
+    Parameters:
+    -----------
+        y_true: actual y values from the train_test_split
+        y_scores: predicted y-values using the X_test values and new threshold
+        title (str): title of the plot
+    
+    Returns:
+    --------
+        Plots ROC curve
+        AUC_Score (float): the ROC area under the curve value
+    """
+
     fpr, tpr, _thresholds = roc_curve(y_true, y_scores, pos_label=1)
 
     AUC_score = roc_auc_score(y_true, y_scores)
@@ -150,6 +180,23 @@ def plot_ROC_curve(y_true, y_scores, title):
     return(AUC_score)
 
 def plot_precision_recall_curve(y_true, y_prob_scores, title, model_precision, model_recall):
+
+    """
+    Plots a precision-recall curve for the given classification model
+
+    Parameters:
+    -----------
+        y_true: actual y values from the train_test_split
+        y_prob_scores: predicted probabilities using the X_test values and new threshold
+        title (str): title of the plot
+        model_precision (float): the precision score of the model
+        model_recall (float): the recall score of the model
+    
+    Returns:
+    --------
+        Plots Precision-Recall curve
+        AUC_Score (float): the Precision-Recall area under the curve value
+    """
 
     precision, recall, _thresholds = precision_recall_curve(y_true, y_prob_scores)
 
