@@ -93,12 +93,34 @@ clusters = kmeans.fit_predict(X_pca)
 # plt.ylabel("PC2")
 # plt.show()
 
-sil_values_kmeans = GCF.determine_sil_values(k_range = k_values, X_data = X_scaled)
+sil_values_X_scaled = GCF.determine_sil_values(k_range = k_values, X_data = X_scaled)
 
-print(sil_values_kmeans)
+print(sil_values_X_scaled)
 
-sil_values_kmeans = GCF.determine_sil_values(k_range = k_values, X_data = X_pca)
-print(sil_values_kmeans)
+sil_values_pca = GCF.determine_sil_values(k_range = k_values, X_data = X_pca)
+print(sil_values_pca)
+
+
+fig, ax = plt.subplots()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
+
+plt.plot(k_values, sil_values_X_scaled[0], c="darkgreen", marker='o', label = 'X_Scaled Euclidean',
+          lw = 3, markersize = 10)
+plt.plot(k_values, sil_values_X_scaled[1], c="dodgerblue", marker='o', label = 'X_scaled Manhattan', 
+         lw = 3, markersize = 10)
+
+plt.plot(k_values, sil_values_pca[0], c="black", marker='o', label = 'PCA Euclidean',
+          lw = 3, markersize = 10)
+plt.plot(k_values, sil_values_pca[1], c="red", marker='o', label = 'PCA Manhattan', 
+         lw = 3, markersize = 10)
+
+plt.title("Silhouette Score for different K", fontsize = 22)
+plt.xlabel("Number of Clusters (K)", fontsize = 16)
+plt.ylabel("Silhoette Score", fontsize = 16)
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.legend(fontsize = 16)
+plt.show()
 
 
 
