@@ -97,11 +97,11 @@ print(clusters)
 # plt.ylabel("PC2")
 # plt.show()
 
-sil_values_X_scaled = GCF.determine_sil_values(k_range = k_values, X_data = X_scaled)
+sil_values_X_scaled = GCF.determine_kmeans_sil_values(k_range = k_values, X_data = X_scaled)
 
 print(sil_values_X_scaled)
 
-sil_values_pca = GCF.determine_sil_values(k_range = k_values, X_data = X_pca)
+sil_values_pca = GCF.determine_kmeans_sil_values(k_range = k_values, X_data = X_pca)
 print(sil_values_pca)
 
 
@@ -131,7 +131,7 @@ plt.show()
 # Silhouette Scores
 
 
-sil_values_kmeans = GCF.determine_sil_values(k_range = k_values, X_data = X_scaled)
+sil_values_kmeans = GCF.determine_kmeans_sil_values(k_range = k_values, X_data = X_scaled)
 
 fig, ax = plt.subplots()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)

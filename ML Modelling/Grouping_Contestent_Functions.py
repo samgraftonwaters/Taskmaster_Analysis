@@ -8,7 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def determine_sil_values(k_range, X_data):
+def determine_kmeans_sil_values(k_range, X_data):
 
     """
     Calculates the set of silhouette score for Kmeans based on range of K clusters
@@ -59,36 +59,43 @@ def CH_Index_scores(k_range, X_data):
         scores.append(score)
     return(scores)
 
-def plot_silhouette_scores(k, silhouette_values, labels, colours, title):
+def plot_clustering_line_graphs(x_values, y_values, labels, colours, title, y_label, x_label):
 
     """
     Plots line graphs of silhouette score for each cluster value
 
     Parameters:
     -----------
-        k: number of clusters (range)
-        silhouette_values: silhouette scores for each k value
+        x_values: data for x-axis
+        y_values: data for y-axis
         labels: list of labels for each line
         colours: list of colours for each line
         title (str): plot title
+        y_label (str): labels of y axis
+        x_label(str): label of x axis
 
     Results:
     --------
-        Plot of silhouette score against number of clusters
+        Plots set of line graphs for clustering models. e.g. Silhouette score against number of 
+        clusters k.
     """
     fig, ax = plt.subplots()
     plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
 
-    for sil_values, colour, label in zip(silhouette_values, colours, labels):
-        plt.plot(k, sil_values, color = colour, label = label, 
-                 marker = 'o', lw = 3, markersize = 10)
+    try:
+        for y, colour, label in zip(y_values, colours, labels):
+            plt.plot(x_values, y, color = colour, label = label, 
+                    marker = 'o', lw = 3, markersize = 10)
+    except:
+        plt.plot(x_values, y_values, color = colour, label = label, 
+                    marker = 'o', lw = 3, markersize = 10)
 
     plt.title(title, fontsize = 22)
-    plt.xlabel("Number of Clusters (K)", fontsize = 16)
-    plt.ylabel("Silhoette Score", fontsize = 16)
+    plt.xlabel(x_label, fontsize = 16)
+    plt.ylabel(y_label, fontsize = 16)
     plt.xticks(fontsize = 14)
     plt.yticks(fontsize = 14)
-    plt.legend(fontsize = 16)
+    plt.legend(fontsize = 18)
     plt.show()
 
 
