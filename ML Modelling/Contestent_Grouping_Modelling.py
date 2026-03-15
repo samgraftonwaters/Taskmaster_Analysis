@@ -165,3 +165,32 @@ plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
 plt.show()
 
+
+
+#######
+#3.Hierarchical Clustering
+########
+print('Hierarchical Clustering Method')
+
+#Create model for each linkage method
+
+single = GCF.determine_sil_values_agg(k_range = k_values, X_data = X_pca, link_type = 'single')
+complete = GCF.determine_sil_values_agg(k_range = k_values, X_data = X_pca, link_type = 'complete')
+average = GCF.determine_sil_values_agg(k_range = k_values, X_data = X_pca, link_type = 'average')
+ward = GCF.determine_sil_values_agg(k_range = k_values, X_data = X_pca, link_type = 'ward')
+
+cluster_method = ['single', 'complete', 'average', 'ward']
+
+eucl_agg_sil_values = []
+max_k_agg = []
+for cluster in cluster_method:
+    eucl_agg = GCF.determine_sil_values_agg_2(k_range = k_values, X_data = X_pca, link_type = cluster, 
+                                 distance_method = 'euclidean')
+    eucl_agg_sil_values.append(eucl_agg)
+    k_agg_max = max(zip(k_values, eucl_agg), key=lambda x: x[1])[0]
+    max_k_agg.append(k_agg_max)
+
+
+
+print(eucl_agg_sil_values)
+print(max_k_agg)

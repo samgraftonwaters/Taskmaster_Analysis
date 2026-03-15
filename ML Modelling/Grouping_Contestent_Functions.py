@@ -134,7 +134,7 @@ def get_dbscan_silhouette_epsilon_values(X_data, epsilon_range, distance_method)
 def determine_sil_values_agg(k_range, X_data, link_type):
 
     """
-    Calculates the set of silhouette score for Kmeans based on range of K clusters
+    Calculates the set of silhouette score for Hierarchical Clustering based on range of K clusters
 
     Parameters:
     -----------
@@ -167,3 +167,33 @@ def determine_sil_values_agg(k_range, X_data, link_type):
             man_sil_values.append(man_sil_score)
         
     return(eucl_sil_values, man_sil_values)
+
+
+def determine_sil_values_agg_2(k_range, X_data, link_type, distance_method):
+
+    """
+    Calculates the set of silhouette score for Hierarchical Clustering based on range of K clusters
+
+    Parameters:
+    -----------
+        k_range: range of K clusters. Should start on 2.
+        X_data: scaled data
+        link_type (str): type of link method
+        distance_method (str): type of distance method. e.g. Euclidean or Manhattan
+    
+    Returns
+    -------
+        list of solhouette scores for Euclidean and Manhatten methods,
+        based on number of clusters K.
+    """
+    sil_values = []
+
+    for k in k_range:
+        km_clusterer = AgglomerativeClustering(n_clusters=k, linkage=link_type, 
+                                               metric = distance_method).fit(X_data)
+        labels_pred = km_clusterer.fit_predict(X_data)
+
+        sil_score = silhouette_score(X_data, labels_pred, metric=distance_method)
+        sil_values.append(sil_score)
+        
+    return(sil_values)
