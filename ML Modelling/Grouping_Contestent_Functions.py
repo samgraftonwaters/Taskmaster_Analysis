@@ -8,7 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def determine_kmeans_sil_values(k_range, X_data):
+def determine_kmeans_sil_values(k_range, X_data, distance_method):
 
     """
     Calculates the set of silhouette score for Kmeans based on range of K clusters
@@ -17,24 +17,23 @@ def determine_kmeans_sil_values(k_range, X_data):
     -----------
         k_range: range of K clusters. Should start on 2.
         X_data: scaled data
+        distance_method (str): type of distance method. e.g. Euclidean or Manhattan
     
     Returns
     -------
-        list of solhouette scores for Euclidean and Manhatten methods,
-        based on number of clusters K.
+        list of solhouette scores for kmeans model based on specified distance method, for
+        a number of clusters K.
     """
-    eucl_sil_values = []
-    man_sil_values = []
+    sil_values = []
 
     for k in k_range:
         km_clusterer = KMeans(n_clusters=k, init="random", 
                             max_iter=300, random_state=123)
         labels_pred = km_clusterer.fit_predict(X_data)
-        eucl_sil_score = silhouette_score(X_data, labels_pred, metric="euclidean")
-        man_sil_score = silhouette_score(X_data, labels_pred, metric="manhattan")
-        eucl_sil_values.append(eucl_sil_score)
-        man_sil_values.append(man_sil_score)
-    return(eucl_sil_values, man_sil_values)
+        sil_score = silhouette_score(X_data, labels_pred, metric=distance_method)
+        sil_values.append(sil_score)
+
+    return(sil_values)
 
 def CH_Index_scores(k_range, X_data):
     """
@@ -98,14 +97,14 @@ def plot_clustering_line_graphs(x_values, y_values, labels, colours, title, y_la
     plt.legend(fontsize = 18)
     plt.show()
 
-def get_dbscan_silhouette_epsilon_values(X, epsilon_range, distance_method):
+def get_dbscan_silhouette_epsilon_values(X_data, epsilon_range, distance_method):
 
     """
     Gets the silhouette scores and reach distances (epsilon) for the DBSCAN classification model
 
     Parameters:
     -----------
-        X: X variables for the classification model
+        X_data: X variables for the classification model
         epsilon_range: range of reach distances to iterate over
         distance_method (str): type of distance method. e.g. Euclidean or Manhattan
     
@@ -121,11 +120,11 @@ def get_dbscan_silhouette_epsilon_values(X, epsilon_range, distance_method):
 
     for reach_dist in epsilon_range:
     
-        dbscan_model = DBSCAN(eps=reach_dist, metric=distance_method, min_samples=20).fit(X)
+        dbscan_model = DBSCAN(eps=reach_dist, metric=distance_method, min_samples=20).fit(X_data)
         labels_pred = dbscan_model.labels_
 
         if len(np.unique(labels_pred)) > 1:
-            sil_score = silhouette_score(X, labels_pred, metric=distance_method)
+            sil_score = silhouette_score(X_data, labels_pred, metric=distance_method)
             eps_values.append(reach_dist)
             sil_values.append(sil_score)
         

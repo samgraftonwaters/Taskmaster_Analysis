@@ -36,7 +36,6 @@ data_nums = data.select_dtypes(include=[float, int])
 # # PCA
 pca = PCA(n_components=2)
 X_pca = pca.fit_transform(data_nums)
-print(X_pca)
 
 cluster_data["PCA1"] = X_pca[:,0]
 cluster_data["PCA2"] = X_pca[:,1]
@@ -48,20 +47,33 @@ k_values = range(2, 12)
 #####
 
 print('Kmeans Method')
-sil_values_kmeans = GCF.determine_kmeans_sil_values(k_range = k_values, X_data = X_pca)
-print(sil_values_kmeans)
+sil_values_kmeans_eucl = GCF.determine_kmeans_sil_values(k_range = k_values, X_data = X_pca, 
+                                                         distance_method = 'euclidean')
 
-GCF.plot_clustering_line_graphs(x_values = k_values, y_values = sil_values_kmeans, 
+sil_values_kmeans_man = GCF.determine_kmeans_sil_values(k_range = k_values, X_data = X_pca, 
+                                                         distance_method = 'manhattan')
+
+GCF.plot_clustering_line_graphs(x_values = k_values, y_values = [sil_values_kmeans_eucl, sil_values_kmeans_man], 
                        labels = ['Euclidean', 'Manhattan'], colours = ['darkgreen', 'dodgerblue'],
                        title = "Kmeans Silhouette Scores for different Number of Clusters (K)",
                        x_label = "Number of Clusters (K)", y_label = "Silhoette Score")
 
-sil_max_K_value = max(zip(k_values, sil_values_kmeans), key=lambda x: x[1])[0]
-print("Best Sillhouette K:", sil_max_K_value)
+
+if max(sil_values_kmeans_eucl) > max(sil_values_kmeans_man):
+    kmeans_distance_method = 'euclidean'
+    sil_max_K_value = max(zip(k_values, sil_values_kmeans_eucl), key=lambda x: x[1])[0]
+    print("Best Sillhouette Score (Euclidean):", round(max(sil_values_kmeans_eucl), 4))
+    print("Best Sillhouette K (Euclidean):", sil_max_K_value)
+
+else:
+    kmeans_distance_method = 'manhattan'
+    sil_max_K_value = max(zip(k_values, sil_values_kmeans_man), key=lambda x: x[1])[0]
+    print("Best Sillhouette Score (Manhattan):", round(max(sil_values_kmeans_man), 4))
+    print("Best Sillhouette K (Manhattan):", sil_max_K_value)
 
 
 # ---- Run KMeans ----
-kmeans = KMeans(n_clusters=sil_max_K_value, random_state=42, n_init='auto')
+kmeans = KMeans(n_clusters=sil_max_K_value)
 kmeans.fit(X_pca)
 
 cluster_data ['Group (kmeans)'] = kmeans.labels_
@@ -74,7 +86,7 @@ print(groups)
 feature_names = ['PCA1', 'PCA2']
 centers_df = pd.DataFrame(centers_scaled, columns=feature_names)
 
-colours = ['dodgerblue', 'darkorange', 'green', 'blueviolet']
+colours = ['dodgerblue', 'darkorange', 'green', 'blueviolet', 'red', 'magenta']
 
 fig, ax = plt.subplots()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
@@ -88,8 +100,8 @@ for group, colour in zip(groups, colours):
                 marker ='*', s = 300, color=colour, edgecolor = 'black',
                 label = f'Class {group} Center')
 
-plt.legend(fontsize = 15)
-plt.title('Comparing Kmeans clusters', fontsize = 22)
+plt.legend(fontsize = 15, ncols = 2)
+plt.title(f'Comparing Kmeans clusters using the {kmeans_distance_method} distance method', fontsize = 22)
 plt.xlabel("PCA1", fontsize = 16)
 plt.ylabel("PCA2", fontsize = 16)
 plt.xticks(fontsize = 14)
@@ -97,11 +109,9 @@ plt.yticks(fontsize = 14)
 plt.show()
 
 # Produce baseline true value silhouette scores
-sil_score_eucl = silhouette_score(X_pca, kmeans_labels, metric="euclidean")
-sil_score_manhat = silhouette_score(X_pca, kmeans_labels, metric="manhattan")
+sil_score = silhouette_score(X_pca, kmeans_labels, metric="kmeans_distance_method")
 
-print("Euclidean Silhouette Score: ", round(sil_score_eucl, 4))
-print("Manhattan Silhouette Score: ", round(sil_score_manhat, 4))
+print(f"{kmeans_distance_method} Silhouette Score: ", round(sil_score, 4))
 print()
 
 
