@@ -47,6 +47,7 @@ k_values = range(2, 12)
 #1. Kmeans Method
 #####
 
+print('Kmeans Method')
 sil_values_kmeans = GCF.determine_kmeans_sil_values(k_range = k_values, X_data = X_pca)
 print(sil_values_kmeans)
 
@@ -84,7 +85,8 @@ for group, colour in zip(groups, colours):
                 color = colour)
 
     plt.scatter(centers_df.iloc[[group]]['PCA1'], centers_df.iloc[[group]]['PCA2'], 
-                marker ='*', s = 300, color=colour)
+                marker ='*', s = 300, color=colour, edgecolor = 'black',
+                label = f'Class {group} Center')
 
 plt.legend(fontsize = 15)
 plt.title('Comparing Kmeans clusters', fontsize = 22)
@@ -100,36 +102,20 @@ sil_score_manhat = silhouette_score(X_pca, kmeans_labels, metric="manhattan")
 
 print("Euclidean Silhouette Score: ", round(sil_score_eucl, 4))
 print("Manhattan Silhouette Score: ", round(sil_score_manhat, 4))
+print()
 
 
 
-
-#DBSCAN Method
+#####
+#2. DBSCAN Method
+#####
+print('DBSCAN Method')
 
 possible_eps_values = np.linspace(start=0.1, stop=15, num=100)
 
-eps_values_eucl = []
-eps_values_man = []
-dbscan_eucl_sil_values = []
-dbscan_man_sil_values = []
+dbscan_eucl_sil_values, eps_values_eucl = GCF.get_dbscan_silhouette_epsilon_values(X = X_pca, epsilon_range = possible_eps_values, distance_method = 'euclidean')
+dbscan_man_sil_values, eps_values_man = GCF.get_dbscan_silhouette_epsilon_values(X = X_pca, epsilon_range = possible_eps_values, distance_method = 'manhattan')
 
-for reach_dist in possible_eps_values:
-    
-    dbscan_eucl = DBSCAN(eps=reach_dist, metric="euclidean", min_samples=20).fit(X_pca)
-    labels_pred_eucl = dbscan_eucl.labels_
-
-    dbscan_man = DBSCAN(eps=reach_dist, metric="manhattan", min_samples=20).fit(X_pca)
-    labels_pred_man = dbscan_man.labels_
-
-    if len(np.unique(labels_pred_eucl)) > 1:
-        eucl_sil_score = silhouette_score(X_pca, labels_pred_eucl, metric="euclidean")
-        eps_values_eucl.append(reach_dist)
-        dbscan_eucl_sil_values.append(eucl_sil_score)
-    
-    if len(np.unique(labels_pred_man)) > 1:
-        man_sil_score = silhouette_score(X_pca, labels_pred_man, metric="manhattan")
-        eps_values_man.append(reach_dist)
-        dbscan_man_sil_values.append(man_sil_score)
 
 fig, ax = plt.subplots()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.1, right = 0.98)
@@ -165,9 +151,6 @@ dbscan_man.fit(X_pca)
 cluster_data['Group (dbscan man)'] = dbscan_man.labels_
 dbscan_labels_man = dbscan_man.labels_
 groups_man = np.unique(dbscan_labels_man)
-
-print(cluster_data[cluster_data['Group (dbscan man)']==0]['PCA1'])
-print(cluster_data[cluster_data['Group (dbscan man)']==-1]['PCA2'])
 
 fig, ax = plt.subplots()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)

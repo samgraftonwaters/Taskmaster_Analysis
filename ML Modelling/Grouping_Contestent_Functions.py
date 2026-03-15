@@ -98,6 +98,39 @@ def plot_clustering_line_graphs(x_values, y_values, labels, colours, title, y_la
     plt.legend(fontsize = 18)
     plt.show()
 
+def get_dbscan_silhouette_epsilon_values(X, epsilon_range, distance_method):
+
+    """
+    Gets the silhouette scores and reach distances (epsilon) for the DBSCAN classification model
+
+    Parameters:
+    -----------
+        X: X variables for the classification model
+        epsilon_range: range of reach distances to iterate over
+        distance_method (str): type of distance method. e.g. Euclidean or Manhattan
+    
+    Returns:
+    --------
+        sil_values: Silhouette score values (for each reach distance value)
+        eps_values: reach distances for dbscan classification model.
+    
+    """
+
+    sil_values = []
+    eps_values = []
+
+    for reach_dist in epsilon_range:
+    
+        dbscan_model = DBSCAN(eps=reach_dist, metric=distance_method, min_samples=20).fit(X)
+        labels_pred = dbscan_model.labels_
+
+        if len(np.unique(labels_pred)) > 1:
+            sil_score = silhouette_score(X, labels_pred, metric=distance_method)
+            eps_values.append(reach_dist)
+            sil_values.append(sil_score)
+        
+    return(sil_values, eps_values)
+
 
 def determine_sil_values_agg(k_range, X_data, link_type):
 

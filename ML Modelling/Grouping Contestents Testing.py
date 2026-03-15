@@ -242,6 +242,9 @@ for reach_dist in possible_eps_values:
         eps_values_man.append(reach_dist)
         dbscan_man_sil_values.append(man_sil_score)
 
+print(possible_eps_values)
+print(eps_values_man)
+
 fig, ax = plt.subplots()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.1, right = 0.98)
 plt.plot(eps_values_eucl, dbscan_eucl_sil_values, c="blueviolet", label = 'Euclidean', lw = 3)
