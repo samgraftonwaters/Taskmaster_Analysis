@@ -57,13 +57,13 @@ if max(sil_values_kmeans_eucl) > max(sil_values_kmeans_man):
     kmeans_distance_method = 'euclidean'
     sil_max_K_value = max(zip(k_values, sil_values_kmeans_eucl), key=lambda x: x[1])[0]
     print("Best Euclidean Sillhouette Score:", round(max(sil_values_kmeans_eucl), 4))
-    print("Best Euclidean Sillhouette K:", sil_max_K_value)
+    print("Best Euclidean K:", sil_max_K_value)
 
 else:
     kmeans_distance_method = 'manhattan'
     sil_max_K_value = max(zip(k_values, sil_values_kmeans_man), key=lambda x: x[1])[0]
     print("Best Manhattan Sillhouette Score:", round(max(sil_values_kmeans_man), 4))
-    print("Best Manhattan Sillhouette K:", sil_max_K_value)
+    print("Best Manhattan K:", sil_max_K_value)
 
 
 # ---- Run KMeans ----
@@ -115,8 +115,10 @@ dbscan_man_sil_values, eps_values_man = GCF.get_dbscan_silhouette_epsilon_values
 
 fig, ax = plt.subplots()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.1, right = 0.98)
-plt.plot(eps_values_eucl, dbscan_eucl_sil_values, c="blueviolet", label = 'Euclidean', lw = 3)
-plt.plot(eps_values_man, dbscan_man_sil_values, c="dodgerblue", label = 'Manhattan', lw = 3)
+plt.plot(eps_values_eucl, dbscan_eucl_sil_values, c="blueviolet", marker = 'o', label = 'Euclidean', 
+         lw = 3, markersize = 10)
+plt.plot(eps_values_man, dbscan_man_sil_values, c="dodgerblue", marker = 'o', label = 'Manhattan', 
+         lw = 3, markersize = 10)
 plt.title("Silhouette Score for different Reach Distances", fontsize = 22)
 plt.xlabel(r"Reach Distance ($\epsilon$)", fontsize = 16)
 plt.ylabel("Silhoette Score", fontsize = 16)
@@ -181,16 +183,105 @@ ward = GCF.determine_sil_values_agg(k_range = k_values, X_data = X_pca, link_typ
 
 cluster_method = ['single', 'complete', 'average', 'ward']
 
+###Euclidean method
 eucl_agg_sil_values = []
-max_k_agg = []
+eucl_max_k_agg = []
+eucl_max_sil_agg = []
+
 for cluster in cluster_method:
     eucl_agg = GCF.determine_sil_values_agg_2(k_range = k_values, X_data = X_pca, link_type = cluster, 
                                  distance_method = 'euclidean')
-    eucl_agg_sil_values.append(eucl_agg)
     k_agg_max = max(zip(k_values, eucl_agg), key=lambda x: x[1])[0]
-    max_k_agg.append(k_agg_max)
+    sil_agg_max = max(eucl_agg)
+    eucl_agg_sil_values.append(eucl_agg)
+    eucl_max_k_agg.append(k_agg_max)
+    eucl_max_sil_agg.append(sil_agg_max)
+
+
+highest_eucl_sil_value = max(eucl_max_sil_agg)
+max_index_eucl = eucl_max_sil_agg.index(max(eucl_max_sil_agg))
+highest_eucl_k_value = eucl_max_k_agg[max_index_eucl]
+best_eucl_agg_cluster = cluster_method[max_index_eucl]
 
 
 
-print(eucl_agg_sil_values)
-print(max_k_agg)
+###Manhattan method
+man_agg_sil_values = []
+man_max_k_agg = []
+man_max_sil_agg = []
+
+for cluster in cluster_method[0:3]:
+    man_agg = GCF.determine_sil_values_agg_2(k_range = k_values, X_data = X_pca, link_type = cluster, 
+                                 distance_method = 'manhattan')
+    k_agg_max = max(zip(k_values, man_agg), key=lambda x: x[1])[0]
+    sil_agg_max = max(man_agg)
+    man_agg_sil_values.append(man_agg)
+    man_max_k_agg.append(k_agg_max)
+    man_max_sil_agg.append(sil_agg_max)
+
+highest_man_sil_value = max(man_max_sil_agg)
+max_index_man = man_max_sil_agg.index(max(man_max_sil_agg))
+highest_man_k_value = man_max_k_agg[max_index_man]
+best_man_agg_cluster = cluster_method[max_index_man]
+
+###Plotting
+colours = ["darkgreen", "dodgerblue", "blueviolet", "darkorange"]
+
+fig, ax = plt.subplots()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.1, right = 0.98)
+
+for sil_values, cluster, colour in zip(eucl_agg_sil_values, cluster_method, colours):
+    plt.plot(k_values, sil_values, c=colour, marker='o', label = cluster,
+             lw = 3, markersize = 10)
+
+plt.title("Hierarchical Clustering Silhouette Scores for different \n K using Euclidean method", fontsize = 22)
+plt.xlabel("Number of Clusters (K)", fontsize = 16)
+plt.ylabel("Silhoette Score (Euclidean)", fontsize = 16)
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.legend(fontsize = 16)
+plt.show()
+
+fig, ax = plt.subplots()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.1, right = 0.98)
+
+for sil_values, cluster, colour in zip(man_agg_sil_values, cluster_method[0:3], colours):
+    plt.plot(k_values, sil_values, c=colour, marker='o', label = cluster,
+             lw = 3, markersize = 10)
+
+plt.title("Hierarchical Clustering Silhouette Scores for different \n K using Manhattan method", fontsize = 22)
+plt.xlabel("Number of Clusters (K)", fontsize = 16)
+plt.ylabel("Silhoette Score (Manhattan)", fontsize = 16)
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.legend(fontsize = 16)
+plt.show()
+
+#Determine best agg method
+
+if highest_eucl_sil_value > highest_man_sil_value:
+    agg_distance_method = 'euclidean'
+    highest_k_value = highest_eucl_k_value
+    agg_cluster_method = best_eucl_agg_cluster
+    print("Best Euclidean Silhouette Score: ", round(highest_eucl_sil_value, 4))
+    print("Best Euclidean K: ", highest_k_value)
+    print("Best Euclidean Agg Method: ", agg_cluster_method)
+
+else:
+    agg_distance_method = 'manhattan'
+    highest_k_value = highest_man_k_value
+    agg_cluster_method = best_man_agg_cluster
+    print("Best Manhattan Silhouette Score: ", round(highest_man_sil_value, 4))
+    print("Best Manhattan K:", highest_k_value)
+    print("Best Manhattan Agg Method: ", agg_cluster_method)
+
+
+agg_model = AgglomerativeClustering(n_clusters=highest_k_value, linkage=agg_cluster_method, 
+                                    metric = agg_distance_method).fit(X_pca)
+
+ #Access labels assigned for each method
+clusters = agg_model.labels_
+cluster_data[f'Group (Agg {agg_distance_method} {agg_cluster_method})'] = clusters
+
+
+
