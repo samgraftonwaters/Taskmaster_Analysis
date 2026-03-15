@@ -120,7 +120,7 @@ def get_dbscan_silhouette_epsilon_values(X_data, epsilon_range, distance_method)
 
     for reach_dist in epsilon_range:
     
-        dbscan_model = DBSCAN(eps=reach_dist, metric=distance_method, min_samples=20).fit(X_data)
+        dbscan_model = DBSCAN(eps=reach_dist, metric=distance_method).fit(X_data)
         labels_pred = dbscan_model.labels_
 
         if len(np.unique(labels_pred)) > 1:

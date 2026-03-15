@@ -20,12 +20,6 @@ plt.rcParams['figure.figsize'] = (13, 7)
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
 model_data = pd.read_csv(file_path + 'Full Contestent Table for Modelling Scaled.csv')
 
-print(model_data.head())
-
-print(model_data.info())
-
-print(model_data.columns)
-
 data = pd.DataFrame(model_data)
 
 cluster_data = model_data[['Series', 'Name']].copy()
@@ -62,21 +56,21 @@ GCF.plot_clustering_line_graphs(x_values = k_values, y_values = [sil_values_kmea
 if max(sil_values_kmeans_eucl) > max(sil_values_kmeans_man):
     kmeans_distance_method = 'euclidean'
     sil_max_K_value = max(zip(k_values, sil_values_kmeans_eucl), key=lambda x: x[1])[0]
-    print("Best Sillhouette Score (Euclidean):", round(max(sil_values_kmeans_eucl), 4))
-    print("Best Sillhouette K (Euclidean):", sil_max_K_value)
+    print("Best Euclidean Sillhouette Score:", round(max(sil_values_kmeans_eucl), 4))
+    print("Best Euclidean Sillhouette K:", sil_max_K_value)
 
 else:
     kmeans_distance_method = 'manhattan'
     sil_max_K_value = max(zip(k_values, sil_values_kmeans_man), key=lambda x: x[1])[0]
-    print("Best Sillhouette Score (Manhattan):", round(max(sil_values_kmeans_man), 4))
-    print("Best Sillhouette K (Manhattan):", sil_max_K_value)
+    print("Best Manhattan Sillhouette Score:", round(max(sil_values_kmeans_man), 4))
+    print("Best Manhattan Sillhouette K:", sil_max_K_value)
 
 
 # ---- Run KMeans ----
 kmeans = KMeans(n_clusters=sil_max_K_value)
 kmeans.fit(X_pca)
 
-cluster_data ['Group (kmeans)'] = kmeans.labels_
+cluster_data[f'Group (kmeans {kmeans_distance_method})'] = kmeans.labels_
 kmeans_labels = kmeans.labels_
 centers_scaled = kmeans.cluster_centers_
 
@@ -92,9 +86,9 @@ fig, ax = plt.subplots()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
 
 for group, colour in zip(groups, colours):
-    plt.scatter(cluster_data[cluster_data['Group (kmeans)']==group]['PCA1'], 
-                cluster_data[cluster_data['Group (kmeans)']==group]['PCA2'], label = f'Class {group}',
-                color = colour)
+    plt.scatter(cluster_data[cluster_data[f'Group (kmeans {kmeans_distance_method})']==group]['PCA1'], 
+                cluster_data[cluster_data[f'Group (kmeans {kmeans_distance_method})']==group]['PCA2'], 
+                label = f'Class {group}', color = colour)
 
     plt.scatter(centers_df.iloc[[group]]['PCA1'], centers_df.iloc[[group]]['PCA2'], 
                 marker ='*', s = 300, color=colour, edgecolor = 'black',
@@ -108,13 +102,6 @@ plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
 plt.show()
 
-# Produce baseline true value silhouette scores
-sil_score = silhouette_score(X_pca, kmeans_labels, metric="kmeans_distance_method")
-
-print(f"{kmeans_distance_method} Silhouette Score: ", round(sil_score, 4))
-print()
-
-
 
 #####
 #2. DBSCAN Method
@@ -123,9 +110,8 @@ print('DBSCAN Method')
 
 possible_eps_values = np.linspace(start=0.1, stop=15, num=100)
 
-dbscan_eucl_sil_values, eps_values_eucl = GCF.get_dbscan_silhouette_epsilon_values(X = X_pca, epsilon_range = possible_eps_values, distance_method = 'euclidean')
-dbscan_man_sil_values, eps_values_man = GCF.get_dbscan_silhouette_epsilon_values(X = X_pca, epsilon_range = possible_eps_values, distance_method = 'manhattan')
-
+dbscan_eucl_sil_values, eps_values_eucl = GCF.get_dbscan_silhouette_epsilon_values(X_data = X_pca, epsilon_range = possible_eps_values, distance_method = 'euclidean')
+dbscan_man_sil_values, eps_values_man = GCF.get_dbscan_silhouette_epsilon_values(X_data = X_pca, epsilon_range = possible_eps_values, distance_method = 'manhattan')
 
 fig, ax = plt.subplots()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.1, right = 0.98)
@@ -139,59 +125,43 @@ plt.yticks(fontsize = 14)
 plt.legend(fontsize = 16)
 plt.show()
 
-eucl_eps_max = max(zip(eps_values_eucl, dbscan_eucl_sil_values), key=lambda x: x[1])[0]
-man_eps_max = max(zip(eps_values_man, dbscan_man_sil_values), key=lambda x: x[1])[0]
 
-print(r"Best Euclidean Reach Distance ($\epsilon$)", eucl_eps_max)
-print(r"Best Manhattan Reach Distance ($\epsilon$)", man_eps_max)
+if max(dbscan_eucl_sil_values) > max(dbscan_man_sil_values):
+    dbscan_distance_method = 'euclidean'
+    eps_max = max(zip(eps_values_eucl, dbscan_eucl_sil_values), key=lambda x: x[1])[0]
+    print("Best Euclidean Silhouette Score: ", round(max(dbscan_eucl_sil_values), 4))
+    print(r"Best Euclidean Reach Distance ($\epsilon$)", eps_max)
+
+else:
+    dbscan_distance_method = 'Manhattan'
+    eps_max = max(zip(eps_values_man, dbscan_man_sil_values), key=lambda x: x[1])[0]
+    print("Best Manhattan Silhouette Score: ", round(max(dbscan_man_sil_values), 4))
+    print(r"Best Manhattan Reach Distance ($\epsilon$)", eps_max)
 
 #-----Run DBSCAN-----
 
-dbscan_eucl = DBSCAN(eps=eucl_eps_max, metric="euclidean", min_samples=20)
-dbscan_eucl.fit(X_pca)
+dbscan = DBSCAN(eps=eps_max, metric=dbscan_distance_method)
+dbscan.fit(X_pca)
 
-cluster_data['Group (dbscan eucl)'] = dbscan_eucl.labels_
-dbscan_labels_eucl = dbscan_eucl.labels_
-groups_eucl = np.unique(dbscan_labels_eucl)
-print(groups_eucl)
-
-dbscan_man = DBSCAN(eps=man_eps_max, metric="manhattan", min_samples=20)
-dbscan_man.fit(X_pca)
-
-cluster_data['Group (dbscan man)'] = dbscan_man.labels_
-dbscan_labels_man = dbscan_man.labels_
-groups_man = np.unique(dbscan_labels_man)
+cluster_data[f'Group (dbscan {dbscan_distance_method})'] = dbscan.labels_
+dbscan_labels = dbscan.labels_
+groups = np.unique(dbscan_labels)
+print(groups)
 
 fig, ax = plt.subplots()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
 
-for group, colour in zip(groups_eucl, colours):
+for group, colour in zip(groups, colours):
     
-    plt.scatter(cluster_data[cluster_data['Group (dbscan eucl)']==group]['PCA1'], 
-                cluster_data[cluster_data['Group (dbscan eucl)']==group]['PCA2'], 
+    plt.scatter(cluster_data[cluster_data[f'Group (dbscan {dbscan_distance_method})']==group]['PCA1'], 
+                cluster_data[cluster_data[f'Group (dbscan {dbscan_distance_method})']==group]['PCA2'], 
                 label = f'Class {group}', color = colour)
 
 plt.legend(fontsize = 15)
-plt.title('Comparing DBSCAN clusters with "Euclidean" Method', fontsize = 22)
+plt.title(f'Comparing DBSCAN clusters with {dbscan_distance_method} distance method', fontsize = 22)
 plt.xlabel("PCA1", fontsize = 16)
 plt.ylabel("PCA2", fontsize = 16)
 plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
 plt.show()
 
-
-fig, ax = plt.subplots()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
-
-for group, colour in zip(groups_man, colours):
-    plt.scatter(cluster_data[cluster_data['Group (dbscan man)']==group]['PCA1'], 
-                cluster_data[cluster_data['Group (dbscan man)']==group]['PCA2'], 
-                label = f'Class {group}', color = colour)
-
-plt.legend(fontsize = 15)
-plt.title('Comparing DBSCAN clusters with "Manhattan" Method', fontsize = 22)
-plt.xlabel("PCA1", fontsize = 16)
-plt.ylabel("PCA2", fontsize = 16)
-plt.xticks(fontsize = 14)
-plt.yticks(fontsize = 14)
-plt.show()
