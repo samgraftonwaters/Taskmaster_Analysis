@@ -337,12 +337,29 @@ print(cluster_model_parameters)
 print(cluster_data.head())
 print(cluster_data.columns)
 
-best_cluster_model = cluster_model_parameters[(cluster_model_parameters['Number of Clusters'] > 2) & (
-    cluster_model_parameters['Silhouette Score'].max())]
+filtered = cluster_model_parameters[cluster_model_parameters['Number of Clusters'] > 2]
 
+best_cluster_model = filtered.loc[filtered['Silhouette Score'].idxmax()]
 
-cluster_data_grouped = cluster_data[['Series', 'Name', 'PCA1', 'PCA2', best_cluster_model['Cluster Column']]]
+cluster_data_grouped = cluster_data[['Series', 'Name', 'PCA1', 'PCA2', 
+                                     best_cluster_model['Cluster Column']]]
 
 print(cluster_data_grouped.head())
 
-# cluster_data_grouped.to_csv(file_path + 'Grouped Contestents.csv', sep = ',', index = False)
+
+
+group0 = cluster_data_grouped[cluster_data_grouped['Group (kmeans manhattan)'] == 0]
+group1 = cluster_data_grouped[cluster_data_grouped['Group (kmeans manhattan)'] == 1]
+group2 = cluster_data_grouped[cluster_data_grouped['Group (kmeans manhattan)'] == 2]
+group3 = cluster_data_grouped[cluster_data_grouped['Group (kmeans manhattan)'] == 3]
+
+print('0')
+print(group0)
+print('1')
+print(group1)
+print('2')
+print(group2)
+print('3')
+print(group3)
+
+# cluster_data_grouped.to_csv(file_path + 'Final Model Grouped Contestents.csv', sep = ',', index = False)
