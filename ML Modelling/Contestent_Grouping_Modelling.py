@@ -36,6 +36,7 @@ cluster_data["PCA2"] = X_pca[:,1]
 
 k_values = range(2, 12)
 
+print()
 #####
 #1. Kmeans Method
 #####
@@ -167,7 +168,7 @@ plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
 plt.show()
 
-
+print()
 
 #######
 #3.Hierarchical Clustering
@@ -234,7 +235,7 @@ for sil_values, cluster, colour in zip(eucl_agg_sil_values, cluster_method, colo
     plt.plot(k_values, sil_values, c=colour, marker='o', label = cluster,
              lw = 3, markersize = 10)
 
-plt.title("Hierarchical Clustering Silhouette Scores for different \n K using Euclidean method", fontsize = 22)
+plt.title("Hierarchical Clustering Silhouette Scores for different \n K using the Euclidean distance method", fontsize = 22)
 plt.xlabel("Number of Clusters (K)", fontsize = 16)
 plt.ylabel("Silhoette Score (Euclidean)", fontsize = 16)
 plt.xticks(fontsize = 14)
@@ -249,7 +250,7 @@ for sil_values, cluster, colour in zip(man_agg_sil_values, cluster_method[0:3], 
     plt.plot(k_values, sil_values, c=colour, marker='o', label = cluster,
              lw = 3, markersize = 10)
 
-plt.title("Hierarchical Clustering Silhouette Scores for different \n K using Manhattan method", fontsize = 22)
+plt.title("Hierarchical Clustering Silhouette Scores for different \n K using the Manhattan distance method", fontsize = 22)
 plt.xlabel("Number of Clusters (K)", fontsize = 16)
 plt.ylabel("Silhoette Score (Manhattan)", fontsize = 16)
 plt.xticks(fontsize = 14)
@@ -279,9 +280,26 @@ else:
 agg_model = AgglomerativeClustering(n_clusters=highest_k_value, linkage=agg_cluster_method, 
                                     metric = agg_distance_method).fit(X_pca)
 
- #Access labels assigned for each method
-clusters = agg_model.labels_
-cluster_data[f'Group (Agg {agg_distance_method} {agg_cluster_method})'] = clusters
+#Access labels assigned for each method
+agg_labels = agg_model.labels_
+cluster_data[f'Group (Agg {agg_distance_method} {agg_cluster_method})'] = agg_labels
+groups = np.unique(agg_labels)
+print(groups)
 
+fig, ax = plt.subplots()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
 
+for group, colour in zip(groups, colours):
+    
+    plt.scatter(cluster_data[cluster_data[f'Group (Agg {agg_distance_method} {agg_cluster_method})']==group]['PCA1'], 
+                cluster_data[cluster_data[f'Group (Agg {agg_distance_method} {agg_cluster_method})']==group]['PCA2'], 
+                label = f'Class {group}', color = colour)
+
+plt.legend(fontsize = 15)
+plt.title(f'Comparing Agglomerative clusters with {agg_distance_method} distance \n method and {agg_cluster_method} Linkage', fontsize = 22)
+plt.xlabel("PCA1", fontsize = 16)
+plt.ylabel("PCA2", fontsize = 16)
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.show()
 
