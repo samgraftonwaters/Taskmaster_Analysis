@@ -82,6 +82,7 @@ feature_names = ['PCA1', 'PCA2']
 centers_df = pd.DataFrame(centers_scaled, columns=feature_names)
 
 colours = ['dodgerblue', 'darkorange', 'green', 'blueviolet', 'red', 'magenta']
+colours = plt.cm.tab10.colors
 
 fig, ax = plt.subplots()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
@@ -103,7 +104,7 @@ plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
 plt.show()
 
-
+print()
 #####
 #2. DBSCAN Method
 #####
@@ -286,6 +287,10 @@ cluster_data[f'Group (Agg {agg_distance_method} {agg_cluster_method})'] = agg_la
 groups = np.unique(agg_labels)
 print(groups)
 
+
+
+centers = cluster_data.groupby(f'Group (Agg {agg_distance_method} {agg_cluster_method})')[["PCA1","PCA2"]].mean()
+
 fig, ax = plt.subplots()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
 
@@ -295,7 +300,11 @@ for group, colour in zip(groups, colours):
                 cluster_data[cluster_data[f'Group (Agg {agg_distance_method} {agg_cluster_method})']==group]['PCA2'], 
                 label = f'Class {group}', color = colour)
 
-plt.legend(fontsize = 15)
+    plt.scatter(centers.iloc[[group]]["PCA1"], centers.iloc[[group]]["PCA2"], 
+            marker ='*', s = 300, color=colour, edgecolor = 'black',
+            label = f'Class {group} Center')
+    
+plt.legend(fontsize = 15, ncols = 2)
 plt.title(f'Comparing Agglomerative clusters with {agg_distance_method} distance \n method and {agg_cluster_method} Linkage', fontsize = 22)
 plt.xlabel("PCA1", fontsize = 16)
 plt.ylabel("PCA2", fontsize = 16)
