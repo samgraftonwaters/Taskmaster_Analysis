@@ -131,7 +131,7 @@ def get_dbscan_silhouette_epsilon_values(X_data, epsilon_range, distance_method)
     return(sil_values, eps_values)
 
 
-def determine_sil_values_agg(k_range, X_data, link_type):
+def determine_sil_values_agg_both_distance_methods(k_range, X_data, link_type):
 
     """
     Calculates the set of silhouette score for Hierarchical Clustering based on range of K clusters
@@ -169,7 +169,7 @@ def determine_sil_values_agg(k_range, X_data, link_type):
     return(eucl_sil_values, man_sil_values)
 
 
-def determine_sil_values_agg_2(k_range, X_data, link_type, distance_method):
+def determine_sil_values_agg(k_range, X_data, link_type, distance_method):
 
     """
     Calculates the set of silhouette score for Hierarchical Clustering based on range of K clusters

@@ -56,38 +56,40 @@ GCF.plot_clustering_line_graphs(x_values = k_values, y_values = [sil_values_kmea
 
 if max(sil_values_kmeans_eucl) > max(sil_values_kmeans_man):
     kmeans_distance_method = 'euclidean'
-    sil_max_K_value = max(zip(k_values, sil_values_kmeans_eucl), key=lambda x: x[1])[0]
-    print("Best Euclidean Sillhouette Score:", round(max(sil_values_kmeans_eucl), 4))
-    print("Best Euclidean K:", sil_max_K_value)
+    sil_max_K_value_kmeans = max(zip(k_values, sil_values_kmeans_eucl), key=lambda x: x[1])[0]
+    highest_sil_value_kmeans = max(sil_values_kmeans_eucl)
+    print("Best Euclidean Sillhouette Score:", round(highest_sil_value_kmeans, 4))
+    print("Best Euclidean K:", sil_max_K_value_kmeans)
 
 else:
     kmeans_distance_method = 'manhattan'
-    sil_max_K_value = max(zip(k_values, sil_values_kmeans_man), key=lambda x: x[1])[0]
-    print("Best Manhattan Sillhouette Score:", round(max(sil_values_kmeans_man), 4))
-    print("Best Manhattan K:", sil_max_K_value)
+    sil_max_K_value_kmeans = max(zip(k_values, sil_values_kmeans_man), key=lambda x: x[1])[0]
+    highest_sil_value_kmeans = max(sil_values_kmeans_man)
+    print("Best Manhattan Sillhouette Score:", round(highest_sil_value_kmeans, 4))
+    print("Best Manhattan K:", sil_max_K_value_kmeans)
 
 
 # ---- Run KMeans ----
-kmeans = KMeans(n_clusters=sil_max_K_value)
+kmeans = KMeans(n_clusters=sil_max_K_value_kmeans)
 kmeans.fit(X_pca)
 
 cluster_data[f'Group (kmeans {kmeans_distance_method})'] = kmeans.labels_
 kmeans_labels = kmeans.labels_
 centers_scaled = kmeans.cluster_centers_
 
-groups = np.unique(kmeans.labels_)
-print(groups)
+groups_kmeans = np.unique(kmeans.labels_)
+print(groups_kmeans)
 
 feature_names = ['PCA1', 'PCA2']
 centers_df = pd.DataFrame(centers_scaled, columns=feature_names)
 
-colours = ['dodgerblue', 'darkorange', 'green', 'blueviolet', 'red', 'magenta']
+# colours = ['dodgerblue', 'darkorange', 'green', 'blueviolet', 'red', 'magenta']
 colours = plt.cm.tab10.colors
 
 fig, ax = plt.subplots()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
 
-for group, colour in zip(groups, colours):
+for group, colour in zip(groups_kmeans, colours):
     plt.scatter(cluster_data[cluster_data[f'Group (kmeans {kmeans_distance_method})']==group]['PCA1'], 
                 cluster_data[cluster_data[f'Group (kmeans {kmeans_distance_method})']==group]['PCA2'], 
                 label = f'Class {group}', color = colour)
@@ -132,30 +134,32 @@ plt.show()
 
 if max(dbscan_eucl_sil_values) > max(dbscan_man_sil_values):
     dbscan_distance_method = 'euclidean'
-    eps_max = max(zip(eps_values_eucl, dbscan_eucl_sil_values), key=lambda x: x[1])[0]
-    print("Best Euclidean Silhouette Score: ", round(max(dbscan_eucl_sil_values), 4))
-    print(r"Best Euclidean Reach Distance ($\epsilon$)", eps_max)
+    eps_max_dbscan = max(zip(eps_values_eucl, dbscan_eucl_sil_values), key=lambda x: x[1])[0]
+    dbscan_highest_sil_values = max(dbscan_eucl_sil_values)
+    print("Best Euclidean Silhouette Score: ", round(dbscan_highest_sil_values, 4))
+    print(r"Best Euclidean Reach Distance ($\epsilon$)", eps_max_dbscan)
 
 else:
     dbscan_distance_method = 'Manhattan'
-    eps_max = max(zip(eps_values_man, dbscan_man_sil_values), key=lambda x: x[1])[0]
-    print("Best Manhattan Silhouette Score: ", round(max(dbscan_man_sil_values), 4))
-    print(r"Best Manhattan Reach Distance ($\epsilon$)", eps_max)
+    eps_max_dbscan = max(zip(eps_values_man, dbscan_man_sil_values), key=lambda x: x[1])[0]
+    dbscan_highest_sil_values = max(dbscan_man_sil_values)
+    print("Best Manhattan Silhouette Score: ", round(dbscan_highest_sil_values, 4))
+    print(r"Best Manhattan Reach Distance ($\epsilon$)", eps_max_dbscan)
 
 #-----Run DBSCAN-----
 
-dbscan = DBSCAN(eps=eps_max, metric=dbscan_distance_method)
+dbscan = DBSCAN(eps=eps_max_dbscan, metric=dbscan_distance_method)
 dbscan.fit(X_pca)
 
 cluster_data[f'Group (dbscan {dbscan_distance_method})'] = dbscan.labels_
 dbscan_labels = dbscan.labels_
-groups = np.unique(dbscan_labels)
-print(groups)
+groups_dbscan = np.unique(dbscan_labels)
+print(groups_dbscan)
 
 fig, ax = plt.subplots()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
 
-for group, colour in zip(groups, colours):
+for group, colour in zip(groups_dbscan, colours):
     
     plt.scatter(cluster_data[cluster_data[f'Group (dbscan {dbscan_distance_method})']==group]['PCA1'], 
                 cluster_data[cluster_data[f'Group (dbscan {dbscan_distance_method})']==group]['PCA2'], 
@@ -178,10 +182,10 @@ print('Hierarchical Clustering Method')
 
 #Create model for each linkage method
 
-single = GCF.determine_sil_values_agg(k_range = k_values, X_data = X_pca, link_type = 'single')
-complete = GCF.determine_sil_values_agg(k_range = k_values, X_data = X_pca, link_type = 'complete')
-average = GCF.determine_sil_values_agg(k_range = k_values, X_data = X_pca, link_type = 'average')
-ward = GCF.determine_sil_values_agg(k_range = k_values, X_data = X_pca, link_type = 'ward')
+single = GCF.determine_sil_values_agg_both_distance_methods(k_range = k_values, X_data = X_pca, link_type = 'single')
+complete = GCF.determine_sil_values_agg_both_distance_methods(k_range = k_values, X_data = X_pca, link_type = 'complete')
+average = GCF.determine_sil_values_agg_both_distance_methods(k_range = k_values, X_data = X_pca, link_type = 'average')
+ward = GCF.determine_sil_values_agg_both_distance_methods(k_range = k_values, X_data = X_pca, link_type = 'ward')
 
 cluster_method = ['single', 'complete', 'average', 'ward']
 
@@ -191,7 +195,7 @@ eucl_max_k_agg = []
 eucl_max_sil_agg = []
 
 for cluster in cluster_method:
-    eucl_agg = GCF.determine_sil_values_agg_2(k_range = k_values, X_data = X_pca, link_type = cluster, 
+    eucl_agg = GCF.determine_sil_values_agg(k_range = k_values, X_data = X_pca, link_type = cluster, 
                                  distance_method = 'euclidean')
     k_agg_max = max(zip(k_values, eucl_agg), key=lambda x: x[1])[0]
     sil_agg_max = max(eucl_agg)
@@ -213,7 +217,7 @@ man_max_k_agg = []
 man_max_sil_agg = []
 
 for cluster in cluster_method[0:3]:
-    man_agg = GCF.determine_sil_values_agg_2(k_range = k_values, X_data = X_pca, link_type = cluster, 
+    man_agg = GCF.determine_sil_values_agg(k_range = k_values, X_data = X_pca, link_type = cluster, 
                                  distance_method = 'manhattan')
     k_agg_max = max(zip(k_values, man_agg), key=lambda x: x[1])[0]
     sil_agg_max = max(man_agg)
@@ -227,7 +231,7 @@ highest_man_k_value = man_max_k_agg[max_index_man]
 best_man_agg_cluster = cluster_method[max_index_man]
 
 ###Plotting
-colours = ["darkgreen", "dodgerblue", "blueviolet", "darkorange"]
+# colours = ["darkgreen", "dodgerblue", "blueviolet", "darkorange"]
 
 fig, ax = plt.subplots()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.1, right = 0.98)
@@ -263,29 +267,31 @@ plt.show()
 
 if highest_eucl_sil_value > highest_man_sil_value:
     agg_distance_method = 'euclidean'
-    highest_k_value = highest_eucl_k_value
+    highest_k_value_agg = highest_eucl_k_value
     agg_cluster_method = best_eucl_agg_cluster
-    print("Best Euclidean Silhouette Score: ", round(highest_eucl_sil_value, 4))
-    print("Best Euclidean K: ", highest_k_value)
+    highest_sil_value_agg = highest_eucl_sil_value
+    print("Best Euclidean Silhouette Score: ", round(highest_sil_value_agg, 4))
+    print("Best Euclidean K: ", highest_k_value_agg)
     print("Best Euclidean Agg Method: ", agg_cluster_method)
 
 else:
     agg_distance_method = 'manhattan'
-    highest_k_value = highest_man_k_value
+    highest_k_value_agg = highest_man_k_value
     agg_cluster_method = best_man_agg_cluster
-    print("Best Manhattan Silhouette Score: ", round(highest_man_sil_value, 4))
-    print("Best Manhattan K:", highest_k_value)
+    highest_sil_value_agg = highest_eucl_sil_value
+    print("Best Manhattan Silhouette Score: ", round(highest_sil_value_agg, 4))
+    print("Best Manhattan K:", highest_k_value_agg)
     print("Best Manhattan Agg Method: ", agg_cluster_method)
 
 
-agg_model = AgglomerativeClustering(n_clusters=highest_k_value, linkage=agg_cluster_method, 
+agg_model = AgglomerativeClustering(n_clusters=highest_k_value_agg, linkage=agg_cluster_method, 
                                     metric = agg_distance_method).fit(X_pca)
 
 #Access labels assigned for each method
 agg_labels = agg_model.labels_
 cluster_data[f'Group (Agg {agg_distance_method} {agg_cluster_method})'] = agg_labels
-groups = np.unique(agg_labels)
-print(groups)
+groups_agg = np.unique(agg_labels)
+print(groups_agg)
 
 
 
@@ -294,7 +300,7 @@ centers = cluster_data.groupby(f'Group (Agg {agg_distance_method} {agg_cluster_m
 fig, ax = plt.subplots()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
 
-for group, colour in zip(groups, colours):
+for group, colour in zip(groups_agg, colours):
     
     plt.scatter(cluster_data[cluster_data[f'Group (Agg {agg_distance_method} {agg_cluster_method})']==group]['PCA1'], 
                 cluster_data[cluster_data[f'Group (Agg {agg_distance_method} {agg_cluster_method})']==group]['PCA2'], 
@@ -312,3 +318,31 @@ plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
 plt.show()
 
+
+cluster_model_parameters = pd.DataFrame({
+    "Cluster Model" : ['Kmeans', 'DBSCAN', 'Agglomerative'],
+    "Number of Clusters" : [len(groups_kmeans), len(groups_dbscan), len(groups_agg)],
+    "Silhouette Score" : [highest_sil_value_kmeans, dbscan_highest_sil_values, highest_sil_value_agg],
+    "Main Model Parameter" : [int(sil_max_K_value_kmeans), float(eps_max_dbscan), int(highest_k_value_agg)],
+    "Distance Method" : [kmeans_distance_method, dbscan_distance_method, agg_distance_method],
+    "Link Type" : [None, None, agg_cluster_method],
+    "Cluster Column" : [f'Group (kmeans {kmeans_distance_method})',
+                        f'Group (dbscan {dbscan_distance_method})', 
+                        f'Group (Agg {agg_distance_method} {agg_cluster_method})']
+ 
+
+})
+
+print(cluster_model_parameters)
+print(cluster_data.head())
+print(cluster_data.columns)
+
+best_cluster_model = cluster_model_parameters[(cluster_model_parameters['Number of Clusters'] > 2) & (
+    cluster_model_parameters['Silhouette Score'].max())]
+
+
+cluster_data_grouped = cluster_data[['Series', 'Name', 'PCA1', 'PCA2', best_cluster_model['Cluster Column']]]
+
+print(cluster_data_grouped.head())
+
+# cluster_data_grouped.to_csv(file_path + 'Grouped Contestents.csv', sep = ',', index = False)
