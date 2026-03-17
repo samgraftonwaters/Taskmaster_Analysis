@@ -358,13 +358,22 @@ cluster_data_grouped = cluster_data_grouped.merge(pd.merge(positions, overall_ra
 print(cluster_data_grouped.head())
 different_groups = []
 
-for group in best_cluster_model["Cluster Values"]:
+for i, group in enumerate(best_cluster_model["Cluster Values"]):
 
     cluster_group = cluster_data_grouped[cluster_data_grouped[best_cluster_model['Cluster Column']] == group].reset_index(drop = True)
     different_groups.append(cluster_group)
+    print(f'\nGroup {i}')
+    print(cluster_group)
 
-for i, group_df in enumerate(different_groups):
-    print(f"\nGroup {i}")
-    print(group_df)
+for i in range(len(best_cluster_model["Cluster Values"])):
+    for col in ['Score', 'Position', 'final_score_rescale', 'Contestent Rank']:
+
+        print(f"Group {i} {col} Average:, {round(different_groups[i][col].mean(), 2)}")
+    print()
+
+
+
+
+
 
 # cluster_data_grouped.to_csv(file_path + 'Final Model Grouped Contestents.csv', sep = ',', index = False)
