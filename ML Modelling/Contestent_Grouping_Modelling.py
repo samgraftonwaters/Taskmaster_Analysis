@@ -322,6 +322,7 @@ plt.show()
 cluster_model_parameters = pd.DataFrame({
     "Cluster Model" : ['Kmeans', 'DBSCAN', 'Agglomerative'],
     "Number of Clusters" : [len(groups_kmeans), len(groups_dbscan), len(groups_agg)],
+    "Cluster Values" : [groups_kmeans, groups_dbscan, groups_agg],
     "Silhouette Score" : [highest_sil_value_kmeans, dbscan_highest_sil_values, highest_sil_value_agg],
     "Main Model Parameter" : [int(sil_max_K_value_kmeans), float(eps_max_dbscan), int(highest_k_value_agg)],
     "Distance Method" : [kmeans_distance_method, dbscan_distance_method, agg_distance_method],
@@ -333,33 +334,37 @@ cluster_model_parameters = pd.DataFrame({
 
 })
 
-print(cluster_model_parameters)
-print(cluster_data.head())
-print(cluster_data.columns)
-
 filtered = cluster_model_parameters[cluster_model_parameters['Number of Clusters'] > 2]
 
 best_cluster_model = filtered.loc[filtered['Silhouette Score'].idxmax()]
 
+print(best_cluster_model)
+
 cluster_data_grouped = cluster_data[['Series', 'Name', 'PCA1', 'PCA2', 
                                      best_cluster_model['Cluster Column']]]
 
+
+#Read in some other data to determine what each group means
+
+positions = pd.read_csv(file_path + 'Full Contestent Table for Modelling.csv')
+overall_rank = pd.read_csv(file_path + 'Overall Contestent Performance.csv')
+
+positions = positions[['Name','Score','Position']]
+overall_rank = overall_rank[['Name', 'final_score_rescale', 'Contestent Rank']]
+
+cluster_data_grouped = cluster_data_grouped.merge(pd.merge(positions, overall_rank, on = 'Name', 
+                                                           how = 'left'), 
+                                                           on = 'Name', how = 'left')
 print(cluster_data_grouped.head())
+different_groups = []
 
+for group in best_cluster_model["Cluster Values"]:
 
+    cluster_group = cluster_data_grouped[cluster_data_grouped[best_cluster_model['Cluster Column']] == group].reset_index(drop = True)
+    different_groups.append(cluster_group)
 
-group0 = cluster_data_grouped[cluster_data_grouped['Group (kmeans manhattan)'] == 0]
-group1 = cluster_data_grouped[cluster_data_grouped['Group (kmeans manhattan)'] == 1]
-group2 = cluster_data_grouped[cluster_data_grouped['Group (kmeans manhattan)'] == 2]
-group3 = cluster_data_grouped[cluster_data_grouped['Group (kmeans manhattan)'] == 3]
-
-print('0')
-print(group0)
-print('1')
-print(group1)
-print('2')
-print(group2)
-print('3')
-print(group3)
+for i, group_df in enumerate(different_groups):
+    print(f"\nGroup {i}")
+    print(group_df)
 
 # cluster_data_grouped.to_csv(file_path + 'Final Model Grouped Contestents.csv', sep = ',', index = False)
