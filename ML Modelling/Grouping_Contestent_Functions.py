@@ -197,3 +197,50 @@ def determine_sil_values_agg(k_range, X_data, link_type, distance_method):
         sil_values.append(sil_score)
         
     return(sil_values)
+
+
+def plot_bar_groups(dataframe, average_metric : str):
+
+    """
+    Plot each metric to determine group cluster's actual meaning
+
+    Parameters:
+    ----------
+        dataframe (DataFrame): contains dataframe with group, metrics, average and median columns
+        average_metric (str): name of the column to plot data from ('Average' or 'Median') 
+    
+    Returns:
+    --------
+        bar chart comparing the values of each metric between the groups
+    
+    """
+    pivot = dataframe.pivot(index="Group", columns="Metric", values=average_metric)
+
+    groups = pivot.index.values
+
+    # Extract each metric
+    score = pivot["Score"]
+    position = pivot["Position"]
+    rescale = pivot["final_score_rescale"]
+    rank = pivot["Contestent Rank"]
+
+    fig, ax = plt.subplots()
+    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.92, left = 0.07, right = 0.98)
+
+    bar1 = plt.bar(groups - 0.30, score, width=0.18, edgecolor='black', label='Score')
+    bar2 = plt.bar(groups - 0.10, position, width=0.18, edgecolor='black', label='Position')
+    bar3 = plt.bar(groups + 0.10, rescale, width=0.18, edgecolor='black', label='Final Score Rescale')
+    bar4 = plt.bar(groups + 0.30, rank, width=0.18, edgecolor='black', label='Contestant Rank')
+
+    for bars in [bar1, bar2, bar3, bar4]:
+        plt.bar_label(bars, fmt='%.2f', fontsize=12, color = 'black', label_type='edge')
+
+    plt.xticks(groups, fontsize=14)
+    plt.yticks(fontsize=14)
+
+    plt.xlabel('Group', fontsize=18)
+    plt.ylabel(f'{average_metric} Value', fontsize=18)
+    plt.title(f'{average_metric} Metrics by Group', fontsize=22)
+
+    plt.legend(fontsize = 15, ncol = 2)
+    plt.show()

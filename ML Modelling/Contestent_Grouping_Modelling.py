@@ -358,17 +358,14 @@ cluster_data_grouped = cluster_data_grouped.merge(pd.merge(positions, overall_ra
 print(cluster_data_grouped.head())
 different_groups = []
 
-for i, group in enumerate(best_cluster_model["Cluster Values"]):
+grouped_details = []
 
+for i, group in enumerate(best_cluster_model["Cluster Values"]):
     cluster_group = cluster_data_grouped[cluster_data_grouped[best_cluster_model['Cluster Column']] == group].reset_index(drop = True)
     different_groups.append(cluster_group)
     print(f'\nGroup {i}')
     print(cluster_group)
-
-
-grouped_details = []
-
-for i in range(len(best_cluster_model["Cluster Values"])):
+    
     for col in ['Score', 'Position', 'final_score_rescale', 'Contestent Rank']:
 
         median_value = round(different_groups[i][col].median(), 2)
@@ -379,7 +376,7 @@ for i in range(len(best_cluster_model["Cluster Values"])):
         average_median_groups = {
             "Group": i,
             "Metric" : col,
-            f"Average": median_value,
+            f"Average": average_value,
             f"Median": median_value
         }
 
@@ -387,10 +384,9 @@ for i in range(len(best_cluster_model["Cluster Values"])):
 
     print()
 
-print(pd.DataFrame(grouped_details))
+grouped_details_df = pd.DataFrame(grouped_details)
 
+print(grouped_details_df)
 
-
-
-
-# cluster_data_grouped.to_csv(file_path + 'Final Model Grouped Contestents.csv', sep = ',', index = False)
+GCF.plot_bar_groups(dataframe = grouped_details_df, average_metric = 'Average')
+GCF.plot_bar_groups(dataframe = grouped_details_df, average_metric = 'Median')
