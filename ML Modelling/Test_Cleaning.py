@@ -35,7 +35,21 @@ task_data['Description'] = task_data['Description'].str.lower()
 
 print(task_data.head())
 
-task_data['Description'] = task_data['Description'].str.replace(string.punctuation)
+task_data['Description'] = task_data['Description'].str.replace(
+        r'([{}])'.format(re.escape(string.punctuation)),
+        r'\1 ',
+        regex=True)
+
+task_data['Description'] = task_data['Description'].str.replace(
+    r'([{}])'.format(re.escape(string.punctuation)), r'\1 ', regex=True
+).str.replace(r'\s+', ' ', regex=True)
+
+task_data['Description'] = task_data['Description'].apply(
+    lambda x: " ".join([c + " " if c in string.punctuation else c for c in x]).split())
+print(task_data.head())
+
+task_data['Description'] = task_data['Description'].str.replace(r'\s+', ' ', regex=True)
+print(task_data.head())
 
 task_data['Description'] = task_data['Description'].apply(remove_punct)
 
