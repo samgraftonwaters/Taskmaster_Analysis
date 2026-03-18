@@ -365,12 +365,29 @@ for i, group in enumerate(best_cluster_model["Cluster Values"]):
     print(f'\nGroup {i}')
     print(cluster_group)
 
+
+grouped_details = []
+
 for i in range(len(best_cluster_model["Cluster Values"])):
     for col in ['Score', 'Position', 'final_score_rescale', 'Contestent Rank']:
 
-        print(f"Group {i} {col} Average:, {round(different_groups[i][col].mean(), 2)}")
+        median_value = round(different_groups[i][col].median(), 2)
+        average_value = round(different_groups[i][col].mean(), 2)
+
+        print(f"Group {i} {col} Median: {median_value}")
+
+        average_median_groups = {
+            "Group": i,
+            "Metric" : col,
+            f"Average": median_value,
+            f"Median": median_value
+        }
+
+        grouped_details.append(average_median_groups)
+
     print()
 
+print(pd.DataFrame(grouped_details))
 
 
 
