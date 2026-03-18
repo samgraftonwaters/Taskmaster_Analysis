@@ -338,8 +338,6 @@ filtered = cluster_model_parameters[cluster_model_parameters['Number of Clusters
 
 best_cluster_model = filtered.loc[filtered['Silhouette Score'].idxmax()]
 
-print(best_cluster_model)
-
 cluster_data_grouped = cluster_data[['Series', 'Name', 'PCA1', 'PCA2', 
                                      best_cluster_model['Cluster Column']]]
 
@@ -356,22 +354,21 @@ cluster_data_grouped = cluster_data_grouped.merge(pd.merge(positions, overall_ra
                                                            how = 'left'), 
                                                            on = 'Name', how = 'left')
 print(cluster_data_grouped.head())
-different_groups = []
 
+different_groups = []
 grouped_details = []
 
 for i, group in enumerate(best_cluster_model["Cluster Values"]):
     cluster_group = cluster_data_grouped[cluster_data_grouped[best_cluster_model['Cluster Column']] == group].reset_index(drop = True)
     different_groups.append(cluster_group)
     print(f'\nGroup {i}')
-    print(cluster_group)
+    print(cluster_group.head())
+    print(len(cluster_group))
     
     for col in ['Score', 'Position', 'final_score_rescale', 'Contestent Rank']:
 
         median_value = round(different_groups[i][col].median(), 2)
         average_value = round(different_groups[i][col].mean(), 2)
-
-        print(f"Group {i} {col} Median: {median_value}")
 
         average_median_groups = {
             "Group": i,
@@ -390,3 +387,17 @@ print(grouped_details_df)
 
 GCF.plot_bar_groups(dataframe = grouped_details_df, average_metric = 'Average')
 GCF.plot_bar_groups(dataframe = grouped_details_df, average_metric = 'Median')
+
+print(best_cluster_model)
+
+#Save final data tables
+
+cluster_data_grouped.to_csv(file_path + 'Final Cluster Model Grouped Contestents.csv', sep = ',', index = False)
+
+cluster_model_parameters.to_csv(file_path + 'Clustering Model Parameters.csv', sep = ',', index = False)
+
+with pd.ExcelWriter(file_path + 'Different Cluster Groups.xlsx') as writer:
+    for group in best_cluster_model["Cluster Values"]:
+        df = different_groups[group]  
+
+        df.to_excel(writer, sheet_name = f'Group {group}', index = False)
