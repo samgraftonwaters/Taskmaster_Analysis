@@ -83,7 +83,6 @@ print(groups_kmeans)
 feature_names = ['PCA1', 'PCA2']
 centers_df = pd.DataFrame(centers_scaled, columns=feature_names)
 
-# colours = ['dodgerblue', 'darkorange', 'green', 'blueviolet', 'red', 'magenta']
 colours = plt.cm.tab10.colors
 
 fig, ax = plt.subplots()
@@ -92,10 +91,10 @@ plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, r
 for group, colour in zip(groups_kmeans, colours):
     plt.scatter(cluster_data[cluster_data[f'Group (kmeans {kmeans_distance_method})']==group]['PCA1'], 
                 cluster_data[cluster_data[f'Group (kmeans {kmeans_distance_method})']==group]['PCA2'], 
-                label = f'Class {group}', color = colour)
+                label = f'Class {group}', color = colour, marker = 'o', s = 50)
 
     plt.scatter(centers_df.iloc[[group]]['PCA1'], centers_df.iloc[[group]]['PCA2'], 
-                marker ='*', s = 300, color=colour, edgecolor = 'black',
+                marker ='*', s = 450, color=colour, edgecolor = 'black',
                 label = f'Class {group} Center')
 
 plt.legend(fontsize = 15, ncols = 2)
@@ -120,9 +119,9 @@ dbscan_man_sil_values, eps_values_man = GCF.get_dbscan_silhouette_epsilon_values
 fig, ax = plt.subplots()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.1, right = 0.98)
 plt.plot(eps_values_eucl, dbscan_eucl_sil_values, c="blueviolet", marker = 'o', label = 'Euclidean', 
-         lw = 3, markersize = 10)
+         lw = 3, markersize = 12)
 plt.plot(eps_values_man, dbscan_man_sil_values, c="dodgerblue", marker = 'o', label = 'Manhattan', 
-         lw = 3, markersize = 10)
+         lw = 3, markersize = 12)
 plt.title("Silhouette Score for different Reach Distances", fontsize = 22)
 plt.xlabel(r"Reach Distance ($\epsilon$)", fontsize = 16)
 plt.ylabel("Silhoette Score", fontsize = 16)
@@ -163,7 +162,7 @@ for group, colour in zip(groups_dbscan, colours):
     
     plt.scatter(cluster_data[cluster_data[f'Group (dbscan {dbscan_distance_method})']==group]['PCA1'], 
                 cluster_data[cluster_data[f'Group (dbscan {dbscan_distance_method})']==group]['PCA2'], 
-                label = f'Class {group}', color = colour)
+                label = f'Class {group}', color = colour, marker = 'o', s = 50)
 
 plt.legend(fontsize = 15)
 plt.title(f'Comparing DBSCAN clusters with {dbscan_distance_method} distance method', fontsize = 22)
@@ -209,8 +208,6 @@ max_index_eucl = eucl_max_sil_agg.index(max(eucl_max_sil_agg))
 highest_eucl_k_value = eucl_max_k_agg[max_index_eucl]
 best_eucl_agg_cluster = cluster_method[max_index_eucl]
 
-
-
 ###Manhattan method
 man_agg_sil_values = []
 man_max_k_agg = []
@@ -238,7 +235,7 @@ plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.1, ri
 
 for sil_values, cluster, colour in zip(eucl_agg_sil_values, cluster_method, colours):
     plt.plot(k_values, sil_values, c=colour, marker='o', label = cluster,
-             lw = 3, markersize = 10)
+             lw = 3, markersize = 12)
 
 plt.title("Hierarchical Clustering Silhouette Scores for different \n K using the Euclidean distance method", fontsize = 22)
 plt.xlabel("Number of Clusters (K)", fontsize = 16)
@@ -253,7 +250,7 @@ plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.1, ri
 
 for sil_values, cluster, colour in zip(man_agg_sil_values, cluster_method[0:3], colours):
     plt.plot(k_values, sil_values, c=colour, marker='o', label = cluster,
-             lw = 3, markersize = 10)
+             lw = 3, markersize = 12)
 
 plt.title("Hierarchical Clustering Silhouette Scores for different \n K using the Manhattan distance method", fontsize = 22)
 plt.xlabel("Number of Clusters (K)", fontsize = 16)
@@ -293,8 +290,6 @@ cluster_data[f'Group (Agg {agg_distance_method} {agg_cluster_method})'] = agg_la
 groups_agg = np.unique(agg_labels)
 print(groups_agg)
 
-
-
 centers = cluster_data.groupby(f'Group (Agg {agg_distance_method} {agg_cluster_method})')[["PCA1","PCA2"]].mean()
 
 fig, ax = plt.subplots()
@@ -304,10 +299,10 @@ for group, colour in zip(groups_agg, colours):
     
     plt.scatter(cluster_data[cluster_data[f'Group (Agg {agg_distance_method} {agg_cluster_method})']==group]['PCA1'], 
                 cluster_data[cluster_data[f'Group (Agg {agg_distance_method} {agg_cluster_method})']==group]['PCA2'], 
-                label = f'Class {group}', color = colour)
+                label = f'Class {group}', color = colour, marker = 'o', s = 50)
 
     plt.scatter(centers.iloc[[group]]["PCA1"], centers.iloc[[group]]["PCA2"], 
-            marker ='*', s = 300, color=colour, edgecolor = 'black',
+            marker ='*', s = 450, color=colour, edgecolor = 'black',
             label = f'Class {group} Center')
     
 plt.legend(fontsize = 15, ncols = 2)
@@ -319,6 +314,7 @@ plt.yticks(fontsize = 14)
 plt.show()
 
 
+### Combinng all model parameters together
 cluster_model_parameters = pd.DataFrame({
     "Cluster Model" : ['Kmeans', 'DBSCAN', 'Agglomerative'],
     "Number of Clusters" : [len(groups_kmeans), len(groups_dbscan), len(groups_agg)],
