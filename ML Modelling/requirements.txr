@@ -1,7 +1,0 @@
-sentence-transformers==2.2.2
-bertopic<0.16
-torch==2.2.2
-transformers==4.39.3
-sentence-transformers==2.2.2
-"huggingface_hub<0.20"
-"bertopic<0.16"
