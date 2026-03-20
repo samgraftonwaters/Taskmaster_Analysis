@@ -93,7 +93,8 @@ normal_k, normal_sil = full_task_theme_analysis(cleaned_task_text = cleaned_task
 ####
 colours = plt.cm.tab10.colors
 
-GCF.plot_clustering_line_graphs(x_values = [all_k, prize_k, team_k, live_k, normal_k], 
+GCF.plot_clustering_line_graphs(x_values = k_values,
+                                # x_values = [all_k, prize_k, team_k, live_k, normal_k],
                                 y_values = [all_sil, prize_sil, team_sil, live_sil, normal_sil], 
                                 labels = ['All Task Descriptions','Prize Task Descriptions','Team Task Descriptions',
                                           'Live Task Descriptions', 'Normal Task Descriptions'],
