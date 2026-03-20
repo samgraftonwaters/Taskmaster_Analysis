@@ -3,9 +3,12 @@ from sklearn.preprocessing import StandardScaler, RobustScaler
 from sklearn.metrics import silhouette_score, calinski_harabasz_score
 from sklearn.compose import ColumnTransformer
 from sklearn.model_selection import GridSearchCV
+from sklearn.decomposition import PCA
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+
+import Grouping_Contestent_Functions as GCF
 
 import sys
 sys.path.append('/Users/SamWaters/Documents/Data Science/Taskmaster/')
@@ -15,7 +18,7 @@ from Correlations import Correlation_Functions as CF
 plt.rcParams['figure.figsize'] = (13, 7)
 
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
-model_data = pd.read_csv(file_path + 'Full Contestent Table for Modelling.csv')
+model_data = pd.read_csv(file_path + 'Full Contestent Table for Modelling Scaled.csv')
 
 print(model_data.head())
 
@@ -42,70 +45,93 @@ print(no_corr['var_2'].value_counts())
 
 print(CF.set_corr_thresholds(corr_data = grouped_variables, range = False, threshold = 0.7)['var_1'].value_counts())
 print(CF.set_corr_thresholds(corr_data = grouped_variables, range = False, threshold = 0.7)['var_2'].value_counts())
-#Splitting variables into scalable or not
-scaled_cols = ['Score', 'Avg Score per Episodes',
-       'Avg Score per Tasks', 'Number 5s Scored', 'Number 1s Scored',
-       'Tie Break Wins', 'Tie Break Losses', 
-       'Tie Breaks per series', 'Disqualifications', 'Number_Episodes',
-       'Episode Percentage Wins', 'Episode Percentage Lossses',
-       'Number Team Tasks', 'Team Total', 'Team Score per Person Task']
-
-cat_cols= ['Position']
-
-ohe_cols = ['Team_A', 'Age_Ranges_20 - 29', 'Age_Ranges_30 - 39',
-       'Age_Ranges_40 - 49', 'Age_Ranges_50 - 59', 
-       'Gender_Female', 'Seat_Seat 1',
-       'Seat_Seat 2', 'Seat_Seat 3', 'Seat_Seat 4']
 
 #Removed Team_B, Tie Breaks per Person and Gender_male as these are highly correlated
 #removed 'Seat_Seat 5' and 'Age_Ranges_60 - 69' as these are the last categories in each group.
 #removed 'Gender_Non-Binary', as only one person identifies  as non-binary
 
-preprocessor = ColumnTransformer(
-    transformers=[
-        ('num', RobustScaler(), scaled_cols),              # numeric → scale
-        ('cat', 'passthrough', cat_cols),  # raw categorical → OHE
-        ('ohe', 'passthrough', ohe_cols)                  # already OHE → keep
-    ]
-)
+data_nums = data_nums.drop(['Team_B', 'Tie Breaks per Person', 'Gender_Male', 'Seat_Seat 5',
+                            'Age_Ranges_60 - 69', 'Gender_Non-Binary'], axis = 1)
 
-#Transform the data
-X_scaled = preprocessor.fit_transform(data)
-# scaler = RobustScaler()
-# X_scaled = scaler.fit_transform(data[scaled_cols])
+X_scaled = data_nums
+
 
 k_values = range(2, 12)
 
-#Silhouette Scores
-def determine_sil_values(k_range, X_data):
 
-    """
-    Calculates the set of silhouette score for Kmeans based on range of K clusters
 
-    Parameters:
-    -----------
-        k_range: range of K clusters. Should start on 2.
-        X_data: scaled data
-    
-    Returns
-    -------
-        list of solhouette scores for Euclidean and Manhatten methods,
-        based on number of clusters K.
-    """
-    eucl_sil_values = []
-    man_sil_values = []
+# # PCA
+pca = PCA(n_components=2)
+pca_90 = PCA(n_components=0.9) # accounts for 90% of the variability
+X_pca = pca.fit_transform(X_scaled)
 
-    for k in k_range:
-        km_clusterer = KMeans(n_clusters=k, init="random", 
-                            max_iter=300, random_state=123)
-        labels_pred = km_clusterer.fit_predict(X_data)
-        eucl_sil_score = silhouette_score(X_data, labels_pred, metric="euclidean")
-        man_sil_score = silhouette_score(X_data, labels_pred, metric="manhattan")
-        eucl_sil_values.append(eucl_sil_score)
-        man_sil_values.append(man_sil_score)
-    return(eucl_sil_values, man_sil_values)
+# data["PCA1"] = X_pca[:,0]
+# data["PCA2"] = X_pca[:,1]
 
-sil_values_kmeans = determine_sil_values(k_range = k_values, X_data = X_scaled)
+# # clustering
+kmeans = KMeans(n_clusters=3, random_state=42)
+clusters = kmeans.fit_predict(X_pca)
+
+
+print(X_pca)
+print(clusters)
+
+# store results
+# data["Cluster"] = clusters
+
+# centers_pca = kmeans.cluster_centers_
+
+# centers_scaled = pca.inverse_transform(centers_pca)
+# centers_raw = centers_scaled
+
+# centers_df = pd.DataFrame(centers_raw, columns=X_pca.columns)
+
+
+# plt.scatter(model_data["PCA1"], model_data["PCA2"], c=model_data["Cluster"])
+
+# for i, name in enumerate(data["Name"]):
+#     plt.text(data["PCA1"][i], data["PCA2"][i], name)
+
+
+# plt.xlabel("PC1")
+# plt.ylabel("PC2")
+# plt.show()
+
+sil_values_X_scaled = GCF.determine_kmeans_sil_values(k_range = k_values, X_data = X_scaled)
+
+print(sil_values_X_scaled)
+
+sil_values_pca = GCF.determine_kmeans_sil_values(k_range = k_values, X_data = X_pca)
+print(sil_values_pca)
+
+
+fig, ax = plt.subplots()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
+
+plt.plot(k_values, sil_values_X_scaled[0], c="darkgreen", marker='o', label = 'X_Scaled Euclidean',
+          lw = 3, markersize = 10)
+plt.plot(k_values, sil_values_X_scaled[1], c="dodgerblue", marker='o', label = 'X_scaled Manhattan', 
+         lw = 3, markersize = 10)
+
+plt.plot(k_values, sil_values_pca[0], c="black", marker='o', label = 'PCA Euclidean',
+          lw = 3, markersize = 10)
+plt.plot(k_values, sil_values_pca[1], c="red", marker='o', label = 'PCA Manhattan', 
+         lw = 3, markersize = 10)
+
+plt.title("Silhouette Score for different K", fontsize = 22)
+plt.xlabel("Number of Clusters (K)", fontsize = 16)
+plt.ylabel("Silhoette Score", fontsize = 16)
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.legend(fontsize = 16)
+plt.show()
+
+
+
+# Silhouette Scores
+
+
+sil_values_kmeans = GCF.determine_kmeans_sil_values(k_range = k_values, X_data = X_scaled)
 
 fig, ax = plt.subplots()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
@@ -125,30 +151,7 @@ plt.show()
 
 #Calinski–Harabasz Index
 
-def CH_Index_scores(k_range, X_data):
-    """
-    Calculates the set of Calinski–Harabasz Index scores for Kmeans based on range of K clusters
-
-    Parameters:
-    -----------
-        k_range: range of K clusters. Should start on 2.
-        X_data: scaled data
-    
-    Returns
-    -------
-        list of Calinski–Harabasz Index scores based on number of clusters K.
-    """
-    scores = []
-
-    for k in k_range:
-        kmeans =  KMeans(n_clusters=k, init="random", 
-                            max_iter=300, random_state=123)
-        labels = kmeans.fit_predict(X_data)
-        score = calinski_harabasz_score(X_data, labels)
-        scores.append(score)
-    return(scores)
-
-ch_scores_kmeans = CH_Index_scores(k_range = k_values, X_data = X_scaled)
+ch_scores_kmeans = GCF.CH_Index_scores(k_range = k_values, X_data = X_scaled)
 
 fig, ax = plt.subplots()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
@@ -176,34 +179,29 @@ kmeans_labels = kmeans.labels_
 centers_scaled = kmeans.cluster_centers_
 
 print(data['Group (kmeans)'])
+groups = np.unique(kmeans.labels_)
+print(groups)
 
-feature_names = scaled_cols + ohe_cols + cat_cols
+feature_names = data_nums.columns
 centers_df = pd.DataFrame(centers_scaled, columns=feature_names)
 
-scaler = preprocessor.named_transformers_['num']
-centers_df[scaled_cols] = scaler.inverse_transform(centers_df[scaled_cols])
-
-class0 = data[data['Group (kmeans)']==0]
-class1 = data[data['Group (kmeans)']==1]
-class2 = data[data['Group (kmeans)']==2]
+colours = ['blue', 'darkorange', 'green', 'purple']
 
 fig, ax = plt.subplots()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
-plt.scatter(class0['Number 5s Scored'], class0['Score'], label = 'class 0')
-plt.scatter(class1['Number 5s Scored'], class1['Score'], label = 'class 1')
-plt.scatter(class2['Number 5s Scored'], class2['Score'], label = 'class 2')
 
-plt.scatter(centers_df.iloc[[0]]['Number 5s Scored'], centers_df.iloc[[0]]['Score'], marker ='*', 
-            s = 300, color='blue')
-plt.scatter(centers_df.iloc[[1]]['Number 5s Scored'], centers_df.iloc[[1]]['Score'], marker ='*', 
-            s = 300, color='darkorange')
-plt.scatter(centers_df.iloc[[2]]['Number 5s Scored'], centers_df.iloc[[2]]['Score'], marker ='*', 
-            s = 300, color='green')
+for group, colour in zip(groups, colours):
+    plt.scatter(data[data['Group (kmeans)']==group]['Number 5s Scored'], 
+                data[data['Group (kmeans)']==group]['Score'], label = f'Class {group}')
+
+    plt.scatter(centers_df.iloc[[group]]['Number 5s Scored'], centers_df.iloc[[group]]['Score'], 
+                marker ='*', s = 300, color=colour)
+
 
 plt.legend(fontsize = 15)
 plt.title('Comparing Kmeans clusters for Total Score against Number of 5s Scored', fontsize = 22)
-plt.xlabel("Number of 5s Scored", fontsize = 16)
-plt.ylabel("Total Score", fontsize = 16)
+plt.xlabel("Number of 5s Scored (Scaled)", fontsize = 16)
+plt.ylabel("Total Score (Scaled)", fontsize = 16)
 plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
 plt.show()
@@ -218,13 +216,6 @@ print("Manhattan Silhouette Score: ", round(sil_score_manhat, 4))
 
 
 #DBSCAN Method
-X_numeric = data[scaled_cols]
-X_scaled = RobustScaler().fit_transform(X_numeric)
-
-# from sklearn.decomposition import PCA
-
-# pca = PCA(n_components=5)
-# X_scaled = pca.fit_transform(X_scaled)
 
 possible_eps_values = np.linspace(start=0.1, stop=15, num=100)
 
@@ -250,6 +241,9 @@ for reach_dist in possible_eps_values:
         man_sil_score = silhouette_score(X_scaled, labels_pred_man, metric="manhattan")
         eps_values_man.append(reach_dist)
         dbscan_man_sil_values.append(man_sil_score)
+
+print(possible_eps_values)
+print(eps_values_man)
 
 fig, ax = plt.subplots()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.1, right = 0.98)
@@ -318,8 +312,8 @@ plt.scatter(class3_man['Number 5s Scored'], class3_man['Score'], label = 'class 
 
 plt.legend(fontsize = 15)
 plt.title('Comparing DBSCAN clusters for Total Score against Number of 5s Scored \n with "Manhattan" Method', fontsize = 22)
-plt.xlabel("Number of 5s Scored", fontsize = 16)
-plt.ylabel("Total Score", fontsize = 16)
+plt.xlabel("Number of 5s Scored (Scaled)", fontsize = 16)
+plt.ylabel("Total Score (Scaled)", fontsize = 16)
 plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
 plt.show()
@@ -332,47 +326,10 @@ plt.show()
 
 k_values = range(2, 11)
 
-def determine_sil_values_agg(k_range, X_data, link_type):
-
-    """
-    Calculates the set of silhouette score for Kmeans based on range of K clusters
-
-    Parameters:
-    -----------
-        k_range: range of K clusters. Should start on 2.
-        X_data: scaled data
-        link_type (str): type of link method
-    
-    Returns
-    -------
-        list of solhouette scores for Euclidean and Manhatten methods,
-        based on number of clusters K.
-    """
-    eucl_sil_values = []
-    man_sil_values = []
-
-    for k in k_range:
-        km_clusterer_eucl = AgglomerativeClustering(n_clusters=k, linkage=link_type, 
-                                               metric = 'euclidean').fit(X_data)
-        labels_pred_eucl = km_clusterer_eucl.fit_predict(X_data)
-
-        eucl_sil_score = silhouette_score(X_data, labels_pred_eucl, metric="euclidean")
-        eucl_sil_values.append(eucl_sil_score)
-
-        if link_type != 'ward':
-            km_clusterer_man = AgglomerativeClustering(n_clusters=k, linkage=link_type, 
-                                                metric = 'manhattan').fit(X_data)
-            labels_pred_man = km_clusterer_man.fit_predict(X_data)
-            
-            man_sil_score = silhouette_score(X_data, labels_pred_man, metric="manhattan")
-            man_sil_values.append(man_sil_score)
-        
-    return(eucl_sil_values, man_sil_values)
-
-single = determine_sil_values_agg(k_range = k_values, X_data = X_scaled, link_type = 'single')
-complete = determine_sil_values_agg(k_range = k_values, X_data = X_scaled, link_type = 'complete')
-average = determine_sil_values_agg(k_range = k_values, X_data = X_scaled, link_type = 'average')
-ward = determine_sil_values_agg(k_range = k_values, X_data = X_scaled, link_type = 'ward')
+single = GCF.determine_sil_values_agg(k_range = k_values, X_data = X_scaled, link_type = 'single')
+complete = GCF.determine_sil_values_agg(k_range = k_values, X_data = X_scaled, link_type = 'complete')
+average = GCF.determine_sil_values_agg(k_range = k_values, X_data = X_scaled, link_type = 'average')
+ward = GCF.determine_sil_values_agg(k_range = k_values, X_data = X_scaled, link_type = 'ward')
 
 
 fig, ax = plt.subplots()
@@ -458,8 +415,8 @@ plt.scatter(class1['Number 5s Scored'], class1['Score'], label = 'class 1')
 
 plt.legend(fontsize = 15)
 plt.title('Comparing Agglomerative clusters for Total Score against Number of 5s Scored \n with "Complete" Linkage and "Manhattan" Method', fontsize = 22)
-plt.xlabel("Number of 5s Scored", fontsize = 16)
-plt.ylabel("Total Score", fontsize = 16)
+plt.xlabel("Number of 5s Scored (Scaled)", fontsize = 16)
+plt.ylabel("Total Score (Scaled)", fontsize = 16)
 plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
 plt.show()
