@@ -86,7 +86,7 @@ def plot_clustering_line_graphs(x_values, y_values, labels, colours, title, y_la
             plt.plot(x_values, y, color = colour, label = label, 
                     marker = 'o', lw = 3, markersize = 12)
     except:
-        plt.plot(x_values, y_values, color = colour, label = label, 
+        plt.plot(x_values, y_values, color = colour, label = labels, 
                     marker = 'o', lw = 3, markersize = 12)
 
     plt.title(title, fontsize = 22)
