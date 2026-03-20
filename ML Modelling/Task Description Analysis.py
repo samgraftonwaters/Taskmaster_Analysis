@@ -43,51 +43,53 @@ def full_task_theme_analysis(cleaned_task_text, theme_type, output_file_name, k_
     
 ####### All Tasks
 
-task_description = task_data['Description'].copy()
+all_task_description = task_data['Description'].copy()
 
-cleaned_tasks = TTCF.clean_task_description(task_description_text = task_description)
+cleaned_all_tasks = TTCF.clean_task_description(task_description_text = all_task_description)
 
-all_k, all_sil = full_task_theme_analysis(cleaned_task_text = cleaned_tasks, theme_type = 'All', 
+all_k, all_sil = full_task_theme_analysis(cleaned_task_text = cleaned_all_tasks, theme_type = 'All', 
                          output_file_name = 'All_Task_Descriptions', k_range = k_values)
 
 
 ###### Prize Tasks
 
-task_description = task_data[task_data['Prize Task'] == 1]['Description']
+prize_task_description = task_data[task_data['Prize Task'] == 1]['Description']
 
-cleaned_tasks = TTCF.clean_task_description(task_description_text = task_description)
+cleaned_prize_tasks = TTCF.clean_task_description(task_description_text = prize_task_description)
 
-prize_k, prize_sil = full_task_theme_analysis(cleaned_task_text = cleaned_tasks, theme_type = 'Prize', 
-                         output_file_name = 'Prize_Task_Descriptions', k_range = k_values)
-
+prize_k, prize_sil = full_task_theme_analysis(cleaned_task_text = cleaned_prize_tasks, 
+                                              theme_type = 'Prize', output_file_name = 'Prize_Task_Descriptions',
+                                                k_range = k_values)
 
 
 ###### Team Tasks
 
-task_description = task_data[task_data['Team Task'] == 1]['Description']
+team_task_description = task_data[task_data['Team Task'] == 1]['Description']
 
-cleaned_tasks = TTCF.clean_task_description(task_description_text = task_description)
+cleaned_team_tasks = TTCF.clean_task_description(task_description_text = team_task_description)
 
-team_k, team_sil = full_task_theme_analysis(cleaned_task_text = cleaned_tasks, theme_type = 'Team', 
-                         output_file_name = 'Team_Task_Descriptions', k_range = k_values)
+team_k, team_sil = full_task_theme_analysis(cleaned_task_text = cleaned_team_tasks, 
+                                            theme_type = 'Team', output_file_name = 'Team_Task_Descriptions',
+                                            k_range = k_values)
 
 
 ###### Live Tasks
 
-task_description = task_data[task_data['Live Task'] == 1]['Description']
+live_task_description = task_data[task_data['Live Task'] == 1]['Description']
 
-cleaned_tasks = TTCF.clean_task_description(task_description_text = task_description)
+cleaned_live_tasks = TTCF.clean_task_description(task_description_text = live_task_description)
 
-live_k, live_sil = full_task_theme_analysis(cleaned_task_text = cleaned_tasks, theme_type = 'Live', 
-                         output_file_name = 'Live_Task_Descriptions', k_range = k_values)
+live_k, live_sil = full_task_theme_analysis(cleaned_task_text = cleaned_live_tasks, 
+                                            theme_type = 'Live', output_file_name = 'Live_Task_Descriptions', 
+                                            k_range = k_values)
 
 ###### Normal Tasks
 
-task_description = task_data[(task_data['Team Task'] != 1) & (task_data['Prize Task'] != 1) & (task_data['Live Task'] != 1)]['Description'].copy()
+normal_task_description = task_data[(task_data['Team Task'] != 1) & (task_data['Prize Task'] != 1) & (task_data['Live Task'] != 1)]['Description'].copy()
 
-cleaned_tasks = TTCF.clean_task_description(task_description_text = task_description)
+cleaned_normal_tasks = TTCF.clean_task_description(task_description_text = normal_task_description)
 
-normal_k, normal_sil = full_task_theme_analysis(cleaned_task_text = cleaned_tasks, theme_type = 'Normal', 
+normal_k, normal_sil = full_task_theme_analysis(cleaned_task_text = cleaned_normal_tasks, theme_type = 'Normal', 
                          output_file_name = 'Normal_Task_Descriptions', k_range = k_values)
 
 ####
@@ -96,8 +98,11 @@ colours = plt.cm.tab10.colors
 GCF.plot_clustering_line_graphs(x_values = k_values,
                                 # x_values = [all_k, prize_k, team_k, live_k, normal_k],
                                 y_values = [all_sil, prize_sil, team_sil, live_sil, normal_sil], 
-                                labels = ['All Task Descriptions','Prize Task Descriptions','Team Task Descriptions',
-                                          'Live Task Descriptions', 'Normal Task Descriptions'],
+                                labels = [f'All Task Descriptions ({len(all_task_description)})',
+                                          f'Prize Task Descriptions ({len(prize_task_description)})',
+                                          f'Team Task Descriptions ({len(team_task_description)})',
+                                          f'Live Task Descriptions ({len(live_task_description)})', 
+                                          f'Normal Task Descriptions ({len(normal_task_description)})'],
                                 colours = [colours[0], colours[1], colours[2], colours[3], colours[4]],
                                 title = f'Silhouette Score against Clusters (K) for different Task Descriptions', 
-                                y_label = 'Silhouette Score', x_label = 'K')
+                                y_label = 'Silhouette Score', x_label = 'K', ncol = 2)

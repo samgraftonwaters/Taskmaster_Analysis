@@ -20,6 +20,10 @@ lemmatizer = WordNetLemmatizer()
 
 def clean_task_description(task_description_text):
 
+    """
+    
+    """
+
     task_description = task_description_text.copy()
 
     task_description = task_description.str.lower()
