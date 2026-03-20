@@ -95,7 +95,7 @@ def plot_clustering_line_graphs(x_values, y_values, labels, colours, title, y_la
     plt.ylabel(y_label, fontsize = 16)
     plt.xticks(fontsize = 14)
     plt.yticks(fontsize = 14)
-    plt.legend(fontsize = 18, ncol = ncol)
+    plt.legend(fontsize = 15, ncol = ncol)
     plt.show()
 
 def get_dbscan_silhouette_epsilon_values(X_data, epsilon_range, distance_method):

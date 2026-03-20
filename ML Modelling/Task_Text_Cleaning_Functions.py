@@ -21,7 +21,16 @@ lemmatizer = WordNetLemmatizer()
 def clean_task_description(task_description_text):
 
     """
+    Cleans the text data using standard NLP methods for each task discription.
+
+    Parameters:
+    -----------
+        task_description_text: text data to be cleaned
     
+    Returns:
+    --------
+        Cleaned task description text data
+
     """
 
     task_description = task_description_text.copy()
@@ -43,6 +52,21 @@ def clean_task_description(task_description_text):
     return(task_description)
 
 def task_theme_clusters_kmeans(max_k, X_data, cleaned_tasks_description):
+
+    """
+    Applies kmeans cluster model to group tasks together
+
+    Parameters:
+    ----------
+        max_k: number of clusters K that give the highest silhouette score
+        X_data: vectorised text data
+        cleaned_tasks_descriptons: cleaned text data
+    
+    Returns:
+    --------
+        Clusters using the kmeans method based on the vectorised text data
+    
+    """
     kmeans = KMeans(n_clusters=max_k, random_state=42, n_init=10)
     kmeans.fit(X_data)
 
@@ -55,6 +79,23 @@ def task_theme_clusters_kmeans(max_k, X_data, cleaned_tasks_description):
     return(clustered_tasks)
 
 def save_task_themes(task_clusters, theme_type:str, file_name:str, file_path:str, descriptions):
+
+    """
+    Saves the groups/themes into a .txt file
+
+    Parameters:
+    -----------
+        task_clusters: kmeans clusters found in previous function
+        theme_type (str): type of tasks being looked into. e.g. prize tasks or team tasks
+        file_name (str): name to be given to output txt file
+        file_path (str): location of folder to save the file to
+        descriptions: task description text data.
+    
+    
+    Reurns:
+    -------
+        .txt file with groups/themes for the tasks    
+    """
     with open(file_path + file_name + ".txt", "w") as f:
         print(theme_type, f"\nNumber of Themes = {len(task_clusters)}", f"\nNumber of Task Descriptions = {len(descriptions)}\n", file = f)
         for cluster_id, task_list in task_clusters.items():

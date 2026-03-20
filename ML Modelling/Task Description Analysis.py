@@ -14,6 +14,22 @@ k_values = range(2, 30)
 
 def full_task_theme_analysis(cleaned_task_text, theme_type, output_file_name, k_range):
 
+    """
+    Overall function to run through various types of task
+
+    Parameters:
+    -----------
+        cleaned_tasks_descriptons: cleaned text data
+        theme_type (str): type of tasks being looked into. e.g. prize tasks or team tasks
+        output_file_name (str): name to be given to output txt file
+        k_range: number of K clusters to iterate over to determine highest silhouette score
+
+    Returns:
+    --------
+        k_values: range of K values iterated over to determine silhouette scores
+        sil_score_eucl: range of silhouette scores based on K
+    """
+
     vectorizer = TfidfVectorizer(stop_words='english')
     X = vectorizer.fit_transform(cleaned_task_text)
 
