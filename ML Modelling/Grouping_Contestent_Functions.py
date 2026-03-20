@@ -79,7 +79,7 @@ def plot_clustering_line_graphs(x_values, y_values, labels, colours, title, y_la
         clusters k.
     """
     fig, ax = plt.subplots()
-    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
+    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.1, right = 0.98)
 
     try:
         for y, colour, label in zip(y_values, colours, labels):

@@ -1,3 +1,7 @@
+All 
+Number of Themes = 23 
+Number of Task Descriptions = 1047
+
 
 All Theme 19 (example tasks):
 - unusual item

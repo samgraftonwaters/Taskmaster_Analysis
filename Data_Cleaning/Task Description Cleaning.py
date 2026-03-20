@@ -23,4 +23,4 @@ task_descriptions = pd.DataFrame(np.vstack(text_data), columns = ['Description',
                                                                   'Tasknumber', 'Team Task', 'Prize Task', 
                                                                   'Live Task'])
 
-task_descriptions.to_csv(file_path + 'Script_Outputs/' + 'Task Descriptions Cleaned.csv', sep = ',', index = False)
+task_descriptions.to_csv(file_path + 'Script_Outputs/' + 'Task Descriptions Only.csv', sep = ',', index = False)
