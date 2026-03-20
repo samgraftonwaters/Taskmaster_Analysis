@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.cluster import KMeans
-import Text_Cleaning as TC
+import Task_Text_Cleaning_Functions as TTCF
 import Grouping_Contestent_Functions as GCF
 
 
@@ -10,18 +10,16 @@ task_data = pd.read_csv(file_path + 'Task Descriptions Cleaned.csv')
 
 task_description = task_data['Description'].copy()
 
-print(task_data.head())
+k_values = range(2, 30)
 
-cleaned_tasks = TC.clean_task_description(task_description_text = task_description)
+cleaned_tasks = TTCF.clean_task_description(task_description_text = task_description)
 
-print(cleaned_tasks)
-print(len(cleaned_tasks))
 
-# Step 1: Convert tasks to numerical vectors
+
 vectorizer = TfidfVectorizer(stop_words='english')
 X = vectorizer.fit_transform(cleaned_tasks)
 
-k_values = range(2, 30)
+
 
 sil_scores_eucl = GCF.determine_kmeans_sil_values(k_range = k_values, X_data = X, distance_method = 'euclidean')
 
@@ -34,20 +32,22 @@ max_sil = max(sil_scores_eucl)
 print(max_k)
 print(max_sil)
 
-# Step 2: Cluster tasks into 20 themes
-kmeans = KMeans(n_clusters=max_k, random_state=42, n_init=10)
-kmeans.fit(X)
+task_clusters = TTCF.task_theme_clusters_kmeans(max_k = max_k, X_data = X, cleaned_tasks_description = cleaned_tasks)
 
-# Step 3: Assign tasks to clusters
-clusters = kmeans.labels_
+TTCF.save_task_themes(task_clusters, theme_type = 'All', file_name = 'All_Task_Descriptions', 
+                      file_path = file_path)
+# results = []
 
-# Step 4: Collect representative task from each cluster
-clustered_tasks = {}
-for i, label in enumerate(clusters):
-    clustered_tasks.setdefault(label, []).append(cleaned_tasks[i])
+# for i in range(5):
+#     results.append(f"Number: {i}")
 
-# Step 5: Print short outputs for each cluster (max 5 tasks each)
-for cluster_id, task_list in clustered_tasks.items():
-    print(f"\nTheme {cluster_id+1} (example tasks):")
-    for t in task_list[:5]:
-        print("-", t)
+# with open("output.txt", "w") as f:
+#     f.write("\n".join(results))
+######
+# with open("output.txt", "w") as f:
+#     for i in range(5):
+#         f.write(f"Number: {i}\n")
+######
+# with open("output.txt", "w") as f:
+#     for i in range(5):
+#         print(f"Number: {i}", file=f)
