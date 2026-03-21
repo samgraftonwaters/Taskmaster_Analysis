@@ -3,6 +3,10 @@ from bs4 import BeautifulSoup
 import time
 import random
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+
+# driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 import pandas as pd
 import numpy as np
 import re
@@ -17,6 +21,9 @@ def scrape_with_requests(url, headers):
     try:
         response = requests.get(url, headers=headers)
         response.raise_for_status()  # Raises an HTTPError for bad responses
+        if response.status_code != 200:
+            print("Bad status code:", response.status_code)
+            return 'error'
         return BeautifulSoup(response.text, 'html.parser')
     except requests.exceptions.HTTPError as errh:
         print("Http Error:", errh)
@@ -32,12 +39,32 @@ def scrape_with_requests(url, headers):
         return('error')
 
 # Function to use Selenium for JavaScript rendered content
+# def scrape_with_selenium(url):
+#     # cService = webdriver.ChromeService(executable_path='/usr/local/bin/chromedriver')
+#     #pip install -U selenium
+#     # driver = webdriver.Chrome() #service = cService
+#     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+#     driver.get(url)
+#     html = driver.page_source
+#     driver.quit()
+#     return BeautifulSoup(html, 'html.parser')
+
 def scrape_with_selenium(url):
-    cService = webdriver.ChromeService(executable_path='/usr/local/bin/chromedriver')
-    driver = webdriver.Chrome(service = cService)
+    print("Starting Selenium...")
+
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+    print("Chrome opened")
+
     driver.get(url)
+    print("Page loaded")
+
+    time.sleep(5)  # 👈 pause so you SEE it
+
     html = driver.page_source
+
     driver.quit()
+    print("Browser closed")
+
     return BeautifulSoup(html, 'html.parser')
 
 
