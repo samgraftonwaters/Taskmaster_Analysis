@@ -6,6 +6,7 @@ from selenium import webdriver #pip install webdriver-manager
 import seaborn as sns
 import time
 import scraping_functions as SF
+import re
 
 # -----------------------------
 # CONFIG
@@ -25,11 +26,55 @@ else:
     print('scrape with requests')
     
 
-print(soup.prettify())
+# print(soup.prettify())
 soup_output = soup.prettify()
 
-with open('IMDB_Season1_Output.txt', 'w') as f:
-     f.write(soup_output)
+episodes = soup.find_all("div", class_="ipc-title__text")
+ratings = soup.find_all("span", class_="ipc-rating-star--rating")
+votes = soup.find_all("span", class_="ipc-rating-star--voteCount")
+
+# print(episodes)
+# print(ratings)
+# print(votes)
+
+ep_num = 1
+rating_idx = 0
+
+all_data = []
+
+for i in range(len(episodes)):
+    
+    # Episode title
+    title = episodes[i].text.strip()
+    
+    # Rating
+    if i < len(ratings):
+        rating = float(ratings[i].text.strip())
+    else:
+        None
+    
+    # Votes
+    if i < len(votes):
+        votes_text = votes[i].text
+        vote_count = int(re.sub(r"[^\d]", "", votes_text))
+    else:
+        vote_count = None
+
+    all_data.append({
+        "episode": i + 1,
+        "title": title,
+        "rating": rating,
+        "votes": vote_count
+    })
+
+print(all_data)
+
+df = pd.DataFrame(all_data)
+
+print(df)
+
+# with open('IMDB_Season1_Output.txt', 'w') as f:
+#      f.write(soup_output)
 
 # -----------------------------
 # FETCH EPISODE DATA
@@ -52,6 +97,7 @@ with open('IMDB_Season1_Output.txt', 'w') as f:
 
 #     episodes = soup.find_all("div", class_="ipc-title__text")
 #     ratings = soup.find_all("span", class_="ipc-rating-star--rating")
+#     votes = soup.find_all("span", class_="ipc-rating-star--voteCount")
 
 #     print(episodes)
 #     print(ratings)
@@ -72,10 +118,18 @@ with open('IMDB_Season1_Output.txt', 'w') as f:
 #             else:
 #                 rating = None
 
+             # Extract votes
+#             voting_tag = block.select_one(".ipc-rating-star--voteCount")
+#             if voting_tag:
+#                 votes = float(voting_tag.text.strip())
+#             else:
+#                 votes = None
+
 #             all_data.append({
 #                 "season": season,
 #                 "episode": ep_num,
-#                 "rating": rating
+#                 "rating": rating,
+#                 "votes" : votes
 #             })
 
 #             ep_num += 1

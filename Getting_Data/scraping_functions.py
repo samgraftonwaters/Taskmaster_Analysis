@@ -5,9 +5,11 @@ import random
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import undetected_chromedriver as uc
 
 # driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 import pandas as pd
@@ -42,16 +44,32 @@ def scrape_with_requests(url, headers):
         return('error')
 
 # Function to use Selenium for JavaScript rendered content
+# def scrape_with_selenium(url):
+#     cService = webdriver.ChromeService(executable_path='/usr/local/bin/chromedriver')
+#     #pip install -U selenium
+#     options = Options()
+    
+#     # 👇 critical anti-detection flags
+#     options.add_argument("--disable-blink-features=AutomationControlled")
+#     options.add_argument("--start-maximized")
+#     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+#     driver.get(url)
+#     WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".ipc-metadata-list-summary-item")))
+#     print("Page loaded")
+#     html = driver.page_source
+#     driver.quit()
+#     print("Browser closed")
+#     return BeautifulSoup(html, 'html.parser')
+
 def scrape_with_selenium(url):
-    cService = webdriver.ChromeService(executable_path='/usr/local/bin/chromedriver')
-    #pip install -U selenium
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+    driver = uc.Chrome()
     driver.get(url)
-    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "section"))    )
-    print("Page loaded")
+
+    time.sleep(5)  # let page fully load
+
     html = driver.page_source
     driver.quit()
-    print("Browser closed")
+
     return BeautifulSoup(html, 'html.parser')
 
 
