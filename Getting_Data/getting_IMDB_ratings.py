@@ -15,7 +15,7 @@ MAX_SEASONS = 20       # safety cap
 
 HEADERS = {"Content-Type": "application/json", "User-agent":"Mozilla/5.0"}
 
-url = f"https://www.imdb.com/title/tt4934214/?ref_=ttep_ov_i"
+url = url = f'https://www.imdb.com/title/tt4934214/episodes/?season=1&ref_=ttep'
 
 if SF.scrape_with_requests(url, headers = HEADERS) == 'error':
     soup = SF.scrape_with_selenium(url)
@@ -26,14 +26,19 @@ else:
     
 
 print(soup.prettify())
+soup_output = soup.prettify()
 
-# # -----------------------------
-# # FETCH EPISODE DATA
-# # -----------------------------
+with open('IMDB_Season1_Output.txt', 'w') as f:
+     f.write(soup_output)
+
+# -----------------------------
+# FETCH EPISODE DATA
+# -----------------------------
 # all_data = []
 
 # for season in range(1, MAX_SEASONS + 1):
-#     url = f"https://www.imdb.com/title/tt4934214/episodes/" #f"https://www.imdb.com/title/{SHOW_ID}/episodes?season={season}&ref_=ttep"
+#     # url = f"https://www.imdb.com/title/{SHOW_ID}/episodes?season={season}&ref_=ttep"
+#     url = f'https://www.imdb.com/title/tt4934214/episodes/?season={season}&ref_=ttep'
 #     print(f"Fetching season {season}...")
 
 #     if SF.scrape_with_requests(url, headers = HEADERS) == 'error':
@@ -43,7 +48,8 @@ print(soup.prettify())
 #         soup = SF.scrape_with_requests(url, headers = HEADERS)
 #         print('scrape with requests')
 
-#     print(soup)
+#     print(soup.prettify())
+
 #     episodes = soup.find_all("div", class_="ipc-title__text")
 #     ratings = soup.find_all("span", class_="ipc-rating-star--rating")
 

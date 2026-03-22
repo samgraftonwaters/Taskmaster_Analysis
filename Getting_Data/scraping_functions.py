@@ -46,6 +46,7 @@ def scrape_with_selenium(url):
     driver.get(url)
     print("Page loaded")
     html = driver.page_source
+    time.sleep(3)
     driver.quit()
     print("Browser closed")
     return BeautifulSoup(html, 'html.parser')
