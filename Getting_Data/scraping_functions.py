@@ -5,6 +5,9 @@ import random
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 # driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 import pandas as pd
@@ -44,9 +47,9 @@ def scrape_with_selenium(url):
     #pip install -U selenium
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
     driver.get(url)
+    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "section"))    )
     print("Page loaded")
     html = driver.page_source
-    time.sleep(3)
     driver.quit()
     print("Browser closed")
     return BeautifulSoup(html, 'html.parser')

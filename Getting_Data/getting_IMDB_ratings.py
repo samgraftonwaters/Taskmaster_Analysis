@@ -15,7 +15,7 @@ MAX_SEASONS = 20       # safety cap
 
 HEADERS = {"Content-Type": "application/json", "User-agent":"Mozilla/5.0"}
 
-url = url = f'https://www.imdb.com/title/tt4934214/episodes/?season=1&ref_=ttep'
+url = f'https://www.imdb.com/title/tt4934214/episodes/?season=1&ref_=ttep'
 
 if SF.scrape_with_requests(url, headers = HEADERS) == 'error':
     soup = SF.scrape_with_selenium(url)
