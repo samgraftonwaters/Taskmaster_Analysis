@@ -44,24 +44,17 @@ def scrape_with_requests(url, headers):
         return('error')
 
 # Function to use Selenium for JavaScript rendered content
-# def scrape_with_selenium(url):
-#     cService = webdriver.ChromeService(executable_path='/usr/local/bin/chromedriver')
-#     #pip install -U selenium
-#     options = Options()
-    
-#     # 👇 critical anti-detection flags
-#     options.add_argument("--disable-blink-features=AutomationControlled")
-#     options.add_argument("--start-maximized")
-#     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
-#     driver.get(url)
-#     WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".ipc-metadata-list-summary-item")))
-#     print("Page loaded")
-#     html = driver.page_source
-#     driver.quit()
-#     print("Browser closed")
-#     return BeautifulSoup(html, 'html.parser')
+def scrape_with_selenium_data(url):
+    cService = webdriver.ChromeService(executable_path='/usr/local/bin/chromedriver')
+    #pip install -U selenium
+    # driver = webdriver.Chrome() #service = cService
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+    driver.get(url)
+    html = driver.page_source
+    driver.quit()
+    return BeautifulSoup(html, 'html.parser')
 
-def scrape_with_selenium(url):
+def scrape_with_selenium_imdb(url):
     driver = uc.Chrome()
     driver.get(url)
 

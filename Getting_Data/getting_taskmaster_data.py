@@ -15,7 +15,7 @@ header = {"Content-Type": "application/json", "User-agent":"Mozilla/5.0"}
 
 
 if SF.scrape_with_requests(url, headers = header) == 'error':
-    soup = SF.scrape_with_selenium(url)
+    soup = SF.scrape_with_selenium_data(url)
     print('scrape with selenium')
 else:
     soup = SF.scrape_with_requests(url, headers = header)
