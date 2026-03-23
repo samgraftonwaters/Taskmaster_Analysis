@@ -18,11 +18,13 @@ for series in range(1, num_series+1):
     url = f'https://www.imdb.com/title/tt4934214/episodes/?season={series}&ref_=ttep'
     print(f"Fetching season {series}...")
 
-    if SF.scrape_with_requests(url, headers = header) == 'error':
+    result = SF.scrape_with_requests(url, headers=header)
+
+    if result == 'error':
         soup = SF.scrape_with_selenium_imdb(url)
         print('scrape with selenium')
     else:
-        soup = SF.scrape_with_requests(url, headers = header)
+        soup = result
         print('scrape with requests')
 
     episodes = soup.find_all("div", class_="ipc-title__text")
@@ -55,7 +57,7 @@ for series in range(1, num_series+1):
             "Votes": vote_count
         })
 
-    time.sleep(1)
+    time.sleep(5)
 
 df = pd.DataFrame(all_data)
 

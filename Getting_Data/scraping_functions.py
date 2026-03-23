@@ -24,7 +24,9 @@ For third function, the backbone was obtained from chatGPT, but editted for scra
 
 def scrape_with_requests(url, headers):
     try:
-        response = requests.get(url, headers=headers)
+        session = requests.Session()
+        response = session.get(url, headers=headers)
+        # response = requests.get(url, headers=headers)
         response.raise_for_status()  # Raises an HTTPError for bad responses
         if response.status_code != 200:
             print("Bad status code:", response.status_code)
@@ -58,7 +60,7 @@ def scrape_with_selenium_imdb(url):
     driver = uc.Chrome()
     driver.get(url)
 
-    time.sleep(5)  # let page fully load
+    time.sleep(5)
 
     html = driver.page_source
     driver.quit()
