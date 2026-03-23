@@ -11,7 +11,7 @@ with pd.ExcelWriter(output_filepath + 'Taskmaster_Series_Scores.xlsx') as writer
         url = f"https://taskmaster.fandom.com/wiki/Series_{series}"
         header = {"Content-Type": "application/json", "User-agent":"Mozilla/5.0"}
 
-        result = SF.scrape_with_requests(url, headers=header)
+        result = SF.scrape_with_requests(url)
 
         if result == 'error':
             soup = SF.scrape_with_selenium_imdb(url)
@@ -45,7 +45,7 @@ with pd.ExcelWriter(output_filepath + 'Taskmaster_CoC_Scores.xlsx') as writer:
 
         url = f"https://taskmaster.fandom.com/wiki/Champion_of_Champions{series}"
 
-        result = SF.scrape_with_requests(url, headers=header)
+        result = SF.scrape_with_requests(url)
 
         if result == 'error':
             soup = SF.scrape_with_selenium_imdb(url)
@@ -76,7 +76,7 @@ with pd.ExcelWriter(output_filepath + 'Taskmaster_CoC_Scores.xlsx') as writer:
 #New Years Treats
 url = f"https://taskmaster.fandom.com/wiki/Taskmaster%27s_New_Year_Treat"
 
-result = SF.scrape_with_requests(url, headers=header)
+result = SF.scrape_with_requests(url)
 
 if result == 'error':
     soup = SF.scrape_with_selenium_imdb(url)
