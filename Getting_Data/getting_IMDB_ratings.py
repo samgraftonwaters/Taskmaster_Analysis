@@ -8,21 +8,13 @@ output_filepath = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
 
 num_series = 20
 
-header = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-                  "AppleWebKit/537.36 (KHTML, like Gecko) "
-                  "Chrome/120.0.0.0 Safari/537.36",
-    "Accept-Language": "en-GB,en-US;q=0.9,en;q=0.8",
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-    "Connection": "keep-alive"
-}
-
 all_data = []
 
 for series in range(1, num_series+1):
     url = f'https://www.imdb.com/title/tt4934214/episodes/?season={series}&ref_=ttep'
     print(f"Fetching season {series}...")
 
-    result = SF.scrape_with_requests(url, headers=header)
+    result = SF.scrape_with_requests(url)
 
     if result == 'error':
         soup = SF.scrape_with_selenium_imdb(url)
@@ -56,8 +48,7 @@ for series in range(1, num_series+1):
         all_data.append({
             "Series": series,
             "Episode": i + 1,
-            "Title": title,
-            "Tating": rating,
+            "Rating": rating,
             "Votes": vote_count
         })
 
