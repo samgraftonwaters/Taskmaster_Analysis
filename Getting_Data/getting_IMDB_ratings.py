@@ -27,6 +27,13 @@ for series in range(1, num_series+1):
     ratings = soup.find_all("span", class_="ipc-rating-star--rating")
     votes = soup.find_all("span", class_="ipc-rating-star--voteCount")
 
+    if len(ratings) > len(episodes):
+        diff = len(ratings) - len(episodes)
+        ratings = ratings[diff:] 
+
+    if len(votes) > len(episodes):
+        votes = votes[:len(episodes)]
+
     for i in range(len(episodes)):
         
         # Episode title
@@ -36,8 +43,9 @@ for series in range(1, num_series+1):
         if i < len(ratings):
             rating = float(ratings[i].text.strip())
         else:
-            None
-        
+            rating = None
+
+        print(rating)
         # Votes
         if i < len(votes):
             votes_text = votes[i].text
