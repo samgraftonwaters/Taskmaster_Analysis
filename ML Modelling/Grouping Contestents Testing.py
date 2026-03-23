@@ -1,0 +1,433 @@
+from sklearn.cluster import KMeans, DBSCAN, AgglomerativeClustering
+from sklearn.preprocessing import StandardScaler, RobustScaler
+from sklearn.metrics import silhouette_score, calinski_harabasz_score
+from sklearn.compose import ColumnTransformer
+from sklearn.model_selection import GridSearchCV
+from sklearn.decomposition import PCA
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+import Grouping_Contestent_Functions as GCF
+
+import sys
+sys.path.append('/Users/SamWaters/Documents/Data Science/Taskmaster/')
+# sys.path.append("../..")
+from Correlations import Correlation_Functions as CF
+
+plt.rcParams['figure.figsize'] = (13, 7)
+
+file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
+model_data = pd.read_csv(file_path + 'Full Contestent Table for Modelling Scaled.csv')
+
+print(model_data.head())
+
+print(model_data.info())
+
+print(model_data.columns)
+
+data = pd.DataFrame(model_data)
+
+#Selecting only Numerical Data
+data_nums = data.select_dtypes(include=[float, int])
+
+#Determining Correlations
+correlations = data_nums.corr(method = 'spearman')
+grouped_variables = CF.group_corr_variables(correlations = correlations)
+print('Correlation > 0.7:')
+print(CF.set_corr_thresholds(corr_data = grouped_variables, range = False, threshold = 0.7))
+print('\nCorrelation > 0.9:')
+print(CF.set_corr_thresholds(corr_data = grouped_variables, range = False, threshold = 0.9))
+
+no_corr = CF.set_corr_thresholds(corr_data = grouped_variables, range = True, threshold = [0, 0.4])
+print(no_corr['var_1'].value_counts())
+print(no_corr['var_2'].value_counts())
+
+print(CF.set_corr_thresholds(corr_data = grouped_variables, range = False, threshold = 0.7)['var_1'].value_counts())
+print(CF.set_corr_thresholds(corr_data = grouped_variables, range = False, threshold = 0.7)['var_2'].value_counts())
+
+#Removed Team_B, Tie Breaks per Person and Gender_male as these are highly correlated
+#removed 'Seat_Seat 5' and 'Age_Ranges_60 - 69' as these are the last categories in each group.
+#removed 'Gender_Non-Binary', as only one person identifies  as non-binary
+
+data_nums = data_nums.drop(['Team_B', 'Tie Breaks per Person', 'Gender_Male', 'Seat_Seat 5',
+                            'Age_Ranges_60 - 69', 'Gender_Non-Binary'], axis = 1)
+
+X_scaled = data_nums
+
+
+k_values = range(2, 12)
+
+
+
+# # PCA
+pca = PCA(n_components=2)
+pca_90 = PCA(n_components=0.9) # accounts for 90% of the variability
+X_pca = pca.fit_transform(X_scaled)
+
+# data["PCA1"] = X_pca[:,0]
+# data["PCA2"] = X_pca[:,1]
+
+# # clustering
+kmeans = KMeans(n_clusters=3, random_state=42)
+clusters = kmeans.fit_predict(X_pca)
+
+
+print(X_pca)
+print(clusters)
+
+# store results
+# data["Cluster"] = clusters
+
+# centers_pca = kmeans.cluster_centers_
+
+# centers_scaled = pca.inverse_transform(centers_pca)
+# centers_raw = centers_scaled
+
+# centers_df = pd.DataFrame(centers_raw, columns=X_pca.columns)
+
+
+# plt.scatter(model_data["PCA1"], model_data["PCA2"], c=model_data["Cluster"])
+
+# for i, name in enumerate(data["Name"]):
+#     plt.text(data["PCA1"][i], data["PCA2"][i], name)
+
+
+# plt.xlabel("PC1")
+# plt.ylabel("PC2")
+# plt.show()
+
+sil_values_X_scaled = GCF.determine_kmeans_sil_values(k_range = k_values, X_data = X_scaled)
+
+print(sil_values_X_scaled)
+
+sil_values_pca = GCF.determine_kmeans_sil_values(k_range = k_values, X_data = X_pca)
+print(sil_values_pca)
+
+
+fig, ax = plt.subplots()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
+
+plt.plot(k_values, sil_values_X_scaled[0], c="darkgreen", marker='o', label = 'X_Scaled Euclidean',
+          lw = 3, markersize = 10)
+plt.plot(k_values, sil_values_X_scaled[1], c="dodgerblue", marker='o', label = 'X_scaled Manhattan', 
+         lw = 3, markersize = 10)
+
+plt.plot(k_values, sil_values_pca[0], c="black", marker='o', label = 'PCA Euclidean',
+          lw = 3, markersize = 10)
+plt.plot(k_values, sil_values_pca[1], c="red", marker='o', label = 'PCA Manhattan', 
+         lw = 3, markersize = 10)
+
+plt.title("Silhouette Score for different K", fontsize = 22)
+plt.xlabel("Number of Clusters (K)", fontsize = 16)
+plt.ylabel("Silhoette Score", fontsize = 16)
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.legend(fontsize = 16)
+plt.show()
+
+
+
+# Silhouette Scores
+
+
+sil_values_kmeans = GCF.determine_kmeans_sil_values(k_range = k_values, X_data = X_scaled)
+
+fig, ax = plt.subplots()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
+
+plt.plot(k_values, sil_values_kmeans[0], c="darkgreen", marker='o', label = 'Euclidean',
+          lw = 3, markersize = 10)
+plt.plot(k_values, sil_values_kmeans[1], c="dodgerblue", marker='o', label = 'Manhattan', 
+         lw = 3, markersize = 10)
+
+plt.title("Silhouette Score for different K", fontsize = 22)
+plt.xlabel("Number of Clusters (K)", fontsize = 16)
+plt.ylabel("Silhoette Score", fontsize = 16)
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.legend(fontsize = 16)
+plt.show()
+
+#Calinski–Harabasz Index
+
+ch_scores_kmeans = GCF.CH_Index_scores(k_range = k_values, X_data = X_scaled)
+
+fig, ax = plt.subplots()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
+
+plt.plot(k_values, ch_scores_kmeans, marker='o', lw = 3, markersize = 10)
+plt.title("Calinski–Harabasz Index for different K", fontsize = 22)
+plt.xlabel("Number of clusters (K)", fontsize = 16)
+plt.ylabel("Calinski–Harabasz Index", fontsize = 16)
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.show()
+
+sil_max_K_value = max(zip(k_values, sil_values_kmeans), key=lambda x: x[1])[0]
+ch_max_K_value = max(zip(k_values, ch_scores_kmeans), key=lambda x: x[1])[0]
+
+print("Best Sillhouette K:", sil_max_K_value)
+print("Best Calinski–Harabasz K:", ch_max_K_value)
+
+# ---- Run KMeans ----
+kmeans = KMeans(n_clusters=sil_max_K_value, random_state=42, n_init='auto')
+kmeans.fit(X_scaled)
+
+data['Group (kmeans)'] = kmeans.labels_
+kmeans_labels = kmeans.labels_
+centers_scaled = kmeans.cluster_centers_
+
+print(data['Group (kmeans)'])
+groups = np.unique(kmeans.labels_)
+print(groups)
+
+feature_names = data_nums.columns
+centers_df = pd.DataFrame(centers_scaled, columns=feature_names)
+
+colours = ['blue', 'darkorange', 'green', 'purple']
+
+fig, ax = plt.subplots()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
+
+for group, colour in zip(groups, colours):
+    plt.scatter(data[data['Group (kmeans)']==group]['Number 5s Scored'], 
+                data[data['Group (kmeans)']==group]['Score'], label = f'Class {group}')
+
+    plt.scatter(centers_df.iloc[[group]]['Number 5s Scored'], centers_df.iloc[[group]]['Score'], 
+                marker ='*', s = 300, color=colour)
+
+
+plt.legend(fontsize = 15)
+plt.title('Comparing Kmeans clusters for Total Score against Number of 5s Scored', fontsize = 22)
+plt.xlabel("Number of 5s Scored (Scaled)", fontsize = 16)
+plt.ylabel("Total Score (Scaled)", fontsize = 16)
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.show()
+
+
+# Produce baseline true value silhouette scores
+sil_score_eucl = silhouette_score(X_scaled, kmeans_labels, metric="euclidean")
+sil_score_manhat = silhouette_score(X_scaled, kmeans_labels, metric="manhattan")
+
+print("Euclidean Silhouette Score: ", round(sil_score_eucl, 4))
+print("Manhattan Silhouette Score: ", round(sil_score_manhat, 4))
+
+
+#DBSCAN Method
+
+possible_eps_values = np.linspace(start=0.1, stop=15, num=100)
+
+eps_values_eucl = []
+eps_values_man = []
+dbscan_eucl_sil_values = []
+dbscan_man_sil_values = []
+
+for reach_dist in possible_eps_values:
+    
+    dbscan_eucl = DBSCAN(eps=reach_dist, metric="euclidean", min_samples=20).fit(X_scaled)
+    labels_pred_eucl = dbscan_eucl.labels_
+
+    dbscan_man = DBSCAN(eps=reach_dist, metric="manhattan", min_samples=20).fit(X_scaled)
+    labels_pred_man = dbscan_man.labels_
+
+    if len(np.unique(labels_pred_eucl)) > 1:
+        eucl_sil_score = silhouette_score(X_scaled, labels_pred_eucl, metric="euclidean")
+        eps_values_eucl.append(reach_dist)
+        dbscan_eucl_sil_values.append(eucl_sil_score)
+    
+    if len(np.unique(labels_pred_man)) > 1:
+        man_sil_score = silhouette_score(X_scaled, labels_pred_man, metric="manhattan")
+        eps_values_man.append(reach_dist)
+        dbscan_man_sil_values.append(man_sil_score)
+
+print(possible_eps_values)
+print(eps_values_man)
+
+fig, ax = plt.subplots()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.1, right = 0.98)
+plt.plot(eps_values_eucl, dbscan_eucl_sil_values, c="blueviolet", label = 'Euclidean', lw = 3)
+plt.plot(eps_values_man, dbscan_man_sil_values, c="dodgerblue", label = 'Manhattan', lw = 3)
+plt.title("Silhouette Score for different Reach Distances", fontsize = 22)
+plt.xlabel(r"Reach Distance ($\epsilon$)", fontsize = 16)
+plt.ylabel("Silhoette Score", fontsize = 16)
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.legend(fontsize = 16)
+plt.show()
+
+eucl_eps_max = max(zip(eps_values_eucl, dbscan_eucl_sil_values), key=lambda x: x[1])[0]
+man_eps_max = max(zip(eps_values_man, dbscan_man_sil_values), key=lambda x: x[1])[0]
+
+print(r"Best Euclidean Reach Distance ($\epsilon$)", eucl_eps_max)
+print(r"Best Manhattan Reach Distance ($\epsilon$)", man_eps_max)
+
+#-----Run DBSCAN-----
+
+dbscan_eucl = DBSCAN(eps=eucl_eps_max, metric="euclidean", min_samples=20)
+dbscan_eucl.fit(X_scaled)
+
+data['Group (dbscan eucl)'] = dbscan_eucl.labels_
+dbscan_labels = dbscan_eucl.labels_
+
+class0_eucl = data[data['Group (dbscan eucl)']==0]
+class1_eucl = data[data['Group (dbscan eucl)']==1]
+class2_eucl = data[data['Group (dbscan eucl)']==2]
+class3_eucl = data[data['Group (dbscan eucl)']==-1]
+
+fig, ax = plt.subplots()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
+plt.scatter(class0_eucl['Number 5s Scored'], class0_eucl['Score'], label = 'class 0')
+plt.scatter(class1_eucl['Number 5s Scored'], class1_eucl['Score'], label = 'class 1')
+plt.scatter(class2_eucl['Number 5s Scored'], class2_eucl['Score'], label = 'class 2')
+plt.scatter(class3_eucl['Number 5s Scored'], class3_eucl['Score'], label = 'class 3')
+
+plt.legend(fontsize = 15)
+plt.title('Comparing DBSCAN clusters for Total Score against Number of 5s Scored \n with "Euclidean" Method', fontsize = 22)
+plt.xlabel("Number of 5s Scored", fontsize = 16)
+plt.ylabel("Total Score", fontsize = 16)
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.show()
+
+
+dbscan_man = DBSCAN(eps=man_eps_max, metric="manhattan", min_samples=20)
+dbscan_man.fit(X_scaled)
+
+data['Group (dbscan man)'] = dbscan_man.labels_
+dbscan_labels = dbscan_man.labels_
+
+class0_man = data[data['Group (dbscan man)']==0]
+class1_man = data[data['Group (dbscan man)']==1]
+class2_man = data[data['Group (dbscan man)']==2]
+class3_man = data[data['Group (dbscan man)']==-1]
+
+fig, ax = plt.subplots()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
+plt.scatter(class0_man['Number 5s Scored'], class0_man['Score'], label = 'class 0')
+plt.scatter(class1_man['Number 5s Scored'], class1_man['Score'], label = 'class 1')
+plt.scatter(class2_man['Number 5s Scored'], class2_man['Score'], label = 'class 2')
+plt.scatter(class3_man['Number 5s Scored'], class3_man['Score'], label = 'class 3')
+
+plt.legend(fontsize = 15)
+plt.title('Comparing DBSCAN clusters for Total Score against Number of 5s Scored \n with "Manhattan" Method', fontsize = 22)
+plt.xlabel("Number of 5s Scored (Scaled)", fontsize = 16)
+plt.ylabel("Total Score (Scaled)", fontsize = 16)
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.show()
+
+
+#######
+#Hierarchical Clustering
+
+#Create model for each linkage method
+
+k_values = range(2, 11)
+
+single = GCF.determine_sil_values_agg(k_range = k_values, X_data = X_scaled, link_type = 'single')
+complete = GCF.determine_sil_values_agg(k_range = k_values, X_data = X_scaled, link_type = 'complete')
+average = GCF.determine_sil_values_agg(k_range = k_values, X_data = X_scaled, link_type = 'average')
+ward = GCF.determine_sil_values_agg(k_range = k_values, X_data = X_scaled, link_type = 'ward')
+
+
+fig, ax = plt.subplots()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.1, right = 0.98)
+
+plt.plot(k_values, single[0], c="darkgreen", marker='o', label = 'single',
+          lw = 3, markersize = 10)
+plt.plot(k_values, complete[0], c="dodgerblue", marker='o', label = 'complete', 
+         lw = 3, markersize = 10)
+plt.plot(k_values, average[0], c="blueviolet", marker='o', label = 'average',
+          lw = 3, markersize = 10)
+plt.plot(k_values, ward[0], c="darkorange", marker='o', label = 'ward', 
+         lw = 3, markersize = 10)
+
+plt.title("Silhouette Score for different K using Euclidean method", fontsize = 22)
+plt.xlabel("Number of Clusters (K)", fontsize = 16)
+plt.ylabel("Silhoette Score (Euclidean)", fontsize = 16)
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.legend(fontsize = 16)
+plt.show()
+
+
+fig, ax = plt.subplots()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.1, right = 0.98)
+
+plt.plot(k_values, single[1], c="darkgreen", marker='o', label = 'single',
+          lw = 3, markersize = 10)
+plt.plot(k_values, complete[1], c="dodgerblue", marker='o', label = 'complete', 
+         lw = 3, markersize = 10)
+plt.plot(k_values, average[1], c="blueviolet", marker='o', label = 'average',
+          lw = 3, markersize = 10)
+
+plt.title("Silhouette Score for different K using Manhattan method", fontsize = 22)
+plt.xlabel("Number of Clusters (K)", fontsize = 16)
+plt.ylabel("Silhoette Score (Manhattan)", fontsize = 16)
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.legend(fontsize = 16)
+plt.show()
+
+single_eucl = max(zip(k_values, single[0]), key=lambda x: x[1])[0]
+single_man = max(zip(k_values, single[1]), key=lambda x: x[1])[0]
+
+print("Best Sillhouette Single Agg Euclidean", single_eucl, max(single[0]))
+print("Best Sillhouette Single Agg Manhattan", single_man, max(single[1]))
+
+complete_eucl = max(zip(k_values, complete[0]), key=lambda x: x[1])[0]
+complete_man = max(zip(k_values, complete[1]), key=lambda x: x[1])[0]
+
+print("Best Sillhouette complete Agg Euclidean", complete_eucl, max(complete[0]))
+print("Best Sillhouette complete Agg Manhattan", complete_man, max(complete[1]))
+
+average_eucl = max(zip(k_values, average[0]), key=lambda x: x[1])[0]
+average_man = max(zip(k_values, average[1]), key=lambda x: x[1])[0]
+
+print("Best Sillhouette average Agg Euclidean", average_eucl, max(average[0]))
+print("Best Sillhouette average Agg Manhattan", average_man, max(average[1]))
+
+ward_eucl = max(zip(k_values, ward[0]), key=lambda x: x[1])[0]
+print("Best Sillhouette ward Agg Euclidean", ward_eucl, max(ward[0]))
+
+agg_model = AgglomerativeClustering(n_clusters=complete_man, linkage="complete", 
+                                    metric = 'manhattan').fit(X_scaled)
+
+ #Access labels assigned for each method
+clusters = agg_model.labels_
+data['Group (Agg Man Complete)'] = clusters
+
+#Evaluate performance of each model and ground truth
+silhouette = silhouette_score(X_scaled, clusters)
+
+print("Sillhouette score:", round(silhouette, 4))
+
+class0 = data[data['Group (Agg Man Complete)']==0]
+class1 = data[data['Group (Agg Man Complete)']==1]
+
+
+fig, ax = plt.subplots()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
+plt.scatter(class0['Number 5s Scored'], class0['Score'], label = 'class 0')
+plt.scatter(class1['Number 5s Scored'], class1['Score'], label = 'class 1')
+
+plt.legend(fontsize = 15)
+plt.title('Comparing Agglomerative clusters for Total Score against Number of 5s Scored \n with "Complete" Linkage and "Manhattan" Method', fontsize = 22)
+plt.xlabel("Number of 5s Scored (Scaled)", fontsize = 16)
+plt.ylabel("Total Score (Scaled)", fontsize = 16)
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.show()
+
+
+print(data.head())
+print(data.columns)
+
+data_grouped = data[['Series', 'Name', 'Score', 'Position', 'Group (kmeans)',
+                     'Group (Agg Man Complete)']]
+
+print(data_grouped.head())
+
+data_grouped.to_csv(file_path + 'Grouped Contestents.csv', sep = ',', index = False)

@@ -1,11 +1,12 @@
 import requests
 from bs4 import BeautifulSoup
 import time
-import random
-from selenium import webdriver
+from selenium import webdriver #pip install webdriver-manager
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+import undetected_chromedriver as uc
 import pandas as pd
-import numpy as np
-import re
+
 
 """
 Top two functions have been edited and changed slightly, but from: https://www.reddit.com/r/learnpython/comments/1ea3r0z/how_to_avoid_http_error_403_forbidden/
@@ -13,10 +14,36 @@ For the Selenium function, to connect to Chromedriver, I used help from: https:/
 For third function, the backbone was obtained from chatGPT, but editted for scraping infomation from ESPNCricinfo
 """
 
-def scrape_with_requests(url, headers):
+def scrape_with_requests(url):
+
+    """
+    Scrapes website using requests.
+
+    Parameters:
+    -----------
+        url (str): website link
+
+    Returns:
+    --------
+        Scraped webpage for analysis
+    
+    """
+
+    header = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                  "AppleWebKit/537.36 (KHTML, like Gecko) "
+                  "Chrome/120.0.0.0 Safari/537.36",
+    "Accept-Language": "en-GB,en-US;q=0.9,en;q=0.8",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+    "Connection": "keep-alive"
+}
     try:
-        response = requests.get(url, headers=headers)
+        session = requests.Session()
+        response = session.get(url, headers=header)
+        # response = requests.get(url, headers=headers)
         response.raise_for_status()  # Raises an HTTPError for bad responses
+        if response.status_code != 200:
+            print("Bad status code:", response.status_code)
+            return 'error'
         return BeautifulSoup(response.text, 'html.parser')
     except requests.exceptions.HTTPError as errh:
         print("Http Error:", errh)
@@ -32,16 +59,67 @@ def scrape_with_requests(url, headers):
         return('error')
 
 # Function to use Selenium for JavaScript rendered content
-def scrape_with_selenium(url):
+def scrape_with_selenium_data(url):
+    """
+    Scrapes Taskmaster webpages using selenium to get data
+
+    Parameters:
+    -----------
+        url (str): website link
+
+    Returns:
+    --------
+        Scraped webpage for analysis
+    
+    """
     cService = webdriver.ChromeService(executable_path='/usr/local/bin/chromedriver')
-    driver = webdriver.Chrome(service = cService)
+    #pip install -U selenium
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
     driver.get(url)
     html = driver.page_source
     driver.quit()
     return BeautifulSoup(html, 'html.parser')
 
+def scrape_with_selenium_imdb(url):
+
+    """
+    Scrapes IMDB webpages using selenium to get ratings
+
+    Parameters:
+    -----------
+        url (str): website link
+
+    Returns:
+    --------
+        Scraped webpage for analysis
+    
+    """
+        
+    driver = uc.Chrome()
+    driver.get(url)
+
+    time.sleep(5)
+
+    html = driver.page_source
+    driver.quit()
+
+    return BeautifulSoup(html, 'html.parser')
+
 
 def extracting_table(table):
+
+    """
+    Takes the scraped webpage an gets the taskmaster tables over each series and each episode
+
+    Parameters:
+    -----------
+        table: table within the scraped webpage to get all the information from it
+    
+    Returns:
+    --------
+        dataframe containing each epsisodes scoring table.
+    
+    """
 
     rows = table.find_all('tr')
 
