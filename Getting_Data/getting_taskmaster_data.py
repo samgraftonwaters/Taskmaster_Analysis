@@ -8,9 +8,6 @@ import scraping_functions as SF
 import numpy as np
 import re
 
-
-# URL to scrape
-# url = f"https://taskmaster.fandom.com/wiki/Series_6"
 header = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
                   "AppleWebKit/537.36 (KHTML, like Gecko) "
                   "Chrome/120.0.0.0 Safari/537.36",
@@ -18,34 +15,6 @@ header = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
     "Connection": "keep-alive"
 }
-
-
-# if SF.scrape_with_requests(url, headers = header) == 'error':
-#     soup = SF.scrape_with_selenium_data(url)
-#     print('scrape with selenium')
-# else:
-#     soup = SF.scrape_with_requests(url, headers = header)
-#     print('scrape with requests')
-
-# soup_output = soup.prettify()
-
-# # with open('taskmaster_series_2.txt', 'w') as f:
-# #      f.write(soup.prettify())
-
-# series_1 = soup.find_all('table', class_='tmtable')
-
-# table = soup.find('table', class_='tmtable')
-
-# # with open('taskmaster_new_years.txt', 'w') as f:
-# #      f.write(soup_output)
-
-# print(table.find_all('tr'))
-
-# df = SF.extracting_table(table = table)
-
-# cols = df.columns
-
-# print(df)
 
 #Main Series
 with pd.ExcelWriter('Taskmaster_Series_Scores.xlsx') as writer:
@@ -99,8 +68,12 @@ with pd.ExcelWriter('Taskmaster_CoC_Scores.xlsx') as writer:
 
         table = soup.find('table', class_='tmtable')
 
+        print(table)
+
         df = SF.extracting_table(table = table)
         cols = df.columns
+
+        print(df)
 
         print(' ')
         print(f'series {series}')
@@ -127,7 +100,7 @@ else:
 tables = soup.find_all('table', class_='tmtable')
 
 with pd.ExcelWriter('Taskmaster_NewYears_Scores.xlsx') as writer:
-    for series, table in zip(range(1,6), tables):
+    for series, table in zip(range(1,7), tables):
         df = SF.extracting_table(table = table)
         cols = df.columns
 
