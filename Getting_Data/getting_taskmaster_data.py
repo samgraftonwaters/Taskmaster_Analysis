@@ -1,12 +1,6 @@
-import requests
-from bs4 import BeautifulSoup
 import time
-import random
-from selenium import webdriver
 import pandas as pd
 import scraping_functions as SF
-import numpy as np
-import re
 
 output_filepath = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
 

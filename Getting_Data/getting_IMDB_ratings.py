@@ -1,8 +1,4 @@
-import requests
-from bs4 import BeautifulSoup
 import pandas as pd
-import matplotlib.pyplot as plt
-from selenium import webdriver #pip install webdriver-manager
 import seaborn as sns
 import time
 import scraping_functions as SF
@@ -72,34 +68,3 @@ df = pd.DataFrame(all_data)
 print(df)
 
 df.to_csv(output_filepath + 'Taskmaster_IMDB_Ratings.csv', sep = ',', index = False)
-
-# # -----------------------------
-# # PIVOT
-# # -----------------------------
-# heatmap_data = df.pivot(index="season", columns="episode", values="rating")
-# heatmap_data = heatmap_data.sort_index(ascending=False)
-
-# # -----------------------------
-# # PLOT
-# # -----------------------------
-# plt.figure(figsize=(14, 8))
-
-# sns.heatmap(
-#     heatmap_data,
-#     cmap="RdYlGn",
-#     vmin=6, vmax=10,
-#     annot=True,
-#     fmt=".1f",
-#     linewidths=0.3,
-#     linecolor="gray",
-#     mask=heatmap_data.isnull(),
-#     cbar_kws={"label": "IMDb Rating"}
-# )
-
-# plt.title(f"IMDb Episode Ratings ({SHOW_ID})", fontsize=16, weight="bold")
-# plt.xlabel("Episode")
-# plt.ylabel("Season")
-
-# plt.tight_layout()
-# plt.show()
-
