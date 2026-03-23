@@ -23,9 +23,6 @@ for series in range(1, num_series+1):
         soup = result
         print('scrape with requests')
 
-    with open('test_out.txt', 'w') as output:
-        output.write(soup.prettify())
-
     episodes = soup.find_all("div", class_="ipc-title__text")
     ratings = soup.find_all("span", class_="ipc-rating-star--rating")
     votes = soup.find_all("span", class_="ipc-rating-star--voteCount")
