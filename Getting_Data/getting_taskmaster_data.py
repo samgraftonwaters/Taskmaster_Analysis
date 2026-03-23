@@ -8,6 +8,8 @@ import scraping_functions as SF
 import numpy as np
 import re
 
+output_filepath = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
+
 header = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
                   "AppleWebKit/537.36 (KHTML, like Gecko) "
                   "Chrome/120.0.0.0 Safari/537.36",
@@ -17,7 +19,7 @@ header = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
 }
 
 #Main Series
-with pd.ExcelWriter('Taskmaster_Series_Scores.xlsx') as writer:
+with pd.ExcelWriter(output_filepath + 'Taskmaster_Series_Scores.xlsx') as writer:
     for series in range(1, 21):
 
         url = f"https://taskmaster.fandom.com/wiki/Series_{series}"
@@ -51,7 +53,7 @@ with pd.ExcelWriter('Taskmaster_Series_Scores.xlsx') as writer:
 
 #Champion of Champions
 champ_of_champs = ['', '_2', "_3", "_4"]
-with pd.ExcelWriter('Taskmaster_CoC_Scores.xlsx') as writer:
+with pd.ExcelWriter(output_filepath + 'Taskmaster_CoC_Scores.xlsx') as writer:
     
     for series in champ_of_champs:
 
@@ -99,7 +101,7 @@ else:
 
 tables = soup.find_all('table', class_='tmtable')
 
-with pd.ExcelWriter('Taskmaster_NewYears_Scores.xlsx') as writer:
+with pd.ExcelWriter(output_filepath + 'Taskmaster_NewYears_Scores.xlsx') as writer:
     for series, table in zip(range(1,7), tables):
         df = SF.extracting_table(table = table)
         cols = df.columns

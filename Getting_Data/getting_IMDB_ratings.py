@@ -8,6 +8,8 @@ import time
 import scraping_functions as SF
 import re
 
+output_filepath = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
+
 num_series = 20
 
 header = {"Content-Type": "application/json", "User-agent":"Mozilla/5.0"}
@@ -62,6 +64,8 @@ for series in range(1, num_series+1):
 df = pd.DataFrame(all_data)
 
 print(df)
+
+df.to_csv(output_filepath + 'Taskmaster_IMDB_Ratings.csv', sep = ',', index = False)
 
 # # -----------------------------
 # # PIVOT
