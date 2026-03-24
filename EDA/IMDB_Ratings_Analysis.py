@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+from Function_Scripts import IMDB_functions as IF
 
 plt.rcParams['figure.figsize'] = (13, 7)
 
@@ -15,6 +16,9 @@ print(imdb_data.head())
 
 heatmap_data = imdb_data.pivot(index="Series", columns="Episode", values="Rating")
 heatmap_data = heatmap_data.sort_index(ascending=False)
+
+IF.plot_heatmap(data = heatmap_data, x_label = 'Episodes', y_label = 'Series', 
+                title = "Taskmaster IMDb Episode Ratings", min_range = 6.8, max_range = 9.2)
 
 fig = plt.figure()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.05, right = 0.95)
