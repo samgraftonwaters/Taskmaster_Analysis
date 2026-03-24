@@ -20,8 +20,8 @@ rating_data = rating_data.sort_index(ascending=False)
 print(rating_data)
 
 IF.plot_heatmap(data = rating_data, x_label = 'Episodes', y_label = 'Series', 
-                title = "Taskmaster IMDb Episode Ratings", min_range = 6.8, max_range = 9.2,
-                colourbar_label = "IMDb Rating")
+                title = "Taskmaster IMDB Episode Ratings", min_range = 6.8, max_range = 9.2,
+                colourbar_label = "IMDB Rating")
 
 
 rating_average = round(imdb_data['Rating'].mean(),2)
@@ -41,20 +41,20 @@ rating_score_data = imdb_data.pivot(index="Series", columns="Episode", values="R
 rating_score_data  = rating_score_data .sort_index(ascending=False)
 
 IF.plot_heatmap(data = rating_score_data , x_label = 'Episodes', y_label = 'Series', 
-                title = "Taskmaster IMDb Episode Ratings Score", 
+                title = "Taskmaster IMDB Episode Ratings Score", 
                 min_range = imdb_data['Rating Score'].min(),
                 max_range = imdb_data['Rating Score'].max(),
-                colourbar_label = "IMDb Rating Score")
+                colourbar_label = "IMDB Rating Score")
   
 
 rating_ratio_data = imdb_data.pivot(index="Series", columns="Episode", values="Rating Ratio")
 rating_ratio_data = rating_ratio_data.sort_index(ascending=False)
 
 IF.plot_heatmap(data = rating_ratio_data, x_label = 'Episodes', y_label = 'Series', 
-                title = "Taskmaster IMDb Episode Ratings Ratio", 
+                title = "Taskmaster IMDB Episode Ratings Ratio", 
                 min_range = imdb_data['Rating Ratio'].min(),
                 max_range = imdb_data['Rating Ratio'].max(),
-                colourbar_label = "IMDb Rating Ratio", decimal_places = 3)
+                colourbar_label = "IMDB Rating Ratio", decimal_places = 3)
 
 ###Averages per series:
 
@@ -77,6 +77,21 @@ print(avg_rating_series)
 print(avg_rating_series.sort_values(by = 'Rating Average', ascending=False).reset_index)
 print(avg_rating_series.sort_values(by = 'Average Rating Score', ascending=False).reset_index)
 
+IF.plot_linegraph(x_data = avg_rating_series['Series'], y_data = avg_rating_series['Rating Average'],
+               line_colour = 'dodgerblue', x_label = 'Series', y_label = 'Average Rating', 
+               title = 'Average IMDB ratings per Series')
+
+IF.plot_linegraph(x_data = avg_rating_series['Series'], y_data = avg_rating_series['Sum Votes'],
+               line_colour = 'blueviolet', x_label = 'Series', y_label = 'Sum of Series Votes', 
+               title = 'Sum of Votes per Series')
+
+IF.plot_linegraph(x_data = avg_rating_series['Series'], y_data = avg_rating_series['Average Votes'],
+               line_colour = 'darkorange', x_label = 'Series', y_label = 'Average Votes', 
+               title = 'Average Votes per Series')
+
+IF.plot_linegraph(x_data = avg_rating_series['Series'], y_data = avg_rating_series['Average Rating Score'],
+               line_colour = 'magenta', x_label = 'Series', y_label = 'Average Rating Score', 
+               title = 'Average Rating Score per Series')
 ### Add line plots
 #### Create function scipt for methods and plots
 ## correlation between number of votes and ratings and each series?

@@ -14,6 +14,7 @@ def plot_heatmap(data, x_label : str, y_label : str, title : str, min_range : fl
         data: pivot data table of series (index), episodes (columns), and heatmap values
         x_label (str): name for the x-axis
         y_label (str): name for the y-axis
+        title (str): title of plot
         min_range (float | int): minimum value for the colourbar
         max_range (float | int): maximum value for the colourbar
         colourbar_label (str): label for the colourbar
@@ -35,4 +36,45 @@ def plot_heatmap(data, x_label : str, y_label : str, title : str, min_range : fl
     plt.xticks(fontsize = 14)
     plt.yticks(fontsize = 14)
     plt.tight_layout()
+    plt.show()
+
+
+def plot_linegraph(x_data, y_data, line_colour:str, x_label:str, y_label:str, title:str):
+
+    """
+    Plots a line graph
+
+    Parameters:
+    -----------
+        x_data: data for x-axis
+        y_data: data for y-axis
+        linecolour (str): colour for the line chart
+        x_label (str): name for the x-axis
+        y_label (str): name for the y-axis
+        title (str): title of plot
+    
+    Returns:
+    --------
+        line plot with y-axis data average as a dashed line and data points with y-axis data written in
+    """
+
+    fig = plt.figure()
+    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.08, right = 0.95)
+
+    plt.hlines(y_data.mean(), 1, 20, lw = 4 ,linestyles='dashed', color = 'black', 
+               label = f'Overall Average = {round(y_data.mean(), 2)}')
+
+    plt.plot(x_data, y_data, '-o', 
+             markersize = 35, lw = 3, color = line_colour)
+
+    for x, y in zip(x_data, y_data):
+        plt.text(x, y-0.01, f"{y:.2f}", fontsize=12, ha='center', color = 'black')
+        
+    plt.xlabel(x_label, fontsize = 18)
+    plt.ylabel(y_label, fontsize = 18)
+    plt.title(title, fontsize = 22)
+    plt.xticks(range(1, 21), fontsize = 16)
+    plt.xlim(0.5, 20.5)
+    plt.yticks(fontsize = 16)
+    plt.legend(loc = 'best', fontsize = 18)
     plt.show()
