@@ -67,6 +67,7 @@ print(avg_rating_series.sort_values(by = 'Rating Average', ascending=False).rese
 print(avg_rating_series.sort_values(by = 'Average Rating Score', ascending=False).reset_index)
 
 imdb_data['Rating Score'] = imdb_data['Rating'] * imdb_data['Votes']
+imdb_data['Rating Ratio'] = imdb_data['Rating'] / imdb_data['Votes']
 
 print(imdb_data.head())
 
@@ -84,7 +85,7 @@ sns.heatmap(
     linewidths=0.3,
     linecolor="darkgray",
     mask=heatmap_data.isnull(),
-    cbar_kws={"label": "IMDb Score Rating"}
+    cbar_kws={"label": "IMDb Rating Score"}
 )
 
 plt.title(f"Taskmaster IMDb Episode Ratings Score", fontsize=16, weight="bold")
@@ -94,3 +95,34 @@ plt.xticks(fontsize = 12)
 plt.yticks(fontsize = 12)
 plt.tight_layout()
 plt.show()
+
+
+heatmap_data = imdb_data.pivot(index="Series", columns="Episode", values="Rating Ratio")
+heatmap_data = heatmap_data.sort_index(ascending=False)
+
+fig = plt.figure()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.05, right = 0.95)
+sns.heatmap(
+    heatmap_data,
+    cmap= "RdYlGn",
+    vmin=imdb_data['Rating Ratio'].min(), vmax=imdb_data['Rating Ratio'].max(),
+    annot=True,
+    fmt=".3f",
+    linewidths=0.3,
+    linecolor="darkgray",
+    mask=heatmap_data.isnull(),
+    cbar_kws={"label": "IMDb Rating Ratio"}
+)
+
+plt.title(f"Taskmaster IMDb Episode Ratings Ratio", fontsize=16, weight="bold")
+plt.xlabel("Episode", fontsize = 14)
+plt.ylabel("Season", fontsize = 14)
+plt.xticks(fontsize = 12)
+plt.yticks(fontsize = 12)
+plt.tight_layout()
+plt.show()
+
+
+### Add line plots
+#### Create function scipt for methods and plots
+## correlation between number of votes and ratings and each series?
