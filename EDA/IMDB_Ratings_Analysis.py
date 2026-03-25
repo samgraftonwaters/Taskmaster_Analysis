@@ -93,9 +93,48 @@ IF.plot_linegraph_or_barchart(x_data = avg_rating_series['Series'], y_data = avg
                line_colour = 'magenta', x_label = 'Series', y_label = 'Average Rating Score', 
                title = 'Average Rating Score per Series', bar_or_line='bar')
 
+episodes_per_series = imdb_data.groupby('Series')['Episode'].count().tolist()
+
+midpoints = []
+start = 1
+
+for n in episodes_per_series:
+    midpoint = start + (n - 1) / 2
+    midpoints.append(midpoint)
+    start += n
+
+series_boundaries = []
+running = 1
+
+for val in episodes_per_series:
+    running += val
+    series_boundaries.append(running)
+
+print(episodes_per_series)
+print(midpoints)
+
+# series_boundaries = list(np.array(midpoints) + np.array(episodes_per_series) / 2)
+print(series_boundaries)
+
+
 fig = plt.figure()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.08, right = 0.95)
-plt.plot(range(1, len(imdb_data)+1), imdb_data['Rating'], '-o', color = 'dodgerblue', lw = 3)
+plt.plot(range(1, len(imdb_data)+1), imdb_data['Rating'], '-o', color = 'dodgerblue', lw = 3, label = 'Episodes')
+plt.plot(midpoints, avg_rating_series['Rating Average'], '-o', color = 'blueviolet',lw = 5, label = 'Average per Series')
+plt.vlines(series_boundaries, 0, 10, color = 'darkgrey', linestyles='dashed', lw = 3)
+
+for x, series in zip(midpoints, avg_rating_series['Series']):
+    plt.text(x-1.5, 8.9, f"S{series}", fontsize = 14)
+
+
+plt.xlim(0, len(imdb_data)+ 1)
+plt.ylim(6.5, 9)
+plt.xlabel('Episodes', fontsize = 18)
+plt.ylabel('IMDB Rating', fontsize = 18)
+plt.title('IMDB Rating per Episode and Averaged over each Series', fontsize = 22)
+plt.xticks(fontsize = 16)
+plt.yticks(fontsize = 16)
+plt.legend(loc = 'best', fontsize = 18)
 plt.show()
 ### Add line plots
 #### Create function scipt for methods and plots
