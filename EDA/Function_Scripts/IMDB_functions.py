@@ -86,3 +86,51 @@ def plot_linegraph_or_barchart(x_data, y_data, line_colour:str, x_label:str, y_l
     plt.yticks(fontsize = 16)
     plt.legend(loc = 'best', fontsize = 18)
     plt.show()
+
+
+def line_plot_episodes_series(episode_x, episode_y, series_x, series_y, series_boundaries, 
+                              series_number_col, x_label : str, y_label : str, title : str):
+    
+    """
+    Plots a line graph with two lines - one for all episodes and the other for the series average
+    
+    Parameters:
+    -----------
+        episode_x: values for x-axis in relation to the episodes data
+        episode_y: values for y-axis in relation to the episodes data
+        series_x: values for x-axis in relation to the averaged series data
+        series_y: values for y-axis in relation to the averaged series data
+        series_number_col: column containing the series numbers
+        x_label (str): name for the x-axis
+        y_label (str): name for the y-axis
+        title (str): title of plot
+
+    Returns:
+    --------
+        Plot with comparitive lines to show how the y axis changed over each series and 
+        between episodes
+    """
+
+    fig = plt.figure()
+    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.08, right = 0.95)
+
+    plt.plot(range(1, len(episode_x)+1), episode_y, '-o', color = 'dodgerblue', 
+            markersize = 10, lw = 3, label = 'Episodes')
+    plt.plot(series_x, series_y, '-o', color = 'blueviolet',
+            markersize = 14, lw = 5, label = 'Average per Series')
+    plt.vlines(series_boundaries, episode_y.min() - 0.01*episode_y.max(), 
+               episode_y.max() + 0.01*episode_y.max(), color = 'darkgrey', 
+               linestyles='dashed', lw = 3)
+
+    for x, series in zip(series_x, series_number_col):
+        plt.text(x-1.5, 8.9, f"S{series}", fontsize = 14)
+
+    plt.xlim(0, len(episode_x)+ 1)
+    plt.ylim(episode_y.min() - 0.01*episode_y.max(), episode_y.max() + 0.01*episode_y.max())
+    plt.xlabel(x_label, fontsize = 18)
+    plt.ylabel(y_label, fontsize = 18)
+    plt.title(title, fontsize = 22)
+    plt.xticks(fontsize = 16)
+    plt.yticks(fontsize = 16)
+    plt.legend(loc = 'best', fontsize = 18)
+    plt.show()
