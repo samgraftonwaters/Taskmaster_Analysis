@@ -77,21 +77,26 @@ print(avg_rating_series)
 print(avg_rating_series.sort_values(by = 'Rating Average', ascending=False).reset_index)
 print(avg_rating_series.sort_values(by = 'Average Rating Score', ascending=False).reset_index)
 
-IF.plot_linegraph(x_data = avg_rating_series['Series'], y_data = avg_rating_series['Rating Average'],
+IF.plot_linegraph_or_barchart(x_data = avg_rating_series['Series'], y_data = avg_rating_series['Rating Average'],
                line_colour = 'dodgerblue', x_label = 'Series', y_label = 'Average Rating', 
-               title = 'Average IMDB ratings per Series')
+               title = 'Average IMDB ratings per Series', bar_or_line='line')
 
-IF.plot_linegraph(x_data = avg_rating_series['Series'], y_data = avg_rating_series['Sum Votes'],
+IF.plot_linegraph_or_barchart(x_data = avg_rating_series['Series'], y_data = avg_rating_series['Sum Votes'],
                line_colour = 'blueviolet', x_label = 'Series', y_label = 'Sum of Series Votes', 
-               title = 'Sum of Votes per Series')
+               title = 'Sum of Votes per Series', bar_or_line='bar')
 
-IF.plot_linegraph(x_data = avg_rating_series['Series'], y_data = avg_rating_series['Average Votes'],
+IF.plot_linegraph_or_barchart(x_data = avg_rating_series['Series'], y_data = avg_rating_series['Average Votes'],
                line_colour = 'darkorange', x_label = 'Series', y_label = 'Average Votes', 
-               title = 'Average Votes per Series')
+               title = 'Average Votes per Series', bar_or_line='bar')
 
-IF.plot_linegraph(x_data = avg_rating_series['Series'], y_data = avg_rating_series['Average Rating Score'],
+IF.plot_linegraph_or_barchart(x_data = avg_rating_series['Series'], y_data = avg_rating_series['Average Rating Score'],
                line_colour = 'magenta', x_label = 'Series', y_label = 'Average Rating Score', 
-               title = 'Average Rating Score per Series')
+               title = 'Average Rating Score per Series', bar_or_line='bar')
+
+fig = plt.figure()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.08, right = 0.95)
+plt.plot(range(1, len(imdb_data)+1), imdb_data['Rating'], '-o', color = 'dodgerblue', lw = 3)
+plt.show()
 ### Add line plots
 #### Create function scipt for methods and plots
 ## correlation between number of votes and ratings and each series?
