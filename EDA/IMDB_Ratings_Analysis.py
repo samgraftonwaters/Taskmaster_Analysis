@@ -35,7 +35,7 @@ taskmaster_overall_votes = 31000
 imdb_data['Rating Score'] = imdb_data['Rating'] * imdb_data['Votes']
 imdb_data['Rating Ratio'] = imdb_data['Rating'] / imdb_data['Votes']
 
-print(imdb_data.head())
+print(imdb_data.head(10))
 
 rating_score_data = imdb_data.pivot(index="Series", columns="Episode", values="Rating Score")
 rating_score_data  = rating_score_data .sort_index(ascending=False)
@@ -64,13 +64,16 @@ for series in range(1, 21):
     rating_average = round(imdb_data[imdb_data['Series'] == series]['Rating'].mean(), 2)
     sum_votes = round(imdb_data[imdb_data['Series'] == series]['Votes'].sum(), 2)
     average_votes = round(imdb_data[imdb_data['Series'] == series]['Votes'].mean(), 2)
-    average_rating_score = rating_average * average_votes
+    average_rating_score =  (imdb_data[imdb_data['Series'] == series]['Rating'] * imdb_data[imdb_data['Series'] == series]['Votes']).mean()
+    average_rating_ratio = (imdb_data[imdb_data['Series'] == series]['Rating'] / imdb_data[imdb_data['Series'] == series]['Votes']).mean()
     
-    series_avg.append([series, rating_average, sum_votes, average_votes, average_rating_score])
+    series_avg.append([series, rating_average, sum_votes, average_votes, 
+                       average_rating_score, average_rating_ratio])
 
 
 avg_rating_series = pd.DataFrame(series_avg, columns = ['Series', 'Rating Average', 'Sum Votes', 
-                                                        'Average Votes', 'Average Rating Score'])
+                                                        'Average Votes', 'Average Rating Score',
+                                                        'Average Rating Ratio'])
 
 print(avg_rating_series)
 
@@ -117,7 +120,23 @@ IF.line_plot_episodes_series(episode_x = imdb_data['Episode'], episode_y = imdb_
                           x_label = 'Episodes', y_label = 'IMDB Ratings',
                           title = 'IMDB Rating per Episode and Averaged over each Series')
 
+IF.line_plot_episodes_series(episode_x = imdb_data['Episode'], episode_y = imdb_data['Votes'], 
+                          series_x = midpoints, series_y = avg_rating_series['Average Votes'], 
+                          series_boundaries = series_boundaries, series_number_col = avg_rating_series['Series'],
+                          x_label = 'Episodes', y_label = 'Number of Votes',
+                          title = 'Number of Rating Votes per Episode and Averaged over each Series')
 
+IF.line_plot_episodes_series(episode_x = imdb_data['Episode'], episode_y = imdb_data['Rating Score'], 
+                          series_x = midpoints, series_y = avg_rating_series['Average Rating Score'], 
+                          series_boundaries = series_boundaries, series_number_col = avg_rating_series['Series'],
+                          x_label = 'Episodes', y_label = 'Rating Score',
+                          title = 'Rating Score per Episode and Averaged over each Series')
+
+IF.line_plot_episodes_series(episode_x = imdb_data['Episode'], episode_y = imdb_data['Rating Ratio'], 
+                          series_x = midpoints, series_y = avg_rating_series['Average Rating Ratio'], 
+                          series_boundaries = series_boundaries, series_number_col = avg_rating_series['Series'],
+                          x_label = 'Episodes', y_label = 'Rating Ratio',
+                          title = 'Rating Ratio per Episode and Averaged over each Series')
 ### Add line plots
 #### Create function scipt for methods and plots
 ## correlation between number of votes and ratings and each series?

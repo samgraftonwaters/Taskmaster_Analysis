@@ -118,15 +118,15 @@ def line_plot_episodes_series(episode_x, episode_y, series_x, series_y, series_b
             markersize = 10, lw = 3, label = 'Episodes')
     plt.plot(series_x, series_y, '-o', color = 'blueviolet',
             markersize = 14, lw = 5, label = 'Average per Series')
-    plt.vlines(series_boundaries, episode_y.min() - 0.01*episode_y.max(), 
-               episode_y.max() + 0.01*episode_y.max(), color = 'darkgrey', 
+    plt.vlines(series_boundaries, episode_y.min() - 0.05*episode_y.max(), 
+               episode_y.max() + 0.05*episode_y.max(), color = 'darkgrey', 
                linestyles='dashed', lw = 3)
 
     for x, series in zip(series_x, series_number_col):
         plt.text(x-1.5, 8.9, f"S{series}", fontsize = 14)
 
     plt.xlim(0, len(episode_x)+ 1)
-    plt.ylim(episode_y.min() - 0.01*episode_y.max(), episode_y.max() + 0.01*episode_y.max())
+    plt.ylim(episode_y.min() - 0.05*episode_y.max(), episode_y.max() + 0.05*episode_y.max())
     plt.xlabel(x_label, fontsize = 18)
     plt.ylabel(y_label, fontsize = 18)
     plt.title(title, fontsize = 22)
