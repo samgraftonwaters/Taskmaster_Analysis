@@ -156,7 +156,7 @@ print(high_corr)
 high_corr, cmap, norm = CF.set_correlation_colours(data_table = high_corr, corr_column = 'correlation', limits = 1)
 
 fig, axes = plt.subplots(nrows = 3, ncols = 2)
-plt.subplots_adjust(wspace=0.1, hspace=0.1, bottom = 0.08, top = 0.98, left = 0.05, right = 0.95)
+plt.subplots_adjust(wspace=0.2, hspace=0.3, bottom = 0.08, top = 0.98, left = 0.05, right = 0.95)
 
 for row, ax in enumerate(axes.flatten()[:len(high_corr)]):
 
@@ -188,4 +188,35 @@ for series in range(1, 21):
         'Max_Episodes': max_episode
     })
 
-print(pd.DataFrame(min_max_ratings))
+min_max_ratings_df = pd.DataFrame(min_max_ratings)
+print(min_max_ratings_df)
+
+fig = plt.figure()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.08, right = 0.95)
+plt.plot(min_max_ratings_df['Series'], min_max_ratings_df['Min_Rating'], 'o-', markersize = 12,
+         color = 'dodgerblue', label = 'Minimum Rating')
+plt.plot(min_max_ratings_df['Series'], min_max_ratings_df['Max_Rating'], 'o-', markersize = 12,
+         color = 'blueviolet', label = 'Maximum Rating')
+
+plt.xlabel('Series', fontsize = 18)
+plt.ylabel('Rating', fontsize = 18)
+plt.title('Comparing Minimum and Maximum Ratings per Series', fontsize = 22 )
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.legend(fontsize = 16)
+plt.show()
+
+fig = plt.figure()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.08, right = 0.95)
+plt.plot(min_max_ratings_df['Series'], min_max_ratings_df['Min_Episodes'], 'o', markersize = 12,
+         color = 'dodgerblue', label = 'Episode with Minimum Rating')
+plt.plot(min_max_ratings_df['Series'], min_max_ratings_df['Max_Episodes'], 'o', markersize = 12,
+         color = 'blueviolet', label = 'Episode with Maximum Rating')
+
+plt.xlabel('Series', fontsize = 18)
+plt.ylabel('Episode Number', fontsize = 18)
+plt.title('Comparing Minimum and Maximum Ratings per Series', fontsize = 22 )
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.legend(fontsize = 16)
+plt.show()
