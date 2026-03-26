@@ -149,6 +149,23 @@ print(imdb_data.corr())
 correlations = imdb_data.corr(method = 'spearman')
 
 grouped_variables = CF.group_corr_variables(correlations)
-high_corr = CF.set_corr_thresholds(corr_data = grouped_variables, range = False, threshold = 0.8)
+high_corr = CF.set_corr_thresholds(corr_data = grouped_variables, range = False, threshold = 0.8).reset_index(drop = True)
 
 print(high_corr)
+
+high_corr, cmap, norm = CF.set_correlation_colours(data_table = high_corr, corr_column = 'correlation', limits = 1)
+
+fig, axes = plt.subplots(nrows = 3, ncols = 2)
+plt.subplots_adjust(wspace=0.1, hspace=0.1, bottom = 0.08, top = 0.98, left = 0.05, right = 0.95)
+
+for row, ax in enumerate(axes.flatten()[:len(high_corr)]):
+
+    ax.scatter(imdb_data[high_corr['var_1'][row]], imdb_data[high_corr['var_2'][row]], 
+            color = high_corr['colour'][row]) 
+    ax.plot([], [], color = 'white', label = f"{round(high_corr['correlation'][row],2)}")
+    ax.set_xlabel(high_corr['var_1'][row])
+    ax.set_ylabel(high_corr['var_2'][row])
+    legend = ax.legend(frameon=True, loc = 'best', labelcolor = 'white', 
+                    facecolor = high_corr['colour'][row])
+plt.show()
+
