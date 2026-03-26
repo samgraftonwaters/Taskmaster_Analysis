@@ -169,3 +169,23 @@ for row, ax in enumerate(axes.flatten()[:len(high_corr)]):
                     facecolor = high_corr['colour'][row])
 plt.show()
 
+min_max_ratings = []
+for series in range(1, 21):
+
+    series_df = imdb_data[imdb_data['Series'] == series]
+
+    min_rating = series_df['Rating'].min()
+    max_rating = series_df['Rating'].max()
+
+    min_episode = series_df[series_df['Rating'] == min_rating]['Episode'].values
+    max_episode = series_df[series_df['Rating'] == max_rating]['Episode'].values
+
+    min_max_ratings.append({
+        'Series': series,
+        'Min_Rating': min_rating,
+        'Min_Episodes': min_episode,
+        'Max_Rating': max_rating,
+        'Max_Episodes': max_episode
+    })
+
+print(pd.DataFrame(min_max_ratings))
