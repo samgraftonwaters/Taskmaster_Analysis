@@ -123,7 +123,7 @@ def line_plot_episodes_series(episode_x, episode_y, series_x, series_y, series_b
                linestyles='dashed', lw = 3)
 
     for x, series in zip(series_x, series_number_col):
-        plt.text(x-1.5, 8.9, f"S{series}", fontsize = 14)
+        plt.text(x-1.5, episode_y.max() - 0.05*episode_y.max(), f"S{series}", fontsize = 14)
 
     plt.xlim(0, len(episode_x)+ 1)
     plt.ylim(episode_y.min() - 0.05*episode_y.max(), episode_y.max() + 0.05*episode_y.max())

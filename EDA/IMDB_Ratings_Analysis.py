@@ -4,6 +4,10 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from Function_Scripts import IMDB_functions as IF
 
+import sys
+sys.path.append('/Users/SamWaters/Documents/Data Science/Taskmaster/')
+from Correlations import Correlation_Functions as CF
+
 plt.rcParams['figure.figsize'] = (13, 7)
 
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
@@ -137,6 +141,14 @@ IF.line_plot_episodes_series(episode_x = imdb_data['Episode'], episode_y = imdb_
                           series_boundaries = series_boundaries, series_number_col = avg_rating_series['Series'],
                           x_label = 'Episodes', y_label = 'Rating Ratio',
                           title = 'Rating Ratio per Episode and Averaged over each Series')
-### Add line plots
-#### Create function scipt for methods and plots
+
 ## correlation between number of votes and ratings and each series?
+
+print(imdb_data.corr())
+
+correlations = imdb_data.corr(method = 'spearman')
+
+grouped_variables = CF.group_corr_variables(correlations)
+high_corr = CF.set_corr_thresholds(corr_data = grouped_variables, range = False, threshold = 0.8)
+
+print(high_corr)
