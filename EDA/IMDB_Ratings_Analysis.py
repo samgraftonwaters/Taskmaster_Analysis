@@ -40,6 +40,7 @@ imdb_data['Rating Score'] = imdb_data['Rating'] * imdb_data['Votes']
 imdb_data['Rating Ratio'] = imdb_data['Rating'] / imdb_data['Votes']
 
 print(imdb_data.head(10))
+print()
 
 rating_score_data = imdb_data.pivot(index="Series", columns="Episode", values="Rating Score")
 rating_score_data  = rating_score_data .sort_index(ascending=False)
@@ -81,8 +82,12 @@ avg_rating_series = pd.DataFrame(series_avg, columns = ['Series', 'Rating Averag
 
 print(avg_rating_series)
 
-print(avg_rating_series.sort_values(by = 'Rating Average', ascending=False).reset_index)
-print(avg_rating_series.sort_values(by = 'Average Rating Score', ascending=False).reset_index)
+avg_rating_series_RA_order = avg_rating_series.sort_values(by = 'Rating Average', ascending=False).reset_index
+avg_rating_series_RAS_order = avg_rating_series.sort_values(by = 'Average Rating Score', ascending=False).reset_index
+
+print(avg_rating_series_RA_order)
+print(avg_rating_series_RAS_order)
+print()
 
 IF.plot_linegraph_or_barchart(x_data = avg_rating_series['Series'], y_data = avg_rating_series['Rating Average'],
                line_colour = 'dodgerblue', x_label = 'Series', y_label = 'Average Rating', 
@@ -101,6 +106,7 @@ IF.plot_linegraph_or_barchart(x_data = avg_rating_series['Series'], y_data = avg
                title = 'Average Rating Score per Series', bar_or_line='bar')
 
 
+#Comparing Series and Episodes for each variable
 episodes_per_series = imdb_data.groupby('Series')['Episode'].count().tolist()
 
 midpoints = []
@@ -142,8 +148,7 @@ IF.line_plot_episodes_series(episode_x = imdb_data['Episode'], episode_y = imdb_
                           x_label = 'Episodes', y_label = 'Rating Ratio',
                           title = 'Rating Ratio per Episode and Averaged over each Series')
 
-## correlation between number of votes and ratings and each series?
-
+#### Correlations between IMDB_DATA variables
 print(imdb_data.corr())
 
 correlations = imdb_data.corr(method = 'spearman')
@@ -152,9 +157,11 @@ grouped_variables = CF.group_corr_variables(correlations)
 high_corr = CF.set_corr_thresholds(corr_data = grouped_variables, range = False, threshold = 0.8).reset_index(drop = True)
 
 print(high_corr)
+print()
 
 high_corr, cmap, norm = CF.set_correlation_colours(data_table = high_corr, corr_column = 'correlation', limits = 1)
 
+#Correlation Plots
 fig, axes = plt.subplots(nrows = 3, ncols = 2)
 plt.subplots_adjust(wspace=0.2, hspace=0.3, bottom = 0.08, top = 0.98, left = 0.05, right = 0.95)
 
@@ -169,6 +176,7 @@ for row, ax in enumerate(axes.flatten()[:len(high_corr)]):
                     facecolor = high_corr['colour'][row])
 plt.show()
 
+####Minimum and Maximum Ratings per Series
 min_max_ratings = []
 for series in range(1, 21):
 
@@ -206,17 +214,14 @@ plt.yticks(fontsize = 14)
 plt.legend(fontsize = 16)
 plt.show()
 
-fig = plt.figure()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.08, right = 0.95)
-plt.plot(min_max_ratings_df['Series'], min_max_ratings_df['Min_Episodes'], 'o', markersize = 12,
-         color = 'dodgerblue', label = 'Episode with Minimum Rating')
-plt.plot(min_max_ratings_df['Series'], min_max_ratings_df['Max_Episodes'], 'o', markersize = 12,
-         color = 'blueviolet', label = 'Episode with Maximum Rating')
+#Episode Counts with Max and Min Ratings
+min_df = min_max_ratings_df[['Series', 'Min_Episodes']].explode('Min_Episodes')
 
-plt.xlabel('Series', fontsize = 18)
-plt.ylabel('Episode Number', fontsize = 18)
-plt.title('Comparing Minimum and Maximum Ratings per Series', fontsize = 22 )
-plt.xticks(fontsize = 14)
-plt.yticks(fontsize = 14)
-plt.legend(fontsize = 16)
-plt.show()
+episodes_min_ratings = min_df.value_counts('Min_Episodes').reset_index()
+
+max_df = min_max_ratings_df[['Series', 'Max_Episodes']].explode('Max_Episodes')
+
+episodes_max_ratings = max_df.value_counts('Max_Episodes').reset_index()
+
+print(episodes_min_ratings)
+print(episodes_max_ratings)
