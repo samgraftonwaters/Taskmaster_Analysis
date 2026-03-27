@@ -44,9 +44,6 @@ count_fives = FSF.point_counts(datatable = count_five, named_table = named_serie
 count_ones = FSF.point_counts(datatable = count_one, named_table = named_series_table_reformatted, 
                            score_column_name = 'Number 1s Scored')
 
-count_fives.to_csv(output_path + 'Number of Fives Scored.csv', sep = ',', index = False, encoding="utf-8")
-count_ones.to_csv(output_path + 'Number of Ones Scored.csv', sep = ',', index = False, encoding="utf-8")
-
 most_ones = FSF.most_least_scores(count_scores = count_one, named_table = named_series_table_reformatted, 
                                   score = 1, size = 'most')
 least_ones = FSF.most_least_scores(count_scores = count_one, named_table = named_series_table_reformatted, 
@@ -56,11 +53,6 @@ most_fives = FSF.most_least_scores(count_scores = count_five, named_table = name
                                    score = 5, size = 'most')
 least_fives = FSF.most_least_scores(count_scores = count_five, named_table = named_series_table_reformatted, 
                                     score = 5, size = 'least')
-
-least_ones.to_csv(output_path + 'Least_Ones_Table.csv', sep = ',', index = False, encoding="utf-8")
-most_ones.to_csv(output_path + 'Most_Ones_Table.csv', sep = ',', index = False, encoding="utf-8")
-least_fives.to_csv(output_path + 'Least_Fives_Table.csv', sep = ',', index = False, encoding="utf-8")
-most_fives.to_csv(output_path + 'Most_Fives_Table.csv', sep = ',', index = False, encoding="utf-8")
 
 #Highest and lowest episode scores per seat
 
@@ -77,8 +69,6 @@ highest_ep_scores = FSF.high_low_ep_scores(data_table = episode_scores, named_ta
 episode_win_lose_results = FSF.episodes_win_lose(episode_scores_table = episode_scores,
                                                  named_table = named_series_table_reformatted)
 
-episode_win_lose_results.to_csv(output_path + 'Episode Wins and Losses.csv', sep = ',', index = False, encoding="utf-8")
-
 most_eps_won_num = episode_win_lose_results[['Series', 'Seat', "Wins", 'Percentage_Won', 'Number_Episodes', 'Name']].sort_values(by = 'Wins', ascending = False).reset_index(drop = True)
 
 most_eps_lost_num = episode_win_lose_results[['Series', 'Seat', "Losses", 'Percentage_Lost', 'Number_Episodes', 'Name']].sort_values(by = 'Losses', ascending = False).reset_index(drop = True)
@@ -93,19 +83,6 @@ most_eps_lost_percent_top = most_eps_lost_percent[0:10].sort_values(by = 'Percen
 never_won = most_eps_won_percent.sort_values(by = 'Percentage_Won', ascending = True).reset_index(drop = True)
 never_lost = most_eps_lost_percent.sort_values(by = 'Percentage_Lost', ascending = True).reset_index(drop = True)
 
-print(most_eps_won_num.head(10))
-print(most_eps_lost_num.head(10))
-
-print(most_eps_won_percent.head(10))
-print(most_eps_lost_percent.head(10))
-
-# Contestents who never won or never lost an episode
-print(never_won.head(10))
-print(never_lost.head(20))
-
-most_eps_won_num.to_csv(output_path + 'Most Episodes Won.csv', sep = ',', index = False, encoding="utf-8")
-most_eps_lost_num.to_csv(output_path + 'Most Episodes Lost.csv', sep = ',', index = False, encoding="utf-8")
-
 ## Tie Breaks
 print('Tie Break Analysis\n\n\n')
 
@@ -119,9 +96,6 @@ tie_break_count_losers = FSF.tie_break_losers(tie_break_scores_names = tie_break
 
 tie_break_count_winners_losers = FSF.tie_break_winners_losers(tie_break_count_winners = tie_break_count_winners,
                                                               tie_break_count_losers = tie_break_count_losers)
-
-tie_break_count_winners.to_csv(output_path + 'Tie_Break_Winners.csv', sep = ',', index = False, encoding="utf-8")
-tie_break_count_losers.to_csv(output_path + 'Tie_Break_Losers.csv', sep = ',', index = False, encoding="utf-8")
 
 (top_tie_break_count_winners, 
  top_tie_break_count_losers) = FSF.tie_break_counts_win_lose(tie_break_count_winners_table = tie_break_count_winners,
@@ -149,10 +123,6 @@ seat_losers_totals['Percentage Losses per Seat'] = seat_losers_totals['Losses']/
 
 seat_winners_totals['Numbers'] = range(1, 6)
 seat_losers_totals['Numbers'] = range(1, 6)
-
-print(seat_winners_totals)
-print(seat_losers_totals)
-
 
 #Plots
 
@@ -375,3 +345,24 @@ plt.title('Number of Wins or Losses for each Seat when it comes to Tie Breakers'
 
 plt.legend(loc = 'best', fontsize = 15)
 plt.show()
+
+# count_fives.to_csv(output_path + 'Number of Fives Scored.csv', sep = ',', index = False, encoding="utf-8")
+# count_ones.to_csv(output_path + 'Number of Ones Scored.csv', sep = ',', index = False, encoding="utf-8")
+# least_ones.to_csv(output_path + 'Least_Ones_Table.csv', sep = ',', index = False, encoding="utf-8")
+# most_ones.to_csv(output_path + 'Most_Ones_Table.csv', sep = ',', index = False, encoding="utf-8")
+# least_fives.to_csv(output_path + 'Least_Fives_Table.csv', sep = ',', index = False, encoding="utf-8")
+# most_fives.to_csv(output_path + 'Most_Fives_Table.csv', sep = ',', index = False, encoding="utf-8")
+
+# episode_win_lose_results.to_csv(output_path + 'Episode Wins and Losses.csv', sep = ',', index = False, encoding="utf-8")
+
+# most_eps_won_num.to_csv(output_path + 'Most Episodes Won.csv', sep = ',', index = False, encoding="utf-8")
+# most_eps_lost_num.to_csv(output_path + 'Most Episodes Lost.csv', sep = ',', index = False, encoding="utf-8")
+
+# tie_break_count_winners.to_csv(output_path + 'Tie_Break_Winners.csv', sep = ',', index = False, encoding="utf-8")
+# tie_break_count_losers.to_csv(output_path + 'Tie_Break_Losers.csv', sep = ',', index = False, encoding="utf-8")
+
+# never_won.head(9).to_csv(output_path + 'Never Won an episode.csv', sep = ',', index = False)
+# never_lost.head(18).to_csv(output_path + 'Never Lost an episode.csv', sep = ',', index = False)
+
+# seat_winners_totals.to_csv('Winner Statistics per Seat.csv', sep = ',', index = False)
+# seat_losers_totals.to_csv('Loser Startics per Seat.csv', sep = ',', index = False)
