@@ -82,8 +82,8 @@ avg_rating_series = pd.DataFrame(series_avg, columns = ['Series', 'Rating Averag
 
 print(avg_rating_series)
 
-avg_rating_series_RA_order = avg_rating_series.sort_values(by = 'Rating Average', ascending=False).reset_index
-avg_rating_series_RAS_order = avg_rating_series.sort_values(by = 'Average Rating Score', ascending=False).reset_index
+avg_rating_series_RA_order = avg_rating_series.sort_values(by = 'Rating Average', ascending=False).reset_index(drop = True)
+avg_rating_series_RAS_order = avg_rating_series.sort_values(by = 'Average Rating Score', ascending=False).reset_index(drop = True)
 
 print(avg_rating_series_RA_order)
 print(avg_rating_series_RAS_order)
@@ -174,6 +174,37 @@ for row, ax in enumerate(axes.flatten()[:len(high_corr)]):
     ax.set_ylabel(high_corr['var_2'][row])
     legend = ax.legend(frameon=True, loc = 'best', labelcolor = 'white', 
                     facecolor = high_corr['colour'][row])
+plt.show()
+
+
+#### Correlations between Series Averages variables
+print()
+print(avg_rating_series.corr())
+
+correlations_series = avg_rating_series.corr(method = 'spearman')
+
+grouped_variables_series = CF.group_corr_variables(correlations_series)
+high_corr_series = CF.set_corr_thresholds(corr_data = grouped_variables_series, range = False, threshold = 0.8).reset_index(drop = True)
+
+print(high_corr_series)
+print()
+
+high_corr_series, cmap, norm = CF.set_correlation_colours(data_table = high_corr_series, corr_column = 'correlation', limits = 1)
+
+#Correlation Plots
+fig, axes = plt.subplots(nrows = 3, ncols = 2)
+plt.subplots_adjust(wspace=0.2, hspace=0.3, bottom = 0.08, top = 0.98, left = 0.05, right = 0.95)
+
+for row, ax in enumerate(axes.flatten()[:len(high_corr_series)]):
+
+    ax.scatter(avg_rating_series[high_corr_series['var_1'][row]], 
+               avg_rating_series[high_corr_series['var_2'][row]], 
+            color = high_corr_series['colour'][row]) 
+    ax.plot([], [], color = 'white', label = f"{round(high_corr_series['correlation'][row],2)}")
+    ax.set_xlabel(high_corr_series['var_1'][row])
+    ax.set_ylabel(high_corr_series['var_2'][row])
+    legend = ax.legend(frameon=True, loc = 'best', labelcolor = 'white', 
+                    facecolor = high_corr_series['colour'][row])
 plt.show()
 
 ####Minimum and Maximum Ratings per Series
