@@ -364,5 +364,5 @@ tie_break_count_losers.to_csv(output_path + 'Tie_Break_Losers.csv', sep = ',', i
 never_won.head(9).to_csv(output_path + 'Never Won an episode.csv', sep = ',', index = False)
 never_lost.head(18).to_csv(output_path + 'Never Lost an episode.csv', sep = ',', index = False)
 
-seat_winners_totals.to_csv('Winner Statistics per Seat.csv', sep = ',', index = False)
-seat_losers_totals.to_csv('Loser Startics per Seat.csv', sep = ',', index = False)
+seat_winners_totals.to_csv(output_path + 'Winner Statistics per Seat.csv', sep = ',', index = False)
+seat_losers_totals.to_csv(output_path + 'Loser Startics per Seat.csv', sep = ',', index = False)

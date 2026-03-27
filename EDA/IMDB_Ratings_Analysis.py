@@ -286,6 +286,6 @@ imdb_data.to_csv(output_path + 'IMDB Episode Ratings Full Table.csv', sep = ',',
 avg_rating_series.to_csv(output_path + 'IMDB Series Average Ratings Full Table.csv', sep = ',', index = False)
 min_max_ratings_df.to_csv(output_path + 'Minimum Maximum IMDB Episode Ratings.csv', sep = ',', index = False)
 
-with open('episode_min_max_ratings_counts.txt', 'w') as f:
+with open(output_path + 'episode_min_max_ratings_counts.txt', 'w') as f:
     print(episodes_min_ratings, file = f)
     print(episodes_max_ratings, file = f)

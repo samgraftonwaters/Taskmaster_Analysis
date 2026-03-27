@@ -39,8 +39,8 @@ average_scores = average_scores.drop(['Seat', 'Position', 'Series'], axis = 1)
 
 score_merged_table = pd.merge(final_positions, average_scores, on = 'Name', how = 'left')
 
-total_eps = pd.read(output_path + 'Total Scores per Number of Episodes.csv')
-total_tasks = pd.read(output_path + 'Total Scores per Number of Tasks.csv')
+total_eps = pd.read_csv(output_path + 'Total Scores per Number of Episodes.csv')
+total_tasks = pd.read_csv(output_path + 'Total Scores per Number of Tasks.csv')
 
 total_eps = total_eps.drop(['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5'], axis = 1)
 total_tasks = total_tasks.drop(['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5'], axis = 1)
@@ -77,15 +77,18 @@ final_positions_dq['Position Difference'] = final_positions_dq['Position'] - fin
 #Filtering table to remove rows where no change in position
 dq_change = final_positions_dq[(final_positions_dq['Position Difference'] != 0)]
 
+print(dq_change)
+
 dq_change = dq_change[~dq_change['Name'].isin(['Frank Skinner', 'Romesh Ranganathan',
                                                       'Desiree Burch', 'Alan Davies'])].reset_index(drop = True)
 
-dq_change_plus = dq_change[dq_change['Position Difference'] == 1]
-dq_change_minus = dq_change[dq_change['Position Difference'] == -1]
+dq_change_plus = dq_change[(dq_change['Position Difference'] == 1) | (dq_change['Position Difference'] == 2)]
+dq_change_minus = dq_change[(dq_change['Position Difference'] == -1) | (dq_change['Position Difference'] == -2)]
+
 
 ax1_y_pos = [(i // 2) + (0.3 if i % 2 == 0 else 0.71) for i in range(len(dq_change))]
 #[0.3, 0.71, 1.3, 1.71, 2.3, 2.71, 3.3, 3.71, 4.3, 4.71, 5.3, 5.71]
-ax2_y_pos = [0.8 + i * 1.08 for i in range(int(len(dq_change)/2))]
+ax2_y_pos = [0.76 + i * 0.91 for i in range(int(len(dq_change)/2))]
 # print([0.74, 1.66, 2.58, 3.5, 4.44, 5.349])#, 6.26]
 ax2_x_pos = [1, 2, 3, 4, 5]
 
@@ -102,12 +105,7 @@ ax3.plot([dq_change['Position'], dq_change['New Position']], [ax1_y_pos, ax1_y_p
 
 ax2.set_ylim(ax1.get_ylim())
 for y in ax2_y_pos:
-    ax2.hlines(y,
-               xmin=140,
-               xmax=250,
-               colors='lightgray',
-               linestyles='--',
-               linewidth=0.8)
+    ax2.hlines(y, xmin=140, xmax=250, colors='lightgray', linestyles='--', linewidth=0.8)
 
 ax3.set_ylim(ax1.get_ylim()) 
 xmin, xmax = 1, 5

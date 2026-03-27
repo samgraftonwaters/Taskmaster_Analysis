@@ -2,7 +2,8 @@ import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import StandardScaler, RobustScaler
 
-input_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
+input_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
+output_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
 
 data = pd.read_csv(input_path + 'Full Contestent Table.csv')
 data = data.rename(columns = {'DQ' : 'Disqualifications'})
@@ -81,4 +82,4 @@ data_non_nums = data_modelling.select_dtypes(exclude=[float, int])
 data_modelling_scaled = pd.concat([data_non_nums, non_normal_variables_scaled, 
                          normal_variables_scaled, concat_ohe_data], axis = 1)
 
-data_modelling_scaled.to_csv(input_path + 'Full Contestent Table for Modelling Scaled.csv', sep = ',', index = False)
+data_modelling_scaled.to_csv(output_path + 'Full Contestent Table for Modelling Scaled.csv', sep = ',', index = False)

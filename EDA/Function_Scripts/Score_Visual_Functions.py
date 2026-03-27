@@ -22,7 +22,7 @@ def bar_number_seat_wins_loses(seat_number_winner, seat_number_losers, count_win
     """
 
     fig, axes = plt.subplots()
-    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.15)
+    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.05, right = 0.95)
 
     plt.bar(x = seat_number_winner-0.2, height = count_winners, 
             label = 'Number of Wins', width = 0.40, color = 'blue', alpha = 0.6, edgecolor ='black')
@@ -35,12 +35,12 @@ def bar_number_seat_wins_loses(seat_number_winner, seat_number_losers, count_win
         plt.text(i+1.2, count_losers[i]+0.05, 
                 count_losers[i], ha='center', fontsize = 15, color = 'green')
 
-    plt.title('The number of wins or loses per seat in all 20 Series of Taskmaster', fontsize = 16)
-    plt.xlabel('Seat Number', fontsize = 14)
-    plt.ylabel('Count', fontsize = 14)
+    plt.title('The number of wins or loses per seat in all 20 Series of Taskmaster', fontsize = 20)
+    plt.xlabel('Seat Number', fontsize = 16)
+    plt.ylabel('Count', fontsize = 16)
     plt.xticks(fontsize = 12)
     plt.yticks(fontsize = 12)
-    plt.legend(loc = 'best', fontsize = 15)
+    plt.legend(loc = 'best', fontsize = 14)
     plt.show()
 
 
@@ -64,6 +64,9 @@ def summed_total_scores(dataframe):
 
     for score, bar_colour, mean_colour in zip(range(3), ['blue', 'green', 'darkorange'], ['orange', 'red', 'blue']):
 
+        fig, axes = plt.subplots()
+        plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.08, right = 0.95)
+
         plt.bar(x = range(1,6), height = dataframe.iloc[[score]].values[0][0:5], 
            label = 'Number of Wins', width = 0.5, color = bar_colour, alpha = 0.6, edgecolor ='black')
 
@@ -72,15 +75,15 @@ def summed_total_scores(dataframe):
             color = mean_colour)
                     
         if score == 0:
-            plt.title('The Total Score per seat in all 20 Series of Taskmaster', fontsize = 16)
-            plt.ylim(2700, 2820)
+            plt.title('The Total Score per seat in all 20 Series of Taskmaster', fontsize = 20)
+            plt.ylim(2700, 2880)
             for i in range(5):
                 plt.text(i+1, dataframe.iloc[[score]].values[0][0:5][i] + 0.5, 
                         dataframe.iloc[[score]].values[0][0:5][i], ha='center', 
                         fontsize = 15, color = bar_colour)
 
         elif score == 1:
-            plt.title('The Total Score per Number of Episodes for each seat in all 20 Series of Taskmaster', fontsize = 16)
+            plt.title('The Total Score per Number of Episodes for each seat in all 20 Series of Taskmaster', fontsize = 20)
             plt.ylim(14, 16.2)    
             for i in range(5):
                 plt.text(i+1, dataframe.iloc[[score]].values[0][0:5][i] + 0.1, 
@@ -88,7 +91,7 @@ def summed_total_scores(dataframe):
                         fontsize = 15, color = bar_colour)
 
         else:
-            plt.title('The Total Score per Number of Tasks for each seat in all 20 Series of Taskmaster', fontsize = 16)
+            plt.title('The Total Score per Number of Tasks for each seat in all 20 Series of Taskmaster', fontsize = 20)
             plt.ylim(2.5, 2.72)
             for i in range(5):
                 plt.text(i+1, dataframe.iloc[[score]].values[0][0:5][i] + 0.013, 
@@ -129,7 +132,7 @@ def scores_over_series_single(total_series_table, total_episodes_table, total_ta
     for i, tables in enumerate([total_series_table, total_episodes_table, total_tasks_table]):
 
         fig, axes = plt.subplots()
-        plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.08)
+        plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.1, right = 0.95)
 
         for seat in tables.columns[:5]:
             plt.plot(tables['Series'], tables[seat], 'o-', 
@@ -139,7 +142,8 @@ def scores_over_series_single(total_series_table, total_episodes_table, total_ta
         plt.xticks(fontsize = 15)
         plt.yticks(fontsize = 15)
         plt.grid()
-        plt.legend(loc = 'best', fontsize = 15)
+        plt.legend(loc = 'best', fontsize = 15, ncols = 2)
+        plt.xlim(-0.5, 19.5)
         
         if i == 0:
             plt.title('The total scores for each seat over all 20 series', fontsize = 20)
@@ -178,9 +182,12 @@ def scores_over_series_panelled(total_series_table, total_episodes_table, total_
     for i, tables in enumerate([total_series_table, total_episodes_table, total_tasks_table]):
 
         fig, axes = plt.subplots(nrows = 2, ncols = 3, sharex = False, sharey = True)
-        plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.1)
+        plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.1, right = 0.95)
 
         for ax, seat, colour in zip(axes.flatten(), tables[:5], colour_list[:5]):
+
+            ax.tick_params(axis='both', which='both', top=True, bottom=True, 
+                           left=True, right=True)
 
             ax.plot(tables['Series'], tables[seat], 'o-', 
                 lw = 3, label = f'{seat}', color = colour)
@@ -189,7 +196,8 @@ def scores_over_series_panelled(total_series_table, total_episodes_table, total_
             ax.tick_params(axis='y', labelsize=15)
 
             ticks = ax.get_xticks()              
-            ax.set_xticks(ticks[::2])   
+            ax.set_xticks(ticks[::2])  
+            ax.grid() 
 
             # ax.legend(loc = 'best', fontsize = 15, frameon=False)
 
@@ -234,10 +242,13 @@ def compare_total_avg_scores(total_series_table, total_episodes_table, total_tas
     """
 
     fig, axes = plt.subplots(nrows = 2, ncols = 3, sharex = False, sharey = True)
-    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.93, left = 0.08)
+    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.93, left = 0.1, right = 0.9)
 
     for ax, seat, colour in zip(axes.flatten(), total_series_table.columns[:5], colour_list[:5]):
 
+        ax.tick_params(axis='both', which='both', top=True, bottom=True, 
+                           left=True, right=True)
+        
         ax.plot(total_series_table['Series'], total_series_table[seat]/4, 'o-.', 
                 lw = 3, color = colour)
         
@@ -291,7 +302,7 @@ def highest_scores_each_seat(highest_seat_series_table, highest_seat_episodes_ta
     for t, tables in enumerate([highest_seat_series_table, highest_seat_episodes_table, highest_seat_tasks_table]):
 
         fig, axes = plt.subplots()
-        plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.2)
+        plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.15, right = 0.95)
 
         for i, score, name, series, seat, colour in zip(range(1, 6), tables['Max Score'],
                                         tables['Name'], tables['Series'],
@@ -354,7 +365,7 @@ def lowest_scores_each_seat(lowest_seat_series_table, lowest_seat_episodes_table
                                 lowest_seat_tasks_table]):
 
         fig, axes = plt.subplots()
-        plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.2)
+        plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.2, right = 0.95)
 
         for i, score, name, series, seat, colour in zip(range(1, 6), tables['Min Score'],
                                         tables['Name'], tables['Series'],
@@ -420,7 +431,7 @@ def final_score_seat_positions(position_tables, colour_list, top = True, top_n =
     for pos in range(1, 6):
 
         fig, axes = plt.subplots()
-        plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.2)
+        plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.2, right = 0.95)
 
         position_data = position_tables[position_tables['Position'] == pos]
 
@@ -511,7 +522,7 @@ def final_average_score_seat_positions(position_tables, colour_list, average_typ
     for pos in range(1, 6):
 
         fig, axes = plt.subplots()
-        plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.2)
+        plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.2, right = 0.95)
 
         position_data = position_tables[position_tables['Position'] == pos]
 
@@ -594,11 +605,11 @@ def final_average_score_seat_positions(position_tables, colour_list, average_typ
 def plot_contestent_scores_top(position_tables, colour_list, average_type, top_n = 20):
     
     position_tables = position_tables.sort_values(by = 'Score', ascending = False).reset_index(drop = True)
-
+    print(position_tables)
     fig, axes = plt.subplots()
-    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.2)
+    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.2, right = 0.95)
 
-    position_tables = position_tables[0 : 20 - top_n] 
+    position_tables = position_tables[0 : top_n] 
     position_tables = position_tables.sort_values(by = 'Score', ascending = True).reset_index(drop = True)
     
     title = f'Top {top_n}'
@@ -622,12 +633,12 @@ def plot_contestent_scores_top(position_tables, colour_list, average_type, top_n
                             position_tables['Series'],
                             position_tables['Seat'],  colour_list):
             plt.barh(y = name, width = score, color = colour, edgecolor = 'black')
-            plt.text(score + 0.25, i, str(score), va='center', fontsize = 15, color = colour)  
+            plt.text(score + 0.18, i, str(score), va='center', fontsize = 15, color = colour)  
             plt.text(0.5, i, str(series), va = 'center', fontsize = 12, color = 'white')
             plt.text(1.6, i, str(seat), va = 'center', fontsize = 12, color = 'white')
         plt.xlabel('Average Score per Number of Tasks', fontsize = 18)
         plt.title(f'Average Score per Number of Tasks of {title} \n Contestents Across all Series', fontsize = 20)        
-        plt.xlim(0, 4)
+        plt.xlim(0, 3.8)
     if average_type == 'episode':
         for i, score, name, series, seat, colour in zip(range(0, top_n), position_tables['Score'],
                             position_tables['Name'], 
@@ -639,7 +650,7 @@ def plot_contestent_scores_top(position_tables, colour_list, average_type, top_n
             plt.text(7.5, i, str(seat), va = 'center', fontsize = 12, color = 'white')
         plt.xlabel('Average Score per Number of Episodes', fontsize = 18)
         plt.title(f'Average Score per Number of Episodes of {title} \n Contestents Across all Series', fontsize = 20)        
-        plt.xlim(0, 22)
+        plt.xlim(0, 21.5)
 
     plt.xticks(fontsize = 15)
     plt.yticks(fontsize = 15)
@@ -651,7 +662,7 @@ def plot_contestent_scores_bottom(position_tables, colour_list, average_type, bo
     position_tables = position_tables.sort_values(by = 'Score', ascending = False).reset_index(drop = True)
 
     fig, axes = plt.subplots()
-    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.2)
+    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.2, right = 0.95)
 
     position_tables = position_tables.sort_values(by = 'Score', ascending = True).reset_index(drop = True)
     position_tables = position_tables[0 : bottom_n]
@@ -666,7 +677,7 @@ def plot_contestent_scores_bottom(position_tables, colour_list, average_type, bo
                 plt.text(score + 1, i, str(score), va='center', fontsize = 15, color = colour)  
                 plt.text(5, i, str(series), va = 'center', fontsize = 12, color = 'white')
                 plt.text(20, i, str(seat), va = 'center', fontsize = 12, color = 'white')
-        plt.xlim(0, 115)
+        plt.xlim(0, 132)
         plt.title(f'Final Scores of {title} Contestents Across all Series', fontsize = 20)   
         plt.xlabel('Total Score', fontsize = 18)
 
@@ -676,24 +687,24 @@ def plot_contestent_scores_bottom(position_tables, colour_list, average_type, bo
                             position_tables['Series'],
                             position_tables['Seat'],  colour_list):
             plt.barh(y = name, width = score, color = colour, edgecolor = 'black')
-            plt.text(score + 0.25, i, str(score), va='center', fontsize = 15, color = colour)  
+            plt.text(score + 0.2, i, str(score), va='center', fontsize = 15, color = colour)  
             plt.text(0.5, i, str(series), va = 'center', fontsize = 12, color = 'white')
             plt.text(1.6, i, str(seat), va = 'center', fontsize = 12, color = 'white')
         plt.xlabel('Average Score per Number of Tasks', fontsize = 18)
         plt.title(f'Average Score per Number of Tasks of {title} \n Contestents Across all Series', fontsize = 20)        
-        plt.xlim(0, 3)
+        plt.xlim(0, 2.8)
     if average_type == 'episode':
         for i, score, name, series, seat, colour in zip(range(0, bottom_n), position_tables['Score'],
                             position_tables['Name'], 
                             position_tables['Series'],
                             position_tables['Seat'],  colour_list):
             plt.barh(y = name, width = score, color = colour, edgecolor = 'black')
-            plt.text(score + 1, i, str(score), va='center', fontsize = 15, color = colour)  
+            plt.text(score + 0.8, i, str(score), va='center', fontsize = 15, color = colour)  
             plt.text(2.5, i, str(series), va = 'center', fontsize = 12, color = 'white')
             plt.text(7.5, i, str(seat), va = 'center', fontsize = 12, color = 'white')
         plt.xlabel('Average Score per Number of Episodes', fontsize = 18)
         plt.title(f'Average Score per Number of Episodes of {title} \n Contestents Across all Series', fontsize = 20)        
-        plt.xlim(0, 17)
+        plt.xlim(0, 16)
 
     plt.xticks(fontsize = 15)
     plt.yticks(fontsize = 15)
