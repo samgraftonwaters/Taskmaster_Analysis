@@ -155,4 +155,4 @@ ax3.set_xticks(ax2_x_pos)
 
 plt.show()
 
-# dq_table.to_csv(output_path + 'DQ_Table.csv', sep = ',', index = False, encoding="utf-8")
+dq_table.to_csv(output_path + 'DQ_Table.csv', sep = ',', index = False, encoding="utf-8")

@@ -346,23 +346,23 @@ plt.title('Number of Wins or Losses for each Seat when it comes to Tie Breakers'
 plt.legend(loc = 'best', fontsize = 15)
 plt.show()
 
-# count_fives.to_csv(output_path + 'Number of Fives Scored.csv', sep = ',', index = False, encoding="utf-8")
-# count_ones.to_csv(output_path + 'Number of Ones Scored.csv', sep = ',', index = False, encoding="utf-8")
-# least_ones.to_csv(output_path + 'Least_Ones_Table.csv', sep = ',', index = False, encoding="utf-8")
-# most_ones.to_csv(output_path + 'Most_Ones_Table.csv', sep = ',', index = False, encoding="utf-8")
-# least_fives.to_csv(output_path + 'Least_Fives_Table.csv', sep = ',', index = False, encoding="utf-8")
-# most_fives.to_csv(output_path + 'Most_Fives_Table.csv', sep = ',', index = False, encoding="utf-8")
+count_fives.to_csv(output_path + 'Number of Fives Scored.csv', sep = ',', index = False, encoding="utf-8")
+count_ones.to_csv(output_path + 'Number of Ones Scored.csv', sep = ',', index = False, encoding="utf-8")
+least_ones.to_csv(output_path + 'Least_Ones_Table.csv', sep = ',', index = False, encoding="utf-8")
+most_ones.to_csv(output_path + 'Most_Ones_Table.csv', sep = ',', index = False, encoding="utf-8")
+least_fives.to_csv(output_path + 'Least_Fives_Table.csv', sep = ',', index = False, encoding="utf-8")
+most_fives.to_csv(output_path + 'Most_Fives_Table.csv', sep = ',', index = False, encoding="utf-8")
 
-# episode_win_lose_results.to_csv(output_path + 'Episode Wins and Losses.csv', sep = ',', index = False, encoding="utf-8")
+episode_win_lose_results.to_csv(output_path + 'Episode Wins and Losses.csv', sep = ',', index = False, encoding="utf-8")
 
-# most_eps_won_num.to_csv(output_path + 'Most Episodes Won.csv', sep = ',', index = False, encoding="utf-8")
-# most_eps_lost_num.to_csv(output_path + 'Most Episodes Lost.csv', sep = ',', index = False, encoding="utf-8")
+most_eps_won_num.to_csv(output_path + 'Most Episodes Won.csv', sep = ',', index = False, encoding="utf-8")
+most_eps_lost_num.to_csv(output_path + 'Most Episodes Lost.csv', sep = ',', index = False, encoding="utf-8")
 
-# tie_break_count_winners.to_csv(output_path + 'Tie_Break_Winners.csv', sep = ',', index = False, encoding="utf-8")
-# tie_break_count_losers.to_csv(output_path + 'Tie_Break_Losers.csv', sep = ',', index = False, encoding="utf-8")
+tie_break_count_winners.to_csv(output_path + 'Tie_Break_Winners.csv', sep = ',', index = False, encoding="utf-8")
+tie_break_count_losers.to_csv(output_path + 'Tie_Break_Losers.csv', sep = ',', index = False, encoding="utf-8")
 
-# never_won.head(9).to_csv(output_path + 'Never Won an episode.csv', sep = ',', index = False)
-# never_lost.head(18).to_csv(output_path + 'Never Lost an episode.csv', sep = ',', index = False)
+never_won.head(9).to_csv(output_path + 'Never Won an episode.csv', sep = ',', index = False)
+never_lost.head(18).to_csv(output_path + 'Never Lost an episode.csv', sep = ',', index = False)
 
-# seat_winners_totals.to_csv('Winner Statistics per Seat.csv', sep = ',', index = False)
-# seat_losers_totals.to_csv('Loser Startics per Seat.csv', sep = ',', index = False)
+seat_winners_totals.to_csv('Winner Statistics per Seat.csv', sep = ',', index = False)
+seat_losers_totals.to_csv('Loser Startics per Seat.csv', sep = ',', index = False)
