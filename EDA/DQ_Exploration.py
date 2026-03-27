@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-import DQ_Functions as DQF
+from Function_Scripts import DQ_Functions as DQF
 import Total_Scores_EDA as TSE
 
 import matplotlib.pyplot as plt
@@ -21,10 +21,6 @@ dq_table = DQF.count_DQ_all_contestents(file_path = file_path,
                                         table_name = 'Taskmaster_Series_Scores.xlsx', 
                                         number_series = 20)
 
-dq_table.to_csv(output_path + 'DQ_Table.csv', sep = ',', index = False, encoding="utf-8")
-
-print(dq_table.head(20))
-
 #Bar charts for number of DQ per series and seats
 dq_sort = dq_table.sort_values(by = 'DQ', ascending=False).reset_index(drop = True)
 
@@ -37,13 +33,17 @@ DQF.dq_series_bar(datatable = total_dq_series)
 DQF.dq_seat_bar(datatable = total_seat_dq)
 
 #Merging Tables
-final_positions = TSE.total_score_positions_ordered
-average_scores = TSE.average_tasks_positions_ordered.drop(['Seat', 'Position', 'Series'], axis = 1)
+final_positions = pd.read_csv(output_path + 'Total Final Scores and Positions.csv') 
+average_scores = pd.read_csv(output_path + 'Avg Task Scores and Positions.csv')
+average_scores = average_scores.drop(['Seat', 'Position', 'Series'], axis = 1)
 
 score_merged_table = pd.merge(final_positions, average_scores, on = 'Name', how = 'left')
 
-total_eps = TSE.Total_per_episode.drop(['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5'], axis = 1)
-total_tasks = TSE.Total_per_task.drop(['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5'], axis = 1)
+total_eps = pd.read(output_path + 'Total Scores per Number of Episodes.csv')
+total_tasks = pd.read(output_path + 'Total Scores per Number of Tasks.csv')
+
+total_eps = total_eps.drop(['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5'], axis = 1)
+total_tasks = total_tasks.drop(['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5'], axis = 1)
 
 tasks_episodes = pd.merge(total_eps, total_tasks, on = 'Series', how = 'left')
 
@@ -82,9 +82,6 @@ dq_change = dq_change[~dq_change['Name'].isin(['Frank Skinner', 'Romesh Ranganat
 
 dq_change_plus = dq_change[dq_change['Position Difference'] == 1]
 dq_change_minus = dq_change[dq_change['Position Difference'] == -1]
-
-print(dq_change[['Name', 'Series', 'DQ','Total Score', 'Position', 'Total Missed Scores', 'New Position',
-       'Position Difference']].head(20))
 
 ax1_y_pos = [(i // 2) + (0.3 if i % 2 == 0 else 0.71) for i in range(len(dq_change))]
 #[0.3, 0.71, 1.3, 1.71, 2.3, 2.71, 3.3, 3.71, 4.3, 4.71, 5.3, 5.71]
@@ -158,3 +155,4 @@ ax3.set_xticks(ax2_x_pos)
 
 plt.show()
 
+dq_table.to_csv(output_path + 'DQ_Table.csv', sep = ',', index = False, encoding="utf-8")

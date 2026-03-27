@@ -1,5 +1,5 @@
 import Total_Scores_EDA as TSE
-import Score_Visual_Functions as VF
+from Function_Scripts import Score_Visual_Functions as VF
 
 import seaborn as sns
 import matplotlib.pyplot as plt

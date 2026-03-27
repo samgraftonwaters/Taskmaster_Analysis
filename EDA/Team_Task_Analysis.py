@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-import Team_Task_Functions as TTF
+from Function_Scripts import Team_Task_Functions as TTF
 
 plt.rcParams['figure.figsize'] = (13, 7)
 
@@ -63,9 +63,6 @@ team_A['Team A Names'] = team_A['Team A Names'].apply(lambda x: ', '.join(map(st
 team_B['Team B Names'] = team_B['Team B Names'].apply(lambda x: ', '.join(map(str, x)))
 team_A[['Name A1', 'Name A2']] = team_A['Team A Names'].str.split(', ', expand=True)
 team_B[['Name B1', 'Name B2', 'Name B3']] = team_B['Team B Names'].str.split(', ', expand=True)
-
-team_A.to_csv(output_path + 'Team A Results.csv', sep = ',', index = False, encoding="utf-8")
-team_B.to_csv(output_path + 'Team B Results.csv', sep = ',', index = False, encoding="utf-8")
 
 # Sort Team A and Team B tables based on the total per person per task column.
 team_A_top = team_A.sort_values(by = 'Team_A_per_person_task', ascending = False)
@@ -282,3 +279,6 @@ ax1.tick_params(axis='x', labelsize=12)
 ax2.tick_params(axis='x', labelsize=12)
 
 plt.show()
+
+team_A.to_csv(output_path + 'Team A Results.csv', sep = ',', index = False, encoding="utf-8")
+team_B.to_csv(output_path + 'Team B Results.csv', sep = ',', index = False, encoding="utf-8")

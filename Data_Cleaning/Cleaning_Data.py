@@ -13,8 +13,4 @@ seat_contestent_table["Series"] = "S" + (seat_contestent_table.index + 1).astype
     
 print(seat_contestent_table)
 
-
 seat_contestent_table.to_csv(file_path + 'seat_contestent_series_table.csv', index = False, sep = ',')
-
-
-

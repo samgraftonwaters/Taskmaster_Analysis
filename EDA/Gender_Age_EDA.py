@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-import gender_age_functions as GAF
+from Function_Scripts import gender_age_functions as GAF
 
 plt.rcParams['figure.figsize'] = (13, 7)
 
@@ -10,8 +10,8 @@ plt.rcParams['figure.figsize'] = (13, 7)
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
 output_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
 
-episode_scores = pd.read_csv(file_path + 'Episode Wins and Losses.csv', encoding="utf-8")
-final_scores = pd.read_csv(file_path + 'Total Final Scores and Positions.csv', encoding="utf-8")
+episode_scores = pd.read_csv(output_path + 'Episode Wins and Losses.csv', encoding="utf-8")
+final_scores = pd.read_csv(output_path + 'Total Final Scores and Positions.csv', encoding="utf-8")
 
 gender_age_table = pd.read_csv(file_path + 'Contestent_Gender_Age.csv', encoding="utf-8")
 gender_age_table['Series Number'] = gender_age_table['Series'].str.replace('S', '').astype(int)
@@ -44,8 +44,6 @@ print('\n Merging Tables \n')
 final_scores_age_gender = GAF.merge_series_age_gender(series_table = final_scores, gender_table = gender_age_table, 
                         age_table = age_binned_table)
 
-final_scores_age_gender.to_csv(output_path + 'Gender_Age_Series_Scores.csv', index = False, sep = ',', encoding="utf-8")
-
 #Count number of gender and age groups per seat
 print('\n Seat Analysis \n')
 
@@ -72,9 +70,6 @@ position_age_table = final_scores_age_gender[['Position', 'Age_Ranges', 'Score']
 
 position_gender_count = position_gender_table.groupby(['Gender', 'Position'], observed=True)['Score'].sum().reset_index()
 position_age_count = position_age_table.groupby(['Age_Ranges', 'Position'], observed=True)['Score'].sum().reset_index()
-
-print(position_age_count)
-print(position_gender_count)
 
 #Carried out Chi-Squared Tests
 print('\n Chi-Squared and Bias Testing \n')
@@ -116,8 +111,6 @@ print('\n Episode Analysis \n')
 episode_scores_age_gender = GAF.merge_series_age_gender(series_table = episode_scores, 
                                                         gender_table = gender_age_table.drop(['First_Air_Date', 'Birth_Date'], axis = 1),
                                                         age_table = age_binned_table)
-
-print(episode_scores_age_gender.head(20))
 
 eps_per_series = episode_scores_age_gender.groupby('Series')['Number_Episodes'].first().reset_index()
 num_eps = eps_per_series['Number_Episodes'].sum()
@@ -161,3 +154,8 @@ GAF.chi2_test(data_table = episode_gender, series_episode = 'episode', values = 
 
 GAF.chi2_test(data_table = episode_age, series_episode = 'episode', values = None, index = None, 
                      columns = None, agg = "sum")
+
+final_scores_age_gender.to_csv(output_path + 'Gender_Age_Series_Scores.csv', index = False, sep = ',', encoding="utf-8")
+episode_scores_age_gender.to_csv(output_path + 'Episode Scores per age and gender .csv', index = False, sep = ',', encoding="utf-8")
+position_age_count.to_csv(output_path + 'Age Final Position Count.csv', index = False, sep = ',', encoding="utf-8")
+position_gender_count.to_csv(output_path + 'Gender Final Position Count.csv', index = False, sep = ',', encoding="utf-8")
