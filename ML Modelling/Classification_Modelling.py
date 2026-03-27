@@ -1,4 +1,4 @@
-import Classification_Functions as CF
+from Function_Scripts import Classification_Functions as CF
 
 
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'

@@ -8,7 +8,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-import Grouping_Contestent_Functions as GCF
+from Function_Scripts import Grouping_Contestent_Functions as GCF
 
 import sys
 sys.path.append('/Users/SamWaters/Documents/Data Science/Taskmaster/')

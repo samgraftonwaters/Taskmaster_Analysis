@@ -2,8 +2,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.cluster import KMeans
-import Task_Text_Cleaning_Functions as TTCF
-import Grouping_Contestent_Functions as GCF
+from Function_Scripts import Task_Text_Cleaning_Functions as TTCF
+from Function_Scripts import Grouping_Contestent_Functions as GCF
 plt.rcParams['figure.figsize'] = (13, 7)
 
 
