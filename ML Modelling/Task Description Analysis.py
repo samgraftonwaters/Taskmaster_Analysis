@@ -7,7 +7,8 @@ from Function_Scripts import Grouping_Contestent_Functions as GCF
 plt.rcParams['figure.figsize'] = (13, 7)
 
 
-file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
+file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
+output_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
 task_data = pd.read_csv(file_path + 'Task Descriptions Only.csv')
 
 k_values = range(2, 30)
@@ -53,7 +54,7 @@ def full_task_theme_analysis(cleaned_task_text, theme_type, output_file_name, k_
                                                     cleaned_tasks_description = cleaned_task_text)
 
     TTCF.save_task_themes(task_clusters, theme_type = theme_type, file_name = output_file_name, 
-                        file_path = file_path, descriptions = cleaned_task_text)
+                        file_path = output_path, descriptions = cleaned_task_text)
 
     return(k_values, sil_scores_eucl)
     

@@ -141,8 +141,7 @@ for model, model_name, parameters_to_search in zip(classification_models, model_
     y_test_probs = optimised_model.predict_proba(X_test)[:, 1]
     y_test_pred = (y_test_probs >= best_threshold_train).astype(int)
 
-    conf_matrix = CF.calculate_conf_matrix(y_test = y_test, y_pred = y_test_pred,
-                                                            labels = labels)
+    conf_matrix = CF.calculate_conf_matrix(y_test = y_test, y_pred = y_test_pred)
 
     CF.plot_confusion_matrix(model_matrix = conf_matrix, tick_labels = tick_labels,
                             title = f'{model_name} Model Confusion Matrix')
