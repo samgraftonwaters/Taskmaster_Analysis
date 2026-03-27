@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-import gender_age_functions as GAF
+from Function_Scripts import gender_age_functions as GAF
 
 plt.rcParams['figure.figsize'] = (13, 7)
 

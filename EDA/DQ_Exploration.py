@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-import DQ_Functions as DQF
+from Function_Scripts import DQ_Functions as DQF
 import Total_Scores_EDA as TSE
 
 import matplotlib.pyplot as plt

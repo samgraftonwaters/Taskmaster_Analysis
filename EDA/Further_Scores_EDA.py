@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-import Further_Scores_Functions as FSF
+from Function_Scripts import Further_Scores_Functions as FSF
 
 plt.rcParams['figure.figsize'] = (13, 7)
 

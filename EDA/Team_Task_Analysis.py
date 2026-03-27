@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-import Team_Task_Functions as TTF
+from Function_Scripts import Team_Task_Functions as TTF
 
 plt.rcParams['figure.figsize'] = (13, 7)
 

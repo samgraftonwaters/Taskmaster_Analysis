@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-import EDA_Functions as EF
+from Function_Scripts import EDA_Functions as EF
 
 # pd.set_option('display.max_rows', 500)
 # pd.set_option('display.max_columns', 500)
