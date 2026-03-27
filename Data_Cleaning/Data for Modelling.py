@@ -41,7 +41,7 @@ concat_ohe_data = pd.concat([teams, age_range, gender, seat], axis=1)
 
 data_merged = pd.concat([data, concat_ohe_data], axis = 1)
 
-data_merged.to_csv(input_path + 'Full Contestent Table OHE.csv', sep = ',', index = False)
+data_merged.to_csv(output_path + 'Full Contestent Table OHE.csv', sep = ',', index = False)
 
 
 data_modelling = data_merged.drop(['Age_Ranges', 'Team', 'Gender', 'Seat', 
@@ -51,13 +51,13 @@ data_modelling = data_merged.drop(['Age_Ranges', 'Team', 'Gender', 'Seat',
 print(data_modelling.columns)
 #Removing first 4 as OHE, remving last 5 due to correlation analysis
 
-data_modelling.to_csv(input_path + 'Full Contestent Table for Modelling.csv', sep = ',', index = False)
+data_modelling.to_csv(output_path + 'Full Contestent Table for Modelling.csv', sep = ',', index = False)
 
 ### Scaling Data
-normal_variables = pd.read_csv(input_path + 'Normal Variable Comparison Table.csv')
+normal_variables = pd.read_csv(output_path + 'Normal Variable Comparison Table.csv')
 normal_variables = normal_variables[~normal_variables['Normal Variable'].isin(['Episode Wins', 'Episode Losses', 'Team Score per Person', 'Team Score per Task'])]
 
-non_normal_variables = pd.read_csv(input_path + 'Non-Normal Variable Comparison Table.csv')
+non_normal_variables = pd.read_csv(output_path + 'Non-Normal Variable Comparison Table.csv')
 non_normal_variables['Non Normal Variable'] = non_normal_variables['Non Normal Variable'].str.replace("Number Episodes", "Number_Episodes")
 non_normal_variables = non_normal_variables[~non_normal_variables['Non Normal Variable'].isin(['Series Number', 'Seat Num'])]
 

@@ -24,15 +24,6 @@ final_score_positions = pd.read_csv(file_path + 'Total Final Scores and Position
 avg_episode_scores = pd.read_csv(file_path + 'Avg Episode Scores and Positions.csv', encoding="utf-8")
 avg_task_scores = pd.read_csv(file_path + 'Avg Task Scores and Positions.csv', encoding="utf-8")
 
-print(final_score_positions[final_score_positions['Series'] == 'S14'])
-print(Episode_win_loss[Episode_win_loss['Series'] == 'S14'])
-print(count_fives[count_fives['Series'] == 'S14'])
-print(team_B[team_B['Series'] == 'S14'])
-print(gender_age[gender_age['Series'] == 'S14'])
-print(tie_winners[tie_winners['Series'] == 'S14'])
-print(DQ_table[DQ_table['Series'] == 'S14'])
-
-
 tables = {"DQ_table": DQ_table, "Episode_win_loss": Episode_win_loss, "gender_age": gender_age, 
           "count_fives": count_fives, "most_fives": count_ones, "team_A": team_A, "team_B": team_B,
           "tie_losers": tie_losers, "tie_winners": tie_winners, "final_score_positions": final_score_positions, 
