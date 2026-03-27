@@ -148,3 +148,6 @@ total_score_positions_ordered.to_csv(output_path + 'Total Final Scores and Posit
 average_tasks_positions_ordered.to_csv(output_path + 'Avg Task Scores and Positions.csv', index = False, sep = ',')
 average_episode_positions_ordered.to_csv(output_path + 'Avg Episode Scores and Positions.csv', index = False, sep = ',')
 total_scores_all_series.to_csv(output_path + 'Summary Scores and Averages Per Seat.csv', sep = ',', index = False)
+Total_per_series.to_csv(output_path + 'Total Scores for each Series.csv', index = False, sep = ',')
+Total_per_episode.to_csv(output_path + 'Total Scores per Number of Episodes.csv', index = False, sep = ',')
+Total_per_task.to_csv(output_path + 'Total Scores per Number of Tasks.csv', index = False, sep = ',')
