@@ -197,21 +197,45 @@ for series in range(1, 21):
     })
 
 min_max_ratings_df = pd.DataFrame(min_max_ratings)
+min_max_ratings_df['Ratings_Difference'] = min_max_ratings_df['Max_Rating'] - min_max_ratings_df['Min_Rating']
 print(min_max_ratings_df)
 
-fig = plt.figure()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.08, right = 0.95)
-plt.plot(min_max_ratings_df['Series'], min_max_ratings_df['Min_Rating'], 'o-', markersize = 12,
-         color = 'dodgerblue', label = 'Minimum Rating')
-plt.plot(min_max_ratings_df['Series'], min_max_ratings_df['Max_Rating'], 'o-', markersize = 12,
-         color = 'blueviolet', label = 'Maximum Rating')
+fig, (ax1, ax2) = plt.subplots(nrows=2, ncols=1, sharex=True, 
+                               gridspec_kw={'height_ratios': [3, 1]})
 
-plt.xlabel('Series', fontsize = 18)
-plt.ylabel('Rating', fontsize = 18)
-plt.title('Comparing Minimum and Maximum Ratings per Series', fontsize = 22 )
-plt.xticks(fontsize = 14)
-plt.yticks(fontsize = 14)
-plt.legend(fontsize = 16)
+plt.subplots_adjust(wspace=0, hspace=0.1, bottom=0.1, top=0.9, left=0.08, right=0.95)
+
+ax1.plot(min_max_ratings_df['Series'], min_max_ratings_df['Min_Rating'], 'o-',
+         markersize=12, color='dodgerblue', label='Minimum Rating')
+
+ax1.plot(min_max_ratings_df['Series'], min_max_ratings_df['Max_Rating'], 'o-',
+         markersize=12, color='blueviolet', label='Maximum Rating')
+
+for x, y in zip(min_max_ratings_df['Series'], min_max_ratings_df['Min_Rating']):
+    ax1.text(x, y-0.15, f"{y:.1f}", fontsize=12, ha='center', color = 'dodgerblue')
+
+for x, y in zip(min_max_ratings_df['Series'], min_max_ratings_df['Max_Rating']):
+    ax1.text(x, y+0.1, f"{y:.1f}", fontsize=12, ha='center', color = 'blueviolet')
+
+ax2.plot(min_max_ratings_df['Series'], min_max_ratings_df['Ratings_Difference'], 'o-',
+         markersize=12, color='darkred')
+
+for x, y in zip(min_max_ratings_df['Series'], min_max_ratings_df['Ratings_Difference']):
+    ax2.text(x, y+0.1, f"{y:.1f}", fontsize=12, ha='center', color = 'darkred')
+
+ax2.set_xlabel('Series', fontsize=18)
+ax1.set_ylabel('Rating', fontsize=18)
+ax2.set_ylabel('Rating\nDifference', fontsize=14)
+fig.suptitle('Comparing Minimum and Maximum Ratings per Series', fontsize=22)
+
+ax1.tick_params(axis='y', labelsize=14)
+ax2.tick_params(axis='y', labelsize=14)
+ax2.tick_params(axis='x', labelsize=14)
+ax1.set_ylim(6.8, 9.0)
+ax2.set_ylim(-0.1, 1.3)
+
+ax1.legend(fontsize=16)
+
 plt.show()
 
 #Episode Counts with Max and Min Ratings
