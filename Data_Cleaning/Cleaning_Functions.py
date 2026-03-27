@@ -14,34 +14,33 @@ def clean_numerical(file_path, file_name, sheet_name, number_sheets, output_file
             cols = df.columns
 
             df['Tasknumber'] = df['Task Number'].replace('1', 'Prize').replace('S', 'Solo').replace('T', 'Tie Break')
-
+            
             df = df.drop(columns = ["Episode"], axis = 1)
             eps_task = df['Task ID'].str.split('-', expand = True)
+            
             df['Episode'] = eps_task[0]
             df['Episode'] = df['Episode'].str.replace('Episode ', 'Ep')
             df['Series'] = f"S{series}"
 
-            task_type = df['Description'].str.split(":", expand = True)
+            task_type =  df['Description'].str.split(":", expand = True)
 
             df = df.replace('Grand Total', f'Series {series} Grand Total')
             df = df.replace('Season Total', f'Series {series} Total')
-
+            
             df['Team Task'] = np.where(task_type[0] == 'Team', 1, 0)
             df['Prize Task'] = np.where(task_type[0] == 'Prize', 1, 0)
             df['Live Task'] = np.where(task_type[0] == 'Live', 1, 0)
             df['Tie Break'] = np.where(df['Task Number'] == 'T', 1, 0)
             df['Solo Task'] = np.where(df['Description'].str.contains('Solo'), 1, 0)
             df['Extra Part'] = np.where(df['Task Number'].str.contains('Extra'), 1, 0)
-
+            
             df[cols[4:]] = df[cols[4:]].replace('DQ', 0)
             df[cols[4:]] = df[cols[4:]].replace('-', 0)
 
-            # for contestent in cols[4:]:
-            #     df[contestent] = pd.to_numeric(df[contestent], errors='coerce')
-
             df = df.drop(columns = ["Task ID"], axis = 1)
-
-            print(df.head())
+            cols = df.columns
+            df[cols[2:7]] = df[cols[2:7]].apply(pd.to_numeric, errors='coerce')
+            df[cols[10:]] = df[cols[10:]].apply(pd.to_numeric, errors='coerce')
 
             df.to_excel(writer, sheet_name = f'Series_{series}', index = False)
 
@@ -62,7 +61,7 @@ def seat_to_name(file_path, file_name):
         
         clean_table_cols.append(clean_cols)
 
-    new_cols = [f"Seat {i+1}" for i in range(5)]
+    new_cols = [f"Seat Name {i+1}" for i in range(5)]
 
     new_df = pd.DataFrame(clean_table_cols, columns=new_cols)
 
