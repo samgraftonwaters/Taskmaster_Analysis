@@ -119,8 +119,10 @@ def line_plot_episodes_series(episode_x, episode_y, series_x, series_y, series_b
     plt.plot(series_x, series_y, '-o', color = 'blueviolet',
             markersize = 14, lw = 5, label = 'Average per Series')
     plt.vlines(series_boundaries, episode_y.min() - 0.05*episode_y.max(), 
-               episode_y.max() + 0.05*episode_y.max(), color = 'darkgrey', 
-               linestyles='dashed', lw = 3)
+               episode_y.max() + 0.05*episode_y.max(), color = 'lightgrey', 
+               linestyles='dashed', lw = 2)
+    plt.hlines(episode_y.mean(), 0, len(episode_x)+1, lw = 3, color = 'black',
+               linestyles='dashed', label = f'Average = {round(episode_y.mean(), 2)}')
 
     for x, series in zip(series_x, series_number_col):
         plt.text(x-1.5, episode_y.max() + 0.01*episode_y.max(), f"S{series}", fontsize = 14)
