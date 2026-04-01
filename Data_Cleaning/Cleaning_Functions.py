@@ -68,7 +68,3 @@ def seat_to_name(file_path, file_name):
     new_df = new_df.astype(str)
 
     return(new_df)
-
-
-
-

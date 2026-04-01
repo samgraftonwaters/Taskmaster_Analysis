@@ -98,13 +98,16 @@ IF.plot_linegraph_or_barchart(x_data = avg_rating_series['Series'], y_data = avg
                title = 'Sum of Votes per Series', bar_or_line='bar')
 
 IF.plot_linegraph_or_barchart(x_data = avg_rating_series['Series'], y_data = avg_rating_series['Average Votes'],
-               line_colour = 'darkorange', x_label = 'Series', y_label = 'Average Votes', 
+               line_colour = 'dodgerblue', x_label = 'Series', y_label = 'Average Votes', 
                title = 'Average Votes per Series', bar_or_line='bar')
 
 IF.plot_linegraph_or_barchart(x_data = avg_rating_series['Series'], y_data = avg_rating_series['Average Rating Score'],
                line_colour = 'magenta', x_label = 'Series', y_label = 'Average Rating Score', 
                title = 'Average Rating Score per Series', bar_or_line='bar')
 
+IF.plot_linegraph_or_barchart(x_data = avg_rating_series['Series'], y_data = avg_rating_series['Average Rating Ratio'],
+               line_colour = 'dodgerblue', x_label = 'Series', y_label = 'Average Rating Ratio', 
+               title = 'Average Rating Ratio per Series', bar_or_line='bar')
 
 #Comparing Series and Episodes for each variable
 episodes_per_series = imdb_data.groupby('Series')['Episode'].count().tolist()

@@ -30,9 +30,9 @@ def plot_heatmap(data, x_label : str, y_label : str, title : str, min_range : fl
                 linewidths=0.3, linecolor="darkgrey", mask=data.isnull(), cmap= "RdYlGn", 
                 cbar_kws={"label": colourbar_label}, annot_kws={"size": 14})
 
-    plt.title(title, fontsize=18)
-    plt.xlabel(x_label, fontsize = 16)
-    plt.ylabel(y_label, fontsize = 16)
+    plt.title(title, fontsize=20)
+    plt.xlabel(x_label, fontsize = 18)
+    plt.ylabel(y_label, fontsize = 18)
     plt.xticks(fontsize = 14)
     plt.yticks(fontsize = 14)
     plt.tight_layout()
@@ -63,14 +63,20 @@ def plot_linegraph_or_barchart(x_data, y_data, line_colour:str, x_label:str, y_l
     fig = plt.figure()
     plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.08, right = 0.95)
     
-    plt.hlines(y_data.mean(), 0.5, 20.5, lw = 4 ,linestyles='dashed', color = 'black', 
+    plt.hlines(y_data.mean(), 0.5, 20.5, lw = 3 ,linestyles='dashed', color = 'black', 
                label = f'Overall Average = {round(y_data.mean(), 2)}')
 
     if bar_or_line.lower() == 'bar':
         plt.bar(x=x_data, height=y_data, color = line_colour)
 
-        for x, y in zip(x_data, y_data):
-            plt.text(x, y+5, f"{y:.1f}", fontsize=12, ha='center', color = line_colour)
+        if y_data.mean() < 0.5:
+            for x, y in zip(x_data, y_data):
+                plt.text(x, y+0.005, f"{y:.3f}", fontsize=12, ha='center', color = line_colour)
+            plt.ylim(0, 0.075)
+        
+        else:
+            for x, y in zip(x_data, y_data):
+                plt.text(x, y+5, f"{y:.1f}", fontsize=12, ha='center', color = line_colour)
 
     if bar_or_line.lower() == 'line':
         plt.plot(x_data, y_data, '-o', markersize = 35, lw = 3, color = line_colour)
