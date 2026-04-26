@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from Function_Scripts import DQ_Functions as DQF
-import Total_Scores_EDA as TSE
+# import Total_Scores_EDA as TSE
 
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -54,6 +54,8 @@ final_positions_dq = final_positions_dq.rename(columns = {'Score_x' : 'Total Sco
 final_positions_dq['Missed Scores'] = final_positions_dq['Avg_Task_Score'].astype(int) * final_positions_dq['DQ']
 final_positions_dq['Total Missed Scores'] = final_positions_dq['Missed Scores'] + final_positions_dq['Total Score']
 
+print(final_positions_dq)
+
 missed_score_table = final_positions_dq[['Name', 'Series', 'Total Missed Scores']]
 
 #Getting new positions
@@ -73,6 +75,8 @@ new_positions = pd.DataFrame(np.vstack(new_positions), columns = ['Name', 'Serie
 final_positions_dq = pd.merge(final_positions_dq, new_positions.drop(['Series', 'Total Missed Scores'], axis = 1), on = 'Name', how = 'left')
 
 final_positions_dq['Position Difference'] = final_positions_dq['Position'] - final_positions_dq['New Position']
+
+print(final_positions_dq)
 
 #Filtering table to remove rows where no change in position
 dq_change = final_positions_dq[(final_positions_dq['Position Difference'] != 0)]
@@ -154,3 +158,5 @@ ax3.set_xticks(ax2_x_pos)
 plt.show()
 
 dq_table.to_csv(output_path + 'DQ_Table.csv', sep = ',', index = False, encoding="utf-8")
+dq_change.to_csv(output_path + 'DQ_position_changes.csv', sep = ',', index = False, encoding="utf-8")
+final_positions_dq.to_csv(output_path + 'DQ_All_Contestents.csv', sep = ',', index = False, encoding="utf-8")
