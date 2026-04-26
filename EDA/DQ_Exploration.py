@@ -47,7 +47,7 @@ total_tasks = total_tasks.drop(['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5'
 
 tasks_episodes = pd.merge(total_eps, total_tasks, on = 'Series', how = 'left')
 
-final_positions_dq = pd.merge(dq_table.drop('Series', axis = 1), score_merged_table, on = 'Name',  how = 'left')
+final_positions_dq = pd.merge(dq_table.drop(['Series', 'Seat'], axis = 1), score_merged_table, on = 'Name',  how = 'left')
 final_positions_dq = pd.merge(final_positions_dq, tasks_episodes, on = 'Series',  how = 'left')
 final_positions_dq = final_positions_dq.rename(columns = {'Score_x' : 'Total Score', 'Score_y' : 'Avg_Task_Score'})
 
