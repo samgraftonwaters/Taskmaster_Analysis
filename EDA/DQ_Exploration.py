@@ -56,6 +56,16 @@ final_positions_dq['Total Missed Scores'] = final_positions_dq['Missed Scores'] 
 
 print(final_positions_dq)
 
+number_dq_ordered = final_positions_dq[['Name', 'DQ', 'Series', 'Total Score', 'Seat', 'Position']].sort_values('DQ', ascending = False)
+count_dq = number_dq_ordered['DQ'].value_counts().reset_index()
+count_dq.columns = ['DQ', 'Count']
+
+plt.hist(number_dq_ordered['DQ'], color = 'red', bins = 10, edgecolor = 'white')
+plt.show()
+
+plt.bar(count_dq['DQ'], count_dq['Count'], color = 'red', edgecolor = 'white')
+plt.show()
+
 missed_score_table = final_positions_dq[['Name', 'Series', 'Total Missed Scores']]
 
 #Getting new positions
