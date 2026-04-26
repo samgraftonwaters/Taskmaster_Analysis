@@ -166,7 +166,41 @@ def dq_seat_bar(datatable):
     plt.title('Number of Disqualifications in each Seat', fontsize = 20)
     plt.show()
 
+def dq_contestent_count_bar(datatable):
 
+    """
+    Create bar plot for count of the number of disqualifications for each contestent
+
+    Parameters:
+    -----------
+        datatable (dataframe): data table that contains the count for each distrinct number of 
+        disqualificaitons for all contestents 
+
+    """
+
+    fig = plt.figure()
+    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.1, right = 0.95)
+
+    plt.bar(datatable['DQ'], datatable['Count'], color = 'dodgerblue', alpha = 0.7, 
+            edgecolor = 'black', lw = 2)
+
+    for i in datatable['DQ']:
+        plt.text(i, datatable['Count'][i]+1, 
+                datatable['Count'][i], ha='center', fontsize = 18, color = 'dodgerblue')
+
+    plt.xlim(-0.5, 7.5)
+    plt.ylim(0, 30)
+    plt.xticks(fontsize = 14)
+    plt.yticks(fontsize = 14)
+    plt.xlabel('Number of Disqualifications per Contestent', fontsize = 16)
+    plt.ylabel('Count', fontsize = 16)
+    plt.title('Count of Number of Disqualifications per Contestent', fontsize = 20)
+    plt.show()
+
+
+
+
+    
 
 
     

@@ -59,12 +59,11 @@ print(final_positions_dq)
 number_dq_ordered = final_positions_dq[['Name', 'DQ', 'Series', 'Total Score', 'Seat', 'Position']].sort_values('DQ', ascending = False)
 count_dq = number_dq_ordered['DQ'].value_counts().reset_index()
 count_dq.columns = ['DQ', 'Count']
+count_dq = count_dq.sort_values(by = 'DQ', ascending=True).reset_index(drop = True)
 
-plt.hist(number_dq_ordered['DQ'], color = 'red', bins = 10, edgecolor = 'white')
-plt.show()
+print(count_dq)
 
-plt.bar(count_dq['DQ'], count_dq['Count'], color = 'red', edgecolor = 'white')
-plt.show()
+DQF.dq_contestent_count_bar(count_dq)
 
 missed_score_table = final_positions_dq[['Name', 'Series', 'Total Missed Scores']]
 
@@ -89,7 +88,7 @@ final_positions_dq['Position Difference'] = final_positions_dq['Position'] - fin
 print(final_positions_dq)
 
 #Filtering table to remove rows where no change in position
-dq_change = final_positions_dq[(final_positions_dq['Position Difference'] != 0)]
+dq_change = final_positions_dq[(final_positions_dq['Position Difference'] != 0)].reset_index(drop = True)
 
 print(dq_change)
 
