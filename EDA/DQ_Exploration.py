@@ -51,10 +51,10 @@ final_positions_dq = pd.merge(dq_table.drop(['Series', 'Seat'], axis = 1), score
 final_positions_dq = pd.merge(final_positions_dq, tasks_episodes, on = 'Series',  how = 'left')
 final_positions_dq = final_positions_dq.rename(columns = {'Score_x' : 'Total Score', 'Score_y' : 'Avg_Task_Score'})
 
-final_positions_dq['Missed Scores'] = final_positions_dq['Avg_Task_Score'].astype(int) * final_positions_dq['DQ']
+final_positions_dq['Missed Scores'] = round((final_positions_dq['Avg_Task_Score'] * final_positions_dq['DQ']),0)
 final_positions_dq['Total Missed Scores'] = final_positions_dq['Missed Scores'] + final_positions_dq['Total Score']
 
-print(final_positions_dq)
+print(final_positions_dq)#.astype(int)
 
 number_dq_ordered = final_positions_dq[['Name', 'DQ', 'Series', 'Total Score', 'Seat', 'Position']].sort_values('DQ', ascending = False)
 count_dq = number_dq_ordered['DQ'].value_counts().reset_index()
@@ -95,9 +95,8 @@ print(dq_change)
 dq_change = dq_change[~dq_change['Name'].isin(['Frank Skinner', 'Romesh Ranganathan',
                                                       'Desiree Burch', 'Alan Davies'])].reset_index(drop = True)
 
-dq_change_plus = dq_change[(dq_change['Position Difference'] == 1) | (dq_change['Position Difference'] == 2)]
-dq_change_minus = dq_change[(dq_change['Position Difference'] == -1) | (dq_change['Position Difference'] == -2)]
-
+dq_change_plus = dq_change[(dq_change['Position Difference'] == 1) | (dq_change['Position Difference'] == 2)| (dq_change['Position Difference'] == 3)]
+dq_change_minus = dq_change[(dq_change['Position Difference'] == -1) | (dq_change['Position Difference'] == -2)| (dq_change['Position Difference'] == -3)]
 
 ax1_y_pos = [(i // 2) + (0.3 if i % 2 == 0 else 0.71) for i in range(len(dq_change))]
 #[0.3, 0.71, 1.3, 1.71, 2.3, 2.71, 3.3, 3.71, 4.3, 4.71, 5.3, 5.71]
@@ -126,12 +125,12 @@ xgrid = np.arange(xmin, xmax+0.1, 1)
 ax3.vlines(xgrid, ymin=ax3.get_ylim()[0], ymax=ax3.get_ylim()[1],
           colors='lightgray', linestyles='--', linewidth=0.8)
 
-ax3.plot(dq_change_plus['Position'], [0.7 + i for i in range(int(len(dq_change)/2))], #[0.7, 1.7, 2.7, 3.7, 4.7, 5.7], #, 6.7], 
+ax3.plot(dq_change_plus['Position'], [0.7 + i for i in range(int(len(dq_change)/2)+1)], #[0.7, 1.7, 2.7, 3.7, 4.7, 5.7], #, 6.7], 
          'o', markersize = 14, color = 'blue')
 ax3.plot(dq_change_minus['Position'], [0.3 + i for i in range(int(len(dq_change)/2))], #[0.3, 1.3, 2.3, 3.3, 4.3, 5.3],# 6.3], 
          'o', markersize = 14, color = 'blue')
 
-ax3.plot(dq_change_plus['New Position'], [0.7 + i for i in range(int(len(dq_change)/2))], #[0.7, 1.7, 2.7, 3.7, 4.7, 5.7],# 6.7], 
+ax3.plot(dq_change_plus['New Position'], [0.7 + i for i in range(int(len(dq_change)/2)+1)], #[0.7, 1.7, 2.7, 3.7, 4.7, 5.7],# 6.7], 
          '^', markersize = 14, color = 'darkgreen')
 ax3.plot(dq_change_minus['New Position'], [0.3 + i for i in range(int(len(dq_change)/2))], #[0.3, 1.3, 2.3, 3.3, 4.3, 5.3],# 6.3], 
          'v', markersize = 14, color = 'darkred')
