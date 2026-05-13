@@ -68,7 +68,7 @@ def summed_total_scores(dataframe):
         plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.08, right = 0.95)
 
         plt.bar(x = range(1,6), height = dataframe.iloc[[score]].values[0][0:5], 
-           label = 'Number of Wins', width = 0.5, color = bar_colour, alpha = 0.6, edgecolor ='black')
+            width = 0.5, color = bar_colour, alpha = 0.6, edgecolor ='black')
 
         plt.hlines(dataframe.iloc[[score]].values[0][6], 0, 6, lw = 5, linestyle = '--',
             label = f'Average = {dataframe.iloc[[score]].values[0][6]}', 
