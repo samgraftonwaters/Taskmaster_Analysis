@@ -113,8 +113,6 @@ ax2_y_pos = [0.6, 1.22, 1.83, 2.43, 3.05, 3.67, 4.28, 4.88, 5.5, 6.27] #[0.76, 1
 ax2_x_pos = [1, 2, 3, 4, 5]
 
 
-
-
 fig = plt.figure()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.15)
 ax1 = fig.subplots()
@@ -146,8 +144,8 @@ ax3.plot(dq_change_plus['New Position'], ax1_y_pos_up, # [0.7 + i for i in range
 ax3.plot(dq_change_minus['New Position'], ax1_y_pos_down, # [0.3 + i for i in range(int(len(dq_change)/2))], #[0.3, 1.3, 2.3, 3.3, 4.3, 5.3],# 6.3], 
          'v', markersize = 12, color = 'darkred')
 
-ax1.text(42, (int(len(dq_change)/2) + 1), '# DQ', fontsize = 16)
-ax1.text(175, (int(len(dq_change)/2) + 1), 'Position:', fontsize = 16)
+ax1.text(42, (int(len(dq_change)/2) + 1.1), '# DQ', fontsize = 16)
+ax1.text(175, (int(len(dq_change)/2) + 1.1), 'Position:', fontsize = 16)
 
 for y, value in zip(ax1_y_pos, dq_change['DQ']):
        ax1.text(45, y-0.1, str(value), fontsize = 14)
