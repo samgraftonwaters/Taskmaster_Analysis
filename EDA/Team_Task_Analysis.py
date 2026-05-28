@@ -114,7 +114,7 @@ plt.ylim(0, 6.5)
 plt.xticks(np.arange(1, 21, 1), fontsize = 16)
 plt.yticks(fontsize = 16)
 plt.xlabel('Series', fontsize = 20)
-plt.ylabel('Number of Team Tasks', fontsize = 10)
+plt.ylabel('Number of Team Tasks', fontsize = 20)
 plt.title('Number of Team Tasks per Series', fontsize = 22)
 
 plt.show()
