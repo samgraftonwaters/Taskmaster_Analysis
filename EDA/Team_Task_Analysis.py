@@ -72,7 +72,7 @@ team_B_top = team_B.sort_values(by = 'Team_B_per_person_task', ascending = False
 team_B_bottom = team_B.sort_values(by = 'Team_B_per_person_task', ascending = True)
 
 #get top and bottom teams
-team_name_scores = TTF.get_best_worse_teams(team_table = all_teams)
+team_name_scores = TTF.get_best_worse_teams(team_table = all_teams, average_method='team_task')
 print(team_name_scores.head())
 
 team_scores_top = team_name_scores.sort_values('TeamScoresPersonTask')[30:40]
@@ -236,7 +236,7 @@ plt.title('Total Team Scores per Number of Team Members and \n Number of Tasks f
 plt.legend(loc = 'upper left', fontsize = 16, ncol = 2)
 plt.show()
 
-#Top and Bottom 10 teams for all series
+#Top and Bottom 10 teams for all series (per number of members and per number of tasks)
 
 fig, (ax1, ax2) = plt.subplots(ncols=1, nrows=2, sharex = True)
 plt.subplots_adjust(wspace=0, hspace=0.05, bottom=0.1, top=0.94, left=0.02, right=0.98)
@@ -279,6 +279,58 @@ ax1.tick_params(axis='x', labelsize=12)
 ax2.tick_params(axis='x', labelsize=12)
 
 plt.show()
+
+#per number of tasks
+
+team_name_scores = TTF.get_best_worse_teams(team_table = all_teams, average_method='task')
+print(team_name_scores.head())
+
+team_scores_top = team_name_scores.sort_values('TeamScoresTask')[30:40]
+
+team_scores_bottom = team_name_scores.sort_values('TeamScoresTask')[0:10]
+
+fig, (ax1, ax2) = plt.subplots(ncols=1, nrows=2, sharex = True)
+plt.subplots_adjust(wspace=0, hspace=0.05, bottom=0.1, top=0.94, left=0.02, right=0.98)
+
+team_scores_top.plot.barh(y='TeamScoresTask', x='Team Names', ax=ax1, color='red', alpha=0.8, 
+                 edgecolor='white', width=0.9, label='Top Ten Teams')
+
+for i, (score, team, series, tasks) in enumerate(zip(team_scores_top['TeamScoresTask'], team_scores_top['Team Names'],
+                                              team_scores_top['Series'], team_scores_top['Number'])):
+    ax1.text(0.05, i, team, va='center', ha='left', fontsize=12, color='white')
+    ax1.text(-0.85, i, series, va='center', ha='left', fontsize=12, color='black')
+    ax1.text(-0.5, i, tasks, va='center', ha='left', fontsize=12, color='black')
+    ax1.text(-0.2, i, score, va='center', ha='left', fontsize=12, color = 'red')
+    ax1.text(-0.95, 10, 'Series  Number  Score', fontsize = 11, color = 'black')
+
+ax1.set_xlim(-1, 6)
+ax1.set_yticks([])
+ax1.set_ylabel('')
+ax1.legend(fontsize=16)
+
+team_scores_bottom.plot.barh(y='TeamScoresTask', x='Team Names', ax=ax2, color='dodgerblue', alpha=0.7, 
+                    edgecolor='white', width=0.9, label='Bottom 10 Teams')
+
+for i, (score, team, series, tasks) in enumerate(zip(team_scores_bottom['TeamScoresTask'], team_scores_bottom['Team Names'],
+                                                     team_scores_bottom['Series'], team_scores_bottom['Number'])):
+    ax2.text(0.05, i, team, va='center', ha='left',fontsize=12, color='black')
+    ax2.text(-0.85, i, series, va='center', ha='left', fontsize=12, color='black')
+    ax2.text(-0.5, i, tasks, va='center', ha='left', fontsize=12, color='black')
+    ax2.text(-0.2, i, score, va='center', ha='left', fontsize=12, color = 'blue')
+
+ax2.set_xlim(-1, 6)
+ax2.set_xticks([0, 1, 2, 3, 4, 5, 6])
+ax2.set_yticks([]) 
+ax2.legend(loc = 'best', fontsize=16)
+
+fig.suptitle("Top and Bottom 10 Teams Across all Series", fontsize = 20)
+plt.xlabel('Score Per Number of Tasks', fontsize=18)
+plt.ylabel('')
+ax1.tick_params(axis='x', labelsize=12)
+ax2.tick_params(axis='x', labelsize=12)
+
+plt.show()
+
 
 team_A.to_csv(output_path + 'Team A Results.csv', sep = ',', index = False, encoding="utf-8")
 team_B.to_csv(output_path + 'Team B Results.csv', sep = ',', index = False, encoding="utf-8")

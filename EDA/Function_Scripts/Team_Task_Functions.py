@@ -311,7 +311,7 @@ def percent_diff(score_team_A, score_team_B):
 
     return(percent)
 
-def get_best_worse_teams(team_table): 
+def get_best_worse_teams(team_table, average_method): 
 
     """
     First it unpivots the dataframe using "pd.melt()" to get the teams, series and team names in individual columns.
@@ -321,6 +321,7 @@ def get_best_worse_teams(team_table):
     Parameters:
     -----------
         team_table (dataframe): data table containing all team's data
+        average_method (str): whether the average is per tasks, team members or both
 
     Returns:
     --------
@@ -333,7 +334,12 @@ def get_best_worse_teams(team_table):
     team_name_table = team_name_table.rename({'variable' : 'Team'}, axis = 1)
     team_name_table['Team'] = team_name_table['Team'].str.replace('Team ', '').str.replace(' Names', '')
     
-    team_person_task = team_table.melt(id_vars='Series', value_vars=['Team_A_per_person_task', 'Team_B_per_person_task'], value_name='TeamScoresPersonTask').drop('variable', axis=1)
+    if average_method == 'team_task':
+        team_person_task = team_table.melt(id_vars='Series', value_vars=['Team_A_per_person_task', 'Team_B_per_person_task'], value_name='TeamScoresPersonTask').drop('variable', axis=1)
+    if average_method == 'task':
+        team_person_task = team_table.melt(id_vars='Series', value_vars=['Team_A_per_task', 'Team_B_per_task'], value_name='TeamScoresTask').drop('variable', axis=1)
+    if average_method == 'team':
+        team_person_task = team_table.melt(id_vars='Series', value_vars=['Team_A_per_person', 'Team_B_per_person'], value_name='TeamScoresPerson').drop('variable', axis=1)
 
     team_name_scores = pd.concat([team_name_table, team_person_task.drop('Series', axis = 1)], axis = 1)
 
