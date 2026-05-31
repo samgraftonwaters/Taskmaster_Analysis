@@ -297,13 +297,13 @@ team_scores_top.plot.barh(y='TeamScoresTask', x='Team Names', ax=ax1, color='red
 
 for i, (score, team, series, tasks) in enumerate(zip(team_scores_top['TeamScoresTask'], team_scores_top['Team Names'],
                                               team_scores_top['Series'], team_scores_top['Number'])):
-    ax1.text(0.05, i, team, va='center', ha='left', fontsize=12, color='white')
-    ax1.text(-0.85, i, series, va='center', ha='left', fontsize=12, color='black')
-    ax1.text(-0.5, i, tasks, va='center', ha='left', fontsize=12, color='black')
-    ax1.text(-0.2, i, score, va='center', ha='left', fontsize=12, color = 'red')
-    ax1.text(-0.95, 10, 'Series  Number  Score', fontsize = 11, color = 'black')
+    ax1.text(1, i, team, va='center', ha='left', fontsize=12, color='white')
+    ax1.text(-3, i, series, va='center', ha='left', fontsize=12, color='black')
+    ax1.text(-2, i, tasks, va='center', ha='left', fontsize=12, color='black')
+    ax1.text(-1, i, score, va='center', ha='left', fontsize=12, color = 'red')
+    ax1.text(-3.2, 10, 'Series  Number  Score', fontsize = 11, color = 'black')
 
-ax1.set_xlim(-1, 6)
+ax1.set_xlim(-3.4, 17)
 ax1.set_yticks([])
 ax1.set_ylabel('')
 ax1.legend(fontsize=16)
@@ -313,13 +313,14 @@ team_scores_bottom.plot.barh(y='TeamScoresTask', x='Team Names', ax=ax2, color='
 
 for i, (score, team, series, tasks) in enumerate(zip(team_scores_bottom['TeamScoresTask'], team_scores_bottom['Team Names'],
                                                      team_scores_bottom['Series'], team_scores_bottom['Number'])):
-    ax2.text(0.05, i, team, va='center', ha='left',fontsize=12, color='black')
-    ax2.text(-0.85, i, series, va='center', ha='left', fontsize=12, color='black')
-    ax2.text(-0.5, i, tasks, va='center', ha='left', fontsize=12, color='black')
-    ax2.text(-0.2, i, score, va='center', ha='left', fontsize=12, color = 'blue')
+    ax2.text(1, i, team, va='center', ha='left',fontsize=12, color='black')
+    ax2.text(-3, i, series, va='center', ha='left', fontsize=12, color='black')
+    ax2.text(-2, i, tasks, va='center', ha='left', fontsize=12, color='black')
+    ax2.text(-1, i, score, va='center', ha='left', fontsize=12, color = 'blue')
 
-ax2.set_xlim(-1, 6)
-ax2.set_xticks([0, 1, 2, 3, 4, 5, 6])
+ax2.set_xlim(-3.4, 17)
+# ax2.set_xticks([0, 3, 6, 9, 12, 15, 18])
+ax2.set_xticks([0, 2.5, 5, 7.5, 10, 12.5, 15])
 ax2.set_yticks([]) 
 ax2.legend(loc = 'best', fontsize=16)
 

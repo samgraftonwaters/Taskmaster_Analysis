@@ -336,10 +336,13 @@ def get_best_worse_teams(team_table, average_method):
     
     if average_method == 'team_task':
         team_person_task = team_table.melt(id_vars='Series', value_vars=['Team_A_per_person_task', 'Team_B_per_person_task'], value_name='TeamScoresPersonTask').drop('variable', axis=1)
+        sort_col = 'TeamScoresPersonTask'
     if average_method == 'task':
         team_person_task = team_table.melt(id_vars='Series', value_vars=['Team_A_per_task', 'Team_B_per_task'], value_name='TeamScoresTask').drop('variable', axis=1)
+        sort_col = 'TeamScoresTask'
     if average_method == 'team':
         team_person_task = team_table.melt(id_vars='Series', value_vars=['Team_A_per_person', 'Team_B_per_person'], value_name='TeamScoresPerson').drop('variable', axis=1)
+        sort_col = 'TeamScoresPerson'
 
     team_name_scores = pd.concat([team_name_table, team_person_task.drop('Series', axis = 1)], axis = 1)
 
@@ -347,7 +350,7 @@ def get_best_worse_teams(team_table, average_method):
     team_name_scores = pd.merge(team_name_scores, number_tasks, how = 'left', on = 'Series')
 
     team_name_scores['Team Names'] = team_name_scores['Team Names'].apply(lambda x: ', '.join(map(str, x)))
-    team_name_scores = team_name_scores.sort_values(by = 'TeamScoresPersonTask', ascending = False).reset_index(drop = True)
+    team_name_scores = team_name_scores.sort_values(by = sort_col, ascending = False).reset_index(drop = True)
 
     return(team_name_scores)
 
