@@ -129,6 +129,9 @@ seat_losers_totals['Numbers'] = range(1, 6)
 plt.figure()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
 
+# plt.hlines(score_diff['Difference'].mean(), -1, 8, lw = 3, color = 'r', linestyle = '--')
+# plt.text(1, 35, f'{score_diff['Difference'].mean():.0f}', fontsize = 18, color = 'r')
+
 plt.bar(x = score_diff['Series'], height = score_diff['Difference'], width = 0.8,
         color = 'blue', alpha = 0.7, edgecolor = 'black')
 
