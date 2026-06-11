@@ -91,7 +91,7 @@ def gender_count_series_bar(gender_age_table, series_seat : bool, title: str):
             edgecolor = 'black')
     plt.scatter(x[gender_series_plot['Non-Binary'] == 1], 
                gender_series_plot.loc[gender_series_plot['Non-Binary'] == 1, 'Non-Binary'],
-               color='darkorange', marker='D', s=150, label='Non-Binary')
+               color='darkorange', edgecolor = 'darkred', marker='D', s=150, label='Non-Binary')
     
     for i in range(len(gender_series_plot)):
         i = i + 1
@@ -203,7 +203,7 @@ def age_series_stacked_bar(table, series_seat, title):
     print(age_series_plot)
     fig, ax = plt.subplots()
     plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.88, left = 0.08, right = 0.96) 
-    ax = age_series_plot.plot(x=x_axis, kind='bar', stacked=True, width = 0.8, ax = ax)
+    ax = age_series_plot.plot(x=x_axis, kind='bar', edgecolor = 'k', stacked=True, width = 0.8, ax = ax)
 
     for c in ax.containers:
         labels = [f"{int(v.get_height())}"

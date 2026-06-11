@@ -130,16 +130,16 @@ print(episode_age)
 #count/percentage bar charts for wins/losses split by age range or gender
 
 GAF.episode_gender_age_bar(data_table = episode_gender, number_percentage = 'number', gender_age = 'gender', 
-                       bartitle = 'Number of Wins and Losses for all Contestents a split by Gender')
+                       bartitle = 'Number of Episode Wins and Losses for all Contestents a split by Gender')
 
 GAF.episode_gender_age_bar(data_table = episode_gender, number_percentage = 'percentage', gender_age = 'gender', 
-                       bartitle = 'Percentage of Wins and Losses for all Contestents a split by Gender')
+                       bartitle = 'Percentage of Episode Wins and Losses for all Contestents a split by Gender')
 
 GAF.episode_gender_age_bar(data_table = episode_age, number_percentage = 'number', gender_age = 'age', 
-                       bartitle = 'Number of Wins and Losses for all Contestents a split by Age Range')
+                       bartitle = 'Number of Episode Wins and Losses for all Contestents a split by Age Range')
 
 GAF.episode_gender_age_bar(data_table = episode_age, number_percentage = 'percentage', gender_age = 'age', 
-                       bartitle = 'Percentage of Wins and Losses for all Contestents a split by Age Range')
+                       bartitle = 'Percentage of Episode Wins and Losses for all Contestents a split by Age Range')
 
 
 #Chi Squared Analysis
