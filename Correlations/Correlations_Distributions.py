@@ -85,6 +85,8 @@ CF.corr_subplots(data_table = data, corr_table = result_high_corrs_split)
 
 result_medium = CF.set_corr_thresholds(corr_data = grouped_variables, range = True, threshold = [0.4, 0.7])
 
+result_medium = result_medium.sort_values('correlation', ascending= True).reset_index(drop = True)
+
 result_medium_var1 = CF.axis_values_for_variables(data_table = result_medium, variable_column = 'var_1',
                                              axis_column = 'x_axis')
 result_medium_var2 = CF.axis_values_for_variables(data_table = result_medium, variable_column = 'var_2',
