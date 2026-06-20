@@ -46,6 +46,8 @@ grouped_variables = CF.group_corr_variables(correlations = correlations)
 
 result_high = CF.set_corr_thresholds(corr_data = grouped_variables, range = False, threshold = 0.7)
 
+result_high = result_high.sort_values('correlation', ascending= True).reset_index(drop = True)
+
 result_high_var1 = CF.axis_values_for_variables(data_table = result_high, variable_column = 'var_1',
                                              axis_column = 'x_axis')
 result_high_var2 = CF.axis_values_for_variables(data_table = result_high, variable_column = 'var_2',
