@@ -161,6 +161,19 @@ plt.ylabel('Total Score', fontsize = 15)
 plt.legend(loc = 'lower right', ncol = 2, fontsize = 14)
 plt.show()
 
+fig, ax = plt.subplots()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.98, left = 0.1, right = 0.95)
+sns.scatterplot(x = scores['Avg Score Tasks'], y = scores['Score'], 
+                hue = scores['Series'])
+sns.regplot(x = scores['Avg Score Tasks'], y = scores['Score'])
+plt.plot(scores['Avg Score Tasks'], y, color = 'green', lw = 3)
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.xlabel('Average Score per Number of Tasks', fontsize = 15)
+plt.ylabel('Total Score', fontsize = 15)
+plt.legend(loc = 'lower right', ncol = 2, fontsize = 14)
+plt.show()
+
 score_above_115 = scores[scores['Score'] > y][['Score', 'Avg Score Tasks']]
 score_below_115 = scores[scores['Score'] <= y][['Score', 'Avg Score Tasks']]
 
@@ -202,6 +215,20 @@ fig, ax = plt.subplots()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.98, left = 0.1, right = 0.95)
 sns.scatterplot(x = avg_scores['Avg Score Tasks'], y = avg_scores['Avg Score Episodes'], 
                 hue = avg_scores['Position'], size = avg_scores['Seat'])
+sns.regplot(x = avg_scores['Avg Score Tasks'], y = avg_scores['Avg Score Episodes'])
+plt.plot(avg_scores['Avg Score Tasks'], y, color = 'green', lw = 3)
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.xlabel('Average Score per Number of Tasks', fontsize = 15)
+plt.ylabel('Average Score per Number of Episodes', fontsize = 15)
+plt.legend(loc = 'lower right', ncol = 2, fontsize = 14)
+plt.ylim(11, 19.5)
+plt.show()
+
+fig, ax = plt.subplots()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.98, left = 0.1, right = 0.95)
+sns.scatterplot(x = avg_scores['Avg Score Tasks'], y = avg_scores['Avg Score Episodes'], 
+                hue = avg_scores['Series'])
 sns.regplot(x = avg_scores['Avg Score Tasks'], y = avg_scores['Avg Score Episodes'])
 plt.plot(avg_scores['Avg Score Tasks'], y, color = 'green', lw = 3)
 plt.xticks(fontsize = 14)
