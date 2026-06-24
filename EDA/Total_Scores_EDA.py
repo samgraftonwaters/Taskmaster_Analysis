@@ -37,6 +37,14 @@ Total_per_task = EF.total_score_tables(table = Total_per_task, extra_columns=['S
 
 print(Total_per_task)
 
+series_all_totals = pd.concat([Total_per_series[['Series', 'Total']], Total_per_task['Number of Tasks'],
+                               Total_per_episode['Number of Episodes']], axis = 1)
+
+series_all_totals['Total per Number of Episodes'] = Total_per_series['Total'] / Total_per_episode['Number of Episodes']
+series_all_totals['Total per Number of Tasks'] = Total_per_series['Total'] / Total_per_task['Number of Tasks']
+
+print(series_all_totals.head())
+
 #Highest and lowest scores and averages per epsiodes or tasks for each seat
 total_highest_seat = EF.find_highest_seat(value_table = Total_per_series, name_table = named_series_table)
 total_lowest_seat = EF.find_lowest_seat(value_table = Total_per_series, name_table = named_series_table)
