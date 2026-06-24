@@ -94,6 +94,8 @@ result_medium_var2 = CF.axis_values_for_variables(data_table = result_medium, va
 
 result_medium = pd.merge(result_medium, result_medium_var1, on = 'var_1', how = 'left')
 result_medium = pd.merge(result_medium, result_medium_var2, on = 'var_2', how = 'left')
+print('\nHERE')
+print(result_medium)
 
 var1_labels_medium = result_medium['var_1'].str.replace(' ', '\n').str.replace('Percentage', '%').str.replace(' per ', ' ')
 result_medium['var_2'] = result_medium['var_2'].str.replace('Percentage', '%').str.replace(' per ', ' ')
@@ -176,9 +178,9 @@ plt.text(3, 110, round(below_115_corr.loc['Score', 'Avg Score Tasks'], 4), fonts
 plt.text(2.2, 160, round(above_115_corr.loc['Score', 'Avg Score Tasks'], 4), fontsize = 18, color = 'dodgerblue')
 plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
-plt.xlabel('Average Score per Number of Tasks', fontsize = 15)
-plt.ylabel('Total Score', fontsize = 15)
-plt.title('Splitting the Data and Extracting Separate Correlations for \n Total Scores and Average Score per Tasks', fontsize = 16)
+plt.xlabel('Average Score per Number of Tasks', fontsize = 16)
+plt.ylabel('Total Score', fontsize = 16)
+plt.title(' Total Scores vs Average Score per Tasks - Splitting the Data', fontsize = 20)
 plt.show()
 
 #Average Score Tasks vs Average Score Episodes (0.61)
@@ -226,8 +228,8 @@ plt.text(3.1, 16, round(below_corr.loc['Avg Score Tasks', 'Avg Score Episodes'],
 plt.text(2.3, 18, round(above_corr.loc['Avg Score Tasks', 'Avg Score Episodes'], 4), fontsize = 18, color = 'dodgerblue')
 plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
-plt.xlabel('Average Score per Number of Tasks', fontsize = 15)
-plt.ylabel('Average Score per Number of Episodes', fontsize = 15)
-plt.title('Splitting the Data and Extracting Separate Correlations for \n Average Scores per Number of Tasks or Episodes', fontsize = 16)
+plt.xlabel('Average Score per Number of Tasks', fontsize = 16)
+plt.ylabel('Average Score per Number of Episodes', fontsize = 16)
+plt.title('Average Scores per Number of Tasks or Episodes - Splitting the Data', fontsize = 20)
 plt.ylim(11, 19.5)
 plt.show()
