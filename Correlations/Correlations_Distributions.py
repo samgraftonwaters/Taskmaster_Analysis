@@ -146,6 +146,7 @@ c = CF.intercept(y1 = 80, x1 = scores['Avg Score Tasks'].min(), slope = m)
 
 y = (scores['Avg Score Tasks'] * m) + c
 
+print(data[(data['Score'] < 100) & (data['Avg Score Tasks']<3.1)])
 
 fig, ax = plt.subplots()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.98, left = 0.1, right = 0.95)
@@ -194,6 +195,8 @@ m = CF.slope(y1 = 14.5, y2 = 19,
 c = CF.intercept(y1 = 14.5, x1 = 2, slope = m)
 
 y = (avg_scores['Avg Score Tasks'] * m) + c
+
+print(data[(data['Avg Score Episodes'] > 15) & (data['Avg Score Tasks']<2.4)])
 
 fig, ax = plt.subplots()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.98, left = 0.1, right = 0.95)
