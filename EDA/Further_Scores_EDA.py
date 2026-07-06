@@ -397,6 +397,8 @@ plt.show()
 
 count_fives.to_csv(output_path + 'Number of Fives Scored.csv', sep = ',', index = False, encoding="utf-8")
 count_ones.to_csv(output_path + 'Number of Ones Scored.csv', sep = ',', index = False, encoding="utf-8")
+percent_fives.to_csv(output_path + 'Percent of Fives Scored.csv', sep = ',', index = False, encoding="utf-8")
+percent_ones.to_csv(output_path + 'Percent of Ones Scored.csv', sep = ',', index = False, encoding="utf-8")
 least_ones.to_csv(output_path + 'Least_Ones_Table.csv', sep = ',', index = False, encoding="utf-8")
 most_ones.to_csv(output_path + 'Most_Ones_Table.csv', sep = ',', index = False, encoding="utf-8")
 least_fives.to_csv(output_path + 'Least_Fives_Table.csv', sep = ',', index = False, encoding="utf-8")
