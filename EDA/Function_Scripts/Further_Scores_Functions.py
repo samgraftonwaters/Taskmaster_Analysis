@@ -747,3 +747,65 @@ def least_most_points(data_table_most, data_table_least, series_column : str, se
     ax2.set_xlim(0, 21)
     plt.suptitle(plot_title, fontsize = 20)
     plt.show()
+
+
+def least_most_percentage(data_table_most, data_table_least, series_column : str, seat_column : str,
+                      name_column : str, most_column : str, least_column : str, plot_title : str):
+    
+    """
+    Bar chart to display the percentage of most and least times each person scrored a particular point for all tasks
+
+    Parameters:
+    -----------
+        data_table_most (DataFrame): data table that contains the most number of counts for a certain score (e.g. most 5s)
+        data_table_least (DataFrame): data table that contains the least number of counts for a certain score (e.g. least 1s)
+        name_column (str): column that contains contestent names
+        series_column (str): column that contains the series numbers
+        seat_column (str): column that contains each seat
+        most_column (str): column that contains the count for the most number of teams each point was given (e.g. most 1s)
+        least_column (str): column that contains the count for the least number of teams each point was given (e.g. least 5s)
+        plot_title (str): Title of the plot
+    
+    Returns:
+    -------
+        split panel bar charts to show the most and least times each point (e.g. 1s or 5s) was awarded
+        to each contested for each task, presented as a percentage.
+    
+    """
+
+    fig, (ax1, ax2) = plt.subplots(ncols = 1, nrows = 2, sharex = True)
+    plt.subplots_adjust(wspace=0, hspace=0.05, bottom = 0.1, top = 0.94, left = 0.05, right = 0.96)
+
+    sns.barplot(data_table_most, x=most_column, y='index', orient="y", hue = seat_column, legend = False, ax = ax1)
+
+    for i, (score, name, series, seat) in enumerate(zip(data_table_most[most_column], data_table_most[name_column],
+                                                data_table_most[series_column], data_table_most[seat_column])):
+        ax1.text(1, i, name, va='center', ha='left', fontsize=15, color='white')
+        ax1.text(10, i, series, va='center', ha='left', fontsize=15, color='white')
+        ax1.text(14, i, seat, va='center', ha='left', fontsize=15, color = 'white')
+        ax1.text(score+0.1, i, f'{score:.2f}', fontsize = 15, color = 'black')
+        
+    sns.barplot(data_table_least, x=least_column, y="index", orient="y", hue = seat_column, legend = False, ax = ax2)
+
+    for i, (score, name, series, seat) in enumerate(zip(data_table_least[least_column], data_table_least[name_column],
+                                                data_table_least[series_column], data_table_least[seat_column])):
+        ax2.text(17,  i, name, va='center', ha='left', fontsize=15, color='black')
+        ax2.text(26, i, series, va='center', ha='left', fontsize=15, color='black')
+        ax2.text(28, i, seat, va='center', ha='left', fontsize=15, color = 'black')
+        ax2.text(score+0.1, i, f'{score:.2f}', fontsize = 15, color = 'black')
+
+    ax1.text(35, 4, 'Percentage ' + most_column, fontsize = 18, color = 'black')
+    ax2.text(35, 4, 'Percentage ' + least_column, fontsize = 18, color = 'black')
+
+    ax1.set_yticks([],[])
+    ax2.set_yticks([],[])
+    ax1.set_xticks([0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50])
+    ax2.set_xticks([0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50])
+    ax2.tick_params(axis = 'x', labelsize = 14)
+    ax1.set_ylabel('')
+    ax2.set_ylabel('')
+    ax2.set_xlabel('')
+    ax1.set_xlim(0, 45)
+    ax2.set_xlim(0, 45)
+    plt.suptitle(plot_title, fontsize = 20)
+    plt.show()

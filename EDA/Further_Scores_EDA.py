@@ -46,8 +46,8 @@ count_five = pd.concat([count_five, number_tasks['Number of Tasks']], axis = 1)
 
 for i in range(1,6):
     
-    count_one[f'Seat {i} Percent'] = count_one[f'Seat {i}'] / count_one['Number of Tasks']
-    count_five[f'Seat {i} Percent'] = count_five[f'Seat {i}'] / count_five['Number of Tasks']
+    count_one[f'Seat {i} Percent'] = (count_one[f'Seat {i}'] / count_one['Number of Tasks'] ) * 100
+    count_five[f'Seat {i} Percent'] = (count_five[f'Seat {i}'] / count_five['Number of Tasks'] ) * 100
 
 print(count_one)
 print(count_five)
@@ -202,11 +202,11 @@ FSF.least_most_points(data_table_most = most_fives, data_table_least = least_fiv
                 seat_column = 'Seat', name_column = 'Name', most_column = 'Most 5s',
                 least_column = 'Least 5s', plot_title = 'Most and Least Number of 5s Scored Per Seat')
 
-FSF.least_most_points(data_table_most = most_ones_percent, data_table_least = least_ones_percent, series_column = 'Series', 
+FSF.least_most_percentage(data_table_most = most_ones_percent, data_table_least = least_ones_percent, series_column = 'Series', 
                 seat_column = 'Seat', name_column = 'Name', most_column = 'Most 1s',
                 least_column = 'Least 1s', plot_title = 'Percentage for the Most and Least 1s Scored Per Seat')
 
-FSF.least_most_points(data_table_most = most_fives_percent, data_table_least = least_fives_percent, series_column = 'Series', 
+FSF.least_most_percentage(data_table_most = most_fives_percent, data_table_least = least_fives_percent, series_column = 'Series', 
                 seat_column = 'Seat', name_column = 'Name', most_column = 'Most 5s',
                 least_column = 'Least 5s', plot_title = 'Percentage for the Most and Least 5s Scored Per Seat')
 
