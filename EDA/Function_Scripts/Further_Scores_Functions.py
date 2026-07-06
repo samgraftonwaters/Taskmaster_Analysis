@@ -807,5 +807,6 @@ def least_most_percentage(data_table_most, data_table_least, series_column : str
     ax2.set_xlabel('')
     ax1.set_xlim(0, 45)
     ax2.set_xlim(0, 45)
+    ax2.set_xlabel('Percentage', fontsize = 20)
     plt.suptitle(plot_title, fontsize = 20)
     plt.show()

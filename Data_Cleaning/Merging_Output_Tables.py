@@ -89,7 +89,7 @@ gender_age = gender_age.rename(columns = {'Age_at_First_Air' : 'Age'})
 Episode_win_loss = Episode_win_loss.drop(['Series', 'Seat'], axis = 1)
 Episode_win_loss = Episode_win_loss.rename(columns = {'Wins' : 'Episode Wins', 'Losses' : 'Episode Losses', 
                                                       'Percentage_Won' : 'Episode Percentage Wins', 
-                                                      'Percentage_Lost' : 'Episode Percentage Lossses'})
+                                                      'Percentage_Lost' : 'Episode Percentage Losses'})
 
 #Teams tables
 

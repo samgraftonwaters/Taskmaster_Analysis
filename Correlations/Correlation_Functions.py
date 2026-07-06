@@ -217,7 +217,7 @@ def correlation_compare_plot(data_table, xaxis_column : str, yaxis_column : str,
 def corr_subplots(data_table, corr_table):
 
     """
-    Creates a figure with subplots for each variable pair
+    Creates a figure with scatter subplots for each variable pair
 
     Parameters:
     -----------

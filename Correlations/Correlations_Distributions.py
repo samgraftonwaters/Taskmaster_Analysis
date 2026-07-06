@@ -130,7 +130,11 @@ result_medium_corrs_split = result_medium_corrs.iloc[36:48].reset_index(drop = T
 print(result_medium_corrs_split)
 CF.corr_subplots(data_table = data, corr_table = result_medium_corrs_split)
 
-result_medium_corrs_split = result_medium_corrs.iloc[48:].reset_index(drop = True)
+result_medium_corrs_split = result_medium_corrs.iloc[48:60].reset_index(drop = True)
+print(result_medium_corrs_split)
+CF.corr_subplots(data_table = data, corr_table = result_medium_corrs_split)
+
+result_medium_corrs_split = result_medium_corrs.iloc[60:].reset_index(drop = True)
 print(result_medium_corrs_split)
 CF.corr_subplots(data_table = data, corr_table = result_medium_corrs_split)
 
