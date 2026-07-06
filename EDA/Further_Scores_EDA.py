@@ -67,14 +67,29 @@ print(percent_fives)
 
 
 most_ones = FSF.most_least_scores(count_scores = count_one, named_table = named_series_table_reformatted, 
-                                  score = 1, size = 'most')
+                                  score = 1, size = 'most', int_per = 'int')
 least_ones = FSF.most_least_scores(count_scores = count_one, named_table = named_series_table_reformatted, 
-                                   score = 1, size = 'least')
+                                   score = 1, size = 'least', int_per = 'int')
 
 most_fives = FSF.most_least_scores(count_scores = count_five, named_table = named_series_table_reformatted, 
-                                   score = 5, size = 'most')
+                                   score = 5, size = 'most', int_per = 'int')
 least_fives = FSF.most_least_scores(count_scores = count_five, named_table = named_series_table_reformatted, 
-                                    score = 5, size = 'least')
+                                    score = 5, size = 'least', int_per = 'int')
+
+
+
+most_ones_percent = FSF.most_least_scores(count_scores = count_one, named_table = named_series_table_reformatted, 
+                                  score = 1, size = 'most', int_per = 'percent')
+least_ones_percent = FSF.most_least_scores(count_scores = count_one, named_table = named_series_table_reformatted, 
+                                   score = 1, size = 'least', int_per = 'percent')
+
+most_fives_percent = FSF.most_least_scores(count_scores = count_five, named_table = named_series_table_reformatted, 
+                                   score = 5, size = 'most', int_per = 'percent')
+least_fives_percent = FSF.most_least_scores(count_scores = count_five, named_table = named_series_table_reformatted, 
+                                    score = 5, size = 'least', int_per = 'percent')
+
+print(least_ones_percent)
+print(most_fives_percent)
 
 #Highest and lowest episode scores per seat
 
@@ -186,6 +201,15 @@ FSF.least_most_points(data_table_most = most_ones, data_table_least = least_ones
 FSF.least_most_points(data_table_most = most_fives, data_table_least = least_fives, series_column = 'Series', 
                 seat_column = 'Seat', name_column = 'Name', most_column = 'Most 5s',
                 least_column = 'Least 5s', plot_title = 'Most and Least Number of 5s Scored Per Seat')
+
+FSF.least_most_points(data_table_most = most_ones_percent, data_table_least = least_ones_percent, series_column = 'Series', 
+                seat_column = 'Seat', name_column = 'Name', most_column = 'Most 1s',
+                least_column = 'Least 1s', plot_title = 'Percentage for the Most and Least 1s Scored Per Seat')
+
+FSF.least_most_points(data_table_most = most_fives_percent, data_table_least = least_fives_percent, series_column = 'Series', 
+                seat_column = 'Seat', name_column = 'Name', most_column = 'Most 5s',
+                least_column = 'Least 5s', plot_title = 'Percentage for the Most and Least 5s Scored Per Seat')
+
 
 plt.figure()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.05, right = 0.96)

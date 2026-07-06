@@ -78,7 +78,7 @@ def point_counts(datatable, named_table, score_column_name : str, int_per : str)
     return(merged_table)
 
 
-def most_least_scores(count_scores, named_table, score : int, size : str):
+def most_least_scores(count_scores, named_table, score : int, size : str, int_per : str):
 
     """
     Finds the contestents with the most and least number of ones and fives per series. Function merges the 
@@ -91,6 +91,8 @@ def most_least_scores(count_scores, named_table, score : int, size : str):
         score (int): score for a task (e.g. 1 - 5)
         size (string): filter to determine if the most or least number of each score for each seat is selected. 
                     Options are "most" for most number; "leat" for least number
+        int_per (str): defines whether the interger (number of 1s or 5s) or percentage (percent of 1s or 5s)
+                        columns are included in the output table
     
     Return:
     -------
@@ -103,7 +105,11 @@ def most_least_scores(count_scores, named_table, score : int, size : str):
     least = []
     
     for seat in range(1, 6):
-        count = count_scores[['Series', f'Seat {seat}']]
+        if int_per == 'int':
+            count = count_scores[['Series', f'Seat {seat}']]
+        if int_per == 'percent':
+            count = count_scores[['Series', f'Seat {seat} Percent']]
+            count = count.rename({f'Seat {seat} Percent' : f'Seat {seat}'}, axis = 1)
 
         mostcounts = count[count[f'Seat {seat}'] == count[f'Seat {seat}'].max(axis = 0)].reset_index(drop = True)
         mostcounts['Seat'] = f'Seat {seat}'
