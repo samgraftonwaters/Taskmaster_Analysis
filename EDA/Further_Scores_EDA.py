@@ -12,7 +12,9 @@ output_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Ou
 
 scores_series_table = file_path + 'Taskmaster_Series_Scores_Cleaned.xlsx'
 
+
 named_series_table = pd.read_csv(file_path + 'seat_contestent_series_table.csv')
+number_tasks = pd.read_csv(output_path + 'Total Scores per Number of Tasks.csv')
 
 named_series_table_reformatted = named_series_table.melt(id_vars= 'Series', var_name = 'Seat', value_name = 'Name')
 named_series_table_reformatted['Seat'] = named_series_table_reformatted['Seat'].str.replace(' Name', "")
@@ -39,10 +41,30 @@ score_diff = pd.DataFrame(score_diff, columns = ['Difference', 'Series'])
 count_one = FSF.count_scores(dataframe = scores_series_table, score = 1)
 count_five = FSF.count_scores(dataframe = scores_series_table, score = 5)
 
+count_one = pd.concat([count_one, number_tasks['Number of Tasks']], axis = 1)
+count_five = pd.concat([count_five, number_tasks['Number of Tasks']], axis = 1)
+
+for i in range(1,6):
+    
+    count_one[f'Seat {i} Percent'] = count_one[f'Seat {i}'] / count_one['Number of Tasks']
+    count_five[f'Seat {i} Percent'] = count_five[f'Seat {i}'] / count_five['Number of Tasks']
+
+print(count_one)
+print(count_five)
+
 count_fives = FSF.point_counts(datatable = count_five, named_table = named_series_table_reformatted, 
-                           score_column_name = 'Number 5s Scored')
+                           score_column_name = 'Number 5s Scored', int_per = 'int')
 count_ones = FSF.point_counts(datatable = count_one, named_table = named_series_table_reformatted, 
-                           score_column_name = 'Number 1s Scored')
+                           score_column_name = 'Number 1s Scored', int_per = 'int')
+
+percent_fives = FSF.point_counts(datatable = count_five, named_table = named_series_table_reformatted, 
+                           score_column_name = 'Percent 5s Scored', int_per = 'percent')
+percent_ones = FSF.point_counts(datatable = count_one, named_table = named_series_table_reformatted, 
+                           score_column_name = 'Percent 1s Scored', int_per = 'percent')
+
+print(count_fives)
+print(percent_fives)
+
 
 most_ones = FSF.most_least_scores(count_scores = count_one, named_table = named_series_table_reformatted, 
                                   score = 1, size = 'most')

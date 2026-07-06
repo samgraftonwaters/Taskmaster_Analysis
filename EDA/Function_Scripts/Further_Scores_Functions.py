@@ -42,7 +42,7 @@ def count_scores(dataframe, score : int):
 
     return(count)
 
-def point_counts(datatable, named_table, score_column_name : str):
+def point_counts(datatable, named_table, score_column_name : str, int_per : str):
 
     """
     Creates a dataframe that contains the count for certain points per task for all contestents
@@ -53,14 +53,23 @@ def point_counts(datatable, named_table, score_column_name : str):
         named_table (DataFrame): contestent name table
         score_column_name (str): Name of the column that contains the number of times each contestent was 
                                 awarded e.g. 1 or 5 for each task. Example here could be "Number 1s Scored"
-    
+        int_per (str): defines whether the interger (number of 1s or 5s) or percentage (percent of 1s or 5s)
+                        columns are included in the output table
     Returns:
     --------
         DataFrame that contains the following columns: Series, Seat, Name and Score Count    
     """
+    if int_per == 'int':
+        out = datatable.melt(id_vars="Series", value_vars=["Seat 1", "Seat 2", "Seat 3", 
+                                                           "Seat 4", "Seat 5"],
+            var_name="Seat", value_name="Score")
     
-    out = datatable.melt(id_vars="Series", value_vars=["Seat 1", "Seat 2", "Seat 3", "Seat 4", "Seat 5"],
-        var_name="Seat", value_name="Score")
+    if int_per == 'percent':
+        out = datatable.melt(id_vars="Series", value_vars=["Seat 1 Percent", "Seat 2 Percent", 
+                                                           "Seat 3 Percent", "Seat 4 Percent", "Seat 5 Percent"],
+            var_name="Seat", value_name="Score")
+        
+        out['Seat'] = out['Seat'].str.replace(' Percent', '')
     
     merged_table = pd.merge(left = out, right = named_table, 
                                 on = ['Series', 'Seat'], how = 'left')
