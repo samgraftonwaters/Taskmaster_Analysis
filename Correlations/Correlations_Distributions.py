@@ -73,11 +73,11 @@ data.columns = data.columns.str.replace('Percentage', '%').str.replace(' per ', 
 result_high_corrs['var_1'] = result_high_corrs['var_1'].str.replace('Percentage', '%').str.replace(' per ', ' ')
 result_high_corrs['var_2'] = result_high_corrs['var_2'].str.replace('Percentage', '%').str.replace(' per ', ' ')
 
-result_high_corrs_split = result_high_corrs.iloc[:11]
+result_high_corrs_split = result_high_corrs.iloc[:12]
 print(result_high_corrs_split)
 CF.corr_subplots(data_table = data, corr_table = result_high_corrs_split)
 
-result_high_corrs_split = result_high_corrs.iloc[11:].reset_index(drop = True)
+result_high_corrs_split = result_high_corrs.iloc[12:].reset_index(drop = True)
 print(result_high_corrs_split)
 CF.corr_subplots(data_table = data, corr_table = result_high_corrs_split)
 
