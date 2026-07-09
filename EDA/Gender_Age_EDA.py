@@ -62,11 +62,11 @@ print(final_scores_age_gender.head())
 
 #Removed "non-binary" as only one contestent out of 100 who identifies, which makes the maths later more complex
 
-final_scores_age_gender = final_scores_age_gender[final_scores_age_gender['Gender'] != 'Non-Binary']
+final_scores_age_gender_nonbin = final_scores_age_gender[final_scores_age_gender['Gender'] != 'Non-Binary']
 
 #Created gender/age position tables for chi-squared and bias testing
-position_gender_table = final_scores_age_gender[['Position', 'Gender', 'Score']]
-position_age_table = final_scores_age_gender[['Position', 'Age_Ranges', 'Score']]
+position_gender_table = final_scores_age_gender_nonbin[['Position', 'Gender', 'Score']]
+position_age_table = final_scores_age_gender_nonbin[['Position', 'Age_Ranges', 'Score']]
 
 position_gender_count = position_gender_table.groupby(['Gender', 'Position'], observed=True)['Score'].sum().reset_index()
 position_age_count = position_age_table.groupby(['Age_Ranges', 'Position'], observed=True)['Score'].sum().reset_index()
@@ -93,13 +93,13 @@ gender_chi2 = GAF.chi2_test(data_table = position_gender_count, series_episode =
 # if Gender and position were unrelated.
 
 #Carried out bias tests
-grouped_ages = GAF.formatting_table(data_table = final_scores_age_gender)
+grouped_ages = GAF.formatting_table(data_table = final_scores_age_gender_nonbin)
 grouped_ages_model = GAF.model_fitting(data_table = grouped_ages, target_variable = 'Score_Z', 
                   test_variables = ['Gender', 'Age_Ranges'])
 GAF.anova_test(model = grouped_ages_model)
 
 #
-ages = GAF.formatting_table(data_table = final_scores_age_gender)
+ages = GAF.formatting_table(data_table = final_scores_age_gender_nonbin)
 ages_model = GAF.model_fitting(data_table = grouped_ages, target_variable = 'Score_Z', 
                   test_variables = ['Gender', 'age_c'])
 GAF.anova_test(model = ages_model)

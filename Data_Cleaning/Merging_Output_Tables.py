@@ -27,6 +27,9 @@ final_score_positions = pd.read_csv(file_path + 'Total Final Scores and Position
 avg_episode_scores = pd.read_csv(file_path + 'Avg Episode Scores and Positions.csv', encoding="utf-8")
 avg_task_scores = pd.read_csv(file_path + 'Avg Task Scores and Positions.csv', encoding="utf-8")
 
+
+print(Episode_win_loss[Episode_win_loss['Name'] == 'Mae Martin'])
+
 tables = {"DQ_table": DQ_table, "Episode_win_loss": Episode_win_loss, "gender_age": gender_age, 
           "count_fives": count_fives, "most_fives": count_ones, "percent_fives" : percent_fives,
           "percent_ones" : percent_ones, "number_tasks" : number_tasks, "team_A": team_A, 
