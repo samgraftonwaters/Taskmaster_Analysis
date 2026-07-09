@@ -45,8 +45,9 @@ data_merged.to_csv(output_path + 'Full Contestent Table OHE.csv', sep = ',', ind
 
 
 data_modelling_all = data_merged.drop(['Age_Ranges', 'Team', 'Gender', 'Seat', 
-                                   'Team Score per Person', 'Team Score per Task', 'Episode Wins',
-                                   'Episode Losses', 'Series Number', 'First_Air_Date'], axis = 1)
+                                    'Episode Wins', 'Episode Losses', 'First_Air_Date'], axis = 1)
+
+#'Team Score per Person', 'Team Score per Task',
 
 print(data_modelling_all.columns)
 #Removing first 4 as OHE, remving last 5 due to correlation analysis
@@ -90,15 +91,17 @@ data_modelling = data_modelling[['Disqualifications', 'Episode Percentage Losses
                                  'Percent 1s Scored', 'Position', 'Score', 'Tie Break Losses', 
                                  'Tie Break Wins', 'Tie Breaks per series', 'Avg Score per Episodes', 
                                  'Avg Score per Tasks', 'Episode Percentage Wins', 'Number_Episodes', 
-                                 'Number Team Tasks', 'Percent 5s Scored', 'Seat Number', 'Series Number', 
+                                 'Number Team Tasks', 'Percent 5s Scored', 'Series Number', 
                                  'Team Score per Task', 'Team Score per Person']]
 
 data_modelling.columns = data_modelling.columns.str.replace(' ', '_')
 
 variables_scaled = robust_scaling.fit_transform(data_modelling)
 
-data_non_nums = data_modelling.select_dtypes(exclude=[float, int])
+# variables_scaled = pd.DataFrame(variables_scaled)
 
 data_modelling_scaled = pd.concat([data_non_nums, variables_scaled, concat_ohe_data], axis = 1)
+
+print(variables_scaled.head())
 
 data_modelling_scaled.to_csv(output_path + 'Full Contestent Table for Modelling Scaled.csv', sep = ',', index = False)
