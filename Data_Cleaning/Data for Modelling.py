@@ -56,49 +56,26 @@ data_modelling_all.to_csv(output_path + 'Full Contestent Table for Modelling.csv
 
 data_modelling = data_modelling_all.copy()
 
-### Scaling Data
-normal_variables = pd.read_csv(output_path + 'Normal Variable Comparison Table.csv')
-normal_variables = normal_variables[~normal_variables['Normal Variable'].isin(['Episode Wins', 'Episode Losses', 'Team Score per Person', 'Team Score per Task'])]
-
-non_normal_variables = pd.read_csv(output_path + 'Non-Normal Variable Comparison Table.csv')
-non_normal_variables['Non Normal Variable'] = non_normal_variables['Non Normal Variable'].str.replace("Number Episodes", "Number_Episodes")
-non_normal_variables = non_normal_variables[~non_normal_variables['Non Normal Variable'].isin(['Series Number', 'Seat Num'])]
-
-
 standard_scaling = StandardScaler()
 robust_scaling = RobustScaler()
 
-normal_variables_scaled = standard_scaling.fit_transform(data_modelling_all[normal_variables['Normal Variable']])
-non_normal_variables_scaled = robust_scaling.fit_transform(data_modelling_all[non_normal_variables['Non Normal Variable']])
-
-normal_cols = normal_variables['Normal Variable']
-non_normal_cols = non_normal_variables['Non Normal Variable']
-
-normal_variables_scaled = pd.DataFrame(normal_variables_scaled, columns=normal_cols, 
-                                       index=data_modelling_all.index)
-
-non_normal_variables_scaled = pd.DataFrame(non_normal_variables_scaled, columns=non_normal_cols, 
-                                           index=data_modelling_all.index)
-
 data_non_nums = data_modelling_all.select_dtypes(exclude=[float, int])
 
-data_modelling_all_scaled = pd.concat([data_non_nums, non_normal_variables_scaled, 
-                         normal_variables_scaled, concat_ohe_data], axis = 1)
-
-data_modelling_all_scaled.to_csv(output_path + 'Full Contestent Table for Modelling All Scaled.csv', sep = ',', index = False)
 
 data_modelling = data_modelling[['Disqualifications', 'Episode Percentage Losses', 'Number of Tasks', 
-                                 'Percent 1s Scored', 'Position', 'Score', 'Tie Break Losses', 
-                                 'Tie Break Wins', 'Tie Breaks per series', 'Avg Score per Episodes', 
-                                 'Avg Score per Tasks', 'Episode Percentage Wins', 'Number_Episodes', 
-                                 'Number Team Tasks', 'Percent 5s Scored', 'Series Number', 
-                                 'Team Score per Task', 'Team Score per Person']]
+            'Percent 1s Scored', 'Position', 'Score', 'Tie Break Losses', 
+            'Tie Break Wins', 'Tie Breaks per series', 'Avg Score per Episodes', 
+            'Avg Score per Tasks', 'Episode Percentage Wins', 'Number_Episodes', 
+            'Number Team Tasks', 'Percent 5s Scored', 'Series Number', 
+            'Team Score per Task', 'Team Score per Person']]
 
 data_modelling.columns = data_modelling.columns.str.replace(' ', '_')
 
+new_cols = data_modelling.columns
+
 variables_scaled = robust_scaling.fit_transform(data_modelling)
 
-# variables_scaled = pd.DataFrame(variables_scaled)
+variables_scaled = pd.DataFrame(variables_scaled, columns = new_cols)
 
 data_modelling_scaled = pd.concat([data_non_nums, variables_scaled, concat_ohe_data], axis = 1)
 
