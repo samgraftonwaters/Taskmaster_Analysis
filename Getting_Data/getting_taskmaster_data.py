@@ -4,9 +4,10 @@ import scraping_functions as SF
 
 output_filepath = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
 
+
 #Main Series
 with pd.ExcelWriter(output_filepath + 'Taskmaster_Series_Scores.xlsx') as writer:
-    for series in range(1, 21):
+    for series in range(1, 20):
 
         url = f"https://taskmaster.fandom.com/wiki/Series_{series}"
         header = {"Content-Type": "application/json", "User-agent":"Mozilla/5.0"}
@@ -36,6 +37,39 @@ with pd.ExcelWriter(output_filepath + 'Taskmaster_Series_Scores.xlsx') as writer
         df.to_excel(writer, sheet_name = f'Series_{series}', index = False)
 
         time.sleep(5)
+
+single_series = 21
+
+with pd.ExcelWriter(output_filepath + f'Taskmaster_Series_{single_series}_Only_Scores.xlsx') as writer:
+
+    url = f"https://taskmaster.fandom.com/wiki/Series_{single_series}"
+    header = {"Content-Type": "application/json", "User-agent":"Mozilla/5.0"}
+
+    result = SF.scrape_with_requests(url)
+
+    if result == 'error':
+        soup = SF.scrape_with_selenium_imdb(url)
+        print('scrape with selenium')
+    else:
+        soup = result
+        print('scrape with requests')
+
+    table = soup.find('table', class_='tmtable')
+
+    for t in soup.find_all('table'):
+        print(t.get('class'))
+
+    df = SF.extracting_table(table = table)
+    cols = df.columns
+
+    print(' ')
+    print(f'series {single_series}')
+    print(df.head())
+    print(df.info())    
+
+    df.to_excel(writer, sheet_name = f'Series_{series}', index = False)
+
+    time.sleep(5)
 
 #Champion of Champions
 champ_of_champs = ['', '_2', "_3", "_4"]
