@@ -3,7 +3,9 @@ from bs4 import BeautifulSoup
 import time
 from selenium import webdriver #pip install webdriver-manager
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.core.driver_cache import DriverCacheManager
 import undetected_chromedriver as uc
 import pandas as pd
 
@@ -72,9 +74,15 @@ def scrape_with_selenium_data(url):
         Scraped webpage for analysis
     
     """
-    cService = webdriver.ChromeService(executable_path='/usr/local/bin/chromedriver')
-    #pip install -U selenium
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+
+    options = Options()
+    driver = webdriver.Chrome(options=options)
+
+    try:
+        driver.get(url)
+        html = driver.page_source
+    finally:
+        driver.quit()
     driver.get(url)
     html = driver.page_source
     driver.quit()
@@ -95,13 +103,15 @@ def scrape_with_selenium_imdb(url):
     
     """
         
-    driver = uc.Chrome()
-    driver.get(url)
+    options = Options()
+    driver = webdriver.Chrome(options=options)
 
-    time.sleep(5)
-
-    html = driver.page_source
-    driver.quit()
+    try:
+        driver.get(url)
+        time.sleep(5)
+        html = driver.page_source
+    finally:
+        driver.quit()
 
     return BeautifulSoup(html, 'html.parser')
 

@@ -4,7 +4,6 @@ import scraping_functions as SF
 
 output_filepath = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
 
-
 #Main Series
 with pd.ExcelWriter(output_filepath + 'Taskmaster_Series_Scores.xlsx') as writer:
     for series in range(1, 20):
@@ -67,7 +66,7 @@ with pd.ExcelWriter(output_filepath + f'Taskmaster_Series_{single_series}_Only_S
     print(df.head())
     print(df.info())    
 
-    df.to_excel(writer, sheet_name = f'Series_{series}', index = False)
+    df.to_excel(writer, sheet_name = f'Series_{single_series}', index = False)
 
     time.sleep(5)
 
