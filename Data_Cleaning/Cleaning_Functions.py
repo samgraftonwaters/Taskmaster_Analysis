@@ -1,13 +1,29 @@
 import pandas as pd
 import numpy as np
 
-def clean_numerical(file_path, file_name, sheet_name, number_sheets, output_filename):
+def clean_numerical(file_path, file_name, number_sheets, output_filename):
+
+    """
+    Cleans the scraped data for each series.
+
+    Parameters:
+    ----------
+        file_path (str): filepath to the raw data
+        file_name (str): name of Excel file with all Series' data
+        number_sheets (int): number of sheets to iterate over.
+        output_filename (str): name of of the cleaned Excel workbook
+    
+    Returns:
+    --------
+        Excel workbook with each Series' cleaned data on each tab
+    
+    """
 
     with pd.ExcelWriter(file_path + output_filename + '.xlsx') as writer:
     
         for series in range(1,number_sheets+1) if number_sheets > 1 else range(20+number_sheets, 20+number_sheets+1):
 
-            data = pd.read_excel(file_path + file_name + '.xlsx', sheet_name = sheet_name + "_" + str(series))
+            data = pd.read_excel(file_path + file_name + '.xlsx', sheet_name = 'Series_' + str(series))
 
             df = pd.DataFrame(data)
 
@@ -47,6 +63,20 @@ def clean_numerical(file_path, file_name, sheet_name, number_sheets, output_file
 
 
 def seat_to_name(file_path, file_name, number_sheets):
+
+    """
+    Maps each Series' seat number to its respective contestents' name
+
+    Parameters:
+    -----------
+        file_path (str): filepath to the raw data
+        file_name (str): name of Excel file with all Series' data
+        number_sheets (int): number of sheets to iterate over.
+    
+    Returns:
+    --------
+        dataframe with contestants' names (rows) under their respective seat number (columns)
+    """
 
     clean_table_cols = []
     for series in range(1,number_sheets+1) if number_sheets > 1 else range(20+number_sheets, 20+number_sheets+1):
