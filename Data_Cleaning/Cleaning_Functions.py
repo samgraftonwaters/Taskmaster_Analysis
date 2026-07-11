@@ -5,7 +5,7 @@ def clean_numerical(file_path, file_name, sheet_name, number_sheets, output_file
 
     with pd.ExcelWriter(file_path + output_filename + '.xlsx') as writer:
     
-        for series in range(1,number_sheets+1):
+        for series in range(1,number_sheets+1) if number_sheets > 1 else range(20+number_sheets, 20+number_sheets+1):
 
             data = pd.read_excel(file_path + file_name + '.xlsx', sheet_name = sheet_name + "_" + str(series))
 
@@ -44,10 +44,12 @@ def clean_numerical(file_path, file_name, sheet_name, number_sheets, output_file
 
             df.to_excel(writer, sheet_name = f'Series_{series}', index = False)
 
-def seat_to_name(file_path, file_name):
+
+
+def seat_to_name(file_path, file_name, number_sheets):
 
     clean_table_cols = []
-    for series in range(1, 21):
+    for series in range(1,number_sheets+1) if number_sheets > 1 else range(20+number_sheets, 20+number_sheets+1):
 
         dataframe = pd.read_excel(file_path + file_name + '.xlsx', sheet_name = f'Series_{series}')
 

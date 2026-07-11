@@ -7,7 +7,7 @@ file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
 cleaned_data = CF.clean_numerical(file_path = file_path, file_name = 'Taskmaster_Series_Scores', 
                 sheet_name = 'Series', number_sheets = 20, output_filename = 'Taskmaster_Series_Scores_Cleaned')
 
-seat_contestent_table = CF.seat_to_name(file_path = file_path, file_name = 'Taskmaster_Series_Scores_Cleaned')
+seat_contestent_table = CF.seat_to_name(file_path = file_path, number_sheets = 20, file_name = 'Taskmaster_Series_Scores_Cleaned')
 
 seat_contestent_table["Series"] = "S" + (seat_contestent_table.index + 1).astype(str)
     
@@ -21,7 +21,7 @@ seat_contestent_table.to_csv(file_path + 'seat_contestent_series_table.csv', ind
 cleaned_data_series_21 = CF.clean_numerical(file_path = file_path, file_name = 'Taskmaster_Series_21_Only_Scores', 
                 sheet_name = 'Series', number_sheets = 1, output_filename = 'Taskmaster_Series_21_Only_Scores_Cleaned')
 
-seat_contestent_table_series_21 = CF.seat_to_name(file_path = file_path, file_name = 'Taskmaster_Series_21_Only_Scores_Cleaned')
+seat_contestent_table_series_21 = CF.seat_to_name(file_path = file_path, number_sheets = 1, file_name = 'Taskmaster_Series_21_Only_Scores_Cleaned')
 
 seat_contestent_table_series_21["Series"] = "S" + (seat_contestent_table_series_21.index + 1).astype(str)
     
