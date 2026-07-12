@@ -23,7 +23,7 @@ cleaned_data_series_21 = CF.clean_numerical(file_path = file_path, file_name = '
 
 seat_contestent_table_series_21 = CF.seat_to_name(file_path = file_path, number_sheets = 1, file_name = 'Taskmaster_Series_21_Only_Scores_Cleaned')
 
-seat_contestent_table_series_21["Series"] = "S" + (seat_contestent_table_series_21.index + 1).astype(str)
+seat_contestent_table_series_21["Series"] = "S" + (seat_contestent_table_series_21.index + 20).astype(str)
     
 print(seat_contestent_table_series_21)
 

@@ -196,7 +196,7 @@ def find_highest_seat(value_table, name_table):
         maximum = max(value_table[f'Seat {seat}'])
         
         series_max = value_table.loc[value_table[f'Seat {seat}'] == maximum]['Series'].reset_index(drop = True).values[0]
-        
+
         max_table.append([f'Seat {seat}', maximum, series_max])
     
     max_table = pd.DataFrame(max_table, columns = ['Seat Number', 'Max Score', 'Series'])
@@ -206,7 +206,7 @@ def find_highest_seat(value_table, name_table):
     for seat in range(5):
 
         name_max = name_table[name_table['Series'] == max_table['Series'][seat]].reset_index(drop = True)
-       
+
         names_max.append(name_max[[f'Seat Name {seat+1}', 'Series']].values[0])
     
     names_max = pd.DataFrame(names_max, columns = ['Name', 'Series Name'])
