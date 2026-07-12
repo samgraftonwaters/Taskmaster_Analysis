@@ -4,7 +4,7 @@ import Total_Scores_EDA as TSE
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-def count_DQ_all_contestents(file_path:str, table_name:str, number_series:int = 20):
+def count_DQ_all_contestents(file_path:str, table_name:str, number_series:int):
 
     """
     Creates a datatable that contains the number of disqualifications per contestent over all series
@@ -48,7 +48,7 @@ def count_DQ_all_contestents(file_path:str, table_name:str, number_series:int = 
 
     return(dq_df)
 
-def dq_total_per_series(dataframe):
+def dq_total_per_series(dataframe, number_series):
 
     """
     Creates a datatable for number of disqualifications in each series
@@ -57,6 +57,7 @@ def dq_total_per_series(dataframe):
     -----------
         dataframe (dataframe): data table that contains the number of disqualifications for each
                                 contestent and their respective series and seat
+        number_series (int): number of series to iterate over
 
     Returns:
     --------
@@ -64,7 +65,7 @@ def dq_total_per_series(dataframe):
     """
 
     total_dq = []
-    for series in range(1, 21):
+    for series in range(1, number_series + 1):
 
         series_df = dataframe[dataframe['Series'] == f'S{series}']
 

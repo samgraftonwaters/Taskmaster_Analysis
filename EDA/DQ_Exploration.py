@@ -8,6 +8,8 @@ import seaborn as sns
 
 plt.rcParams['figure.figsize'] = (13, 7)
 
+number_of_series = 21
+
 colours = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2',
  '#7f7f7f', '#bcbd22', '#17becf']
 
@@ -19,18 +21,14 @@ series_tables = file_path + 'Taskmaster_Series_Scores.xlsx'
 
 dq_table = DQF.count_DQ_all_contestents(file_path = file_path, 
                                         table_name = 'Taskmaster_Series_Scores.xlsx', 
-                                        number_series = 20)
+                                        number_series = 21)
 
 #Bar charts for number of DQ per series and seats
 dq_sort = dq_table.sort_values(by = 'DQ', ascending=False).reset_index(drop = True)
 
-total_dq_series = DQF.dq_total_per_series(dataframe = dq_table)
+total_dq_series = DQF.dq_total_per_series(dataframe = dq_table, number_series = 21)
 
 total_seat_dq = DQF.dq_total_each_seat(dataframe = dq_table)
-
-DQF.dq_series_bar(datatable = total_dq_series)
-
-DQF.dq_seat_bar(datatable = total_seat_dq)
 
 #Merging Tables
 final_positions = pd.read_csv(output_path + 'Total Final Scores and Positions.csv') 
@@ -63,13 +61,11 @@ count_dq = count_dq.sort_values(by = 'DQ', ascending=True).reset_index(drop = Tr
 
 print(count_dq)
 
-DQF.dq_contestent_count_bar(count_dq)
-
 missed_score_table = final_positions_dq[['Name', 'Series', 'Total Missed Scores']]
 
 #Getting new positions
 new_positions = []
-for series in range(1, 21):
+for series in range(1, number_of_series + 1):
 
     series_df = missed_score_table[missed_score_table['Series'] == f'S{series}']
 
@@ -92,6 +88,7 @@ print(final_positions_dq)
 #Filtering table to remove rows where no change in position
 dq_change = final_positions_dq[(final_positions_dq['Position Difference'] != 0)].reset_index(drop = True)
 
+dq_change = dq_change[dq_change['Series'] != 'S21']
 print(dq_change)
 
 dq_change = dq_change[~dq_change['Name'].isin(['Frank Skinner', 'Romesh Ranganathan',
@@ -99,6 +96,17 @@ dq_change = dq_change[~dq_change['Name'].isin(['Frank Skinner', 'Romesh Ranganat
 
 dq_change_plus = dq_change[(dq_change['Position Difference'] == 1) | (dq_change['Position Difference'] == 2)| (dq_change['Position Difference'] == 3)]
 dq_change_minus = dq_change[(dq_change['Position Difference'] == -1) | (dq_change['Position Difference'] == -2)| (dq_change['Position Difference'] == -3)]
+
+
+#####
+#Plots
+######
+
+DQF.dq_series_bar(datatable = total_dq_series[total_dq_series['Series'] != 'S21'])
+
+DQF.dq_seat_bar(datatable = total_seat_dq)
+
+DQF.dq_contestent_count_bar(count_dq)
 
 print(len(dq_change))
 # ax1_y_pos = 
