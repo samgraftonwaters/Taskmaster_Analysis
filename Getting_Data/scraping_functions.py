@@ -277,3 +277,54 @@ def extracting_table(table):
         df[contestants] = df[contestants].replace(r"(?<=\d)\[\d+\]", " ", regex=True)
 
     return df
+
+def get_main_series_data_scraped(output_filepath, output_filename, start_series_number,
+                                 final_series_number, single_series_number = None):
+    
+    """
+    Scrape the taskmaster data for each requested series.
+
+    Parameters:
+    -----------
+        output_filepath (str): filepath location to save the data to
+        output_filename (str): name of final Excel workbook (excluding '.xlsx')
+        start_series_number (int): series number to start iterating from
+        final_series_number (int); series number to finish iterating to
+        single_series_number (int): single series number to extract data for. Default is None
+
+    Returns:
+    --------
+        Excel workbook with scraped data for each Serises in its own respective sheet
+    """
+    
+    with pd.ExcelWriter(output_filepath + output_filename + '.xlsx') as writer:
+        for series in range(start_series_number, final_series_number) if single_series_number is None else range(single_series_number, single_series_number + 1):
+
+            url = f"https://taskmaster.fandom.com/wiki/Series_{series}"
+            header = {"Content-Type": "application/json", "User-agent":"Mozilla/5.0"}
+
+            result = scrape_with_requests(url)
+
+            if result == 'error':
+                soup = scrape_with_selenium_imdb(url)
+                print('scrape with selenium')
+            else:
+                soup = result
+                print('scrape with requests')
+
+            table = soup.find('table', class_='tmtable')
+
+            for t in soup.find_all('table'):
+                print(t.get('class'))
+
+            df = extracting_table(table = table)
+            cols = df.columns
+
+            print(' ')
+            print(f'series {series}')
+            print(df.head())
+            print(df.info())    
+
+            df.to_excel(writer, sheet_name = f'Series_{series}', index = False)
+
+            time.sleep(5)

@@ -2,73 +2,22 @@ import time
 import pandas as pd
 import scraping_functions as SF
 
+
+single_series_number = 21
+start_series = 1
+final_series = 21
+output_filename_all = 'Taskmaster_Series_Scores'
+output_filename_single = 'Taskmaster_Series_21_Only_Scores'
+
+
 output_filepath = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
 
-#Main Series
-with pd.ExcelWriter(output_filepath + 'Taskmaster_Series_Scores.xlsx') as writer:
-    for series in range(1, 20):
+SF.get_main_series_data_scraped(output_filepath, output_filename = output_filename_all, start_series_number = final_series,
+                                 final_series_number = final_series, single_series_number = None)
 
-        url = f"https://taskmaster.fandom.com/wiki/Series_{series}"
-        header = {"Content-Type": "application/json", "User-agent":"Mozilla/5.0"}
-
-        result = SF.scrape_with_requests(url)
-
-        if result == 'error':
-            soup = SF.scrape_with_selenium_imdb(url)
-            print('scrape with selenium')
-        else:
-            soup = result
-            print('scrape with requests')
-
-        table = soup.find('table', class_='tmtable')
-
-        for t in soup.find_all('table'):
-            print(t.get('class'))
-
-        df = SF.extracting_table(table = table)
-        cols = df.columns
-
-        print(' ')
-        print(f'series {series}')
-        print(df.head())
-        print(df.info())    
-
-        df.to_excel(writer, sheet_name = f'Series_{series}', index = False)
-
-        time.sleep(5)
-
-single_series = 21
-
-with pd.ExcelWriter(output_filepath + f'Taskmaster_Series_{single_series}_Only_Scores.xlsx') as writer:
-
-    url = f"https://taskmaster.fandom.com/wiki/Series_{single_series}"
-    header = {"Content-Type": "application/json", "User-agent":"Mozilla/5.0"}
-
-    result = SF.scrape_with_requests(url)
-
-    if result == 'error':
-        soup = SF.scrape_with_selenium_imdb(url)
-        print('scrape with selenium')
-    else:
-        soup = result
-        print('scrape with requests')
-
-    table = soup.find('table', class_='tmtable')
-
-    for t in soup.find_all('table'):
-        print(t.get('class'))
-
-    df = SF.extracting_table(table = table)
-    cols = df.columns
-
-    print(' ')
-    print(f'series {single_series}')
-    print(df.head())
-    print(df.info())    
-
-    df.to_excel(writer, sheet_name = f'Series_{single_series}', index = False)
-
-    time.sleep(5)
+SF.get_main_series_data_scraped(output_filepath, output_filename = output_filename_single, start_series_number = 21,
+                                 final_series_number = 21, single_series_number = 21)
+        
 
 #Champion of Champions
 champ_of_champs = ['', '_2', "_3", "_4"]
