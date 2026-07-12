@@ -1,7 +1,7 @@
 Series,Least 5s,Seat,Name,index
-S3,4,Seat 3,Paul Chowdhry,1
-S3,4,Seat 5,Sara Pascoe,2
-S1,3,Seat 1,Frank Skinner,3
-S2,3,Seat 1,Doc Brown,4
-S2,3,Seat 2,Joe Wilkinson,5
-S2,3,Seat 4,Katherine Ryan,6
+S3,4.0,Seat 3,Paul Chowdhry,1
+S3,4.0,Seat 5,Sara Pascoe,2
+S1,3.0,Seat 1,Frank Skinner,3
+S2,3.0,Seat 1,Doc Brown,4
+S2,3.0,Seat 2,Joe Wilkinson,5
+S2,3.0,Seat 4,Katherine Ryan,6

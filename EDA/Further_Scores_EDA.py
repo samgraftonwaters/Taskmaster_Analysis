@@ -12,7 +12,6 @@ output_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Ou
 
 scores_series_table = file_path + 'Taskmaster_Series_Scores_Cleaned.xlsx'
 
-
 named_series_table = pd.read_csv(file_path + 'seat_contestent_series_table.csv')
 number_tasks = pd.read_csv(output_path + 'Total Scores per Number of Tasks.csv')
 
@@ -21,7 +20,9 @@ named_series_table_reformatted['Seat'] = named_series_table_reformatted['Seat'].
 
 score_diff = []
 
-for series in range(1, 21):
+number_of_series = 21
+
+for series in range(1, number_of_series + 1):
 
     data = pd.read_excel(scores_series_table, sheet_name = f'Series_{series}')
     cols = data.columns
@@ -38,11 +39,13 @@ score_diff = pd.DataFrame(score_diff, columns = ['Difference', 'Series'])
 #Number of times contestents got e.g. 1 or 5 points.
 #Then finds the most and least for each points category for each seat
 
-count_one = FSF.count_scores(dataframe = scores_series_table, score = 1)
-count_five = FSF.count_scores(dataframe = scores_series_table, score = 5)
+count_one = FSF.count_scores(dataframe = scores_series_table, score = 1, number_series = 21)
+count_five = FSF.count_scores(dataframe = scores_series_table, score = 5, number_series = 21)
 
 count_one = pd.concat([count_one, number_tasks['Number of Tasks']], axis = 1)
 count_five = pd.concat([count_five, number_tasks['Number of Tasks']], axis = 1)
+
+print(count_one)
 
 for i in range(1,6):
     

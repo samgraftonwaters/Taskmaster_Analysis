@@ -13,8 +13,6 @@ team_table = pd.read_csv(file_path+'Teams.csv', encoding="utf-8")
 
 team_table = TTF.formatting_team_table(dataframe = team_table)
 
-TTF.plot_teams(dataframe = team_table)
-
 #Split team tables based off group of 2 (A) or group of three (B)
 team_two = team_table[team_table['Team'] == 'A'].reset_index(drop = True)
 team_three = team_table[team_table['Team'] == 'B'].reset_index(drop = True)
@@ -94,6 +92,11 @@ print(team_combinations_grouped)
 #PLOTS
 #########
 
+team_table = team_table[team_table['Series'] != 'S21']
+team_task_totals = team_task_totals[team_task_totals['Series'] != 'S21']
+
+TTF.plot_teams(dataframe = team_table)
+
 #Number of Team tasks per series
 plt.figure()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.08, right = 0.96)
@@ -118,8 +121,6 @@ plt.ylabel('Number of Team Tasks', fontsize = 20)
 plt.title('Number of Team Tasks per Series', fontsize = 22)
 
 plt.show()
-
-
 
 #Percentage differnce bar charts for four team score methods
 plt.figure()

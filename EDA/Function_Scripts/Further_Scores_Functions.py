@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-def count_scores(dataframe, score : int):
+def count_scores(dataframe, score : int, number_series : int):
 
     """
     Counts the number of times each score (1 - 5) was given for each seat in each series.
@@ -12,6 +12,7 @@ def count_scores(dataframe, score : int):
     -----------
         dataframe (DataFrame): dataframe with all scores per episode and task in all series
         score (int): Number of the score value to be counted
+        number_series (int): number of series to iterate over
 
     Returns:
     --------
@@ -21,7 +22,7 @@ def count_scores(dataframe, score : int):
 
     count_score = []
 
-    for series in range(1, 21):
+    for series in range(1, number_series + 1):
 
         data = pd.read_excel(dataframe, sheet_name = f'Series_{series}')
         cols = data.columns
@@ -36,7 +37,7 @@ def count_scores(dataframe, score : int):
     count = pd.DataFrame(np.vstack(count_score), columns = ['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5'])
 
     series = []
-    for i in range(20):
+    for i in range(number_series):
         series.append(f'S{count.index.values[i] + 1}')
     count['Series'] = series
 

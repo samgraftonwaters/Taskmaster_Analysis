@@ -19,6 +19,7 @@ S17,Seat 1,14.285714285714285,Joanne McNally
 S18,Seat 1,5.357142857142857,Andy Zaltzman
 S19,Seat 1,17.857142857142858,Fatiha El-Ghorri
 S20,Seat 1,16.071428571428573,Ania Magliano
+,Seat 1,,
 S1,Seat 2,17.142857142857142,Josh Widdicombe
 S2,Seat 2,12.5,Joe Wilkinson
 S3,Seat 2,3.4482758620689653,Dave Gorman
@@ -39,6 +40,7 @@ S17,Seat 2,5.357142857142857,John Robins
 S18,Seat 2,10.714285714285714,Babátúndé Aléshé
 S19,Seat 2,21.428571428571427,Jason Mantzoukas
 S20,Seat 2,14.285714285714285,Maisie Adam
+,Seat 2,,
 S1,Seat 3,37.142857142857146,Roisin Conaty
 S2,Seat 3,12.5,Jon Richardson
 S3,Seat 3,24.137931034482758,Paul Chowdhry
@@ -59,6 +61,7 @@ S17,Seat 3,16.071428571428573,Nick Mohammed
 S18,Seat 3,12.5,Emma Sidi
 S19,Seat 3,8.928571428571429,Mathew Baynton
 S20,Seat 3,12.5,Phil Ellis
+,Seat 3,,
 S1,Seat 4,14.285714285714285,Romesh Ranganathan
 S2,Seat 4,6.25,Katherine Ryan
 S3,Seat 4,3.4482758620689653,Rob Beckett
@@ -79,6 +82,7 @@ S17,Seat 4,14.285714285714285,Sophie Willan
 S18,Seat 4,7.142857142857142,Jack Dee
 S19,Seat 4,10.714285714285714,Rosie Ramsey
 S20,Seat 4,14.285714285714285,Reece Shearsmith
+,Seat 4,,
 S1,Seat 5,20.0,Tim Key
 S2,Seat 5,12.5,Richard Osman
 S3,Seat 5,17.24137931034483,Sara Pascoe
@@ -99,3 +103,4 @@ S17,Seat 5,8.928571428571429,Steve Pemberton
 S18,Seat 5,8.928571428571429,Rosie Jones
 S19,Seat 5,12.5,Stevie Martin
 S20,Seat 5,16.071428571428573,Sanjeev Bhaskar
+,Seat 5,,
