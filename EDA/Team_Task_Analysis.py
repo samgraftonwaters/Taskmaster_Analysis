@@ -6,6 +6,8 @@ from Function_Scripts import Team_Task_Functions as TTF
 
 plt.rcParams['figure.figsize'] = (13, 7)
 
+number_of_series = 21
+
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
 output_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
 
@@ -20,14 +22,21 @@ team_three = team_table[team_table['Team'] == 'B'].reset_index(drop = True)
 team_combinations_all_series = TTF.team_combinations(series_grouped = False)
 team_combinations_grouped = TTF.team_combinations(series_grouped = True)
 
+print(team_combinations_all_series)
+
 team_task_totals, all_team_tasks = TTF.team_scores_per_seat(filepath = file_path, 
                                                             filename = 'Taskmaster_Series_Scores_Cleaned.xlsx', 
-                                                            combo_table = team_combinations_all_series)
+                                                            combo_table = team_combinations_all_series,
+                                                            number_of_series = number_of_series)
 
-team_task_totals = TTF.total_team_scores(team_table = team_task_totals)
+print(team_task_totals)
+print(all_team_tasks)
+
+team_task_totals = TTF.total_team_scores(team_table = team_task_totals, number_of_series = number_of_series)
 
 team_task_totals = TTF.include_team_names(team_score_table = team_task_totals, 
-                                           team_two_table = team_two, team_three_table = team_three)
+                                           team_two_table = team_two, team_three_table = team_three,
+                                           number_of_series = number_of_series)
 
 # Determine percentage differences between Team A and Team B in each series
 total_per_diff = TTF.percent_diff(score_team_A = team_task_totals['Team A Total'],
@@ -52,6 +61,8 @@ all_teams = team_task_totals[['Series', 'Number', 'Team A Total', 'Team B Total'
 team_A = team_task_totals[['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Series', 'Number',
        'Team_A', 'Series Number', 'Team A Total', 'Team_A_per_person', 'Team_A_per_task',
        'Team_A_per_person_task', 'Team A Names']]
+
+print(team_A)
 
 team_B = team_task_totals[['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 'Seat 5', 'Series', 'Number',
         'Team_B', 'Series Number', 'Team B Total', 'Team_B_per_person', 'Team_B_per_task',  
@@ -88,6 +99,9 @@ print(count_configs_bottom)
 
 print(team_combinations_grouped)
 
+team_A.to_csv(output_path + 'Team A Results.csv', sep = ',', index = False, encoding="utf-8")
+team_B.to_csv(output_path + 'Team B Results.csv', sep = ',', index = False, encoding="utf-8")
+
 #########
 #PLOTS
 #########
@@ -122,17 +136,19 @@ plt.title('Number of Team Tasks per Series', fontsize = 22)
 
 plt.show()
 
+print(total_per_diff)
+
 #Percentage differnce bar charts for four team score methods
 plt.figure()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.08, right = 0.96)
 
-plt.bar(team_task_totals['Series Number']-0.3, total_per_diff, 
+plt.bar(team_task_totals['Series Number']-0.3, total_per_diff[0:number_of_series-1], 
         width = 0.2, edgecolor = 'black', label = 'Total Team Score')
-plt.bar(team_task_totals['Series Number']-0.1, total_person_diff, 
+plt.bar(team_task_totals['Series Number']-0.1, total_person_diff[0:number_of_series-1], 
         width = 0.2, edgecolor = 'black', label = 'Team Score per Person')
-plt.bar(team_task_totals['Series Number']+0.1, total_task_diff, 
+plt.bar(team_task_totals['Series Number']+0.1, total_task_diff[0:number_of_series-1], 
         width = 0.2, edgecolor = 'black', label = 'Team Score per Task')
-plt.bar(team_task_totals['Series Number']+0.3, total_person_task_diff, 
+plt.bar(team_task_totals['Series Number']+0.3, total_person_task_diff[0:number_of_series-1], 
         width = 0.2, edgecolor = 'black', label = 'Score per Person per Task')
 plt.xlim(0.5, 20.5)
 plt.xticks(np.arange(1, 21, 1), fontsize = 16)
@@ -332,7 +348,3 @@ ax1.tick_params(axis='x', labelsize=12)
 ax2.tick_params(axis='x', labelsize=12)
 
 plt.show()
-
-
-team_A.to_csv(output_path + 'Team A Results.csv', sep = ',', index = False, encoding="utf-8")
-team_B.to_csv(output_path + 'Team B Results.csv', sep = ',', index = False, encoding="utf-8")

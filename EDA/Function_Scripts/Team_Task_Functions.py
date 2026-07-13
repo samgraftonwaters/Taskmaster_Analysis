@@ -117,8 +117,8 @@ def team_combinations(series_grouped = False):
         "Team_A" : [[1, 5], [3, 5], [4, 5], [1, 4], [3, 4], [2, 3], [2, 5], [1, 3], [2, 4], [1, 2]],
         "Team_B" : [[2, 3, 4], [1, 2, 4], [1, 2, 3], [2, 3, 5], [1, 2, 5], [1, 4, 5], [1, 3, 4], [2, 4, 5], 
                     [1, 3, 5], [3, 4, 5]],
-        "Series" : [[1, 10, 12], [2, 17], [3, 14, 16, 18], [4, 6], [5, 11], [7], [8, 19], [9, 13], [20], [15]],
-        "Combos" : [3, 2, 4, 2, 2, 1, 2, 2, 1, 1]
+        "Series" : [[1, 10, 12], [2, 17], [3, 14, 16, 18], [4, 6], [5, 11], [7, 21], [8, 19], [9, 13], [20], [15]],
+        "Combos" : [3, 2, 4, 2, 2, 2, 2, 2, 1, 1]
         }
 
         team_combos = pd.DataFrame(combo_table)
@@ -129,18 +129,18 @@ def team_combinations(series_grouped = False):
         
         combo_table = {
             "Team_A" : [[1, 5], [1, 5], [1, 5], [3, 5], [3, 5], [4, 5], [4, 5], [4, 5], [4, 5], [1, 4], [1, 4],
-                        [3, 4], [3, 4], [2, 3], [2, 5], [2, 5], [1, 3], [1, 3], [2, 4], [1, 2]],
+                        [3, 4], [3, 4], [2, 3], [2, 5], [2, 5], [1, 3], [1, 3], [2, 4], [1, 2], [2,3]],
             "Team_B" : [[2, 3, 4], [2, 3, 4], [2, 3, 4], [1, 2, 4], [1, 2, 4], [1, 2, 3], [1, 2, 3], [1, 2, 3], 
                         [1, 2, 3], [2, 3, 5], [2, 3, 5], [1, 2, 5], [1, 2, 5], [1, 4, 5], [1, 3, 4], [1, 3, 4], 
-                        [2, 4, 5], [2, 4, 5], [1, 3, 5], [3, 4, 5]],
-            "Series Number" : [1, 10, 12, 2, 17, 3, 14, 16, 18, 4, 6, 5, 11, 7, 8, 19, 9, 13, 20, 15],
+                        [2, 4, 5], [2, 4, 5], [1, 3, 5], [3, 4, 5], [1, 4, 5]],
+            "Series Number" : [1, 10, 12, 2, 17, 3, 14, 16, 18, 4, 6, 5, 11, 7, 8, 19, 9, 13, 20, 15, 21],
         }
 
         team_combos = pd.DataFrame(combo_table).sort_values(by = 'Series Number').reset_index(drop = True)
 
         return(team_combos)
 
-def team_scores_per_seat(filepath:str, filename:str, combo_table):
+def team_scores_per_seat(filepath:str, filename:str, combo_table, number_of_series : int):
 
     """
     Determine the total scores for each seat based on team tasks only. i.e. only scores obtained from team tasks
@@ -151,6 +151,7 @@ def team_scores_per_seat(filepath:str, filename:str, combo_table):
         filepath (string): path to the directory where the data is saved
         filename (string): name of the file that contains the data
         combo_table (dataframe): table with different team seat combinations for each series separately
+        number_of_series (int): number of series to iterate over
 
     Returns:
         team_task_totals (dataframe): contains seat scores for all team tasks per series summed as well as the 
@@ -164,7 +165,7 @@ def team_scores_per_seat(filepath:str, filename:str, combo_table):
     team_task_totals = []
     team_tasks_series = []
 
-    for series in range(1, 21):
+    for series in range(1, number_of_series+1):
 
         data = pd.read_excel(filepath + filename, sheet_name = f'Series_{series}')
         
@@ -203,7 +204,7 @@ def team_scores_per_seat(filepath:str, filename:str, combo_table):
 
     return(team_task_totals, all_team_tasks)
 
-def total_team_scores(team_table):
+def total_team_scores(team_table, number_of_series):
 
     """
     Calculates the total scores, scores per number of tasks, scores per number of people per team and scores per
@@ -213,7 +214,7 @@ def total_team_scores(team_table):
     -----------
         team_table (dataframe): dataframe that contains the total scores for each seat from team tasks only.
                                 table obtained from the team_scores_per_seat() function above.
-    
+        number_of_series (int): number of series to iterate over
     Returns:
     --------
     Input table with new columns that contain Total scores and ratios based off number of tasks and people per team
@@ -222,7 +223,7 @@ def total_team_scores(team_table):
 
     A_total = []
     B_total = []
-    for series in range(0, 20):
+    for series in range(0, number_of_series):
 
         a1 = team_table['Team_A'][series][0]
         a2 = team_table['Team_A'][series][1]
@@ -249,10 +250,12 @@ def total_team_scores(team_table):
     team_table['Team_A_per_person_task'] = round(team_table['Team_A_per_person'] / team_table['Number'], 1)
     team_table['Team_B_per_person_task'] = round(team_table['Team_B_per_person'] / team_table['Number'], 1)
 
+    print('HERE')
+    print(team_table)
     return(team_table)
 
 
-def include_team_names(team_score_table, team_two_table, team_three_table):
+def include_team_names(team_score_table, team_two_table, team_three_table, number_of_series : int):
 
     """
     Obtains the names from the team of two and team of three separately, before merging the values with the
@@ -263,6 +266,7 @@ def include_team_names(team_score_table, team_two_table, team_three_table):
         team_score_table (dataframe): table that contains the total team scores for each series
         team_two_table (dataframe): table that contains only team of two members to obtain the names
         team_three_table (dataframe): table that contains only team of three members to obtain the names
+        number_of_series (int): number of series to iterate over
 
     Returns:
     --------
@@ -272,7 +276,7 @@ def include_team_names(team_score_table, team_two_table, team_three_table):
     team_A_names = []
     team_B_names = []
 
-    for series in range(1, 21):
+    for series in range(1, number_of_series+1):
 
         names_A = team_two_table[team_two_table['Series Number'] == series]['Name'].to_list()
 
