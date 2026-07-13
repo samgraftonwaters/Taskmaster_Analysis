@@ -80,10 +80,11 @@ tie_breaks['Tie Breaks per series'] = tie_breaks[['Tie breaks per series wins', 
 tie_breaks = tie_breaks.drop(['Tie Breaks per Person wins', 'Tie Breaks per Person losses', 
                               'Tie breaks per series wins', 'Tie breaks per series losses'], axis = 1)
 tie_breaks = tie_breaks.rename(columns = {'Wins' : 'Tie Break Wins', 'Losses' : 'Tie Break Losses'})
-
+print(tie_breaks.tail())
 #Removing columns from DQ, Gender/Age and Episode columns
 
 DQ_table = DQ_table.drop(['Series', 'Seat'], axis = 1)
+print(DQ_table.tail())
 gender_age = gender_age.drop(['Series', 'Score', 'Seat', 'Position', 'Birth_Date', 'Age_at_First_Air'], axis = 1)
 gender_age = gender_age.rename(columns = {'Age_at_First_Air' : 'Age'})
 Episode_win_loss = Episode_win_loss.drop(['Series', 'Seat'], axis = 1)
@@ -120,12 +121,14 @@ print(gender_age.head())
 print(Episode_win_loss.head())
 print(team_tasks.head())
 
-dq_tie = pd.merge(left = tie_breaks, right = DQ_table, on = 'Name', how = 'left')
+
 score_points = pd.merge(left = merged_scores_table, right = count_fives_ones, on = 'Name', how = 'left')
 score_points = pd.merge(left = score_points, right = percent_fives_ones, on = 'Name', how = 'left')
+dq_score_points = pd.merge(left = score_points, right = DQ_table, on = 'Name', how = 'left')
+# dq_score_tie = pd.merge(left = dq_score_points, right = tie_breaks, on = 'Name', how = 'left')
 gender_age_eps = pd.merge(left = gender_age, right = Episode_win_loss, on = 'Name', how = 'left')
 
-merged_contestent_table = pd.merge(left = score_points, right = dq_tie, on = 'Name', how = 'left')
+merged_contestent_table = pd.merge(left = dq_score_points, right = tie_breaks, on = 'Name', how = 'left')
 merged_contestent_table = pd.merge(left = merged_contestent_table, right = gender_age_eps, on = 'Name', how = 'left')
 merged_contestent_table = pd.merge(left = merged_contestent_table, right = team_tasks, on = 'Name', how = 'left')
 

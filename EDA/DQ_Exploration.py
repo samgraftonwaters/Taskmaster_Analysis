@@ -98,6 +98,10 @@ dq_change_plus = dq_change[(dq_change['Position Difference'] == 1) | (dq_change[
 dq_change_minus = dq_change[(dq_change['Position Difference'] == -1) | (dq_change['Position Difference'] == -2)| (dq_change['Position Difference'] == -3)]
 
 
+dq_table.to_csv(output_path + 'DQ_Table.csv', sep = ',', index = False, encoding="utf-8")
+dq_change.to_csv(output_path + 'DQ_position_changes.csv', sep = ',', index = False, encoding="utf-8")
+final_positions_dq.to_csv(output_path + 'DQ_All_Contestents.csv', sep = ',', index = False, encoding="utf-8")
+
 #####
 #Plots
 ######
@@ -181,7 +185,3 @@ ax3.set_xlim(-25, 6)
 ax3.set_xticks(ax2_x_pos)
 
 plt.show()
-
-dq_table.to_csv(output_path + 'DQ_Table.csv', sep = ',', index = False, encoding="utf-8")
-dq_change.to_csv(output_path + 'DQ_position_changes.csv', sep = ',', index = False, encoding="utf-8")
-final_positions_dq.to_csv(output_path + 'DQ_All_Contestents.csv', sep = ',', index = False, encoding="utf-8")
