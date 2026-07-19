@@ -32,6 +32,12 @@ age_table = gender_age_table[['Name', 'Series Number', 'Age_at_First_Air']]
 
 age_binned_table = GAF.setting_age_bins(table = age_table)
 
+print('\n Merging Tables \n')
+#Merge gender, age and total score tables together
+
+final_scores_age_gender = GAF.merge_series_age_gender(series_table = final_scores, gender_table = gender_age_table, 
+                        age_table = age_binned_table)
+
 age_range_counts = GAF.age_range_metrics(table = age_binned_table)
 
 age_series = GAF.age_group_series(table = age_binned_table)
@@ -39,10 +45,7 @@ age_series = GAF.age_group_series(table = age_binned_table)
 GAF.age_series_stacked_bar(table = age_series, series_seat = 'Series', 
                            title = 'Number of Age Ranges for each Contestent per Series')
 
-print('\n Merging Tables \n')
-#Merge gender, age and total score tables together
-final_scores_age_gender = GAF.merge_series_age_gender(series_table = final_scores, gender_table = gender_age_table, 
-                        age_table = age_binned_table)
+
 
 #Count number of gender and age groups per seat
 print('\n Seat Analysis \n')
