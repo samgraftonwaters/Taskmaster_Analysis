@@ -36,7 +36,7 @@ def calculate_conf_matrix(y_test, y_pred):
 
     return(conf_matrix_values)
 
-def plot_confusion_matrix(model_matrix, tick_labels, title : str):
+def plot_confusion_matrix(model_matrix, tick_labels, title : str, save_plot = False):
 
     """
    Plots the confidence matrix of a classfication model
@@ -46,33 +46,36 @@ def plot_confusion_matrix(model_matrix, tick_labels, title : str):
         model_matrix: confusion matrix calculated from previous function. 
         tick_labels: names of the classes
         title (str): Title of confusion matrix
+        save_plot (boolean): Set to save the plot. Default is False
     
     Returns:
     --------
         Returns the confusion matrix plot of the classification model. 
     """
+    if save_plot == True:
+        fig, ax = plt.subplots()
+        plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.05, top = 0.85, left = 0.1, right = 0.95)
 
-    fig, ax = plt.subplots()
-    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.05, top = 0.85, left = 0.1, right = 0.95)
+        sns.heatmap(
+            model_matrix, annot=True, fmt="d", cmap="coolwarm", xticklabels=tick_labels,
+            yticklabels=tick_labels, annot_kws={"size": 16}, cbar_kws={"shrink": 1.0},
+            linewidths=1, linecolor="black")
 
-    sns.heatmap(
-        model_matrix, annot=True, fmt="d", cmap="coolwarm", xticklabels=tick_labels,
-        yticklabels=tick_labels, annot_kws={"size": 16}, cbar_kws={"shrink": 1.0},
-        linewidths=1, linecolor="black")
+        ax.xaxis.tick_top()
+        ax.xaxis.set_label_position('top')
 
-    ax.xaxis.tick_top()
-    ax.xaxis.set_label_position('top')
+        cbar = ax.collections[0].colorbar
+        cbar.ax.tick_params(labelsize=14)
 
-    cbar = ax.collections[0].colorbar
-    cbar.ax.tick_params(labelsize=14)
-
-    plt.xlabel('Predicted', fontsize = 16)
-    plt.ylabel('True', fontsize = 16)
-    plt.title(title, fontsize = 20)
-    plt.xticks(fontsize=14)
-    plt.yticks(fontsize=14)
-
-    plt.show()
+        plt.xlabel('Predicted', fontsize = 16)
+        plt.ylabel('True', fontsize = 16)
+        plt.title(title, fontsize = 20)
+        plt.xticks(fontsize=14)
+        plt.yticks(fontsize=14)
+        
+        plt.show()
+    else:
+        None
 
 def determine_best_threshold(y, y_probs):
 
@@ -144,7 +147,7 @@ def return_model_metrics(y_true, y_pred):
 
     return(precision, recall, f1)
 
-def plot_ROC_curve(y_true, y_scores, title):
+def plot_ROC_curve(y_true, y_scores, title, save_plot = False):
 
     """
     Plots an ROC curve for the given classification model
@@ -154,6 +157,7 @@ def plot_ROC_curve(y_true, y_scores, title):
         y_true: actual y values from the train_test_split
         y_scores: predicted y-values using the X_test values and new threshold
         title (str): title of the plot
+        save_plot (boolean): Set to save the plot. Default is False
     
     Returns:
     --------
@@ -165,21 +169,23 @@ def plot_ROC_curve(y_true, y_scores, title):
 
     AUC_score = roc_auc_score(y_true, y_scores)
 
-    fig, ax = plt.subplots()
-    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.1, right = 0.95)
+    if save_plot == True:
+        fig, ax = plt.subplots()
+        plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.1, right = 0.95)
 
-    plt.plot(fpr, tpr, color='firebrick', lw = 3, label="ROC curve area: {:.3f}".format(AUC_score))
-    plt.plot([0, 1], [0, 1], color='dodgerblue', linestyle='--', lw = 3, label="Expected Random Model")
-    plt.title(title, fontsize = 20)
-    plt.legend(loc="best", fontsize = 18)
-    plt.xlabel('False Positive Rate', fontsize = 16)
-    plt.ylabel('True Positive Rate', fontsize = 16)
-    plt.xticks(fontsize = 14)
-    plt.yticks(fontsize = 14)
-    plt.show()
+        plt.plot(fpr, tpr, color='firebrick', lw = 3, label="ROC curve area: {:.3f}".format(AUC_score))
+        plt.plot([0, 1], [0, 1], color='dodgerblue', linestyle='--', lw = 3, label="Expected Random Model")
+        plt.title(title, fontsize = 20)
+        plt.legend(loc="best", fontsize = 18)
+        plt.xlabel('False Positive Rate', fontsize = 16)
+        plt.ylabel('True Positive Rate', fontsize = 16)
+        plt.xticks(fontsize = 14)
+        plt.yticks(fontsize = 14)
+        plt.show()
     return(AUC_score)
 
-def plot_precision_recall_curve(y_true, y_prob_scores, title, model_precision, model_recall):
+def plot_precision_recall_curve(y_true, y_prob_scores, title, model_precision, model_recall, 
+                                save_plot = False):
 
     """
     Plots a precision-recall curve for the given classification model
@@ -191,6 +197,7 @@ def plot_precision_recall_curve(y_true, y_prob_scores, title, model_precision, m
         title (str): title of the plot
         model_precision (float): the precision score of the model
         model_recall (float): the recall score of the model
+        save_plot (boolean): Set to save the plot. Default is False
     
     Returns:
     --------
@@ -202,16 +209,18 @@ def plot_precision_recall_curve(y_true, y_prob_scores, title, model_precision, m
 
     AUC_score = auc(recall, precision)
 
-    fig, ax = plt.subplots()
-    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.1, right = 0.95)
+    if save_plot == True:
 
-    plt.plot(recall, precision, color='dodgerblue', lw = 3, label="PR AUC: {:.3f}".format(AUC_score))
-    plt.plot(model_recall, model_precision, 'o', color='firebrick', markersize = 16, label="Model Precision-Recall")
-    plt.title(title, fontsize = 20)
-    plt.legend(loc="best", fontsize = 18)
-    plt.xlabel('Recall', fontsize = 16)
-    plt.ylabel('Precision', fontsize = 16)
-    plt.xticks(fontsize = 14)
-    plt.yticks(fontsize = 14)
-    plt.show()
+        fig, ax = plt.subplots()
+        plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.1, right = 0.95)
+
+        plt.plot(recall, precision, color='dodgerblue', lw = 3, label="PR AUC: {:.3f}".format(AUC_score))
+        plt.plot(model_recall, model_precision, 'o', color='firebrick', markersize = 16, label="Model Precision-Recall")
+        plt.title(title, fontsize = 20)
+        plt.legend(loc="best", fontsize = 18)
+        plt.xlabel('Recall', fontsize = 16)
+        plt.ylabel('Precision', fontsize = 16)
+        plt.xticks(fontsize = 14)
+        plt.yticks(fontsize = 14)
+        plt.show()
     return(AUC_score)

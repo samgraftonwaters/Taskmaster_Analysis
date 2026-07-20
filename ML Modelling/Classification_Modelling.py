@@ -11,12 +11,19 @@ warnings.filterwarnings("ignore", category=ConvergenceWarning)
 
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
 data = CF.pd.read_csv(file_path + 'Full Contestent Table for Modelling Scaled.csv')
-
 print(data.head())
 
-data = data[['Series', 'Name', 'Position', 'Number_Episodes', 'Team_A', 'Team_B', 'Age_Ranges_20 - 29', 
+########
+#To Change
+
+final_table_file_name = "Classification Modelling Table.csv"
+columns = ['Series', 'Name', 'Position', 'Number_Episodes', 'Team_A', 'Team_B', 'Age_Ranges_20 - 29', 
                    'Age_Ranges_30 - 39', 'Age_Ranges_40 - 49', 'Age_Ranges_50 - 59', 
-                   'Age_Ranges_60 - 69', 'Gender_Female', 'Gender_Male']]
+                   'Age_Ranges_60 - 69', 'Gender_Female', 'Gender_Male']
+
+######
+
+data = data[columns]
                 #    'Seat_Seat 1', 'Seat_Seat 2', 'Seat_Seat 3', 'Seat_Seat 4', 'Seat_Seat 5'
 
 
@@ -174,7 +181,7 @@ for model, model_name, parameters_to_search in zip(classification_models, model_
     conf_matrix = CF.calculate_conf_matrix(y_test = y_test, y_pred = y_test_pred)
 
     CF.plot_confusion_matrix(model_matrix = conf_matrix, tick_labels = tick_labels,
-                            title = f'{model_name} Model Confusion Matrix')
+                            title = f'{model_name} Model Confusion Matrix', save_plot = False)
 
     classif_report = CF.classification_report(y_test, y_test_pred, target_names=tick_labels,
                                             labels=labels)
@@ -188,12 +195,13 @@ for model, model_name, parameters_to_search in zip(classification_models, model_
     F1_Score.append(f1)
 
     roc_auc = CF.plot_ROC_curve(y_true = y_test, y_scores = y_test_pred, 
-                      title = f'{model_name} Model ROC Curve')
+                      title = f'{model_name} Model ROC Curve', save_plot = False)
 
     pr_auc = CF.plot_precision_recall_curve(y_true = y_test, y_prob_scores = y_test_probs, 
                                 title = f'{model_name} Model Precision Recall Curve',
                                 model_precision = CF.precision_score(y_test, y_test_pred), 
-                                model_recall = CF.recall_score(y_test, y_test_pred))
+                                model_recall = CF.recall_score(y_test, y_test_pred),
+                                save_plot = False)
     
     ROC_AUC.append(roc_auc)
     Precision_Recall_AUC.append(pr_auc)
@@ -214,7 +222,7 @@ model_table = CF.pd.DataFrame({
 print(model_table)
 print(model_table.info())
 
-model_table.to_csv(file_path + "Classification Modelling Table.csv", sep = ',', index = False)
+model_table.to_csv(file_path + final_table_file_name, sep = ',', index = False)
 
 # best_model = model_table[model_table['F1 Score'].max()]
 
@@ -230,7 +238,29 @@ best_classification_model.set_params(**best_model_table['Best Hyperparameters'])
 
 best_classification_model.fit(X_train, y_train)
 
+y_test_probs = best_classification_model.predict_proba(X_test)[:, 1]
+y_test_pred = (y_test_probs >= best_model_table['Threshold']).astype(int)
+
+conf_matrix = CF.calculate_conf_matrix(y_test = y_test, y_pred = y_test_pred)
+
+precision, recall, f1 = CF.return_model_metrics(y_true = y_test, y_pred = y_test_pred)
+
+CF.plot_confusion_matrix(model_matrix = conf_matrix, tick_labels = tick_labels,
+                        title = f'{best_model_table['Model Name']} Model Confusion Matrix', save_plot = True)
+
+CF.plot_ROC_curve(y_true = y_test, y_scores = y_test_pred, 
+                    title = f'{best_model_table['Model Name']} Model ROC Curve', save_plot = True)
+
+CF.plot_precision_recall_curve(y_true = y_test, y_prob_scores = y_test_probs, 
+                            title = f'{best_model_table['Model Name']} Model Precision Recall Curve',
+                            model_precision = CF.precision_score(y_test, y_test_pred), 
+                            model_recall = CF.recall_score(y_test, y_test_pred),
+                            save_plot = True)
+
 # series_21_contestents = CF.pd.read_csv('/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Series 21 Predictions Table.csv')
+###
+# Predictions with Series 21
+####
 
 print(series_21_contestents.columns)
 
