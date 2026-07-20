@@ -80,5 +80,6 @@ variables_scaled = pd.DataFrame(variables_scaled, columns = new_cols)
 data_modelling_scaled = pd.concat([data_non_nums, variables_scaled, concat_ohe_data], axis = 1)
 
 print(data_modelling_scaled.head())
+print(data_modelling_scaled.tail())
 
 data_modelling_scaled.to_csv(output_path + 'Full Contestent Table for Modelling Scaled.csv', sep = ',', index = False)
