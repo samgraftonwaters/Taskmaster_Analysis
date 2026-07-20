@@ -10,7 +10,7 @@ warnings.filterwarnings("ignore", category=UserWarning,
 warnings.filterwarnings("ignore", category=ConvergenceWarning)
 
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
-data = CF.pd.read_csv(file_path + 'Full Contestent Table for Modelling.csv')
+data = CF.pd.read_csv(file_path + 'Full Contestent Table for Modelling Scaled.csv')
 
 print(data.head())
 
@@ -20,7 +20,9 @@ data = data[['Series', 'Name', 'Position', 'Number_Episodes', 'Team_A', 'Team_B'
                 #    'Seat_Seat 1', 'Seat_Seat 2', 'Seat_Seat 3', 'Seat_Seat 4', 'Seat_Seat 5'
 
 
-series_21_contestents = data[data['Series'] == 'S21']
+series_21_contestents = data[data['Series'] == 'S21'].reset_index(drop = True)
+series_21_contestents_names = series_21_contestents[['Name']]
+
 series_21_contestents = series_21_contestents[['Number_Episodes', 'Team_A', 'Team_B', 
                                                'Age_Ranges_20 - 29', 'Age_Ranges_30 - 39', 
                                                'Age_Ranges_40 - 49', 'Age_Ranges_50 - 59', 
@@ -122,6 +124,13 @@ classification_models = [CF.LogisticRegression(class_weight="balanced"), CF.Bern
           CF.LinearSVC(class_weight = 'balanced'),  CF.SVC(class_weight = 'balanced', probability=True),
           CF.NuSVC(class_weight = 'balanced', probability=True),
           CF.DecisionTreeClassifier(class_weight = 'balanced')]
+
+
+if (data.select_dtypes(include="number") < 0).any().any() == True:
+    del hyperparameters[2]
+    del model_names[2]
+    del classification_models[2]
+    print(model_names)
 
 Best_Params = []
 Threshold = []
@@ -233,6 +242,8 @@ y_predict_pred = (y_predict_probs >= best_model_table['Threshold']).astype(int)
 
 print(y_predict_probs)
 print(y_predict_pred)
+
+series_21_contestents = CF.pd.concat([series_21_contestents, series_21_contestents_names], axis = 1)
 
 series_21_contestents['Prediction'] = y_predict_pred
 
