@@ -1,5 +1,13 @@
 from Function_Scripts import Classification_Functions as CF
+import warnings
+from sklearn.exceptions import ConvergenceWarning
 
+warnings.filterwarnings("ignore", category=FutureWarning, module=r"sklearn")
+
+warnings.filterwarnings("ignore", category=UserWarning,
+                          module=r"sklearn\.linear_model\._logistic")
+
+warnings.filterwarnings("ignore", category=ConvergenceWarning)
 
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
 data = CF.pd.read_csv(file_path + 'Full Contestent Table for Modelling.csv')
@@ -8,8 +16,20 @@ print(data.head())
 
 data = data[['Series', 'Name', 'Position', 'Number_Episodes', 'Team_A', 'Team_B', 'Age_Ranges_20 - 29', 
                    'Age_Ranges_30 - 39', 'Age_Ranges_40 - 49', 'Age_Ranges_50 - 59', 
-                   'Age_Ranges_60 - 69', 'Gender_Female', 'Gender_Male', 
-                   'Seat_Seat 1', 'Seat_Seat 2', 'Seat_Seat 3', 'Seat_Seat 4', 'Seat_Seat 5']]
+                   'Age_Ranges_60 - 69', 'Gender_Female', 'Gender_Male']]
+                #    'Seat_Seat 1', 'Seat_Seat 2', 'Seat_Seat 3', 'Seat_Seat 4', 'Seat_Seat 5'
+
+
+series_21_contestents = data[data['Series'] == 'S21']
+series_21_contestents = series_21_contestents[['Number_Episodes', 'Team_A', 'Team_B', 
+                                               'Age_Ranges_20 - 29', 'Age_Ranges_30 - 39', 
+                                               'Age_Ranges_40 - 49', 'Age_Ranges_50 - 59', 
+                                                'Age_Ranges_60 - 69', 'Gender_Female', 
+                                                'Gender_Male']]
+
+print(series_21_contestents)
+
+data = data[data['Series'] != 'S21']
 
 data['Winner'] = CF.np.where(data['Position'] == 1, 1, 0)
 
@@ -18,9 +38,10 @@ print(data.head())
 model_data = data[['Number_Episodes', 'Team_A', 'Team_B', 'Age_Ranges_20 - 29', 
                    'Age_Ranges_30 - 39', 'Age_Ranges_40 - 49', 'Age_Ranges_50 - 59', 
                    'Age_Ranges_60 - 69', 'Gender_Female', 'Gender_Male',
-                   'Seat_Seat 1', 'Seat_Seat 2', 'Seat_Seat 3', 'Seat_Seat 4', 'Seat_Seat 5', 
+                #    'Seat_Seat 1', 'Seat_Seat 2', 'Seat_Seat 3', 'Seat_Seat 4', 'Seat_Seat 5', 
                    'Winner']]
 
+print(model_data)
 X = model_data.iloc[:,:-1]
 y = model_data['Winner']
 
@@ -200,9 +221,12 @@ best_classification_model.set_params(**best_model_table['Best Hyperparameters'])
 
 best_classification_model.fit(X_train, y_train)
 
-series_21_contestents = CF.pd.read_csv('/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Series 21 Predictions Table.csv')
+# series_21_contestents = CF.pd.read_csv('/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Series 21 Predictions Table.csv')
 
-predict_data = series_21_contestents.iloc[:, 2:]
+print(series_21_contestents.columns)
+
+predict_data = series_21_contestents#.iloc[:, 2:]
+print(predict_data)
 
 y_predict_probs = best_classification_model.predict_proba(predict_data)[:, 1]
 y_predict_pred = (y_predict_probs >= best_model_table['Threshold']).astype(int)

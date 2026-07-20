@@ -1,8 +1,8 @@
 Model Name,Classification Model,Best Hyperparameters,Threshold,F1 Score,precision,Recall,ROC AUC,Precision Recall AUC
-Logistic Regression,LogisticRegression(class_weight='balanced'),"{'C': 10, 'penalty': 'l2', 'solver': 'saga', 'tol': 0.1}",0.48999999999999977,0.36,0.25,0.67,0.6568627450980391,0.23148148148148148
-Bernoulli NB,BernoulliNB(),{'alpha': 2},0.12,0.4,0.25,1.0,0.7352941176470589,0.20833333333333331
-Multinomial NB,MultinomialNB(),{'alpha': 0.001},0.13999999999999999,0.29,0.18,0.67,0.5686274509803921,0.19300144300144298
-SVM Linear,LinearSVC(class_weight='balanced'),"{'C': 1, 'loss': 'squared_hinge', 'penalty': 'l2', 'tol': 1}",0.1,0.26,0.15,1.0,0.5,0.43421855921855923
-SVC,"SVC(class_weight='balanced', probability=True)","{'C': 1, 'gamma': 'scale', 'kernel': 'poly', 'tol': 1}",0.1,0.22,0.13,0.67,0.45098039215686275,0.10003112356053531
-NuSVC,"NuSVC(class_weight='balanced', probability=True)","{'gamma': 'scale', 'kernel': 'poly', 'nu': 0.2, 'tol': 0.1}",0.18999999999999995,0.27,0.16,1.0,0.5294117647058824,0.12310834590246356
-Decision Tree,DecisionTreeClassifier(class_weight='balanced'),"{'criterion': 'entropy', 'max_features': 'sqrt', 'splitter': 'random'}",0.1,0.6,0.43,1.0,0.8823529411764706,0.45476190476190476
+Logistic Regression,LogisticRegression(class_weight='balanced'),"{'C': 1, 'penalty': 'l2', 'solver': 'newton-cg', 'tol': 0.01}",0.13,0.33,0.2,1.0,0.5,0.2839285714285714
+Bernoulli NB,BernoulliNB(),{'alpha': 0.001},0.12,0.53,0.36,1.0,0.78125,0.28214285714285714
+Multinomial NB,MultinomialNB(),{'alpha': 0.001},0.19999999999999996,0.53,0.36,1.0,0.78125,0.2925595238095238
+SVM Linear,LinearSVC(class_weight='balanced'),"{'C': 1, 'loss': 'hinge', 'penalty': 'l2', 'tol': 0.0001}",0.1,0.33,0.2,1.0,0.5,0.2183712121212121
+SVC,"SVC(class_weight='balanced', probability=True)","{'C': 100, 'gamma': 'scale', 'kernel': 'rbf', 'tol': 1}",0.1,0.33,0.2,1.0,0.5,0.15020503393665158
+NuSVC,"NuSVC(class_weight='balanced', probability=True)","{'gamma': 'auto', 'kernel': 'rbf', 'nu': 0.2, 'tol': 1}",0.18999999999999995,0.18,0.14,0.25,0.4375,0.2073051948051948
+Decision Tree,DecisionTreeClassifier(class_weight='balanced'),"{'criterion': 'gini', 'max_features': 'sqrt', 'splitter': 'random'}",0.5699999999999997,0.43,0.3,0.75,0.65625,0.196875
