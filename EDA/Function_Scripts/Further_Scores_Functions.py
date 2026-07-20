@@ -192,7 +192,7 @@ def high_low_ep_scores(data_table, named_table, direction : str):
         return(lowest_ep_scores)
 
 
-def episode_tie_scores(data_table):
+def episode_tie_scores(data_table, number_series : int):
 
     """
     Function to determine final episode scores and to account for tie breaks in each series. 
@@ -200,7 +200,7 @@ def episode_tie_scores(data_table):
     Parameter:
     ---------
         data_table (DataFrame): dataframe with all scores per episode and task in all series
-
+        number_series (int): number of series to iterate over
     Returns:
     --------
         episode_scores (DataFrame): dataframe that contains all final episode scores for each series (takes into
@@ -214,7 +214,7 @@ def episode_tie_scores(data_table):
     tie_break_scores = []
     before_tie_total = []
 
-    for series in range(1, 21):
+    for series in range(1, number_series + 1):
 
         data = pd.read_excel(data_table, sheet_name = f'Series_{series}')
 

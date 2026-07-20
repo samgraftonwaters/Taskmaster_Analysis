@@ -1,19 +1,19 @@
 Series,Seat,Losses,Percentage_Lost,Number_Episodes,Name
-S5,Seat 5,0,0.0,8,Sally Phillips
-S3,Seat 2,0,0.0,5,Dave Gorman
-S5,Seat 3,0,0.0,8,Mark Watson
-S8,Seat 3,0,0.0,10,Lou Sanders
-S9,Seat 2,0,0.0,10,Ed Gamble
-S15,Seat 1,0,0.0,10,Frankie Boyle
-S1,Seat 4,0,0.0,6,Romesh Ranganathan
-S14,Seat 1,0,0.0,10,Dara Ó Briain
-S2,Seat 4,0,0.0,5,Katherine Ryan
-S17,Seat 2,0,0.0,10,John Robins
-S2,Seat 1,0,0.0,5,Doc Brown
-S3,Seat 4,0,0.0,5,Rob Beckett
-S6,Seat 5,0,0.0,10,Tim Vine
-S1,Seat 2,0,0.0,6,Josh Widdicombe
-S15,Seat 5,0,0.0,10,Mae Martin
-S16,Seat 3,0,0.0,10,Sam Campbell
 S12,Seat 1,0,0.0,10,Alan Davies
 S19,Seat 3,0,0.0,10,Mathew Baynton
+S2,Seat 1,0,0.0,5,Doc Brown
+S2,Seat 4,0,0.0,5,Katherine Ryan
+S1,Seat 2,0,0.0,6,Josh Widdicombe
+S1,Seat 4,0,0.0,6,Romesh Ranganathan
+S3,Seat 4,0,0.0,5,Rob Beckett
+S5,Seat 3,0,0.0,8,Mark Watson
+S3,Seat 2,0,0.0,5,Dave Gorman
+S15,Seat 1,0,0.0,10,Frankie Boyle
+S5,Seat 5,0,0.0,8,Sally Phillips
+S6,Seat 5,0,0.0,10,Tim Vine
+S17,Seat 2,0,0.0,10,John Robins
+S16,Seat 3,0,0.0,10,Sam Campbell
+S8,Seat 3,0,0.0,10,Lou Sanders
+S15,Seat 5,0,0.0,10,Mae Martin
+S9,Seat 2,0,0.0,10,Ed Gamble
+S14,Seat 1,0,0.0,10,Dara Ó Briain

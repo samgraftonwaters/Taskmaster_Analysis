@@ -68,7 +68,6 @@ percent_ones = FSF.point_counts(datatable = count_one, named_table = named_serie
 print(count_fives)
 print(percent_fives)
 
-
 most_ones = FSF.most_least_scores(count_scores = count_one, named_table = named_series_table_reformatted, 
                                   score = 1, size = 'most', int_per = 'int')
 least_ones = FSF.most_least_scores(count_scores = count_one, named_table = named_series_table_reformatted, 
@@ -78,8 +77,7 @@ most_fives = FSF.most_least_scores(count_scores = count_five, named_table = name
                                    score = 5, size = 'most', int_per = 'int')
 least_fives = FSF.most_least_scores(count_scores = count_five, named_table = named_series_table_reformatted, 
                                     score = 5, size = 'least', int_per = 'int')
-
-
+print(most_fives)
 
 most_ones_percent = FSF.most_least_scores(count_scores = count_one, named_table = named_series_table_reformatted, 
                                   score = 1, size = 'most', int_per = 'percent')
@@ -96,7 +94,7 @@ print(most_fives_percent)
 
 #Highest and lowest episode scores per seat
 
-episode_scores, tie_break_scores, before_tie_total = FSF.episode_tie_scores(data_table = scores_series_table)
+episode_scores, tie_break_scores, before_tie_total = FSF.episode_tie_scores(data_table = scores_series_table, number_series = 21)
 
 lowest_ep_scores = FSF.high_low_ep_scores(data_table = episode_scores, named_table = named_series_table_reformatted, 
                        direction = 'lowest')
@@ -108,6 +106,7 @@ highest_ep_scores = FSF.high_low_ep_scores(data_table = episode_scores, named_ta
 
 episode_win_lose_results = FSF.episodes_win_lose(episode_scores_table = episode_scores,
                                                  named_table = named_series_table_reformatted)
+print(episode_win_lose_results)
 
 most_eps_won_num = episode_win_lose_results[['Series', 'Seat', "Wins", 'Percentage_Won', 'Number_Episodes', 'Name']].sort_values(by = 'Wins', ascending = False).reset_index(drop = True)
 
