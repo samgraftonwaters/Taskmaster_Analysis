@@ -11,6 +11,7 @@ warnings.filterwarnings("ignore", category=ConvergenceWarning)
 
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
 data = CF.pd.read_csv(file_path + 'Full Contestent Table for Modelling.csv')
+# 'Full Contestent Table for Modelling Scaled.csv'
 print(data.head())
 
 ########

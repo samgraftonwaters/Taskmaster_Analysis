@@ -49,6 +49,20 @@ data_modelling_all = data_merged.drop(['Age_Ranges', 'Team', 'Gender', 'Seat',
 
 #'Team Score per Person', 'Team Score per Task',
 
+data_modelling_all = data_modelling_all[['Series', 'Name', 'Position', 'Score', 
+                                         'Disqualifications', 'Episode Percentage Losses',
+                                         'Number of Tasks', 'Percent 1s Scored', 'Tie Break Losses', 
+            'Tie Break Wins', 'Tie Breaks per series', 'Avg Score per Episodes', 
+            'Avg Score per Tasks', 'Episode Percentage Wins', 'Number_Episodes', 
+            'Number Team Tasks', 'Percent 5s Scored', 'Series Number', 
+            'Team Score per Task', 'Team Score per Person', 'Team_A', 'Team_B', 'Age_Ranges_20 - 29',
+       'Age_Ranges_30 - 39', 'Age_Ranges_40 - 49', 'Age_Ranges_50 - 59',
+       'Age_Ranges_60 - 69', 'Gender_Female', 'Gender_Male',
+       'Gender_Non-Binary', 'Seat_Seat 1', 'Seat_Seat 2', 'Seat_Seat 3',
+       'Seat_Seat 4', 'Seat_Seat 5']]
+
+data_modelling_all.columns = data_modelling_all.columns.str.replace(' ', '_').str.replace('_-_', '-')
+
 print(data_modelling_all.columns)
 #Removing first 4 as OHE, remving last 5 due to correlation analysis
 
@@ -59,17 +73,16 @@ data_modelling = data_modelling_all.copy()
 standard_scaling = StandardScaler()
 robust_scaling = RobustScaler()
 
-data_non_nums = data_modelling_all.select_dtypes(exclude=[float, int])
+data_non_nums = data_modelling.select_dtypes(exclude=[float, int])
+print(data_modelling.columns)
+data_modelling = data_modelling[['Position', 'Score', 'Disqualifications', 'Episode_Percentage_Losses',
+                                 'Number_of_Tasks', 'Percent_1s_Scored', 'Tie_Break_Losses', 
+                                 'Tie_Break_Wins', 'Tie_Breaks_per_series', 'Avg_Score_per_Episodes', 
+                                 'Avg_Score_per_Tasks', 'Episode_Percentage_Wins', 'Number_Episodes', 
+                                 'Number_Team_Tasks', 'Percent_5s_Scored', 'Series_Number', 
+                                 'Team_Score_per_Task', 'Team_Score_per_Person']]#.select_dtypes(include=[float, int])
 
-
-data_modelling = data_modelling[['Disqualifications', 'Episode Percentage Losses', 'Number of Tasks', 
-            'Percent 1s Scored', 'Position', 'Score', 'Tie Break Losses', 
-            'Tie Break Wins', 'Tie Breaks per series', 'Avg Score per Episodes', 
-            'Avg Score per Tasks', 'Episode Percentage Wins', 'Number_Episodes', 
-            'Number Team Tasks', 'Percent 5s Scored', 'Series Number', 
-            'Team Score per Task', 'Team Score per Person']]
-
-data_modelling.columns = data_modelling.columns.str.replace(' ', '_')
+print(data_modelling.columns)
 
 new_cols = data_modelling.columns
 
@@ -78,8 +91,9 @@ variables_scaled = robust_scaling.fit_transform(data_modelling)
 variables_scaled = pd.DataFrame(variables_scaled, columns = new_cols)
 
 data_modelling_scaled = pd.concat([data_non_nums, variables_scaled, concat_ohe_data], axis = 1)
-
+# data_modelling_scaled = pd.concat([data_non_nums, variables_scaled,], axis = 1)
 print(data_modelling_scaled.head())
 print(data_modelling_scaled.tail())
+print(data_modelling_scaled.columns)
 
 data_modelling_scaled.to_csv(output_path + 'Full Contestent Table for Modelling Scaled.csv', sep = ',', index = False)
