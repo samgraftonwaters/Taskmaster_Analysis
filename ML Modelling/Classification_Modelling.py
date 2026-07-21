@@ -10,49 +10,59 @@ warnings.filterwarnings("ignore", category=UserWarning,
 warnings.filterwarnings("ignore", category=ConvergenceWarning)
 
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
-data = CF.pd.read_csv(file_path + 'Full Contestent Table for Modelling.csv')
+data = CF.pd.read_csv(file_path + 'Full Contestent Table for Modelling Scaled.csv')
 # 'Full Contestent Table for Modelling Scaled.csv'
 print(data.head())
+
+name_series_cols = ['Name', 'Series', 'Position', 'Score']
 
 ########
 #To Change
 
 final_table_file_name = "Classification Modelling Table.csv"
 
-columns = ['Series', 'Name', 'Position', 'Number_Episodes', 'Team_A', 'Team_B', 
+model_columns = ['Number_Episodes', 'Team_A', 'Team_B', 
            'Age_Ranges_20 - 29', 'Age_Ranges_30 - 39', 'Age_Ranges_40 - 49', 
            'Age_Ranges_50 - 59', 'Age_Ranges_60 - 69', 'Gender_Female', 'Gender_Male',
            'Seat_Seat 1', 'Seat_Seat 2', 'Seat_Seat 3', 'Seat_Seat 4', 'Seat_Seat 5']
 
+# model_columns = ['Disqualifications',
+#        'Episode_Percentage_Losses', 'Number_of_Tasks', 'Percent_1s_Scored',
+#        'Tie_Break_Losses', 'Tie_Break_Wins', 'Tie_Breaks_per_series',
+#        'Avg_Score_per_Episodes', 'Avg_Score_per_Tasks',
+#        'Episode_Percentage_Wins', 'Number_Episodes', 'Number_Team_Tasks',
+#        'Percent_5s_Scored', 'Series_Number', 'Team_Score_per_Task',
+#        'Team_Score_per_Person', 'Team_A', 'Team_B', 'Age_Ranges_20 - 29',
+#        'Age_Ranges_30 - 39', 'Age_Ranges_40 - 49', 'Age_Ranges_50 - 59',
+#        'Age_Ranges_60 - 69', 'Gender_Female', 'Gender_Male',
+#        'Gender_Non-Binary', 'Seat_Seat 1', 'Seat_Seat 2', 'Seat_Seat 3',
+#        'Seat_Seat 4', 'Seat_Seat 5']
 ######
 
-data = data[columns]
 
 
 series_21_contestents = data[data['Series'] == 'S21'].reset_index(drop = True)
-series_21_contestents_names = series_21_contestents[['Name']]
+series_21_contestents_names_series = series_21_contestents[name_series_cols]
 
-series_21_contestents = series_21_contestents[['Number_Episodes', 'Team_A', 'Team_B', 
-                                               'Age_Ranges_20 - 29', 'Age_Ranges_30 - 39', 
-                                               'Age_Ranges_40 - 49', 'Age_Ranges_50 - 59', 
-                                                'Age_Ranges_60 - 69', 'Gender_Female', 
-                                                'Gender_Male']]
+series_21_contestents = series_21_contestents[model_columns]
 
 print(series_21_contestents)
 
 data = data[data['Series'] != 'S21']
 
-data['Winner'] = CF.np.where(data['Position'] == 1, 1, 0)
+data = data[model_columns + ["Position"]]
 
 print(data.head())
 
-model_data = data[['Number_Episodes', 'Team_A', 'Team_B', 'Age_Ranges_20 - 29', 
-                   'Age_Ranges_30 - 39', 'Age_Ranges_40 - 49', 'Age_Ranges_50 - 59', 
-                   'Age_Ranges_60 - 69', 'Gender_Female', 'Gender_Male',
-                #    'Seat_Seat 1', 'Seat_Seat 2', 'Seat_Seat 3', 'Seat_Seat 4', 'Seat_Seat 5', 
-                   'Winner']]
+data['Winner'] = CF.np.where(data['Position'] == 1, 1, 0)
+data = data.drop('Position', axis = 1)
+
+print(data.head())
+
+model_data = data.copy()
 
 print(model_data)
+
 X = model_data.iloc[:,:-1]
 y = model_data['Winner']
 
@@ -111,7 +121,7 @@ svc_param_grid = [
 
 nu_svc_param_grid = [
     {"tol": [0.0001, 0.001, 0.01, 0.1, 1],
-     "nu": [0, 0.2, 0.4, 0.6, 0.8, 1],
+     "nu": [0.01, 0.02, 0.05, 0.1, 0.2, 0.5],
      "kernel" : ["linear", "poly", "rbf", "sigmoid"],
       "gamma": ["scale", "auto"]
     }
@@ -276,7 +286,7 @@ y_predict_pred = (y_predict_probs >= best_model_table['Threshold']).astype(int)
 print(y_predict_probs)
 print(y_predict_pred)
 
-series_21_contestents = CF.pd.concat([series_21_contestents, series_21_contestents_names], axis = 1)
+series_21_contestents = CF.pd.concat([series_21_contestents, series_21_contestents_names_series], axis = 1)
 
 series_21_contestents['Prediction'] = y_predict_pred
 

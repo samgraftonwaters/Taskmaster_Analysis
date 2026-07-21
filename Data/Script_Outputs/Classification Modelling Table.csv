@@ -1,8 +1,7 @@
 Model Name,Classification Model,Best Hyperparameters,Threshold,F1 Score,precision,Recall,ROC AUC,Precision Recall AUC
-Logistic Regression,LogisticRegression(class_weight='balanced'),"{'C': 1, 'penalty': 'l1', 'solver': 'saga', 'tol': 1}",0.1,0.33,0.2,1.0,0.5,0.4634615384615385
-Bernoulli NB,BernoulliNB(),{'alpha': 0.001},0.12,0.53,0.36,1.0,0.78125,0.28214285714285714
-Multinomial NB,MultinomialNB(),{'alpha': 0.001},0.19999999999999996,0.53,0.36,1.0,0.78125,0.2925595238095238
-SVM Linear,LinearSVC(class_weight='balanced'),"{'C': 1, 'loss': 'hinge', 'penalty': 'l2', 'tol': 0.001}",0.1,0.33,0.2,1.0,0.5,0.24828296703296704
-SVC,"SVC(class_weight='balanced', probability=True)","{'C': 100, 'gamma': 'scale', 'kernel': 'rbf', 'tol': 1}",0.1,0.33,0.2,1.0,0.5,0.2537421218487395
-NuSVC,"NuSVC(class_weight='balanced', probability=True)","{'gamma': 'auto', 'kernel': 'rbf', 'nu': 0.2, 'tol': 1}",0.16999999999999998,0.33,0.2,1.0,0.5,0.1567002442002442
-Decision Tree,DecisionTreeClassifier(class_weight='balanced'),"{'criterion': 'entropy', 'max_features': None, 'splitter': 'random'}",0.6199999999999998,0.5,0.38,0.75,0.71875,0.196875
+Logistic Regression,LogisticRegression(class_weight='balanced'),"{'C': 10, 'penalty': 'l2', 'solver': 'saga', 'tol': 0.0001}",0.3699999999999999,0.4,0.33,0.5,0.5357142857142857,0.23671016089746738
+Bernoulli NB,BernoulliNB(),{'alpha': 0.001},0.29999999999999993,0.0,0.0,0.0,0.3214285714285714,0.28093133718133717
+SVM Linear,LinearSVC(class_weight='balanced'),"{'C': 100, 'loss': 'hinge', 'penalty': 'l2', 'tol': 0.001}",0.1,0.46,0.3,1.0,0.5,0.248777781314546
+SVC,"SVC(class_weight='balanced', probability=True)","{'C': 0.1, 'gamma': 'scale', 'kernel': 'linear', 'tol': 0.0001}",0.1,0.46,0.3,1.0,0.5,0.30445596070596076
+NuSVC,"NuSVC(class_weight='balanced', probability=True)","{'gamma': 'scale', 'kernel': 'linear', 'nu': 0.05, 'tol': 0.1}",0.13999999999999999,0.46,0.3,1.0,0.5,0.3717109279609279
+Decision Tree,DecisionTreeClassifier(class_weight='balanced'),"{'criterion': 'log_loss', 'max_features': 'sqrt', 'splitter': 'best'}",0.8299999999999996,0.5,1.0,0.33,0.6666666666666666,0.5444444444444445
