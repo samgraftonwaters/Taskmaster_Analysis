@@ -10,21 +10,22 @@ warnings.filterwarnings("ignore", category=UserWarning,
 warnings.filterwarnings("ignore", category=ConvergenceWarning)
 
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
-data = CF.pd.read_csv(file_path + 'Full Contestent Table for Modelling Scaled.csv')
+data = CF.pd.read_csv(file_path + 'Full Contestent Table for Modelling.csv')
 print(data.head())
 
 ########
 #To Change
 
 final_table_file_name = "Classification Modelling Table.csv"
-columns = ['Series', 'Name', 'Position', 'Number_Episodes', 'Team_A', 'Team_B', 'Age_Ranges_20 - 29', 
-                   'Age_Ranges_30 - 39', 'Age_Ranges_40 - 49', 'Age_Ranges_50 - 59', 
-                   'Age_Ranges_60 - 69', 'Gender_Female', 'Gender_Male']
+
+columns = ['Series', 'Name', 'Position', 'Number_Episodes', 'Team_A', 'Team_B', 
+           'Age_Ranges_20 - 29', 'Age_Ranges_30 - 39', 'Age_Ranges_40 - 49', 
+           'Age_Ranges_50 - 59', 'Age_Ranges_60 - 69', 'Gender_Female', 'Gender_Male',
+           'Seat_Seat 1', 'Seat_Seat 2', 'Seat_Seat 3', 'Seat_Seat 4', 'Seat_Seat 5']
 
 ######
 
 data = data[columns]
-                #    'Seat_Seat 1', 'Seat_Seat 2', 'Seat_Seat 3', 'Seat_Seat 4', 'Seat_Seat 5'
 
 
 series_21_contestents = data[data['Series'] == 'S21'].reset_index(drop = True)
@@ -184,7 +185,7 @@ for model, model_name, parameters_to_search in zip(classification_models, model_
                             title = f'{model_name} Model Confusion Matrix', save_plot = False)
 
     classif_report = CF.classification_report(y_test, y_test_pred, target_names=tick_labels,
-                                            labels=labels)
+                                            labels=labels, zero_division=0)
 
     print(f"Final {model_name} Model Report: \n", classif_report)
 
@@ -226,7 +227,8 @@ model_table.to_csv(file_path + final_table_file_name, sep = ',', index = False)
 
 # best_model = model_table[model_table['F1 Score'].max()]
 
-best_model_index = model_table["F1 Score"].idxmax()
+best_model_index = (model_table.sort_values(by=["F1 Score", "ROC AUC", "Precision Recall AUC"],
+                                      ascending=False).index[0])
 
 best_model_table = model_table.loc[best_model_index]
 
