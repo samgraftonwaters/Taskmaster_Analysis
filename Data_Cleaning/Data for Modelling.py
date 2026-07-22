@@ -73,14 +73,20 @@ data_modelling = data_modelling_all.copy()
 standard_scaling = StandardScaler()
 robust_scaling = RobustScaler()
 
+data_modelling_S21 = data_modelling[data_modelling['Series'] == 'S21']
+data_modelling = data_modelling[data_modelling['Series'] != 'S21']
+
 data_non_nums = data_modelling.select_dtypes(exclude=[float, int])
 print(data_modelling.columns)
-data_modelling = data_modelling[['Position', 'Score', 'Disqualifications', 'Episode_Percentage_Losses',
-                                 'Number_of_Tasks', 'Percent_1s_Scored', 'Tie_Break_Losses', 
-                                 'Tie_Break_Wins', 'Tie_Breaks_per_series', 'Avg_Score_per_Episodes', 
-                                 'Avg_Score_per_Tasks', 'Episode_Percentage_Wins', 'Number_Episodes', 
-                                 'Number_Team_Tasks', 'Percent_5s_Scored', 'Series_Number', 
-                                 'Team_Score_per_Task', 'Team_Score_per_Person']]#.select_dtypes(include=[float, int])
+
+cols_to_model = ['Position', 'Score', 'Disqualifications', 'Episode_Percentage_Losses',
+                'Number_of_Tasks', 'Percent_1s_Scored', 'Tie_Break_Losses', 
+                'Tie_Break_Wins', 'Tie_Breaks_per_series', 'Avg_Score_per_Episodes', 
+                'Avg_Score_per_Tasks', 'Episode_Percentage_Wins', 'Number_Episodes', 
+                'Number_Team_Tasks', 'Percent_5s_Scored', 'Series_Number', 
+                'Team_Score_per_Task', 'Team_Score_per_Person']
+
+data_modelling = data_modelling[cols_to_model]#.select_dtypes(include=[float, int])
 
 print(data_modelling.columns)
 
@@ -90,10 +96,39 @@ variables_scaled = robust_scaling.fit_transform(data_modelling)
 
 variables_scaled = pd.DataFrame(variables_scaled, columns = new_cols)
 
-data_modelling_scaled = pd.concat([data_non_nums, variables_scaled, concat_ohe_data], axis = 1)
+data_modelling_scaled = pd.concat([data_non_nums, variables_scaled,
+                                   concat_ohe_data[concat_ohe_data['Series'] != 'S21']], 
+                                   axis = 1)
 # data_modelling_scaled = pd.concat([data_non_nums, variables_scaled,], axis = 1)
 print(data_modelling_scaled.head())
 print(data_modelling_scaled.tail())
 print(data_modelling_scaled.columns)
+
+#Series 21 only scaling
+
+data_modelling_S21 = data_modelling[data_modelling['Series'] == 'S21']
+
+data_S21_non_nums = data_modelling_S21.select_dtypes(exclude=[float, int])
+
+data_modelling_S21 = data_modelling_S21[cols_to_model]#.select_dtypes(include=[float, int])
+
+print(data_modelling_S21.columns)
+
+new_cols_S21 = data_modelling_S21.columns
+
+variables_scaled_S21 = robust_scaling.fit_transform(data_modelling_S21)
+
+variables_scaled_S21 = pd.DataFrame(variables_scaled, columns = new_cols_S21)
+
+data_modelling_scaled_S21 = pd.concat([data_S21_non_nums, variables_scaled_S21, 
+                                       concat_ohe_data[concat_ohe_data['Series'] == 'S21']], 
+                                       axis = 1)
+
+print(data_modelling_scaled_S21)
+
+data_modelling_scaled = pd.concat([data_modelling_scaled, data_modelling_scaled_S21], axis = 1)
+
+print(data_modelling_scaled.head())
+print(len(data_modelling_scaled))
 
 data_modelling_scaled.to_csv(output_path + 'Full Contestent Table for Modelling Scaled.csv', sep = ',', index = False)

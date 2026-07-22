@@ -10,7 +10,7 @@ warnings.filterwarnings("ignore", category=UserWarning,
 warnings.filterwarnings("ignore", category=ConvergenceWarning)
 
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
-data = CF.pd.read_csv(file_path + 'Full Contestent Table for Modelling Scaled.csv')
+data = CF.pd.read_csv(file_path + 'Full Contestent Table for Modelling.csv')
 # 'Full Contestent Table for Modelling Scaled.csv'
 print(data.head())
 
@@ -21,22 +21,22 @@ name_series_cols = ['Name', 'Series', 'Position', 'Score']
 
 final_table_file_name = "Classification Modelling Table.csv"
 
-model_columns = ['Number_Episodes', 'Team_A', 'Team_B', 
-           'Age_Ranges_20 - 29', 'Age_Ranges_30 - 39', 'Age_Ranges_40 - 49', 
-           'Age_Ranges_50 - 59', 'Age_Ranges_60 - 69', 'Gender_Female', 'Gender_Male',
-           'Seat_Seat 1', 'Seat_Seat 2', 'Seat_Seat 3', 'Seat_Seat 4', 'Seat_Seat 5']
+# model_columns = ['Number_Episodes', 'Team_A', 'Team_B', 
+#            'Age_Ranges_20 - 29', 'Age_Ranges_30 - 39', 'Age_Ranges_40 - 49', 
+#            'Age_Ranges_50 - 59', 'Age_Ranges_60 - 69', 'Gender_Female', 'Gender_Male',
+#            'Seat_Seat 1', 'Seat_Seat 2', 'Seat_Seat 3', 'Seat_Seat 4', 'Seat_Seat 5']
 
-# model_columns = ['Disqualifications',
-#        'Episode_Percentage_Losses', 'Number_of_Tasks', 'Percent_1s_Scored',
-#        'Tie_Break_Losses', 'Tie_Break_Wins', 'Tie_Breaks_per_series',
-#        'Avg_Score_per_Episodes', 'Avg_Score_per_Tasks',
-#        'Episode_Percentage_Wins', 'Number_Episodes', 'Number_Team_Tasks',
-#        'Percent_5s_Scored', 'Series_Number', 'Team_Score_per_Task',
-#        'Team_Score_per_Person', 'Team_A', 'Team_B', 'Age_Ranges_20 - 29',
-#        'Age_Ranges_30 - 39', 'Age_Ranges_40 - 49', 'Age_Ranges_50 - 59',
-#        'Age_Ranges_60 - 69', 'Gender_Female', 'Gender_Male',
-#        'Gender_Non-Binary', 'Seat_Seat 1', 'Seat_Seat 2', 'Seat_Seat 3',
-#        'Seat_Seat 4', 'Seat_Seat 5']
+model_columns = ['Disqualifications',
+       'Episode_Percentage_Losses', 'Number_of_Tasks', 'Percent_1s_Scored',
+       'Tie_Break_Losses', 'Tie_Break_Wins', 'Tie_Breaks_per_series',
+       'Avg_Score_per_Episodes', 'Avg_Score_per_Tasks',
+       'Episode_Percentage_Wins', 'Number_Episodes', 'Number_Team_Tasks',
+       'Percent_5s_Scored', 'Series_Number', 'Team_Score_per_Task',
+       'Team_Score_per_Person', 'Team_A', 'Team_B', 'Age_Ranges_20 - 29',
+       'Age_Ranges_30 - 39', 'Age_Ranges_40 - 49', 'Age_Ranges_50 - 59',
+       'Age_Ranges_60 - 69', 'Gender_Female', 'Gender_Male',
+       'Gender_Non-Binary', 'Seat_Seat 1', 'Seat_Seat 2', 'Seat_Seat 3',
+       'Seat_Seat 4', 'Seat_Seat 5']
 ######
 
 
