@@ -10,7 +10,7 @@ warnings.filterwarnings("ignore", category=UserWarning,
 warnings.filterwarnings("ignore", category=ConvergenceWarning)
 
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
-data = CF.pd.read_csv(file_path + 'Full Contestent Table for Modelling.csv')
+data = CF.pd.read_csv(file_path + 'Full Contestent Table for Modelling Scaled.csv')
 # 'Full Contestent Table for Modelling Scaled.csv'
 print(data.head())
 
@@ -19,27 +19,27 @@ name_series_cols = ['Name', 'Series', 'Position', 'Score']
 ########
 #To Change
 
-final_table_file_name = "Classification Modelling Table.csv"
+final_table_file_name = "Classification Modelling Table Simple Scaled"
 
-# model_columns = ['Number_Episodes', 'Team_A', 'Team_B', 
-#            'Age_Ranges_20 - 29', 'Age_Ranges_30 - 39', 'Age_Ranges_40 - 49', 
-#            'Age_Ranges_50 - 59', 'Age_Ranges_60 - 69', 'Gender_Female', 'Gender_Male',
-#            'Seat_Seat 1', 'Seat_Seat 2', 'Seat_Seat 3', 'Seat_Seat 4', 'Seat_Seat 5']
+#Simple Model
+model_columns = ['Number_Episodes', 'Team_A', 'Team_B', 
+           'Age_Ranges_20-29', 'Age_Ranges_30-39', 'Age_Ranges_40-49', 
+           'Age_Ranges_50-59', 'Age_Ranges_60-69', 'Gender_Female', 'Gender_Male',
+           'Seat_Seat_1', 'Seat_Seat_2', 'Seat_Seat_3', 'Seat_Seat_4', 'Seat_Seat_5']
 
-model_columns = ['Disqualifications',
-       'Episode_Percentage_Losses', 'Number_of_Tasks', 'Percent_1s_Scored',
-       'Tie_Break_Losses', 'Tie_Break_Wins', 'Tie_Breaks_per_series',
-       'Avg_Score_per_Episodes', 'Avg_Score_per_Tasks',
-       'Episode_Percentage_Wins', 'Number_Episodes', 'Number_Team_Tasks',
-       'Percent_5s_Scored', 'Series_Number', 'Team_Score_per_Task',
-       'Team_Score_per_Person', 'Team_A', 'Team_B', 'Age_Ranges_20 - 29',
-       'Age_Ranges_30 - 39', 'Age_Ranges_40 - 49', 'Age_Ranges_50 - 59',
-       'Age_Ranges_60 - 69', 'Gender_Female', 'Gender_Male',
-       'Gender_Non-Binary', 'Seat_Seat 1', 'Seat_Seat 2', 'Seat_Seat 3',
-       'Seat_Seat 4', 'Seat_Seat 5']
+#Complex column
+# model_columns = ['Disqualifications',
+#        'Episode_Percentage_Losses', 'Number_of_Tasks', 'Percent_1s_Scored',
+#        'Tie_Break_Losses', 'Tie_Break_Wins', 'Tie_Breaks_per_series',
+#        'Avg_Score_per_Episodes', 'Avg_Score_per_Tasks',
+#        'Episode_Percentage_Wins', 'Number_Episodes', 'Number_Team_Tasks',
+#        'Percent_5s_Scored', 'Series_Number', 'Team_Score_per_Task',
+#        'Team_Score_per_Person', 'Team_A', 'Team_B', 'Age_Ranges_20-29',
+#        'Age_Ranges_30-39', 'Age_Ranges_40-49', 'Age_Ranges_50-59',
+#        'Age_Ranges_60-69', 'Gender_Female', 'Gender_Male',
+#        'Gender_Non-Binary', 'Seat_Seat_1', 'Seat_Seat_2', 'Seat_Seat_3',
+#        'Seat_Seat_4', 'Seat_Seat_5']
 ######
-
-
 
 series_21_contestents = data[data['Series'] == 'S21'].reset_index(drop = True)
 series_21_contestents_names_series = series_21_contestents[name_series_cols]
@@ -234,7 +234,7 @@ model_table = CF.pd.DataFrame({
 print(model_table)
 print(model_table.info())
 
-model_table.to_csv(file_path + final_table_file_name, sep = ',', index = False)
+model_table.to_csv(file_path + final_table_file_name + '.csv', sep = ',', index = False)
 
 # best_model = model_table[model_table['F1 Score'].max()]
 
@@ -251,7 +251,13 @@ best_classification_model.set_params(**best_model_table['Best Hyperparameters'])
 
 best_classification_model.fit(X_train, y_train)
 
-y_test_probs = best_classification_model.predict_proba(X_test)[:, 1]
+# y_test_probs = best_classification_model.predict_proba(X_test)[:, 1]
+
+if hasattr(best_classification_model, "predict_proba"):
+    y_test_probs = best_classification_model.predict_proba(X_test)[:, 1]
+else:
+    y_test_probs = best_classification_model.decision_function(X_test)
+
 y_test_pred = (y_test_probs >= best_model_table['Threshold']).astype(int)
 
 conf_matrix = CF.calculate_conf_matrix(y_test = y_test, y_pred = y_test_pred)
@@ -288,6 +294,11 @@ print(y_predict_pred)
 
 series_21_contestents = CF.pd.concat([series_21_contestents, series_21_contestents_names_series], axis = 1)
 
+series_21_contestents['Probability'] = y_predict_probs
 series_21_contestents['Prediction'] = y_predict_pred
 
 print(series_21_contestents[series_21_contestents['Prediction'] == 1]['Name'])
+
+series_21_contestents[['Name', 'Series', 'Position', 'Score', 
+                       'Prediction', 'Probability']].to_csv(file_path + final_table_file_name + 'Predicton.csv', 
+                             sep = ',', index = False)

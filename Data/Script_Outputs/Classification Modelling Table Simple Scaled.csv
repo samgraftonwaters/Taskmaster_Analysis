@@ -1,0 +1,10 @@
+Model Name,Classification Model,Best Hyperparameters,Threshold,F1 Score,precision,Recall,ROC AUC,Precision Recall AUC,,,
+Logistic Regression,LogisticRegression(class_weight='balanced'),"{'C': 10, 'penalty': 'l1', 'solver': 'saga', 'tol': 1}",0.24,0.46,0.3,1,0.5,0.258940243,,,Model Name                                                            SVC
+Bernoulli NB,BernoulliNB(),{'alpha': 0.001},0.3,0,0,0,0.321428571,0.280931337,,,"Classification Model       SVC(class_weight='balanced', probability=True)"
+SVM Linear,LinearSVC(class_weight='balanced'),"{'C': 0.1, 'loss': 'hinge', 'penalty': 'l2', 'tol': 0.0001}",0.11,0.46,0.3,1,0.5,0.185539932,,,"Best Hyperparameters    {'C': 0.1, 'gamma': 'scale', 'kernel': 'linear..."
+SVC,"SVC(class_weight='balanced', probability=True)","{'C': 0.1, 'gamma': 'scale', 'kernel': 'linear', 'tol': 0.0001}",0.1,0.55,0.38,1,0.642857143,0.306106394,,,Threshold                                                             0.1
+NuSVC,"NuSVC(class_weight='balanced', probability=True)","{'gamma': 'scale', 'kernel': 'linear', 'nu': 0.02, 'tol': 0.0001}",0.1,0.46,0.3,1,0.5,0.65,,,F1 Score                                                             0.55
+Decision Tree,DecisionTreeClassifier(class_weight='balanced'),"{'criterion': 'gini', 'max_features': 'sqrt', 'splitter': 'best'}",0.1,0.36,0.4,0.33,0.55952381,0.516666667,,,precision                                                            0.38
+,,,,,,,,,,,Recall                                                                1.0
+,,,,,,,,,,,ROC AUC                                                          0.642857
+,,,,,,,,,,,Precision Recall AUC                                             0.306106

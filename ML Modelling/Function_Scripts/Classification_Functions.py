@@ -169,6 +169,8 @@ def plot_ROC_curve(y_true, y_scores, title, save_plot = False):
 
     AUC_score = roc_auc_score(y_true, y_scores)
 
+    print(AUC_score)
+
     if save_plot == True:
         fig, ax = plt.subplots()
         plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.1, right = 0.95)
@@ -208,6 +210,8 @@ def plot_precision_recall_curve(y_true, y_prob_scores, title, model_precision, m
     precision, recall, _thresholds = precision_recall_curve(y_true, y_prob_scores)
 
     AUC_score = auc(recall, precision)
+
+    print(AUC_score)
 
     if save_plot == True:
 
