@@ -47,7 +47,6 @@ data_merged.to_csv(output_path + 'Full Contestent Table OHE.csv', sep = ',', ind
 data_modelling_all = data_merged.drop(['Age_Ranges', 'Team', 'Gender', 'Seat', 
                                     'Episode Wins', 'Episode Losses', 'First_Air_Date'], axis = 1)
 
-#'Team Score per Person', 'Team Score per Task',
 
 data_modelling_all = data_modelling_all[['Series', 'Name', 'Position', 'Score', 
                                          'Disqualifications', 'Episode Percentage Losses',
@@ -64,7 +63,6 @@ data_modelling_all = data_modelling_all[['Series', 'Name', 'Position', 'Score',
 data_modelling_all.columns = data_modelling_all.columns.str.replace(' ', '_').str.replace('_-_', '-')
 
 print(data_modelling_all.columns)
-#Removing first 4 as OHE, remving last 5 due to correlation analysis
 
 data_modelling_all.to_csv(output_path + 'Full Contestent Table for Modelling.csv', sep = ',', index = False)
 
@@ -73,11 +71,8 @@ data_modelling = data_modelling_all.copy()
 standard_scaling = StandardScaler()
 robust_scaling = RobustScaler()
 
-data_modelling_S21 = data_modelling[data_modelling['Series'] == 'S21']
-data_modelling = data_modelling[data_modelling['Series'] != 'S21']
-
-data_non_nums = data_modelling.select_dtypes(exclude=[float, int])
-print(data_modelling.columns)
+data_modelling_S21 = data_modelling[data_modelling['Series'] == 'S21'].reset_index(drop = True)
+data_modelling = data_modelling[data_modelling['Series'] != 'S21'].reset_index(drop = True)
 
 cols_to_model = ['Position', 'Score', 'Disqualifications', 'Episode_Percentage_Losses',
                 'Number_of_Tasks', 'Percent_1s_Scored', 'Tie_Break_Losses', 
@@ -86,49 +81,49 @@ cols_to_model = ['Position', 'Score', 'Disqualifications', 'Episode_Percentage_L
                 'Number_Team_Tasks', 'Percent_5s_Scored', 'Series_Number', 
                 'Team_Score_per_Task', 'Team_Score_per_Person']
 
-data_modelling = data_modelling[cols_to_model]#.select_dtypes(include=[float, int])
+data_scaled_modelling = data_modelling[cols_to_model]#.select_dtypes(include=[float, int])
 
-print(data_modelling.columns)
+print(data_scaled_modelling.columns)
 
-new_cols = data_modelling.columns
+new_cols = data_scaled_modelling.columns
 
-variables_scaled = robust_scaling.fit_transform(data_modelling)
+variables_scaled = robust_scaling.fit_transform(data_scaled_modelling)
 
 variables_scaled = pd.DataFrame(variables_scaled, columns = new_cols)
 
-data_modelling_scaled = pd.concat([data_non_nums, variables_scaled,
-                                   concat_ohe_data[concat_ohe_data['Series'] != 'S21']], 
-                                   axis = 1)
-# data_modelling_scaled = pd.concat([data_non_nums, variables_scaled,], axis = 1)
+data_modelling[cols_to_model] = variables_scaled
+
+data_modelling_scaled = data_modelling.copy()
+
 print(data_modelling_scaled.head())
 print(data_modelling_scaled.tail())
 print(data_modelling_scaled.columns)
 
+#######################
 #Series 21 only scaling
 
-data_modelling_S21 = data_modelling[data_modelling['Series'] == 'S21']
+data_modelling_scaled_S21 = data_modelling_S21[cols_to_model]#.select_dtypes(include=[float, int])
 
-data_S21_non_nums = data_modelling_S21.select_dtypes(exclude=[float, int])
+new_cols_S21 = data_modelling_scaled_S21.columns
 
-data_modelling_S21 = data_modelling_S21[cols_to_model]#.select_dtypes(include=[float, int])
+variables_scaled_S21 = robust_scaling.fit_transform(data_modelling_scaled_S21)
 
-print(data_modelling_S21.columns)
+variables_scaled_S21 = pd.DataFrame(variables_scaled_S21, columns = new_cols_S21)
 
-new_cols_S21 = data_modelling_S21.columns
+data_modelling_S21[cols_to_model] = variables_scaled_S21
 
-variables_scaled_S21 = robust_scaling.fit_transform(data_modelling_S21)
+print(data_modelling_S21)
 
-variables_scaled_S21 = pd.DataFrame(variables_scaled, columns = new_cols_S21)
+data_modelling_scaled_S21 = data_modelling_S21.copy()
 
-data_modelling_scaled_S21 = pd.concat([data_S21_non_nums, variables_scaled_S21, 
-                                       concat_ohe_data[concat_ohe_data['Series'] == 'S21']], 
-                                       axis = 1)
 
 print(data_modelling_scaled_S21)
 
-data_modelling_scaled = pd.concat([data_modelling_scaled, data_modelling_scaled_S21], axis = 1)
+data_modelling_scaled = pd.concat([data_modelling_scaled, data_modelling_scaled_S21], 
+                                  axis = 0).reset_index(drop = True)
 
 print(data_modelling_scaled.head())
+print(data_modelling_scaled.tail())
 print(len(data_modelling_scaled))
 
 data_modelling_scaled.to_csv(output_path + 'Full Contestent Table for Modelling Scaled.csv', sep = ',', index = False)
