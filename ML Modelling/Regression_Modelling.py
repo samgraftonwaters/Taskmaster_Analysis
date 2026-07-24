@@ -3,6 +3,14 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
+
+"""
+Model for:
+    y = score per number of tasks
+    X = GCA method
+    X - remove score per number of tasks if y = total score
+"""
 
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
 data = pd.read_csv(file_path + 'Full Contestent Table for Modelling Scaled.csv')
@@ -12,7 +20,7 @@ print(data.head())
 model_columns = ['Disqualifications',
        'Episode_Percentage_Losses', 'Number_of_Tasks', 'Percent_1s_Scored',
        'Tie_Break_Losses', 'Tie_Break_Wins', 'Tie_Breaks_per_series',
-       'Avg_Score_per_Episodes', 'Avg_Score_per_Tasks',
+    #    'Avg_Score_per_Episodes', 'Avg_Score_per_Tasks',
        'Episode_Percentage_Wins', 'Number_Episodes', 'Number_Team_Tasks',
        'Percent_5s_Scored', 'Series_Number', 'Team_Score_per_Task',
        'Team_Score_per_Person', 'Team_A', 'Team_B', 'Age_Ranges_20-29',
@@ -36,7 +44,6 @@ print(X)
 print(y)
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=123)
-print(len(X_train), len(X_test), len(y_train), len(y_test))
 
 linear_model = LinearRegression()
 
@@ -51,11 +58,13 @@ y_pred = linear_model.predict(X_test)
 
 r2_value = r2_score(y_test, y_pred)
 
+print(r2_value)
+
 print("Model coefficient: \n", linear_model.coef_[0].round(2))
 print("Model intercept: \n", linear_model.intercept_.round(2))
 
-
-print(r2_value)
+for i, col in enumerate(model_columns):
+    print(f"{col} coefficient:", linear_model.coef_[i].round(2))
 
 
 plt.scatter(y_pred, y_test, color="navy", label="Data")
@@ -80,3 +89,19 @@ ax.set_xlabel('Measured Count')
 ax.set_ylabel('Predicted Count')
 ax.set_title(r"True and Predicted $y_i$")
 plt.show()
+
+
+residual = y - y_pred
+
+res_mean = residual.mean()
+res_median = np.median(residual)
+
+print(res_mean, res_median)
+
+
+standard_residual = residual / residual.std()
+
+stan_res_mean = standard_residual.mean()
+stan_res_median = np.median(standard_residual)
+
+print(stan_res_mean, stan_res_median)
