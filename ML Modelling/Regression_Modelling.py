@@ -1,4 +1,4 @@
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, cross_val_score, cross_val_predict
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
 import matplotlib.pyplot as plt
@@ -40,6 +40,11 @@ print(len(X_train), len(X_test), len(y_train), len(y_test))
 
 linear_model = LinearRegression()
 
+cv_scores = cross_val_score(estimator=linear_model, X=X, y=y, cv=5, scoring="r2")
+
+print(cv_scores)
+print(cv_scores.mean())
+
 linear_model.fit(X_train, y_train)
 
 y_pred = linear_model.predict(X_test)
@@ -62,4 +67,16 @@ plt.plot(y_pred, y_pred, color='red', linewidth=2.5)#,
 # plt.xlabel("Standardised Humidity")
 # plt.ylabel("Count")
 plt.legend()
+plt.show()
+
+
+y_pred = cross_val_predict(estimator=linear_model, X=X, y=y, cv=5)
+
+# We can then compare our predicted and true values using a plot.
+fig, ax = plt.subplots(figsize=(6,6))
+ax.scatter(y, y_pred, edgecolors=(0, 0, 0), alpha=0.4)
+ax.plot([0, y.max()], [0, y.max()], 'k--', lw=4)
+ax.set_xlabel('Measured Count')
+ax.set_ylabel('Predicted Count')
+ax.set_title(r"True and Predicted $y_i$")
 plt.show()
