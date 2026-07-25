@@ -1,6 +1,6 @@
 from sklearn.model_selection import train_test_split, cross_val_score, cross_val_predict
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import r2_score
+from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error, root_mean_squared_error
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
@@ -47,18 +47,28 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 
 linear_model = LinearRegression()
 
-cv_scores = cross_val_score(estimator=linear_model, X=X, y=y, cv=5, scoring="r2")
+cv_scores_r2 = cross_val_score(estimator=linear_model, X=X, y=y, cv=5, scoring="r2")
+cv_scores_mae = cross_val_score(estimator=linear_model, X=X, y=y, cv=5, scoring="neg_mean_absolute_error")
 
-print(cv_scores)
-print(cv_scores.mean())
+print(cv_scores_r2)
+print(cv_scores_r2.mean())
+
+print(cv_scores_mae)
+print(cv_scores_mae.mean())
 
 linear_model.fit(X_train, y_train)
 
 y_pred = linear_model.predict(X_test)
 
 r2_value = r2_score(y_test, y_pred)
+mae_value = mean_absolute_error(y_test, y_pred)
+MSE_value = mean_squared_error(y_test, y_pred)
+RMSE_value = root_mean_squared_error(y_test, y_pred)
 
 print(r2_value)
+print(mae_value)
+print(MSE_value)
+print(RMSE_value)
 
 print("Model coefficient: \n", linear_model.coef_[0].round(2))
 print("Model intercept: \n", linear_model.intercept_.round(2))
@@ -113,7 +123,7 @@ def plot_residuals(residual_data, standardised = True):
         res_mean = residual_data.mean()
         res_median = np.median(residual_data)
 
-        print(f"esidual Mean: {res_mean} \n Residual Median: {res_median}")
+        print(f"esidual Mean: {res_mean}\nResidual Median: {res_median}")
 
         title = "Residual Distribution Plot of the Linear Model"
 
@@ -133,3 +143,13 @@ def plot_residuals(residual_data, standardised = True):
 plot_residuals(residual_data = standard_residual, standardised = True)
 
 plot_residuals(residual_data = residual, standardised = False)
+
+
+plt.axhline(0, color="black", linestyle="--", lw = 4)
+plt.scatter(y_pred, standard_residual, color="dodgerblue")
+plt.title("Residual Plot of Predicted Values", fontsize = 20)
+plt.xlabel("Predicted Value", fontsize = 16)
+plt.ylabel("Residual", fontsize = 16)
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.show()
