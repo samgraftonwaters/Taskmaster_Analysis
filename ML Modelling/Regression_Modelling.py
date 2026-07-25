@@ -93,15 +93,43 @@ plt.show()
 
 residual = y - y_pred
 
-res_mean = residual.mean()
-res_median = np.median(residual)
-
-print(res_mean, res_median)
-
-
 standard_residual = residual / residual.std()
 
-stan_res_mean = standard_residual.mean()
-stan_res_median = np.median(standard_residual)
 
-print(stan_res_mean, stan_res_median)
+def plot_residuals(residual_data, standardised = True):
+
+    if standardised == True:
+
+        standard_residual = residual_data / residual.std()
+
+        res_mean = standard_residual.mean()
+        res_median = np.median(standard_residual)
+
+        print(f"Standared Residual Mean: {res_mean} \n Standard Residual Median: {res_median}")
+
+        title = "Standardised Residual Distribution Plot of the Linear Model"
+
+    else:
+        res_mean = residual_data.mean()
+        res_median = np.median(residual_data)
+
+        print(f"esidual Mean: {res_mean} \n Residual Median: {res_median}")
+
+        title = "Residual Distribution Plot of the Linear Model"
+
+    plt.axvline(x=res_mean, label=f"mean: {res_mean.round(2)}", color="red", lw = 4)
+    plt.axvline(x=res_median, label=f"median: {res_median.round(2)}", color = 'black', lw = 4)
+    plt.hist(residual_data, bins=25, color="dodgerblue", alpha = 0.6)
+
+    plt.title(title, fontsize = 20)
+    plt.xlabel("Residual", fontsize = 16)
+    plt.ylabel("Count", fontsize = 16)
+    plt.xticks(fontsize = 14)
+    plt.yticks(fontsize = 14)
+    plt.legend(fontsize = 14)
+    plt.show()
+
+
+plot_residuals(residual_data = standard_residual, standardised = True)
+
+plot_residuals(residual_data = residual, standardised = False)
