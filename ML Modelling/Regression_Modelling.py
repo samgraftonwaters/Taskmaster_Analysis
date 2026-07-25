@@ -13,14 +13,15 @@ Model for:
 """
 
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
-data = pd.read_csv(file_path + 'Full Contestent Table for Modelling Scaled.csv')
+scaled_data = pd.read_csv(file_path + 'Full Contestent Table for Modelling Scaled.csv')
+unscaled_data = pd.read_csv(file_path + 'Full Contestent Table for Modelling.csv')
 # 'Full Contestent Table for Modelling Scaled.csv'
-print(data.head())
+print(scaled_data .head())
 
 model_columns = ['Disqualifications',
        'Episode_Percentage_Losses', 'Number_of_Tasks', 'Percent_1s_Scored',
        'Tie_Break_Losses', 'Tie_Break_Wins', 'Tie_Breaks_per_series',
-    #    'Avg_Score_per_Episodes', 'Avg_Score_per_Tasks',
+       'Avg_Score_per_Episodes', 'Avg_Score_per_Tasks',
        'Episode_Percentage_Wins', 'Number_Episodes', 'Number_Team_Tasks',
        'Percent_5s_Scored', 'Series_Number', 'Team_Score_per_Task',
        'Team_Score_per_Person', 'Team_A', 'Team_B', 'Age_Ranges_20-29',
@@ -29,16 +30,16 @@ model_columns = ['Disqualifications',
        'Gender_Non-Binary', 'Seat_Seat_1', 'Seat_Seat_2', 'Seat_Seat_3',
        'Seat_Seat_4', 'Seat_Seat_5']
 
-series_21_contestents = data[data['Series'] == 'S21'].reset_index(drop = True)
+series_21_contestents = scaled_data[scaled_data['Series'] == 'S21'].reset_index(drop = True)
 
 series_21_contestents = series_21_contestents[model_columns]
 
-data = data[data['Series'] != 'S21']
+data = scaled_data[scaled_data['Series'] != 'S21']
 
 model_data = data[model_columns]
 
 X = model_data
-y = data['Score']
+y = unscaled_data[unscaled_data['Series'] != 'S21']['Score'].reset_index(drop = True)
 
 print(X)
 print(y)
@@ -47,63 +48,64 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 
 linear_model = LinearRegression()
 
-cv_scores_r2 = cross_val_score(estimator=linear_model, X=X, y=y, cv=5, scoring="r2")
-cv_scores_mae = cross_val_score(estimator=linear_model, X=X, y=y, cv=5, scoring="neg_mean_absolute_error")
-
-print(cv_scores_r2)
-print(cv_scores_r2.mean())
-
-print(cv_scores_mae)
-print(cv_scores_mae.mean())
-
 linear_model.fit(X_train, y_train)
 
 y_pred = linear_model.predict(X_test)
 
+
+
+cv_scores_r2 = cross_val_score(estimator=linear_model, X=X, y=y, cv=5, scoring="r2")
+cv_scores_mae = cross_val_score(estimator=linear_model, X=X, y=y, cv=5, scoring="neg_mean_absolute_error")
+
+print()
+print("Cross Val R2 Scores:", cv_scores_r2)
+print("Cross Val R2 Mean Score:", cv_scores_r2.mean())
+
+print("Cross Val MAD Scores:", cv_scores_mae*-1)
+print("Cross Val MAD Mean Score:", cv_scores_mae.mean()*-1)
 r2_value = r2_score(y_test, y_pred)
 mae_value = mean_absolute_error(y_test, y_pred)
 MSE_value = mean_squared_error(y_test, y_pred)
 RMSE_value = root_mean_squared_error(y_test, y_pred)
-
-print(r2_value)
-print(mae_value)
-print(MSE_value)
-print(RMSE_value)
-
-print("Model coefficient: \n", linear_model.coef_[0].round(2))
-print("Model intercept: \n", linear_model.intercept_.round(2))
-
+print()
+print("Model R2 Score:", r2_value)
+print("Model MAE Score:", mae_value)
+print("Model MSE Score:", MSE_value)
+print("Model RMSE Score:", RMSE_value)
+print()
+print("Model intercept:", linear_model.intercept_.round(3))
 for i, col in enumerate(model_columns):
-    print(f"{col} coefficient:", linear_model.coef_[i].round(2))
+    print(f"{i}. {col} coefficient:", linear_model.coef_[i].round(3))
 
-
-plt.scatter(y_pred, y_test, color="navy", label="Data")
-plt.plot(y_pred, y_pred, color='red', linewidth=2.5)#, 
-        #  label="Regression model:\nCount = {:.1f}{}Humidity + {:.1f}"\
-        #          .format(linear_model.coef_[0], r"$\times$", 
-        #              linear_model.intercept_))
-# plt.title("Humidity Predicting Count")
-# plt.xlabel("Standardised Humidity")
-# plt.ylabel("Count")
-plt.legend()
+plt.scatter(y_pred, y_test, color="dodgerblue", label="Data")
+plt.plot(y_test, y_test, color='red', linewidth=3, label = 'Actual Score Line')
+plt.title("Predicted vs Actual (Standardised) Scores", fontsize = 20)
+plt.xlabel("Predicted Score", fontsize = 16)
+plt.ylabel("Actual Score", fontsize = 16)
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.legend(fontsize = 14)
+# plt.xlim(-3, 2)
+# plt.ylim(-3, 2)
 plt.show()
 
+y_pred_cv = cross_val_predict(estimator=linear_model, X=X, y=y, cv=5)
 
-y_pred = cross_val_predict(estimator=linear_model, X=X, y=y, cv=5)
-
-# We can then compare our predicted and true values using a plot.
 fig, ax = plt.subplots(figsize=(6,6))
-ax.scatter(y, y_pred, edgecolors=(0, 0, 0), alpha=0.4)
-ax.plot([0, y.max()], [0, y.max()], 'k--', lw=4)
+ax.scatter(y, y_pred_cv, edgecolors=(0, 0, 0), alpha=0.4)
+ax.plot([y.min(), y.max()], [y.min(), y.max()], 'k--', lw=4)
 ax.set_xlabel('Measured Count')
 ax.set_ylabel('Predicted Count')
 ax.set_title(r"True and Predicted $y_i$")
 plt.show()
 
-
-residual = y - y_pred
-
-standard_residual = residual / residual.std()
+fig, ax = plt.subplots(figsize=(6,6))
+ax.scatter(y_test, y_pred, edgecolors=(0, 0, 0), alpha=0.4)
+ax.plot([y.min(), y.max()], [y.min(), y.max()], 'k--', lw=4)
+ax.set_xlabel('Measured Count')
+ax.set_ylabel('Predicted Count')
+ax.set_title(r"True and Predicted $y_i$")
+plt.show()
 
 
 def plot_residuals(residual_data, standardised = True):
@@ -139,11 +141,13 @@ def plot_residuals(residual_data, standardised = True):
     plt.legend(fontsize = 14)
     plt.show()
 
+residual = y_test - y_pred
+
+standard_residual = residual / residual.std()
 
 plot_residuals(residual_data = standard_residual, standardised = True)
 
 plot_residuals(residual_data = residual, standardised = False)
-
 
 plt.axhline(0, color="black", linestyle="--", lw = 4)
 plt.scatter(y_pred, standard_residual, color="dodgerblue")
@@ -153,3 +157,29 @@ plt.ylabel("Residual", fontsize = 16)
 plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
 plt.show()
+
+residual = y - y_pred_cv
+
+standard_residual = residual / residual.std()
+
+plot_residuals(residual_data = standard_residual, standardised = True)
+
+plot_residuals(residual_data = residual, standardised = False)
+
+plt.axhline(0, color="black", linestyle="--", lw = 4)
+plt.scatter(y_pred_cv, standard_residual, color="dodgerblue")
+plt.title("Residual Plot of Predicted Values", fontsize = 20)
+plt.xlabel("Predicted Value", fontsize = 16)
+plt.ylabel("Residual", fontsize = 16)
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.show()
+
+
+
+# from sklearn.linear_model import ElasticNet
+
+# model = ElasticNet(
+#     alpha=1.0,      # overall regularisation strength
+#     l1_ratio=0.5    # 0 = Ridge, 1 = Lasso
+# )
