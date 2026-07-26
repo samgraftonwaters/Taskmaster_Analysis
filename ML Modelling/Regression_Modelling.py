@@ -161,7 +161,7 @@ def plot_residuals(residual_data, standardised = True):
         res_mean = standard_residual.mean()
         res_median = np.median(standard_residual)
 
-        print(f"Standared Residual Mean: {res_mean:.3f}\nStandard Residual Median: {res_median:.3f}")
+        print(f"Standard Residual Mean: {res_mean:.3f}\nStandard Residual Median: {res_median:.3f}")
 
         title = "Standardised Residual Distribution Plot of the Linear Model"
 
@@ -169,7 +169,7 @@ def plot_residuals(residual_data, standardised = True):
         res_mean = residual_data.mean()
         res_median = np.median(residual_data)
 
-        print(f"esidual Mean: {res_mean:.3f}\nResidual Median: {res_median:.3f}")
+        print(f"Residual Mean: {res_mean:.3f}\nResidual Median: {res_median:.3f}")
 
         title = "Residual Distribution Plot of the Linear Model"
 
@@ -233,97 +233,91 @@ sm.qqplot(model.resid, line='45')
 plt.title("Q-Q Plot of Residuals")
 plt.show()
 
-alpha_value = 100
-ridge_model = Ridge(alpha=alpha_value)
 
-# Do some cross validation to get a feel for what the model performance is.
-cv_scores = cross_val_score(estimator=ridge_model, X=X_train, y=y_train, cv=5, 
-                            scoring="r2")
 
-print(cv_scores)
-print(cv_scores.mean())
+# ridge_model = Ridge()
 
-ridge_model = Ridge()
+# alphas = np.logspace(-6, 6, 200)
 
-alphas = np.logspace(-6, 6, 200)
-
-# Train the model with different regularisation strengths.
-coefs = []
-MSEs = []
-for each_value in alphas:
-    ridge_model.set_params(alpha=each_value)
-    ridge_model.fit(X_train, y_train)
-    coefs.append(ridge_model.coef_)
-    y_pred = ridge_model.predict(X_test)
-    MSEs.append(mean_squared_error(y_test, y_pred))
+# # Train the model with different regularisation strengths.
+# coefs = []
+# MSEs = []
+# for each_value in alphas:
+#     ridge_model.set_params(alpha=each_value)
+#     ridge_model.fit(X_train, y_train)
+#     coefs.append(ridge_model.coef_)
+#     y_pred = ridge_model.predict(X_test)
+#     MSEs.append(mean_squared_error(y_test, y_pred))
     
-# Plot parameters of the model as they change wth alpha.
-fig, ax = plt.subplots(figsize=(8,6))
-ax = plt.gca()
-ax.plot(alphas, coefs)
-ax.set_xscale('log')
-plt.xlabel(r'$\alpha$')
-plt.ylabel('Feature weights')
-plt.title('Ridge variable coefficients compared to MSE')
-plt.axis('tight')
-labels = scaled_data.columns.to_list()
+# # Plot parameters of the model as they change wth alpha.
+# fig, ax = plt.subplots(figsize=(8,6))
+# ax = plt.gca()
+# ax.plot(alphas, coefs)
+# ax.set_xscale('log')
+# plt.xlabel(r'$\alpha$')
+# plt.ylabel('Feature weights')
+# plt.title('Ridge variable coefficients compared to MSE')
+# plt.axis('tight')
+# labels = scaled_data.columns.to_list()
 
-ax2 = ax.twinx()
-ax2.plot(alphas, MSEs, color="red")
-ax2.set_ylabel("MSE", color="red")
-ax2.tick_params(axis='y', labelcolor="red")
-labels.append("MSE")
-fig.legend(labels, loc=(0.13, 0.4))
-plt.show()
+# ax2 = ax.twinx()
+# ax2.plot(alphas, MSEs, color="red")
+# ax2.set_ylabel("MSE", color="red")
+# ax2.tick_params(axis='y', labelcolor="red")
+# labels.append("MSE")
+# fig.legend(labels, loc=(0.13, 0.4))
+# plt.show()
 
 
 # Create the model object
-lasso_model = Lasso()
+# lasso_model = Lasso()
 
 # set a range of alpha values
-alphas = np.logspace(-6, 6, 200)
+# alphas = np.logspace(-6, 6, 200)
 
-# Train the model with different regularisation strengths
-coefs = []
-MSEs = []
-for each_value in alphas:
-    lasso_model.set_params(alpha=each_value)
-    lasso_model.fit(X_train, y_train)
-    coefs.append(lasso_model.coef_)
-    y_pred = lasso_model.predict(X_test)
-    MSEs.append(mean_squared_error(y_test, y_pred))
+# # Train the model with different regularisation strengths
+# coefs = []
+# MSEs = []
+# for each_value in alphas:
+#     lasso_model.set_params(alpha=each_value)
+#     lasso_model.fit(X_train, y_train)
+#     coefs.append(lasso_model.coef_)
+#     y_pred = lasso_model.predict(X_test)
+#     MSEs.append(mean_squared_error(y_test, y_pred))
 
-# Plot parameters of the model as they change wth alpha.
-fig, ax = plt.subplots(figsize=(8,6))
-ax = plt.gca()
-ax.plot(alphas, coefs)
-ax.set_xscale('log')
-plt.xlabel(r'$\alpha$')
-plt.ylabel('Feature weights')
-plt.title('Lasso variable coefficients compared to MSE')
-plt.axis('tight')
-labels = scaled_data.columns.to_list()
+# # Plot parameters of the model as they change wth alpha.
+# fig, ax = plt.subplots(figsize=(8,6))
+# ax = plt.gca()
+# ax.plot(alphas, coefs)
+# ax.set_xscale('log')
+# plt.xlabel(r'$\alpha$')
+# plt.ylabel('Feature weights')
+# plt.title('Lasso variable coefficients compared to MSE')
+# plt.axis('tight')
+# labels = scaled_data.columns.to_list()
 
-ax2 = ax.twinx()
-ax2.plot(alphas, MSEs, color="red")
-ax2.set_ylabel("MSE", color="red")
-ax2.tick_params(axis='y', labelcolor="red")
-labels.append("MSE")
-fig.legend(labels, loc=(0.13, 0.4))
-plt.show()
+# ax2 = ax.twinx()
+# ax2.plot(alphas, MSEs, color="red")
+# ax2.set_ylabel("MSE", color="red")
+# ax2.tick_params(axis='y', labelcolor="red")
+# labels.append("MSE")
+# fig.legend(labels, loc=(0.13, 0.4))
+# plt.show()
 
+lin_reg_hyper = [{"fit_intercept": [True, False],
+                 "positive": [True, False]}]
 
 ridge_hyper = [{"alpha": [0.001, 0.01, 0.1, 1, 10, 100, 1000],
                 "solver": ["auto","svd", "cholesky", "lsqr", "sag", "saga" ],
-                "max_iter": [100, 500, 1000, 5000],
-                "tol": [1e-1, 1e-2, 1e-3, 1e-4, 1e-5],
+                "max_iter": [10000, 20000, 50000],
+                "tol": [1e-3, 1e-4, 1e-5],
                 "fit_intercept": [True, False]
                 }
 ]
 
 lasso_hyper = [{"alpha": [0.001, 0.01, 0.1, 1, 10, 100, 1000],
-                "max_iter": [100, 500, 1000, 5000],
-                "tol": [1e-1, 1e-2, 1e-3, 1e-4, 1e-5],
+                "max_iter": [10000, 20000, 50000],
+                "tol": [1e-3, 1e-4, 1e-5],
                 "fit_intercept": [True, False],
                 "selection" : ["cyclic", "random"]
                 }
@@ -332,35 +326,44 @@ lasso_hyper = [{"alpha": [0.001, 0.01, 0.1, 1, 10, 100, 1000],
 ridge_param_grid = {
     "alpha": np.logspace(-3, 3, 20),
     "solver": ["auto"],
-    "max_iter": [1000],
+    "max_iter": [5000, 10000],
 }
 
 lasso_param_grid = {
     "alpha": np.logspace(-3, 3, 20),
     "selection" : ["cyclic", "random"],
-    "max_iter": [1000],
+    "max_iter": [5000, 10000],
 }
 
 elastic_hyper = {
-    "alpha": np.logspace(-4, 2, 50),
-    "l1_ratio": [0, 0.1, 0.25, 0.5, 0.75, 0.9, 1],
+    "alpha": np.logspace(-3, 3, 20),
+    "l1_ratio": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
     "fit_intercept": [True, False],
-    "max_iter": [1000, 5000, 10000],
-    "tol": [1e-1, 1e-2, 1e-3, 1e-4, 1e-5],
+    "max_iter": [5000, 10000, 20000, 50000],
+    "tol": [1e-3, 1e-4],
     "selection": ["cyclic", "random"]
 }
 
 elastic_param_grid = {
-    "alpha": np.logspace(-3, 2, 30),
-    "l1_ratio": np.linspace(0, 1, 11),
+    "alpha": np.logspace(-3, 3, 20),
+    "l1_ratio": np.linspace(0.1, 1, 11),
     "max_iter": [5000],
     "tol": [1e-4]
 }
+model_names = ['Linear', 'Ridge', 'Lasso', 'Elastic_Net']
+classification_models = [LinearRegression(), Ridge(), Lasso(), ElasticNet()]
+hyperparameters = [lin_reg_hyper, ridge_hyper, lasso_hyper, elastic_hyper]
 
-model_names = ['Ridge', 'ridge_2', 'Lasso', 'lasso_2', 'Elastic_Newt', 'Elastic_Net_2']
-classification_models = [Ridge(), Ridge(), Lasso(), Lasso(), ElasticNet(), ElasticNet()]
-hyperparameters = [ridge_hyper, ridge_param_grid, lasso_hyper, lasso_param_grid, 
-                   elastic_hyper, elastic_param_grid]
+# model_names = ['Ridge', 'ridge_2', 'Lasso', 'lasso_2', 'Elastic_Net_2']
+# classification_models = [Ridge(), Ridge(), Lasso(), Lasso(), ElasticNet()]
+# hyperparameters = [ridge_hyper, ridge_param_grid, lasso_hyper, lasso_param_grid, 
+#                    elastic_param_grid]
+
+Best_Params = []
+r2_value = []
+mse_value = []
+rmse_value = []
+mae_value = []
 
 for model, model_name, parameters_to_search in zip(classification_models, model_names, hyperparameters):
 
@@ -375,8 +378,32 @@ for model, model_name, parameters_to_search in zip(classification_models, model_
 
     optimised_model = grid_search.best_estimator_
 
+    y_pred = grid_search.predict(X_test)
+
     print(optimised_model)
-    
+    print(grid_search.best_params_)
+
+    Best_Params.append(grid_search.best_params_)
+
+    r2_value.append(r2_score(y_test, y_pred))
+    mae_value.append(mean_absolute_error(y_test, y_pred) * -1)
+    mse_value.append(mean_squared_error(y_test, y_pred))
+    rmse_value.append(root_mean_squared_error(y_test, y_pred))
+
+
+model_table = pd.DataFrame({
+    "Model Name" : model_names,
+    "Classification Model" : classification_models,
+    "Best Hyperparameters" : Best_Params,
+    "R2 Score" : r2_score,
+    "MAE Score" : mae_value,
+    "MSE Score" : mse_value,
+    "RMSE Score" : rmse_value,
+    }
+)
+
+print(model_table)
+
 # from sklearn.linear_model import ElasticNet
 
 # model = ElasticNet(
