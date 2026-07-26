@@ -1,5 +1,5 @@
 from sklearn.model_selection import train_test_split, cross_val_score, cross_val_predict, GridSearchCV
-from sklearn.linear_model import LinearRegression, Ridge, Lasso
+from sklearn.linear_model import LinearRegression, Ridge, Lasso, ElasticNet
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error, root_mean_squared_error
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -276,12 +276,56 @@ labels.append("MSE")
 fig.legend(labels, loc=(0.13, 0.4))
 plt.show()
 
-model_names = ['Ridge', 'ridge_2']
-classification_models = [Ridge(), Ridge()]
+
+# Create the model object
+lasso_model = Lasso()
+
+# set a range of alpha values
+alphas = np.logspace(-6, 6, 200)
+
+# Train the model with different regularisation strengths
+coefs = []
+MSEs = []
+for each_value in alphas:
+    lasso_model.set_params(alpha=each_value)
+    lasso_model.fit(X_train, y_train)
+    coefs.append(lasso_model.coef_)
+    y_pred = lasso_model.predict(X_test)
+    MSEs.append(mean_squared_error(y_test, y_pred))
+
+# Plot parameters of the model as they change wth alpha.
+fig, ax = plt.subplots(figsize=(8,6))
+ax = plt.gca()
+ax.plot(alphas, coefs)
+ax.set_xscale('log')
+plt.xlabel(r'$\alpha$')
+plt.ylabel('Feature weights')
+plt.title('Lasso variable coefficients compared to MSE')
+plt.axis('tight')
+labels = scaled_data.columns.to_list()
+
+ax2 = ax.twinx()
+ax2.plot(alphas, MSEs, color="red")
+ax2.set_ylabel("MSE", color="red")
+ax2.tick_params(axis='y', labelcolor="red")
+labels.append("MSE")
+fig.legend(labels, loc=(0.13, 0.4))
+plt.show()
+
+
 ridge_hyper = [{"alpha": [0.001, 0.01, 0.1, 1, 10, 100, 1000],
                 "solver": ["auto","svd", "cholesky", "lsqr", "sag", "saga" ],
                 "max_iter": [100, 500, 1000, 5000],
+                "tol": [1e-1, 1e-2, 1e-3, 1e-4, 1e-5],
                 "fit_intercept": [True, False]
+                }
+]
+
+lasso_hyper = [{"alpha": [0.001, 0.01, 0.1, 1, 10, 100, 1000],
+                "max_iter": [100, 500, 1000, 5000],
+                "tol": [1e-1, 1e-2, 1e-3, 1e-4, 1e-5],
+                "fit_intercept": [True, False],
+                "selection" : ["cyclic", "random"]
                 }
 ]
 
@@ -291,7 +335,32 @@ ridge_param_grid = {
     "max_iter": [1000],
 }
 
-hyperparameters = [ridge_hyper, ridge_param_grid]
+lasso_param_grid = {
+    "alpha": np.logspace(-3, 3, 20),
+    "selection" : ["cyclic", "random"],
+    "max_iter": [1000],
+}
+
+elastic_hyper = {
+    "alpha": np.logspace(-4, 2, 50),
+    "l1_ratio": [0, 0.1, 0.25, 0.5, 0.75, 0.9, 1],
+    "fit_intercept": [True, False],
+    "max_iter": [1000, 5000, 10000],
+    "tol": [1e-1, 1e-2, 1e-3, 1e-4, 1e-5],
+    "selection": ["cyclic", "random"]
+}
+
+elastic_param_grid = {
+    "alpha": np.logspace(-3, 2, 30),
+    "l1_ratio": np.linspace(0, 1, 11),
+    "max_iter": [5000],
+    "tol": [1e-4]
+}
+
+model_names = ['Ridge', 'ridge_2', 'Lasso', 'lasso_2', 'Elastic_Newt', 'Elastic_Net_2']
+classification_models = [Ridge(), Ridge(), Lasso(), Lasso(), ElasticNet(), ElasticNet()]
+hyperparameters = [ridge_hyper, ridge_param_grid, lasso_hyper, lasso_param_grid, 
+                   elastic_hyper, elastic_param_grid]
 
 for model, model_name, parameters_to_search in zip(classification_models, model_names, hyperparameters):
 
@@ -302,7 +371,7 @@ for model, model_name, parameters_to_search in zip(classification_models, model_
 
     print(f"\n{model_name} Best parameters: \n", grid_search.best_params_)
 
-    print(f"\nBest CV {model_name} F1: \n", grid_search.best_score_)
+    print(f"\nBest CV {model_name} R2: \n", grid_search.best_score_)
 
     optimised_model = grid_search.best_estimator_
 
