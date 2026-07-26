@@ -1,5 +1,5 @@
-from sklearn.model_selection import train_test_split, cross_val_score, cross_val_predict
-from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split, cross_val_score, cross_val_predict, GridSearchCV
+from sklearn.linear_model import LinearRegression, Ridge, Lasso
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error, root_mean_squared_error
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -233,7 +233,81 @@ sm.qqplot(model.resid, line='45')
 plt.title("Q-Q Plot of Residuals")
 plt.show()
 
+alpha_value = 100
+ridge_model = Ridge(alpha=alpha_value)
 
+# Do some cross validation to get a feel for what the model performance is.
+cv_scores = cross_val_score(estimator=ridge_model, X=X_train, y=y_train, cv=5, 
+                            scoring="r2")
+
+print(cv_scores)
+print(cv_scores.mean())
+
+ridge_model = Ridge()
+
+alphas = np.logspace(-6, 6, 200)
+
+# Train the model with different regularisation strengths.
+coefs = []
+MSEs = []
+for each_value in alphas:
+    ridge_model.set_params(alpha=each_value)
+    ridge_model.fit(X_train, y_train)
+    coefs.append(ridge_model.coef_)
+    y_pred = ridge_model.predict(X_test)
+    MSEs.append(mean_squared_error(y_test, y_pred))
+    
+# Plot parameters of the model as they change wth alpha.
+fig, ax = plt.subplots(figsize=(8,6))
+ax = plt.gca()
+ax.plot(alphas, coefs)
+ax.set_xscale('log')
+plt.xlabel(r'$\alpha$')
+plt.ylabel('Feature weights')
+plt.title('Ridge variable coefficients compared to MSE')
+plt.axis('tight')
+labels = scaled_data.columns.to_list()
+
+ax2 = ax.twinx()
+ax2.plot(alphas, MSEs, color="red")
+ax2.set_ylabel("MSE", color="red")
+ax2.tick_params(axis='y', labelcolor="red")
+labels.append("MSE")
+fig.legend(labels, loc=(0.13, 0.4))
+plt.show()
+
+model_names = ['Ridge', 'ridge_2']
+classification_models = [Ridge(), Ridge()]
+ridge_hyper = [{"alpha": [0.001, 0.01, 0.1, 1, 10, 100, 1000],
+                "solver": ["auto","svd", "cholesky", "lsqr", "sag", "saga" ],
+                "max_iter": [100, 500, 1000, 5000],
+                "fit_intercept": [True, False]
+                }
+]
+
+ridge_param_grid = {
+    "alpha": np.logspace(-3, 3, 20),
+    "solver": ["auto"],
+    "max_iter": [1000],
+}
+
+hyperparameters = [ridge_hyper, ridge_param_grid]
+
+for model, model_name, parameters_to_search in zip(classification_models, model_names, hyperparameters):
+
+    grid_search = GridSearchCV(estimator=model, param_grid=parameters_to_search, 
+                                      scoring="r2", cv=5)
+
+    grid_search.fit(X_train, y_train)
+
+    print(f"\n{model_name} Best parameters: \n", grid_search.best_params_)
+
+    print(f"\nBest CV {model_name} F1: \n", grid_search.best_score_)
+
+    optimised_model = grid_search.best_estimator_
+
+    print(optimised_model)
+    
 # from sklearn.linear_model import ElasticNet
 
 # model = ElasticNet(
