@@ -4,6 +4,8 @@ from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error, r
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
+import statsmodels.api as sm
+from scipy import stats
 
 """
 Model for:
@@ -78,7 +80,10 @@ for i, col in enumerate(model_columns):
     print(f"{i}. {col} coefficient:", linear_model.coef_[i].round(3))
 
 plt.scatter(y_pred, y_test, color="dodgerblue", label="Data")
-plt.plot(y_test, y_test, color='red', linewidth=3, label = 'Actual Score Line')
+# plt.plot(y_test, y_test, color='red', linewidth=3, label = 'Actual Score Line')
+lims = [min(y_test.min(), y_pred.min()), max(y_test.max(), y_pred.max())]
+
+plt.plot(lims, lims, color='red', linewidth=3, label = 'Actual Score Line')
 plt.title("Predicted vs Actual (Standardised) Scores", fontsize = 20)
 plt.xlabel("Predicted Score", fontsize = 16)
 plt.ylabel("Actual Score", fontsize = 16)
@@ -88,6 +93,45 @@ plt.legend(fontsize = 14)
 # plt.xlim(-3, 2)
 # plt.ylim(-3, 2)
 plt.show()
+
+
+# Feature to plot
+feature = "Avg_Score_per_Tasks"
+
+x = np.linspace(X_train[feature].min(), X_train[feature].max(), 100)
+
+# Create a DataFrame where every feature is fixed at its mean
+X_plot = pd.DataFrame(np.tile(X_train.mean().values, (len(x), 1)), columns=X_train.columns)
+
+X_plot[feature] = x
+
+y_plot = linear_model.predict(X_plot)
+
+plt.figure(figsize=(8,6))
+plt.scatter(X_train[feature], y_train, color="dodgerblue", alpha=0.7, label="Data")
+plt.plot(x, y_plot, color="red", linewidth=3,  label="Regression Line")
+plt.title(f"{feature} Predicting Target")
+plt.xlabel(feature)
+plt.ylabel("Target")
+plt.legend()
+plt.show()
+
+
+from sklearn.inspection import PartialDependenceDisplay
+
+pdd = PartialDependenceDisplay.from_estimator(linear_model, X_train, features=[feature])
+print(pdd)
+coef = pd.Series(linear_model.coef_, index=X_train.columns)
+
+coef.sort_values().plot.barh(figsize=(8,6))
+plt.xlabel("Coefficient")
+plt.title("Feature Importance")
+plt.show()
+
+
+
+
+
 
 y_pred_cv = cross_val_predict(estimator=linear_model, X=X, y=y, cv=5)
 
@@ -117,7 +161,7 @@ def plot_residuals(residual_data, standardised = True):
         res_mean = standard_residual.mean()
         res_median = np.median(standard_residual)
 
-        print(f"Standared Residual Mean: {res_mean} \n Standard Residual Median: {res_median}")
+        print(f"Standared Residual Mean: {res_mean:.3f}\nStandard Residual Median: {res_median:.3f}")
 
         title = "Standardised Residual Distribution Plot of the Linear Model"
 
@@ -125,7 +169,7 @@ def plot_residuals(residual_data, standardised = True):
         res_mean = residual_data.mean()
         res_median = np.median(residual_data)
 
-        print(f"esidual Mean: {res_mean}\nResidual Median: {res_median}")
+        print(f"esidual Mean: {res_mean:.3f}\nResidual Median: {res_median:.3f}")
 
         title = "Residual Distribution Plot of the Linear Model"
 
@@ -175,6 +219,19 @@ plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
 plt.show()
 
+# Q-Q plot
+sm.qqplot(residual, line='45', fit=True)
+
+plt.title("Q-Q Plot of Residuals")
+plt.show()
+
+
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+
+sm.qqplot(model.resid, line='45')
+plt.title("Q-Q Plot of Residuals")
+plt.show()
 
 
 # from sklearn.linear_model import ElasticNet
