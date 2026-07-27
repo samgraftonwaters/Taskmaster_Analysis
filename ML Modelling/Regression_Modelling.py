@@ -1,18 +1,14 @@
 from sklearn.model_selection import train_test_split, cross_val_score, cross_val_predict, GridSearchCV
 from sklearn.linear_model import LinearRegression, Ridge, Lasso, ElasticNet
+from sklearn.preprocessing import RobustScaler
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error, root_mean_squared_error
+from sklearn.inspection import PartialDependenceDisplay
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 import statsmodels.api as sm
 from scipy import stats
 
-"""
-Model for:
-    y = score per number of tasks
-    X = GCA method
-    X - remove score per number of tasks if y = total score
-"""
 
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
 scaled_data = pd.read_csv(file_path + 'Full Contestent Table for Modelling Scaled.csv')
@@ -32,29 +28,35 @@ model_columns = ['Disqualifications',
        'Gender_Non-Binary', 'Seat_Seat_1', 'Seat_Seat_2', 'Seat_Seat_3',
        'Seat_Seat_4', 'Seat_Seat_5']
 
-series_21_contestents = scaled_data[scaled_data['Series'] == 'S21'].reset_index(drop = True)
+series_21_contestents = unscaled_data[scaled_data['Series'] == 'S21'].reset_index(drop = True)
 
 series_21_contestents = series_21_contestents[model_columns]
 
-data = scaled_data[scaled_data['Series'] != 'S21']
+data = unscaled_data[scaled_data['Series'] != 'S21']
 
 model_data = data[model_columns]
 
 X = model_data
-y = unscaled_data[unscaled_data['Series'] != 'S21']['Score'].reset_index(drop = True)
+y = data['Score']
 
 print(X)
 print(y)
 
+#####
+#SINGLE MODEL (TEST)
+
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=123)
+
+scaler = RobustScaler().set_output(transform="pandas")
+
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
 
 linear_model = LinearRegression()
 
 linear_model.fit(X_train, y_train)
 
 y_pred = linear_model.predict(X_test)
-
-
 
 cv_scores_r2 = cross_val_score(estimator=linear_model, X=X, y=y, cv=5, scoring="r2")
 cv_scores_mae = cross_val_score(estimator=linear_model, X=X, y=y, cv=5, scoring="neg_mean_absolute_error")
@@ -75,9 +77,29 @@ print("Model MAE Score:", mae_value)
 print("Model MSE Score:", MSE_value)
 print("Model RMSE Score:", RMSE_value)
 print()
-print("Model intercept:", linear_model.intercept_.round(3))
-for i, col in enumerate(model_columns):
-    print(f"{i}. {col} coefficient:", linear_model.coef_[i].round(3))
+
+def model_coefficients(model_columns, model, x_cols, show_plot = True):
+
+    print("Model intercept:", model.intercept_.round(3))
+    for i, col in enumerate(model_columns):
+        print(f"{i}. {col} coefficient:", model.coef_[i].round(3))
+
+    if show_plot == True:
+        coef = pd.Series(model.coef_, index=x_cols.columns)
+
+        coef.sort_values().plot.barh(figsize=(8,6))
+        plt.xlabel("Coefficient")
+        plt.title("Feature Importance")
+        plt.show()
+
+model_coefficients(model_columns = model_columns, model = linear_model, x_cols = X_train, 
+                   show_plot = True)
+
+# coef = pd.Series(
+#     model.named_steps["model"].coef_,
+#     index=X_train.columns
+# )
+
 
 plt.scatter(y_pred, y_test, color="dodgerblue", label="Data")
 # plt.plot(y_test, y_test, color='red', linewidth=3, label = 'Actual Score Line')
@@ -98,6 +120,8 @@ plt.show()
 # Feature to plot
 feature = "Avg_Score_per_Tasks"
 
+print(X_train)
+
 x = np.linspace(X_train[feature].min(), X_train[feature].max(), 100)
 
 # Create a DataFrame where every feature is fixed at its mean
@@ -116,20 +140,27 @@ plt.ylabel("Target")
 plt.legend()
 plt.show()
 
+features = [
+    "Avg_Score_per_Tasks",
+    "Number_of_Tasks",
+    "Team_Score_per_Person"
+]
 
-from sklearn.inspection import PartialDependenceDisplay
+fig, ax = plt.subplots(figsize=(8, 6))
+PartialDependenceDisplay.from_estimator(linear_model, X_test, features=features, ax = ax)
 
-pdd = PartialDependenceDisplay.from_estimator(linear_model, X_train, features=[feature])
-print(pdd)
-coef = pd.Series(linear_model.coef_, index=X_train.columns)
-
-coef.sort_values().plot.barh(figsize=(8,6))
-plt.xlabel("Coefficient")
-plt.title("Feature Importance")
 plt.show()
 
+fig, ax = plt.subplots(figsize=(7, 6))
 
+PartialDependenceDisplay.from_estimator(
+    estimator=linear_model,
+    X=X_test,
+    features=[("Avg_Score_per_Tasks", "Number_of_Tasks")],
+    ax = ax
+)
 
+plt.show()
 
 
 
@@ -150,7 +181,6 @@ ax.set_xlabel('Measured Count')
 ax.set_ylabel('Predicted Count')
 ax.set_title(r"True and Predicted $y_i$")
 plt.show()
-
 
 def plot_residuals(residual_data, standardised = True):
 
@@ -219,194 +249,8 @@ plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
 plt.show()
 
-# Q-Q plot
+
 sm.qqplot(residual, line='45', fit=True)
 
 plt.title("Q-Q Plot of Residuals")
 plt.show()
-
-
-X = sm.add_constant(X)
-model = sm.OLS(y, X).fit()
-
-sm.qqplot(model.resid, line='45')
-plt.title("Q-Q Plot of Residuals")
-plt.show()
-
-
-
-# ridge_model = Ridge()
-
-# alphas = np.logspace(-6, 6, 200)
-
-# # Train the model with different regularisation strengths.
-# coefs = []
-# MSEs = []
-# for each_value in alphas:
-#     ridge_model.set_params(alpha=each_value)
-#     ridge_model.fit(X_train, y_train)
-#     coefs.append(ridge_model.coef_)
-#     y_pred = ridge_model.predict(X_test)
-#     MSEs.append(mean_squared_error(y_test, y_pred))
-    
-# # Plot parameters of the model as they change wth alpha.
-# fig, ax = plt.subplots(figsize=(8,6))
-# ax = plt.gca()
-# ax.plot(alphas, coefs)
-# ax.set_xscale('log')
-# plt.xlabel(r'$\alpha$')
-# plt.ylabel('Feature weights')
-# plt.title('Ridge variable coefficients compared to MSE')
-# plt.axis('tight')
-# labels = scaled_data.columns.to_list()
-
-# ax2 = ax.twinx()
-# ax2.plot(alphas, MSEs, color="red")
-# ax2.set_ylabel("MSE", color="red")
-# ax2.tick_params(axis='y', labelcolor="red")
-# labels.append("MSE")
-# fig.legend(labels, loc=(0.13, 0.4))
-# plt.show()
-
-
-# Create the model object
-# lasso_model = Lasso()
-
-# set a range of alpha values
-# alphas = np.logspace(-6, 6, 200)
-
-# # Train the model with different regularisation strengths
-# coefs = []
-# MSEs = []
-# for each_value in alphas:
-#     lasso_model.set_params(alpha=each_value)
-#     lasso_model.fit(X_train, y_train)
-#     coefs.append(lasso_model.coef_)
-#     y_pred = lasso_model.predict(X_test)
-#     MSEs.append(mean_squared_error(y_test, y_pred))
-
-# # Plot parameters of the model as they change wth alpha.
-# fig, ax = plt.subplots(figsize=(8,6))
-# ax = plt.gca()
-# ax.plot(alphas, coefs)
-# ax.set_xscale('log')
-# plt.xlabel(r'$\alpha$')
-# plt.ylabel('Feature weights')
-# plt.title('Lasso variable coefficients compared to MSE')
-# plt.axis('tight')
-# labels = scaled_data.columns.to_list()
-
-# ax2 = ax.twinx()
-# ax2.plot(alphas, MSEs, color="red")
-# ax2.set_ylabel("MSE", color="red")
-# ax2.tick_params(axis='y', labelcolor="red")
-# labels.append("MSE")
-# fig.legend(labels, loc=(0.13, 0.4))
-# plt.show()
-
-lin_reg_hyper = [{"fit_intercept": [True, False],
-                 "positive": [True, False]}]
-
-ridge_hyper = [{"alpha": [0.001, 0.01, 0.1, 1, 10, 100, 1000],
-                "solver": ["auto","svd", "cholesky", "lsqr", "sag", "saga" ],
-                "max_iter": [10000, 20000, 50000],
-                "tol": [1e-3, 1e-4, 1e-5],
-                "fit_intercept": [True, False]
-                }
-]
-
-lasso_hyper = [{"alpha": [0.001, 0.01, 0.1, 1, 10, 100, 1000],
-                "max_iter": [10000, 20000, 50000],
-                "tol": [1e-3, 1e-4, 1e-5],
-                "fit_intercept": [True, False],
-                "selection" : ["cyclic", "random"]
-                }
-]
-
-ridge_param_grid = {
-    "alpha": np.logspace(-3, 3, 20),
-    "solver": ["auto"],
-    "max_iter": [5000, 10000],
-}
-
-lasso_param_grid = {
-    "alpha": np.logspace(-3, 3, 20),
-    "selection" : ["cyclic", "random"],
-    "max_iter": [5000, 10000],
-}
-
-elastic_hyper = {
-    "alpha": np.logspace(-3, 3, 20),
-    "l1_ratio": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
-    "fit_intercept": [True, False],
-    "max_iter": [5000, 10000, 20000, 50000],
-    "tol": [1e-3, 1e-4],
-    "selection": ["cyclic", "random"]
-}
-
-elastic_param_grid = {
-    "alpha": np.logspace(-3, 3, 20),
-    "l1_ratio": np.linspace(0.1, 1, 11),
-    "max_iter": [5000],
-    "tol": [1e-4]
-}
-model_names = ['Linear', 'Ridge', 'Lasso', 'Elastic_Net']
-classification_models = [LinearRegression(), Ridge(), Lasso(), ElasticNet()]
-hyperparameters = [lin_reg_hyper, ridge_hyper, lasso_hyper, elastic_hyper]
-
-# model_names = ['Ridge', 'ridge_2', 'Lasso', 'lasso_2', 'Elastic_Net_2']
-# classification_models = [Ridge(), Ridge(), Lasso(), Lasso(), ElasticNet()]
-# hyperparameters = [ridge_hyper, ridge_param_grid, lasso_hyper, lasso_param_grid, 
-#                    elastic_param_grid]
-
-Best_Params = []
-r2_value = []
-mse_value = []
-rmse_value = []
-mae_value = []
-
-for model, model_name, parameters_to_search in zip(classification_models, model_names, hyperparameters):
-
-    grid_search = GridSearchCV(estimator=model, param_grid=parameters_to_search, 
-                                      scoring="r2", cv=5)
-
-    grid_search.fit(X_train, y_train)
-
-    print(f"\n{model_name} Best parameters: \n", grid_search.best_params_)
-
-    print(f"\nBest CV {model_name} R2: \n", grid_search.best_score_)
-
-    optimised_model = grid_search.best_estimator_
-
-    y_pred = grid_search.predict(X_test)
-
-    print(optimised_model)
-    print(grid_search.best_params_)
-
-    Best_Params.append(grid_search.best_params_)
-
-    r2_value.append(r2_score(y_test, y_pred))
-    mae_value.append(mean_absolute_error(y_test, y_pred) * -1)
-    mse_value.append(mean_squared_error(y_test, y_pred))
-    rmse_value.append(root_mean_squared_error(y_test, y_pred))
-
-
-model_table = pd.DataFrame({
-    "Model Name" : model_names,
-    "Classification Model" : classification_models,
-    "Best Hyperparameters" : Best_Params,
-    "R2 Score" : r2_score,
-    "MAE Score" : mae_value,
-    "MSE Score" : mse_value,
-    "RMSE Score" : rmse_value,
-    }
-)
-
-print(model_table)
-
-# from sklearn.linear_model import ElasticNet
-
-# model = ElasticNet(
-#     alpha=1.0,      # overall regularisation strength
-#     l1_ratio=0.5    # 0 = Ridge, 1 = Lasso
-# )
