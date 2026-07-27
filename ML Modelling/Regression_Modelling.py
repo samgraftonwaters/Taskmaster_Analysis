@@ -1,5 +1,7 @@
 from sklearn.model_selection import train_test_split, cross_val_score, cross_val_predict, GridSearchCV
 from sklearn.linear_model import LinearRegression, Ridge, Lasso, ElasticNet
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import RobustScaler
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error, root_mean_squared_error
 from sklearn.inspection import PartialDependenceDisplay
@@ -8,6 +10,9 @@ import pandas as pd
 import numpy as np
 import statsmodels.api as sm
 from scipy import stats
+
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import PolynomialFeatures
 
 from Function_Scripts import Regression_Functions as RF
 
@@ -53,6 +58,8 @@ scaler = RobustScaler().set_output(transform="pandas")
 
 X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
+
+print(X_train)
 
 linear_model = LinearRegression()
 
@@ -208,3 +215,185 @@ sm.qqplot(residual, line='45', fit=True)
 
 plt.title("Q-Q Plot of Residuals")
 plt.show()
+
+
+
+######
+#Model Comparison
+
+
+models = {
+    "Linear Regression": Pipeline([
+        ("scaler", RobustScaler()),
+        ("model", LinearRegression())
+    ]),
+
+    "Ridge": Pipeline([
+        ("scaler", RobustScaler()),
+        ("model", Ridge())
+    ]),
+
+    "Lasso": Pipeline([
+        ("scaler", RobustScaler()),
+        ("model", Lasso())
+    ]),
+
+    "Elastic Net": Pipeline([
+        ("scaler", RobustScaler()),
+        ("model", ElasticNet())
+    ]),
+
+
+    "Polynomial Ridge": Pipeline([ #Best option, but testing the rest
+        ("poly", PolynomialFeatures(include_bias=False)),
+        ("ridge", Ridge())
+    ]),
+
+    "Polynomial Lasso": Pipeline([
+    ("poly", PolynomialFeatures(include_bias=False)),
+    ("lasso", Lasso())
+    ]),
+
+    "Polynomial Elastic Net": Pipeline([
+    ("poly", PolynomialFeatures(include_bias=False)),
+    ("elastic", ElasticNet())
+    ]),
+
+    "Decision Tree": DecisionTreeRegressor(random_state=42),
+
+    "Random Forest": RandomForestRegressor(random_state=42)
+}
+
+param_grids = {
+
+    "Linear Regression": {
+        "fit_intercept": [True, False],
+        "positive": [True, False]
+    },
+
+    "Ridge": {
+        "alpha": [0.001, 0.01, 0.1, 1, 10, 100, 1000],
+        "solver": ["auto","svd", "cholesky", "lsqr", "sag", "saga" ],
+        "max_iter": [10000, 20000, 50000],
+        "tol": [1e-3, 1e-4, 1e-5],
+        "fit_intercept": [True, False]
+    },
+
+    "Lasso": {"alpha": [0.001, 0.01, 0.1, 1, 10, 100, 1000],
+            "max_iter": [10000, 20000, 50000],
+            "tol": [1e-3, 1e-4, 1e-5],
+            "fit_intercept": [True, False],
+            "selection" : ["cyclic", "random"]
+            },
+
+    "Elastic Net": {
+        "alpha": np.logspace(-3, 3, 20),
+        "l1_ratio": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
+        "fit_intercept": [True, False],
+        "max_iter": [5000, 10000, 20000, 50000],
+        "tol": [1e-3, 1e-4],
+        "selection": ["cyclic", "random"]
+    },
+
+    "Polynomial Ridge": {
+        "poly__degree": [2, 3],
+        "alpha": [0.001, 0.01, 0.1, 1, 10, 100, 1000],
+        "solver": ["auto","svd", "cholesky", "lsqr", "sag", "saga" ],
+        "max_iter": [10000, 20000, 50000],
+        "tol": [1e-3, 1e-4, 1e-5],
+        "fit_intercept": [True, False]
+    },
+
+    "Polynomial Lasso": {
+        "poly__degree": [2, 3],
+        "alpha": [0.001, 0.01, 0.1, 1, 10, 100, 1000],
+        "max_iter": [10000, 20000, 50000],
+        "tol": [1e-3, 1e-4, 1e-5],
+        "fit_intercept": [True, False],
+        "selection" : ["cyclic", "random"]
+    },
+
+    "Polynomial Elastic Net": {
+        "poly__degree": [2, 3],
+        "alpha": np.logspace(-3, 3, 20),
+        "l1_ratio": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
+        "fit_intercept": [True, False],
+        "max_iter": [5000, 10000, 20000, 50000],
+        "tol": [1e-3, 1e-4],
+        "selection": ["cyclic", "random"]
+    },
+
+    "Decision Tree": {
+        "max_depth": [None, 5, 10, 20],
+        "min_samples_split": [2, 5, 10],
+        "min_samples_leaf": [1, 2, 4]
+    },
+
+    "Random Forest": {
+        "n_estimators": [100, 200, 500],
+        "max_depth": [None, 10, 20],
+        "min_samples_split": [2, 5],
+        "min_samples_leaf": [1, 2]
+    }
+}
+
+results = []
+Best_Params = []
+r2_value = []
+mse_value = []
+rmse_value = []
+mae_value = []
+
+for model_name, model in models.items():
+
+    print(f"Running {model_name}...")
+
+    grid_search = GridSearchCV(
+        estimator=model,
+        param_grid=param_grids[model_name],
+        scoring="neg_mean_absolute_error",
+        cv=5,
+        n_jobs=-1
+    )
+
+    grid_search.fit(X_train, y_train)
+
+    print(f"\n{model_name} Best parameters: \n", grid_search.best_params_)
+
+    print(f"\nBest CV {model_name} MAE: \n", grid_search.best_score_)
+
+    optimised_model = grid_search.best_estimator_
+
+    y_pred = grid_search.predict(X_test)
+
+    print(optimised_model)
+    print(grid_search.best_params_)
+
+    Best_Params.append(grid_search.best_params_)
+
+    r2_value.append(r2_score(y_test, y_pred))
+    mae_value.append(mean_absolute_error(y_test, y_pred) * -1)
+    mse_value.append(mean_squared_error(y_test, y_pred))
+    rmse_value.append(root_mean_squared_error(y_test, y_pred))
+
+    results.append({
+        "Model": model_name,
+        "Best MAE": -grid_search.best_score_,
+        "Best Parameters": grid_search.best_params_,
+        "Best Estimator": grid_search.best_estimator_
+    })
+
+
+model_table = pd.DataFrame({
+    "Model Name" : models.items()[0],
+    "Classification Model" : models.items()[1],
+    "Best Hyperparameters" : Best_Params,
+    "R2 Score" : r2_score,
+    "MAE Score" : mae_value,
+    "MSE Score" : mse_value,
+    "RMSE Score" : rmse_value,
+    }
+)
+
+print(model_table)
+
