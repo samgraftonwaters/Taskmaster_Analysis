@@ -9,6 +9,8 @@ import numpy as np
 import statsmodels.api as sm
 from scipy import stats
 
+from Function_Scripts import Regression_Functions as RF
+
 
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
 scaled_data = pd.read_csv(file_path + 'Full Contestent Table for Modelling Scaled.csv')
@@ -78,27 +80,10 @@ print("Model MSE Score:", MSE_value)
 print("Model RMSE Score:", RMSE_value)
 print()
 
-def model_coefficients(model_columns, model, x_cols, show_plot = True):
 
-    print("Model intercept:", model.intercept_.round(3))
-    for i, col in enumerate(model_columns):
-        print(f"{i}. {col} coefficient:", model.coef_[i].round(3))
 
-    if show_plot == True:
-        coef = pd.Series(model.coef_, index=x_cols.columns)
-
-        coef.sort_values().plot.barh(figsize=(8,6))
-        plt.xlabel("Coefficient")
-        plt.title("Feature Importance")
-        plt.show()
-
-model_coefficients(model_columns = model_columns, model = linear_model, x_cols = X_train, 
+RF.model_coefficients(model_columns = model_columns, model = linear_model, x_cols = X_train, 
                    show_plot = True)
-
-# coef = pd.Series(
-#     model.named_steps["model"].coef_,
-#     index=X_train.columns
-# )
 
 
 plt.scatter(y_pred, y_test, color="dodgerblue", label="Data")
@@ -182,46 +167,15 @@ ax.set_ylabel('Predicted Count')
 ax.set_title(r"True and Predicted $y_i$")
 plt.show()
 
-def plot_residuals(residual_data, standardised = True):
-
-    if standardised == True:
-
-        standard_residual = residual_data / residual.std()
-
-        res_mean = standard_residual.mean()
-        res_median = np.median(standard_residual)
-
-        print(f"Standard Residual Mean: {res_mean:.3f}\nStandard Residual Median: {res_median:.3f}")
-
-        title = "Standardised Residual Distribution Plot of the Linear Model"
-
-    else:
-        res_mean = residual_data.mean()
-        res_median = np.median(residual_data)
-
-        print(f"Residual Mean: {res_mean:.3f}\nResidual Median: {res_median:.3f}")
-
-        title = "Residual Distribution Plot of the Linear Model"
-
-    plt.axvline(x=res_mean, label=f"mean: {res_mean.round(2)}", color="red", lw = 4)
-    plt.axvline(x=res_median, label=f"median: {res_median.round(2)}", color = 'black', lw = 4)
-    plt.hist(residual_data, bins=25, color="dodgerblue", alpha = 0.6)
-
-    plt.title(title, fontsize = 20)
-    plt.xlabel("Residual", fontsize = 16)
-    plt.ylabel("Count", fontsize = 16)
-    plt.xticks(fontsize = 14)
-    plt.yticks(fontsize = 14)
-    plt.legend(fontsize = 14)
-    plt.show()
 
 residual = y_test - y_pred
 
+RF.plot_residuals(residual_data = residual, standardised = True)
+
+RF.plot_residuals(residual_data = residual, standardised = False)
+
+
 standard_residual = residual / residual.std()
-
-plot_residuals(residual_data = standard_residual, standardised = True)
-
-plot_residuals(residual_data = residual, standardised = False)
 
 plt.axhline(0, color="black", linestyle="--", lw = 4)
 plt.scatter(y_pred, standard_residual, color="dodgerblue")
@@ -236,9 +190,9 @@ residual = y - y_pred_cv
 
 standard_residual = residual / residual.std()
 
-plot_residuals(residual_data = standard_residual, standardised = True)
+RF.plot_residuals(residual_data = standard_residual, standardised = True)
 
-plot_residuals(residual_data = residual, standardised = False)
+RF.plot_residuals(residual_data = residual, standardised = False)
 
 plt.axhline(0, color="black", linestyle="--", lw = 4)
 plt.scatter(y_pred_cv, standard_residual, color="dodgerblue")
