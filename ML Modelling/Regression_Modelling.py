@@ -267,60 +267,61 @@ models = {
 param_grids = {
 
     "Linear Regression": {
-        "fit_intercept": [True, False],
-        "positive": [True, False]
+        "model__fit_intercept": [True, False],
+        "model__positive": [True, False]
     },
 
     "Ridge": {
-        "alpha": [0.001, 0.01, 0.1, 1, 10, 100, 1000],
-        "solver": ["auto","svd", "cholesky", "lsqr", "sag", "saga" ],
-        "max_iter": [10000, 20000, 50000],
-        "tol": [1e-3, 1e-4, 1e-5],
-        "fit_intercept": [True, False]
+        "model__alpha": [0.001, 0.01, 0.1, 1, 10, 100, 1000],
+        "model__solver": ["auto", "svd", "cholesky", "lsqr", "sag", "saga"],
+        "model__max_iter": [10000, 20000, 50000],
+        "model__tol": [1e-3, 1e-4, 1e-5],
+        "model__fit_intercept": [True, False]
     },
 
-    "Lasso": {"alpha": [0.001, 0.01, 0.1, 1, 10, 100, 1000],
-            "max_iter": [10000, 20000, 50000],
-            "tol": [1e-3, 1e-4, 1e-5],
-            "fit_intercept": [True, False],
-            "selection" : ["cyclic", "random"]
-            },
+    "Lasso": {
+        "model__alpha": [0.001, 0.01, 0.1, 1, 10, 100, 1000],
+        "model__max_iter": [10000, 20000, 50000],
+        "model__tol": [1e-3, 1e-4, 1e-5],
+        "model__fit_intercept": [True, False],
+        "model__selection": ["cyclic", "random"]
+    },
 
     "Elastic Net": {
-        "alpha": np.logspace(-3, 3, 20),
-        "l1_ratio": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
-        "fit_intercept": [True, False],
-        "max_iter": [5000, 10000, 20000, 50000],
-        "tol": [1e-3, 1e-4],
-        "selection": ["cyclic", "random"]
+        "model__alpha": np.logspace(-3, 3, 20),
+        "model__l1_ratio": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
+        "model__fit_intercept": [True, False],
+        "model__max_iter": [5000, 10000, 20000, 50000],
+        "model__tol": [1e-3, 1e-4],
+        "model__selection": ["cyclic", "random"]
     },
 
     "Polynomial Ridge": {
         "poly__degree": [2, 3],
-        "alpha": [0.001, 0.01, 0.1, 1, 10, 100, 1000],
-        "solver": ["auto","svd", "cholesky", "lsqr", "sag", "saga" ],
-        "max_iter": [10000, 20000, 50000],
-        "tol": [1e-3, 1e-4, 1e-5],
-        "fit_intercept": [True, False]
+        "model__alpha": [0.001, 0.01, 0.1, 1, 10, 100, 1000],
+        "model__solver": ["auto", "svd", "cholesky", "lsqr", "sag", "saga"],
+        "model__max_iter": [10000, 20000, 50000],
+        "model__tol": [1e-3, 1e-4, 1e-5],
+        "model__fit_intercept": [True, False]
     },
 
     "Polynomial Lasso": {
         "poly__degree": [2, 3],
-        "alpha": [0.001, 0.01, 0.1, 1, 10, 100, 1000],
-        "max_iter": [10000, 20000, 50000],
-        "tol": [1e-3, 1e-4, 1e-5],
-        "fit_intercept": [True, False],
-        "selection" : ["cyclic", "random"]
+        "model__alpha": [0.001, 0.01, 0.1, 1, 10, 100, 1000],
+        "model__max_iter": [10000, 20000, 50000],
+        "model__tol": [1e-3, 1e-4, 1e-5],
+        "model__fit_intercept": [True, False],
+        "model__selection": ["cyclic", "random"]
     },
 
     "Polynomial Elastic Net": {
         "poly__degree": [2, 3],
-        "alpha": np.logspace(-3, 3, 20),
-        "l1_ratio": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
-        "fit_intercept": [True, False],
-        "max_iter": [5000, 10000, 20000, 50000],
-        "tol": [1e-3, 1e-4],
-        "selection": ["cyclic", "random"]
+        "model__alpha": np.logspace(-3, 3, 20),
+        "model__l1_ratio": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
+        "model__fit_intercept": [True, False],
+        "model__max_iter": [5000, 10000, 20000, 50000],
+        "model__tol": [1e-3, 1e-4],
+        "model__selection": ["cyclic", "random"]
     },
 
     "Decision Tree": {
