@@ -16,6 +16,13 @@ from sklearn.preprocessing import PolynomialFeatures
 
 from Function_Scripts import Regression_Functions as RF
 
+import warnings
+from sklearn.exceptions import ConvergenceWarning
+from sklearn.exceptions import FitFailedWarning
+warnings.filterwarnings("ignore", category=UserWarning)
+warnings.filterwarnings("ignore", category=FitFailedWarning)
+warnings.filterwarnings("ignore", category=ConvergenceWarning)
+
 
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
 scaled_data = pd.read_csv(file_path + 'Full Contestent Table for Modelling Scaled.csv')
@@ -132,14 +139,9 @@ plt.ylabel("Target")
 plt.legend()
 plt.show()
 
-features = [
-    "Avg_Score_per_Tasks",
-    "Number_of_Tasks",
-    "Team_Score_per_Person"
-]
 
 fig, ax = plt.subplots(figsize=(8, 6))
-PartialDependenceDisplay.from_estimator(linear_model, X_test, features=features, ax = ax)
+PartialDependenceDisplay.from_estimator(linear_model, X_test, features=model_columns, ax = ax)
 
 plt.show()
 
@@ -228,40 +230,40 @@ models = {
         ("model", LinearRegression())
     ]),
 
-    "Ridge": Pipeline([
-        ("scaler", RobustScaler()),
-        ("model", Ridge())
-    ]),
+    # "Ridge": Pipeline([
+    #     ("scaler", RobustScaler()),
+    #     ("model", Ridge())
+    # ]),
 
-    "Lasso": Pipeline([
-        ("scaler", RobustScaler()),
-        ("model", Lasso())
-    ]),
+    # "Lasso": Pipeline([
+    #     ("scaler", RobustScaler()),
+    #     ("model", Lasso())
+    # ]),
 
-    "Elastic Net": Pipeline([
-        ("scaler", RobustScaler()),
-        ("model", ElasticNet())
-    ]),
+    # "Elastic Net": Pipeline([
+    #     ("scaler", RobustScaler()),
+    #     ("model", ElasticNet())
+    # ]),
 
 
-    "Polynomial Ridge": Pipeline([ #Best option, but testing the rest
-        ("poly", PolynomialFeatures(include_bias=False)),
-        ("ridge", Ridge())
-    ]),
+    # "Polynomial Ridge": Pipeline([ #Best option, but testing the rest
+    #     ("poly", PolynomialFeatures(include_bias=False)),
+    #     ("model", Ridge())
+    # ]),
 
-    "Polynomial Lasso": Pipeline([
-    ("poly", PolynomialFeatures(include_bias=False)),
-    ("lasso", Lasso())
-    ]),
+    # "Polynomial Lasso": Pipeline([
+    # ("poly", PolynomialFeatures(include_bias=False)),
+    # ("model", Lasso())
+    # ]),
 
-    "Polynomial Elastic Net": Pipeline([
-    ("poly", PolynomialFeatures(include_bias=False)),
-    ("elastic", ElasticNet())
-    ]),
+    # "Polynomial Elastic Net": Pipeline([
+    # ("poly", PolynomialFeatures(include_bias=False)),
+    # ("model", ElasticNet())
+    # ]),
 
-    "Decision Tree": DecisionTreeRegressor(random_state=42),
+    # "Decision Tree": DecisionTreeRegressor(random_state=42),
 
-    "Random Forest": RandomForestRegressor(random_state=42)
+    # "Random Forest": RandomForestRegressor(random_state=42)
 }
 
 param_grids = {
@@ -271,71 +273,71 @@ param_grids = {
         "model__positive": [True, False]
     },
 
-    "Ridge": {
-        "model__alpha": [0.001, 0.01, 0.1, 1, 10, 100, 1000],
-        "model__solver": ["auto", "svd", "cholesky", "lsqr", "sag", "saga"],
-        "model__max_iter": [10000, 20000, 50000],
-        "model__tol": [1e-3, 1e-4, 1e-5],
-        "model__fit_intercept": [True, False]
-    },
+    # "Ridge": {
+    #     "model__alpha": np.logspace(-3, 3, 20),
+    #     "model__solver": ["auto", "svd", "cholesky", "lsqr", "sag", "saga"],
+    #     "model__max_iter": [10000, 20000, 50000],
+    #     "model__tol": [1e-3, 1e-4, 1e-5],
+    #     "model__fit_intercept": [True, False]
+    # },
 
-    "Lasso": {
-        "model__alpha": [0.001, 0.01, 0.1, 1, 10, 100, 1000],
-        "model__max_iter": [10000, 20000, 50000],
-        "model__tol": [1e-3, 1e-4, 1e-5],
-        "model__fit_intercept": [True, False],
-        "model__selection": ["cyclic", "random"]
-    },
+    # "Lasso": {
+    #     "model__alpha": np.logspace(-3, 3, 20),
+    #     "model__max_iter": [10000, 20000, 50000],
+    #     "model__tol": [1e-3, 1e-4, 1e-5],
+    #     "model__fit_intercept": [True, False],
+    #     "model__selection": ["cyclic", "random"]
+    # },
 
-    "Elastic Net": {
-        "model__alpha": np.logspace(-3, 3, 20),
-        "model__l1_ratio": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
-        "model__fit_intercept": [True, False],
-        "model__max_iter": [5000, 10000, 20000, 50000],
-        "model__tol": [1e-3, 1e-4],
-        "model__selection": ["cyclic", "random"]
-    },
+    # "Elastic Net": {
+    #     "model__alpha": np.logspace(-3, 3, 20),
+    #     "model__l1_ratio": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
+    #     "model__fit_intercept": [True, False],
+    #     "model__max_iter": [5000, 10000, 20000, 50000],
+    #     "model__tol": [1e-3, 1e-4],
+    #     "model__selection": ["cyclic", "random"]
+    # },
 
-    "Polynomial Ridge": {
-        "poly__degree": [2, 3],
-        "model__alpha": [0.001, 0.01, 0.1, 1, 10, 100, 1000],
-        "model__solver": ["auto", "svd", "cholesky", "lsqr", "sag", "saga"],
-        "model__max_iter": [10000, 20000, 50000],
-        "model__tol": [1e-3, 1e-4, 1e-5],
-        "model__fit_intercept": [True, False]
-    },
+    # "Polynomial Ridge": {
+    #     "poly__degree": [2, 3],
+    #     "model__alpha": np.logspace(-3, 3, 20),
+    #     "model__solver": ["auto", "svd", "cholesky", "lsqr", "sag", "saga"],
+    #     "model__max_iter": [10000, 20000, 50000],
+    #     "model__tol": [1e-3, 1e-4, 1e-5],
+    #     "model__fit_intercept": [True, False]
+    # },
 
-    "Polynomial Lasso": {
-        "poly__degree": [2, 3],
-        "model__alpha": [0.001, 0.01, 0.1, 1, 10, 100, 1000],
-        "model__max_iter": [10000, 20000, 50000],
-        "model__tol": [1e-3, 1e-4, 1e-5],
-        "model__fit_intercept": [True, False],
-        "model__selection": ["cyclic", "random"]
-    },
+    # "Polynomial Lasso": {
+    #     "poly__degree": [2, 3],
+    #     "model__alpha": np.logspace(-3, 3, 20),
+    #     "model__max_iter": [10000, 20000, 50000],
+    #     "model__tol": [1e-3, 1e-4, 1e-5],
+    #     "model__fit_intercept": [True, False],
+    #     "model__selection": ["cyclic", "random"]
+    # },
 
-    "Polynomial Elastic Net": {
-        "poly__degree": [2, 3],
-        "model__alpha": np.logspace(-3, 3, 20),
-        "model__l1_ratio": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
-        "model__fit_intercept": [True, False],
-        "model__max_iter": [5000, 10000, 20000, 50000],
-        "model__tol": [1e-3, 1e-4],
-        "model__selection": ["cyclic", "random"]
-    },
+    # "Polynomial Elastic Net": {
+    #     "poly__degree": [2, 3],
+    #     "model__alpha": np.logspace(-3, 3, 20),
+    #     "model__l1_ratio": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
+    #     "model__fit_intercept": [True, False],
+    #     "model__max_iter": [5000, 10000, 20000, 50000],
+    #     "model__tol": [1e-3, 1e-4],
+    #     "model__selection": ["cyclic", "random"]
+    # },
 
-    "Decision Tree": {
-        "max_depth": [None, 5, 10, 20],
-        "min_samples_split": [2, 5, 10],
-        "min_samples_leaf": [1, 2, 4]
-    },
+    # "Decision Tree": {
+    #     "max_depth": [None, 5, 10, 20],
+    #     "min_samples_split": [2, 5, 10],
+    #     "min_samples_leaf": [1, 2, 4]
+    # },
 
-    "Random Forest": {
-        "n_estimators": [100, 200, 500],
-        "max_depth": [None, 10, 20],
-        "min_samples_split": [2, 5],
-        "min_samples_leaf": [1, 2]
-    }
+    # "Random Forest": {
+    #     "n_estimators": [100, 200, 500],
+    #     "max_depth": [None, 10, 20],
+    #     "min_samples_split": [2, 5],
+    #     "min_samples_leaf": [1, 2]
+    # }
 }
 
 results = []
@@ -361,40 +363,41 @@ for model_name, model in models.items():
 
     print(f"\n{model_name} Best parameters: \n", grid_search.best_params_)
 
-    print(f"\nBest CV {model_name} MAE: \n", grid_search.best_score_)
+    print(f"\nBest CV {model_name} MAE: \n", -grid_search.best_score_)
 
     optimised_model = grid_search.best_estimator_
 
     y_pred = grid_search.predict(X_test)
 
     print(optimised_model)
-    print(grid_search.best_params_)
 
     Best_Params.append(grid_search.best_params_)
 
     r2_value.append(r2_score(y_test, y_pred))
-    mae_value.append(mean_absolute_error(y_test, y_pred) * -1)
+    mae_value.append(-1* mean_absolute_error(y_test, y_pred))
     mse_value.append(mean_squared_error(y_test, y_pred))
     rmse_value.append(root_mean_squared_error(y_test, y_pred))
 
     results.append({
         "Model": model_name,
         "Best MAE": -grid_search.best_score_,
-        "Best Parameters": grid_search.best_params_,
+        "Best Hyperparameters": grid_search.best_params_,
         "Best Estimator": grid_search.best_estimator_
     })
 
+results = pd.DataFrame(results)
 
 model_table = pd.DataFrame({
-    "Model Name" : models.items()[0],
-    "Classification Model" : models.items()[1],
-    "Best Hyperparameters" : Best_Params,
-    "R2 Score" : r2_score,
+    "R2 Score" : r2_value,
     "MAE Score" : mae_value,
     "MSE Score" : mse_value,
     "RMSE Score" : rmse_value,
     }
 )
 
+model_table = pd.concat([results, model_table], axis = 1)
+
 print(model_table)
+
+model_table.to_csv(file_path + 'Regression_Modelling_Comparison_Table.csv', sep = ',', index = False)
 

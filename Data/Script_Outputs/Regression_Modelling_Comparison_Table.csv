@@ -1,0 +1,3 @@
+Best Hyperparameters,R2 Score,MAE Score,MSE Score,RMSE Score,Model,Best MAE,Best Parameters,Best Estimator
+"{'model__fit_intercept': True, 'model__positive': True}",<function r2_score at 0x12f67f740>,-2.156326529450485,7.544821092333329,2.746783772402431,Linear Regression,2.417051005559973,"{'model__fit_intercept': True, 'model__positive': True}","Pipeline(steps=[('scaler', RobustScaler()),
+                ('model', LinearRegression(positive=True))])"
