@@ -24,7 +24,7 @@ def model_coefficients(model_columns, model, x_cols, show_plot = True):
         plt.title("Feature Importance")
         plt.show()
 
-def plot_residuals(residual_data, standardised = True):
+def plot_residuals(residual_data, standardised = True, show_plot = True):
 
     if standardised == True:
 
@@ -55,4 +55,7 @@ def plot_residuals(residual_data, standardised = True):
     plt.xticks(fontsize = 14)
     plt.yticks(fontsize = 14)
     plt.legend(fontsize = 14)
-    plt.show()
+    if show_plot == True:
+        plt.show()
+
+    return(res_mean, res_median)

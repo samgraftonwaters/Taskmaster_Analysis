@@ -245,21 +245,20 @@ models = {
         ("model", ElasticNet())
     ]),
 
+    # "Polynomial Ridge": Pipeline([ #Best option, but testing the rest
+    #     ("poly", PolynomialFeatures(include_bias=False)),
+    #     ("model", Ridge())
+    # ]),
 
-    "Polynomial Ridge": Pipeline([ #Best option, but testing the rest
-        ("poly", PolynomialFeatures(include_bias=False)),
-        ("model", Ridge())
-    ]),
+    # "Polynomial Lasso": Pipeline([
+    # ("poly", PolynomialFeatures(include_bias=False)),
+    # ("model", Lasso())
+    # ]),
 
-    "Polynomial Lasso": Pipeline([
-    ("poly", PolynomialFeatures(include_bias=False)),
-    ("model", Lasso())
-    ]),
-
-    "Polynomial Elastic Net": Pipeline([
-    ("poly", PolynomialFeatures(include_bias=False)),
-    ("model", ElasticNet())
-    ]),
+    # "Polynomial Elastic Net": Pipeline([
+    # ("poly", PolynomialFeatures(include_bias=False)),
+    # ("model", ElasticNet())
+    # ]),
 
     "Decision Tree": DecisionTreeRegressor(random_state=42),
 
@@ -298,33 +297,33 @@ param_grids = {
         "model__selection": ["cyclic", "random"]
     },
 
-    "Polynomial Ridge": {
-        "poly__degree": [2, 3],
-        "model__alpha": np.logspace(-3, 3, 20),
-        "model__solver": ["auto", "svd", "cholesky", "lsqr", "sag", "saga"],
-        "model__max_iter": [10000, 20000, 50000],
-        "model__tol": [1e-3, 1e-4, 1e-5],
-        "model__fit_intercept": [True, False]
-    },
+    # "Polynomial Ridge": {
+    #     "poly__degree": [2, 3],
+    #     "model__alpha": np.logspace(-3, 3, 20),
+    #     "model__solver": ["auto", "svd", "cholesky", "lsqr", "sag", "saga"],
+    #     "model__max_iter": [10000, 20000, 50000],
+    #     "model__tol": [1e-3, 1e-4, 1e-5],
+    #     "model__fit_intercept": [True, False]
+    # },
 
-    "Polynomial Lasso": {
-        "poly__degree": [2, 3],
-        "model__alpha": np.logspace(-3, 3, 20),
-        "model__max_iter": [10000, 20000, 50000],
-        "model__tol": [1e-3, 1e-4, 1e-5],
-        "model__fit_intercept": [True, False],
-        "model__selection": ["cyclic", "random"]
-    },
+    # "Polynomial Lasso": {
+    #     "poly__degree": [2, 3],
+    #     "model__alpha": np.logspace(-3, 3, 20),
+    #     "model__max_iter": [10000, 20000, 50000],
+    #     "model__tol": [1e-3, 1e-4, 1e-5],
+    #     "model__fit_intercept": [True, False],
+    #     "model__selection": ["cyclic", "random"]
+    # },
 
-    "Polynomial Elastic Net": {
-        "poly__degree": [2, 3],
-        "model__alpha": np.logspace(-3, 3, 20),
-        "model__l1_ratio": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
-        "model__fit_intercept": [True, False],
-        "model__max_iter": [5000, 10000, 20000, 50000],
-        "model__tol": [1e-3, 1e-4],
-        "model__selection": ["cyclic", "random"]
-    },
+    # "Polynomial Elastic Net": {
+    #     "poly__degree": [2, 3],
+    #     "model__alpha": np.logspace(-3, 3, 20),
+    #     "model__l1_ratio": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
+    #     "model__fit_intercept": [True, False],
+    #     "model__max_iter": [5000, 10000, 20000, 50000],
+    #     "model__tol": [1e-3, 1e-4],
+    #     "model__selection": ["cyclic", "random"]
+    # },
 
     "Decision Tree": {
         "max_depth": [None, 5, 10, 20],
@@ -371,6 +370,14 @@ for model_name, model in models.items():
     mse_value = mean_squared_error(y_test, y_pred)
     rmse_value = root_mean_squared_error(y_test, y_pred)
 
+    residual = y_test - y_pred
+
+    res_stand_mean, res_stand_median = RF.plot_residuals(residual_data = residual, standardised = True, 
+                                                         show_plot = False)
+
+    res_mean, res_median = RF.plot_residuals(residual_data = residual, standardised = False, 
+                                             show_plot = False)
+
     results.append({
         "Model": model_name,
         "Best MAE": -grid_search.best_score_,
@@ -380,6 +387,10 @@ for model_name, model in models.items():
         "MAE Score" : mae_value,
         "MSE Score" : mse_value,
         "RMSE Score" : rmse_value,
+        "Standard Residual Mean" : res_stand_mean,
+        "Standard Residual Median" :res_stand_median,
+        "Residual Mean" : res_mean,
+        "Residual Median" :res_median
     })
 
 model_table = results
