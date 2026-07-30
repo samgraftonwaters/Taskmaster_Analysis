@@ -1,3 +1,17 @@
-Best Hyperparameters,R2 Score,MAE Score,MSE Score,RMSE Score,Model,Best MAE,Best Parameters,Best Estimator
-"{'model__fit_intercept': True, 'model__positive': True}",<function r2_score at 0x12f67f740>,-2.156326529450485,7.544821092333329,2.746783772402431,Linear Regression,2.417051005559973,"{'model__fit_intercept': True, 'model__positive': True}","Pipeline(steps=[('scaler', RobustScaler()),
-                ('model', LinearRegression(positive=True))])"
+Model,Best MAE,Best Hyperparameters,Best Estimator,R2 Score,MAE Score,MSE Score,RMSE Score,Standard Residual Mean,Standard Residual Median,Residual Mean,Residual Median
+Linear Regression,2.417051005559973,"{'model__fit_intercept': True, 'model__positive': True}","Pipeline(steps=[('scaler', RobustScaler()),
+                ('model', LinearRegression(positive=True))])",0.9922153333274866,-2.156326529450485,7.544821092333329,2.746783772402431,0.03894948692892349,0.23684078287854585,0.1096775963263589,0.6669183557045102
+Ridge,2.2792390218224368,"{'model__alpha': 0.0379269019073225, 'model__fit_intercept': True, 'model__max_iter': 50000, 'model__solver': 'saga', 'model__tol': 0.001}","Pipeline(steps=[('scaler', RobustScaler()),
+                ('model',
+                 Ridge(alpha=0.0379269019073225, max_iter=50000, solver='saga',
+                       tol=0.001))])",0.9880049191836627,-2.6405807554442546,11.625512376385908,3.409620561937341,-0.13300857528290558,0.1459713368672534,-0.4610173594808913,0.5059472303894808
+Lasso,2.045359561093086,"{'model__alpha': 0.3359818286283781, 'model__fit_intercept': True, 'model__max_iter': 20000, 'model__selection': 'random', 'model__tol': 0.001}","Pipeline(steps=[('scaler', RobustScaler()),
+                ('model',
+                 Lasso(alpha=0.3359818286283781, max_iter=20000,
+                       selection='random', tol=0.001))])",0.9923008388170391,-2.0780682540295414,7.461950026913826,2.7316570112138576,-0.08822271199413959,0.029839110458690934,-0.2462481372537937,0.08328723071051058
+Elastic Net,2.114681500935871,"{'model__alpha': 0.07847599703514611, 'model__fit_intercept': True, 'model__l1_ratio': 0.9, 'model__max_iter': 10000, 'model__selection': 'random', 'model__tol': 0.001}","Pipeline(steps=[('scaler', RobustScaler()),
+                ('model',
+                 ElasticNet(alpha=0.07847599703514611, l1_ratio=0.9,
+                            max_iter=10000, selection='random', tol=0.001))])",0.9919125392083662,-2.0774747345369624,7.838286124643595,2.7996939341012967,-0.09142037998875695,-0.00987912234511964,-0.26145067256273435,-0.028253034846045466
+Decision Tree,4.4854166666666675,"{'max_depth': None, 'min_samples_leaf': 2, 'min_samples_split': 2}","DecisionTreeRegressor(min_samples_leaf=2, random_state=42)",0.9182994734434596,-6.9333333333333345,79.18333333333335,8.898501746548874,0.03470742810809163,0.0,0.31666666666666643,0.0
+Random Forest,4.445328124999999,"{'max_depth': 10, 'min_samples_leaf': 1, 'min_samples_split': 2, 'n_estimators': 200}","RandomForestRegressor(max_depth=10, n_estimators=200, random_state=42)",0.9416683596611604,-5.427000000000001,56.53444250000001,7.518938921151043,0.04925733481246765,0.10188934868982066,0.37950000000000017,0.7849999999999966

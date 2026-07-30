@@ -393,7 +393,7 @@ for model_name, model in models.items():
         "Residual Median" :res_median
     })
 
-model_table = results
+model_table = pd.DataFrame(results)
 
 print(model_table)
 
