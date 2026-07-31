@@ -283,6 +283,20 @@ print(f"Best CV MAE: {best_model_row['Best MAE']:.3f}")
 print("\nBest Hyperparameters:")
 print(best_params)
 
+import joblib
+
+model_info = {
+    "model_name": best_model_name,
+    "best_params": best_params
+}
+
+joblib.dump(best_regression_model, "best_regression_model.pkl")
+
+print("Model saved successfully.")
+
+best_model = joblib.load("best_regression_model.pkl")
+
+# new_predictions = best_model.predict(new_data)
 
 y_pred = best_regression_model.predict(X_test)
 
