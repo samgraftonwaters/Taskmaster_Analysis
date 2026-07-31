@@ -206,6 +206,7 @@ param_grids = {
 }
 
 results = []
+best_estimators = {}
 
 for model_name, model in models.items():
 
@@ -226,6 +227,7 @@ for model_name, model in models.items():
     print(f"\nBest CV {model_name} MAE: \n", -grid_search.best_score_)
 
     optimised_model = grid_search.best_estimator_
+    best_estimators[model_name] = grid_search.best_estimator_
 
     y_pred = grid_search.predict(X_test)
 
@@ -261,6 +263,8 @@ for model_name, model in models.items():
 
 model_table = pd.DataFrame(results)
 
+print(type(model_table.loc[0, "Best Estimator"]))
+
 print(model_table)
 
 model_table.to_csv(file_path + 'Regression_Modelling_Comparison_Table.csv', sep = ',', index = False)
@@ -271,7 +275,8 @@ best_model_row = model_table.loc[model_table["Best MAE"].idxmin()]
 
 best_model_name = best_model_row["Model"]
 best_params = best_model_row["Best Hyperparameters"]
-best_regression_model = best_model_row["Best Estimator"]
+# best_regression_model = best_model_row["Best Estimator"]
+best_regression_model = best_estimators[best_model_name]
 
 print(f"Best model: {best_model_name}")
 print(f"Best CV MAE: {best_model_row['Best MAE']:.3f}")
