@@ -1,16 +1,17 @@
 Model,Best MAE,Best Hyperparameters,Best Estimator,R2 Score,MAE Score,MSE Score,RMSE Score,Standard Residual Mean,Standard Residual Median,Residual Mean,Residual Median
 Linear Regression,2.417051005559973,"{'model__fit_intercept': True, 'model__positive': True}","Pipeline(steps=[('scaler', RobustScaler()),
                 ('model', LinearRegression(positive=True))])",0.9922153333274866,2.156326529450485,7.544821092333329,2.746783772402431,0.03894948692892349,0.23684078287854585,0.1096775963263589,0.6669183557045102
-Ridge,2.2737450706319615,"{'model__alpha': 0.001, 'model__fit_intercept': True, 'model__max_iter': 50000, 'model__solver': 'saga', 'model__tol': 0.001}","Pipeline(steps=[('scaler', RobustScaler()),
+Ridge,2.2798438947753503,"{'model__alpha': 0.004281332398719396, 'model__fit_intercept': True, 'model__max_iter': 20000, 'model__solver': 'saga', 'model__tol': 0.001}","Pipeline(steps=[('scaler', RobustScaler()),
                 ('model',
-                 Ridge(alpha=0.001, max_iter=50000, solver='saga', tol=0.001))])",0.9880212386788473,2.6425066929442407,11.60969568484806,3.4073003514289812,-0.1346411876124864,0.1420488197863493,-0.4662532857689129,0.49190541274488453
-Lasso,2.0437889763165176,"{'model__alpha': 0.1623776739188721, 'model__fit_intercept': True, 'model__max_iter': 50000, 'model__selection': 'random', 'model__tol': 0.001}","Pipeline(steps=[('scaler', RobustScaler()),
+                 Ridge(alpha=0.004281332398719396, max_iter=20000,
+                       solver='saga', tol=0.001))])",0.9878991421242695,2.6541095379997643,11.728030444579204,3.424621211839231,-0.1361023392966481,0.1378016156054947,-0.47361230029185036,0.4795254841917256
+Lasso,2.017080097563232,"{'model__alpha': 0.07847599703514611, 'model__fit_intercept': True, 'model__max_iter': 20000, 'model__selection': 'random', 'model__tol': 0.001}","Pipeline(steps=[('scaler', RobustScaler()),
                 ('model',
-                 Lasso(alpha=0.1623776739188721, max_iter=50000,
-                       selection='random', tol=0.001))])",0.9942698148677055,1.9234383904644985,5.5536381283685365,2.356615821123277,-0.05554356131261331,-0.1282248091199861,-0.13407773787157992,-0.30952448743899197
-Elastic Net,2.1226908096324713,"{'model__alpha': 0.07847599703514611, 'model__fit_intercept': True, 'model__l1_ratio': 0.9, 'model__max_iter': 50000, 'model__selection': 'random', 'model__tol': 0.001}","Pipeline(steps=[('scaler', RobustScaler()),
+                 Lasso(alpha=0.07847599703514611, max_iter=20000,
+                       selection='random', tol=0.001))])",0.9916473166256542,2.1184290417748786,8.095337199582232,2.8452306056947707,-0.11051925412670091,0.019760766887676983,-0.32056748290088277,0.057317246224911855
+Elastic Net,2.114433873300814,"{'model__alpha': 0.1623776739188721, 'model__fit_intercept': True, 'model__l1_ratio': 0.9, 'model__max_iter': 5000, 'model__selection': 'random', 'model__tol': 0.001}","Pipeline(steps=[('scaler', RobustScaler()),
                 ('model',
-                 ElasticNet(alpha=0.07847599703514611, l1_ratio=0.9,
-                            max_iter=50000, selection='random', tol=0.001))])",0.9930626142136895,2.0113708213332018,6.723644930234329,2.5929992152398214,-0.06549789067404613,-0.07209231384511597,-0.17385593415258427,-0.19136000319672064
+                 ElasticNet(alpha=0.1623776739188721, l1_ratio=0.9,
+                            max_iter=5000, selection='random', tol=0.001))])",0.9925974590310054,2.0497890364112323,7.174468681739844,2.6785198677142277,-0.07899026710071969,-0.046811765632239655,-0.21636406052412838,-0.1282231857702243
 Decision Tree,4.4854166666666675,"{'max_depth': None, 'min_samples_leaf': 2, 'min_samples_split': 2}","DecisionTreeRegressor(min_samples_leaf=2, random_state=42)",0.9182994734434596,6.9333333333333345,79.18333333333335,8.898501746548874,0.03470742810809163,0.0,0.31666666666666643,0.0
 Random Forest,4.445328124999999,"{'max_depth': 10, 'min_samples_leaf': 1, 'min_samples_split': 2, 'n_estimators': 200}","RandomForestRegressor(max_depth=10, n_estimators=200, random_state=42)",0.9416683596611604,5.427000000000001,56.53444250000001,7.518938921151043,0.04925733481246765,0.10188934868982066,0.37950000000000017,0.7849999999999966

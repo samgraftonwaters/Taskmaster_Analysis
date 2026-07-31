@@ -310,65 +310,65 @@ print(f"RMSE : {rmse:.4f}")
 
 
 
-# RF.model_coefficients(model_columns = model_columns, model = linear_model, x_cols = X_train, 
-#                    show_plot = True)
+RF.model_coefficients(model_columns = model_columns, model = linear_model, x_cols = X_train, 
+                   show_plot = True)
 
 
-# plt.scatter(y_pred, y_test, color="dodgerblue", label="Data")
-# # plt.plot(y_test, y_test, color='red', linewidth=3, label = 'Actual Score Line')
-# lims = [min(y_test.min(), y_pred.min()), max(y_test.max(), y_pred.max())]
+plt.scatter(y_pred, y_test, color="dodgerblue", label="Data")
+# plt.plot(y_test, y_test, color='red', linewidth=3, label = 'Actual Score Line')
+lims = [min(y_test.min(), y_pred.min()), max(y_test.max(), y_pred.max())]
 
-# plt.plot(lims, lims, color='red', linewidth=3, label = 'Actual Score Line')
-# plt.title("Predicted vs Actual (Standardised) Scores", fontsize = 20)
-# plt.xlabel("Predicted Score", fontsize = 16)
-# plt.ylabel("Actual Score", fontsize = 16)
-# plt.xticks(fontsize = 14)
-# plt.yticks(fontsize = 14)
-# plt.legend(fontsize = 14)
-# # plt.xlim(-3, 2)
-# # plt.ylim(-3, 2)
-# plt.show()
-
-
-# # Feature to plot
-# feature = "Avg_Score_per_Tasks"
-
-# print(X_train)
-
-# x = np.linspace(X_train[feature].min(), X_train[feature].max(), 100)
-
-# # Create a DataFrame where every feature is fixed at its mean
-# X_plot = pd.DataFrame(np.tile(X_train.mean().values, (len(x), 1)), columns=X_train.columns)
-
-# X_plot[feature] = x
-
-# y_plot = linear_model.predict(X_plot)
-
-# plt.figure(figsize=(8,6))
-# plt.scatter(X_train[feature], y_train, color="dodgerblue", alpha=0.7, label="Data")
-# plt.plot(x, y_plot, color="red", linewidth=3,  label="Regression Line")
-# plt.title(f"{feature} Predicting Target")
-# plt.xlabel(feature)
-# plt.ylabel("Target")
-# plt.legend()
-# plt.show()
+plt.plot(lims, lims, color='red', linewidth=3, label = 'Actual Score Line')
+plt.title("Predicted vs Actual (Standardised) Scores", fontsize = 20)
+plt.xlabel("Predicted Score", fontsize = 16)
+plt.ylabel("Actual Score", fontsize = 16)
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.legend(fontsize = 14)
+# plt.xlim(-3, 2)
+# plt.ylim(-3, 2)
+plt.show()
 
 
-# fig, ax = plt.subplots(figsize=(8, 6))
-# PartialDependenceDisplay.from_estimator(linear_model, X_test, features=model_columns, ax = ax)
+# Feature to plot
+feature = "Avg_Score_per_Tasks"
 
-# plt.show()
+print(X_train)
 
-# fig, ax = plt.subplots(figsize=(7, 6))
+x = np.linspace(X_train[feature].min(), X_train[feature].max(), 100)
 
-# PartialDependenceDisplay.from_estimator(
-#     estimator=linear_model,
-#     X=X_test,
-#     features=[("Avg_Score_per_Tasks", "Number_of_Tasks")],
-#     ax = ax
-# )
+# Create a DataFrame where every feature is fixed at its mean
+X_plot = pd.DataFrame(np.tile(X_train.mean().values, (len(x), 1)), columns=X_train.columns)
 
-# plt.show()
+X_plot[feature] = x
+
+y_plot = linear_model.predict(X_plot)
+
+plt.figure(figsize=(8,6))
+plt.scatter(X_train[feature], y_train, color="dodgerblue", alpha=0.7, label="Data")
+plt.plot(x, y_plot, color="red", linewidth=3,  label="Regression Line")
+plt.title(f"{feature} Predicting Target")
+plt.xlabel(feature)
+plt.ylabel("Target")
+plt.legend()
+plt.show()
+
+
+fig, ax = plt.subplots(figsize=(8, 6))
+PartialDependenceDisplay.from_estimator(linear_model, X_test, features=model_columns, ax = ax)
+
+plt.show()
+
+fig, ax = plt.subplots(figsize=(7, 6))
+
+PartialDependenceDisplay.from_estimator(
+    estimator=linear_model,
+    X=X_test,
+    features=[("Avg_Score_per_Tasks", "Number_of_Tasks")],
+    ax = ax
+)
+
+plt.show()
 
 
 
@@ -382,32 +382,32 @@ print(f"RMSE : {rmse:.4f}")
 # ax.set_title(r"True and Predicted $y_i$")
 # plt.show()
 
-# fig, ax = plt.subplots(figsize=(6,6))
-# ax.scatter(y_test, y_pred, edgecolors=(0, 0, 0), alpha=0.4)
-# ax.plot([y.min(), y.max()], [y.min(), y.max()], 'k--', lw=4)
-# ax.set_xlabel('Measured Count')
-# ax.set_ylabel('Predicted Count')
-# ax.set_title(r"True and Predicted $y_i$")
-# plt.show()
+fig, ax = plt.subplots(figsize=(6,6))
+ax.scatter(y_test, y_pred, edgecolors=(0, 0, 0), alpha=0.4)
+ax.plot([y.min(), y.max()], [y.min(), y.max()], 'k--', lw=4)
+ax.set_xlabel('Measured Count')
+ax.set_ylabel('Predicted Count')
+ax.set_title(r"True and Predicted $y_i$")
+plt.show()
 
 
-# residual = y_test - y_pred
+residual = y_test - y_pred
 
-# RF.plot_residuals(residual_data = residual, standardised = True)
+RF.plot_residuals(residual_data = residual, standardised = True)
 
-# RF.plot_residuals(residual_data = residual, standardised = False)
+RF.plot_residuals(residual_data = residual, standardised = False)
 
 
-# standard_residual = residual / residual.std()
+standard_residual = residual / residual.std()
 
-# plt.axhline(0, color="black", linestyle="--", lw = 4)
-# plt.scatter(y_pred, standard_residual, color="dodgerblue")
-# plt.title("Residual Plot of Predicted Values", fontsize = 20)
-# plt.xlabel("Predicted Value", fontsize = 16)
-# plt.ylabel("Residual", fontsize = 16)
-# plt.xticks(fontsize = 14)
-# plt.yticks(fontsize = 14)
-# plt.show()
+plt.axhline(0, color="black", linestyle="--", lw = 4)
+plt.scatter(y_pred, standard_residual, color="dodgerblue")
+plt.title("Residual Plot of Predicted Values", fontsize = 20)
+plt.xlabel("Predicted Value", fontsize = 16)
+plt.ylabel("Residual", fontsize = 16)
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.show()
 
 # residual = y - y_pred_cv
 
@@ -427,7 +427,7 @@ print(f"RMSE : {rmse:.4f}")
 # plt.show()
 
 
-# sm.qqplot(residual, line='45', fit=True)
+sm.qqplot(residual, line='45', fit=True)
 
-# plt.title("Q-Q Plot of Residuals")
-# plt.show()
+plt.title("Q-Q Plot of Residuals")
+plt.show()
