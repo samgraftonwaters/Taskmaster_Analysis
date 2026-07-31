@@ -23,12 +23,11 @@ warnings.filterwarnings("ignore", category=UserWarning)
 warnings.filterwarnings("ignore", category=FitFailedWarning)
 warnings.filterwarnings("ignore", category=ConvergenceWarning)
 
-
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
 scaled_data = pd.read_csv(file_path + 'Full Contestent Table for Modelling Scaled.csv')
 unscaled_data = pd.read_csv(file_path + 'Full Contestent Table for Modelling.csv')
-# 'Full Contestent Table for Modelling Scaled.csv'
-print(scaled_data .head())
+
+print(scaled_data.head())
 
 model_columns = ['Disqualifications',
        'Episode_Percentage_Losses', 'Number_of_Tasks', 'Percent_1s_Scored',
@@ -83,140 +82,7 @@ print("Cross Val R2 Mean Score:", cv_scores_r2.mean())
 
 print("Cross Val MAD Scores:", cv_scores_mae*-1)
 print("Cross Val MAD Mean Score:", cv_scores_mae.mean()*-1)
-r2_value = r2_score(y_test, y_pred)
-mae_value = mean_absolute_error(y_test, y_pred)
-MSE_value = mean_squared_error(y_test, y_pred)
-RMSE_value = root_mean_squared_error(y_test, y_pred)
-print()
-print("Model R2 Score:", r2_value)
-print("Model MAE Score:", mae_value)
-print("Model MSE Score:", MSE_value)
-print("Model RMSE Score:", RMSE_value)
-print()
 
-
-
-RF.model_coefficients(model_columns = model_columns, model = linear_model, x_cols = X_train, 
-                   show_plot = True)
-
-
-plt.scatter(y_pred, y_test, color="dodgerblue", label="Data")
-# plt.plot(y_test, y_test, color='red', linewidth=3, label = 'Actual Score Line')
-lims = [min(y_test.min(), y_pred.min()), max(y_test.max(), y_pred.max())]
-
-plt.plot(lims, lims, color='red', linewidth=3, label = 'Actual Score Line')
-plt.title("Predicted vs Actual (Standardised) Scores", fontsize = 20)
-plt.xlabel("Predicted Score", fontsize = 16)
-plt.ylabel("Actual Score", fontsize = 16)
-plt.xticks(fontsize = 14)
-plt.yticks(fontsize = 14)
-plt.legend(fontsize = 14)
-# plt.xlim(-3, 2)
-# plt.ylim(-3, 2)
-plt.show()
-
-
-# Feature to plot
-feature = "Avg_Score_per_Tasks"
-
-print(X_train)
-
-x = np.linspace(X_train[feature].min(), X_train[feature].max(), 100)
-
-# Create a DataFrame where every feature is fixed at its mean
-X_plot = pd.DataFrame(np.tile(X_train.mean().values, (len(x), 1)), columns=X_train.columns)
-
-X_plot[feature] = x
-
-y_plot = linear_model.predict(X_plot)
-
-plt.figure(figsize=(8,6))
-plt.scatter(X_train[feature], y_train, color="dodgerblue", alpha=0.7, label="Data")
-plt.plot(x, y_plot, color="red", linewidth=3,  label="Regression Line")
-plt.title(f"{feature} Predicting Target")
-plt.xlabel(feature)
-plt.ylabel("Target")
-plt.legend()
-plt.show()
-
-
-fig, ax = plt.subplots(figsize=(8, 6))
-PartialDependenceDisplay.from_estimator(linear_model, X_test, features=model_columns, ax = ax)
-
-plt.show()
-
-fig, ax = plt.subplots(figsize=(7, 6))
-
-PartialDependenceDisplay.from_estimator(
-    estimator=linear_model,
-    X=X_test,
-    features=[("Avg_Score_per_Tasks", "Number_of_Tasks")],
-    ax = ax
-)
-
-plt.show()
-
-
-
-y_pred_cv = cross_val_predict(estimator=linear_model, X=X, y=y, cv=5)
-
-fig, ax = plt.subplots(figsize=(6,6))
-ax.scatter(y, y_pred_cv, edgecolors=(0, 0, 0), alpha=0.4)
-ax.plot([y.min(), y.max()], [y.min(), y.max()], 'k--', lw=4)
-ax.set_xlabel('Measured Count')
-ax.set_ylabel('Predicted Count')
-ax.set_title(r"True and Predicted $y_i$")
-plt.show()
-
-fig, ax = plt.subplots(figsize=(6,6))
-ax.scatter(y_test, y_pred, edgecolors=(0, 0, 0), alpha=0.4)
-ax.plot([y.min(), y.max()], [y.min(), y.max()], 'k--', lw=4)
-ax.set_xlabel('Measured Count')
-ax.set_ylabel('Predicted Count')
-ax.set_title(r"True and Predicted $y_i$")
-plt.show()
-
-
-residual = y_test - y_pred
-
-RF.plot_residuals(residual_data = residual, standardised = True)
-
-RF.plot_residuals(residual_data = residual, standardised = False)
-
-
-standard_residual = residual / residual.std()
-
-plt.axhline(0, color="black", linestyle="--", lw = 4)
-plt.scatter(y_pred, standard_residual, color="dodgerblue")
-plt.title("Residual Plot of Predicted Values", fontsize = 20)
-plt.xlabel("Predicted Value", fontsize = 16)
-plt.ylabel("Residual", fontsize = 16)
-plt.xticks(fontsize = 14)
-plt.yticks(fontsize = 14)
-plt.show()
-
-residual = y - y_pred_cv
-
-standard_residual = residual / residual.std()
-
-RF.plot_residuals(residual_data = standard_residual, standardised = True)
-
-RF.plot_residuals(residual_data = residual, standardised = False)
-
-plt.axhline(0, color="black", linestyle="--", lw = 4)
-plt.scatter(y_pred_cv, standard_residual, color="dodgerblue")
-plt.title("Residual Plot of Predicted Values", fontsize = 20)
-plt.xlabel("Predicted Value", fontsize = 16)
-plt.ylabel("Residual", fontsize = 16)
-plt.xticks(fontsize = 14)
-plt.yticks(fontsize = 14)
-plt.show()
-
-
-sm.qqplot(residual, line='45', fit=True)
-
-plt.title("Q-Q Plot of Residuals")
-plt.show()
 
 
 
@@ -366,7 +232,7 @@ for model_name, model in models.items():
     print(optimised_model)
 
     r2_value = r2_score(y_test, y_pred)
-    mae_value = (-1* mean_absolute_error(y_test, y_pred))
+    mae_value = mean_absolute_error(y_test, y_pred)
     mse_value = mean_squared_error(y_test, y_pred)
     rmse_value = root_mean_squared_error(y_test, y_pred)
 
@@ -399,3 +265,164 @@ print(model_table)
 
 model_table.to_csv(file_path + 'Regression_Modelling_Comparison_Table.csv', sep = ',', index = False)
 
+model_table = pd.read_csv(file_path + 'Regression_Modelling_Comparison_Table.csv')
+
+best_model_row = model_table.loc[model_table["Best MAE"].idxmin()]
+
+best_model_name = best_model_row["Model"]
+best_params = best_model_row["Best Hyperparameters"]
+best_regression_model = best_model_row["Best Estimator"]
+
+print(f"Best model: {best_model_name}")
+print(f"Best CV MAE: {best_model_row['Best MAE']:.3f}")
+print("\nBest Hyperparameters:")
+print(best_params)
+
+
+y_pred = best_regression_model.predict(X_test)
+
+r2 = r2_score(y_test, y_pred)
+mae = mean_absolute_error(y_test, y_pred)
+mse = mean_squared_error(y_test, y_pred)
+rmse = np.sqrt(mse)
+
+print("\nTest Set Performance")
+print(f"R²   : {r2:.4f}")
+print(f"MAE  : {mae:.4f}")
+print(f"MSE  : {mse:.4f}")
+print(f"RMSE : {rmse:.4f}")
+
+# r2_value = r2_score(y_test, y_pred)
+# mae_value = mean_absolute_error(y_test, y_pred)
+# MSE_value = mean_squared_error(y_test, y_pred)
+# RMSE_value = root_mean_squared_error(y_test, y_pred)
+# print()
+# print("Model R2 Score:", r2_value)
+# print("Model MAE Score:", mae_value)
+# print("Model MSE Score:", MSE_value)
+# print("Model RMSE Score:", RMSE_value)
+# print()
+
+
+
+# RF.model_coefficients(model_columns = model_columns, model = linear_model, x_cols = X_train, 
+#                    show_plot = True)
+
+
+# plt.scatter(y_pred, y_test, color="dodgerblue", label="Data")
+# # plt.plot(y_test, y_test, color='red', linewidth=3, label = 'Actual Score Line')
+# lims = [min(y_test.min(), y_pred.min()), max(y_test.max(), y_pred.max())]
+
+# plt.plot(lims, lims, color='red', linewidth=3, label = 'Actual Score Line')
+# plt.title("Predicted vs Actual (Standardised) Scores", fontsize = 20)
+# plt.xlabel("Predicted Score", fontsize = 16)
+# plt.ylabel("Actual Score", fontsize = 16)
+# plt.xticks(fontsize = 14)
+# plt.yticks(fontsize = 14)
+# plt.legend(fontsize = 14)
+# # plt.xlim(-3, 2)
+# # plt.ylim(-3, 2)
+# plt.show()
+
+
+# # Feature to plot
+# feature = "Avg_Score_per_Tasks"
+
+# print(X_train)
+
+# x = np.linspace(X_train[feature].min(), X_train[feature].max(), 100)
+
+# # Create a DataFrame where every feature is fixed at its mean
+# X_plot = pd.DataFrame(np.tile(X_train.mean().values, (len(x), 1)), columns=X_train.columns)
+
+# X_plot[feature] = x
+
+# y_plot = linear_model.predict(X_plot)
+
+# plt.figure(figsize=(8,6))
+# plt.scatter(X_train[feature], y_train, color="dodgerblue", alpha=0.7, label="Data")
+# plt.plot(x, y_plot, color="red", linewidth=3,  label="Regression Line")
+# plt.title(f"{feature} Predicting Target")
+# plt.xlabel(feature)
+# plt.ylabel("Target")
+# plt.legend()
+# plt.show()
+
+
+# fig, ax = plt.subplots(figsize=(8, 6))
+# PartialDependenceDisplay.from_estimator(linear_model, X_test, features=model_columns, ax = ax)
+
+# plt.show()
+
+# fig, ax = plt.subplots(figsize=(7, 6))
+
+# PartialDependenceDisplay.from_estimator(
+#     estimator=linear_model,
+#     X=X_test,
+#     features=[("Avg_Score_per_Tasks", "Number_of_Tasks")],
+#     ax = ax
+# )
+
+# plt.show()
+
+
+
+# y_pred_cv = cross_val_predict(estimator=linear_model, X=X, y=y, cv=5)
+
+# fig, ax = plt.subplots(figsize=(6,6))
+# ax.scatter(y, y_pred_cv, edgecolors=(0, 0, 0), alpha=0.4)
+# ax.plot([y.min(), y.max()], [y.min(), y.max()], 'k--', lw=4)
+# ax.set_xlabel('Measured Count')
+# ax.set_ylabel('Predicted Count')
+# ax.set_title(r"True and Predicted $y_i$")
+# plt.show()
+
+# fig, ax = plt.subplots(figsize=(6,6))
+# ax.scatter(y_test, y_pred, edgecolors=(0, 0, 0), alpha=0.4)
+# ax.plot([y.min(), y.max()], [y.min(), y.max()], 'k--', lw=4)
+# ax.set_xlabel('Measured Count')
+# ax.set_ylabel('Predicted Count')
+# ax.set_title(r"True and Predicted $y_i$")
+# plt.show()
+
+
+# residual = y_test - y_pred
+
+# RF.plot_residuals(residual_data = residual, standardised = True)
+
+# RF.plot_residuals(residual_data = residual, standardised = False)
+
+
+# standard_residual = residual / residual.std()
+
+# plt.axhline(0, color="black", linestyle="--", lw = 4)
+# plt.scatter(y_pred, standard_residual, color="dodgerblue")
+# plt.title("Residual Plot of Predicted Values", fontsize = 20)
+# plt.xlabel("Predicted Value", fontsize = 16)
+# plt.ylabel("Residual", fontsize = 16)
+# plt.xticks(fontsize = 14)
+# plt.yticks(fontsize = 14)
+# plt.show()
+
+# residual = y - y_pred_cv
+
+# standard_residual = residual / residual.std()
+
+# RF.plot_residuals(residual_data = standard_residual, standardised = True)
+
+# RF.plot_residuals(residual_data = residual, standardised = False)
+
+# plt.axhline(0, color="black", linestyle="--", lw = 4)
+# plt.scatter(y_pred_cv, standard_residual, color="dodgerblue")
+# plt.title("Residual Plot of Predicted Values", fontsize = 20)
+# plt.xlabel("Predicted Value", fontsize = 16)
+# plt.ylabel("Residual", fontsize = 16)
+# plt.xticks(fontsize = 14)
+# plt.yticks(fontsize = 14)
+# plt.show()
+
+
+# sm.qqplot(residual, line='45', fit=True)
+
+# plt.title("Q-Q Plot of Residuals")
+# plt.show()
