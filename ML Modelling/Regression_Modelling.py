@@ -45,6 +45,8 @@ series_21_contestents = unscaled_data[scaled_data['Series'] == 'S21'].reset_inde
 
 series_21_contestents = series_21_contestents[model_columns]
 
+print(len(series_21_contestents))
+
 data = unscaled_data[scaled_data['Series'] != 'S21']
 
 model_data = data[model_columns]
@@ -58,30 +60,28 @@ print(y)
 #####
 #SINGLE MODEL (TEST)
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=123)
+# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=123)
 
-scaler = RobustScaler().set_output(transform="pandas")
+# scaler = RobustScaler().set_output(transform="pandas")
 
-X_train_single = scaler.fit_transform(X_train)
-X_test_single = scaler.transform(X_test)
+# X_train_single = scaler.fit_transform(X_train)
+# X_test_single = scaler.transform(X_test)
 
-print(X_train_single)
+# linear_model = LinearRegression()
 
-linear_model = LinearRegression()
+# linear_model.fit(X_train_single, y_train)
 
-linear_model.fit(X_train_single, y_train)
+# y_pred = linear_model.predict(X_test_single)
 
-y_pred = linear_model.predict(X_test_single)
+# cv_scores_r2 = cross_val_score(estimator=linear_model, X=X, y=y, cv=5, scoring="r2")
+# cv_scores_mae = cross_val_score(estimator=linear_model, X=X, y=y, cv=5, scoring="neg_mean_absolute_error")
 
-cv_scores_r2 = cross_val_score(estimator=linear_model, X=X, y=y, cv=5, scoring="r2")
-cv_scores_mae = cross_val_score(estimator=linear_model, X=X, y=y, cv=5, scoring="neg_mean_absolute_error")
+# print()
+# print("Cross Val R2 Scores:", cv_scores_r2)
+# print("Cross Val R2 Mean Score:", cv_scores_r2.mean())
 
-print()
-print("Cross Val R2 Scores:", cv_scores_r2)
-print("Cross Val R2 Mean Score:", cv_scores_r2.mean())
-
-print("Cross Val MAD Scores:", cv_scores_mae*-1)
-print("Cross Val MAD Mean Score:", cv_scores_mae.mean()*-1)
+# print("Cross Val MAD Scores:", cv_scores_mae*-1)
+# print("Cross Val MAD Mean Score:", cv_scores_mae.mean()*-1)
 
 
 
@@ -290,11 +290,11 @@ model_info = {
     "best_params": best_params
 }
 
-joblib.dump(best_regression_model, "best_regression_model.pkl")
+joblib.dump(best_regression_model, "ML Modelling/best_regression_model.pkl")
 
 print("Model saved successfully.")
 
-best_model = joblib.load("best_regression_model.pkl")
+best_regression_model = joblib.load("ML Modelling/best_regression_model.pkl")
 
 y_pred = best_regression_model.predict(X_test)
 
@@ -320,6 +320,9 @@ print(f"RMSE : {rmse:.4f}")
 # print("Model RMSE Score:", RMSE_value)
 # print()
 
+print(len(y_test))
+print(len(y_pred))
+
 plt.scatter(y_pred, y_test, color="dodgerblue", label="Data")
 lims = [min(y_test.min(), y_pred.min()), max(y_test.max(), y_pred.max())]
 
@@ -343,7 +346,7 @@ X_plot = pd.DataFrame(np.tile(X_train.mean().values, (len(x), 1)), columns=X_tra
 
 X_plot[feature] = x
 
-y_plot = linear_model.predict(X_plot)
+y_plot = best_regression_model.predict(X_plot)
 
 plt.figure(figsize=(8,6))
 plt.scatter(X_train[feature], y_train, color="dodgerblue", alpha=0.7, label="Data")
@@ -356,14 +359,14 @@ plt.show()
 
 
 fig, ax = plt.subplots(figsize=(8, 6))
-PartialDependenceDisplay.from_estimator(linear_model, X_test, features=model_columns, ax = ax)
+PartialDependenceDisplay.from_estimator(best_regression_model, X_test, features=model_columns, ax = ax)
 
 plt.show()
 
 fig, ax = plt.subplots(figsize=(7, 6))
 
 PartialDependenceDisplay.from_estimator(
-    estimator=linear_model,
+    estimator=best_regression_model,
     X=X_test,
     features=[("Avg_Score_per_Tasks", "Number_of_Tasks")],
     ax = ax
@@ -373,7 +376,7 @@ plt.show()
 
 
 
-# y_pred_cv = cross_val_predict(estimator=linear_model, X=X, y=y, cv=5)
+# y_pred_cv = cross_val_predict(estimator=best_regression_model, X=X, y=y, cv=5)
 
 # fig, ax = plt.subplots(figsize=(6,6))
 # ax.scatter(y, y_pred_cv, edgecolors=(0, 0, 0), alpha=0.4)
@@ -439,11 +442,13 @@ plt.show()
 series_21_contestents = series_21_contestents[model_columns]
 
 X_new_data = series_21_contestents
-y_new_data = data['Score']
+y_new_data = series_21_contestents['Score']
 
-print(X)
+print(X_new_data)
 
-new_predictions = best_model.predict(X_new_data)
+new_predictions = best_regression_model.predict(X_new_data)
+
+print(new_predictions)
 
 for i in range(1,6):
     print(i, new_predictions, y_new_data)

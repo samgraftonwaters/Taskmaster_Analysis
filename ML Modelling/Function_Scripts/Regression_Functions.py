@@ -45,17 +45,17 @@ def plot_residuals(residual_data, standardised = True, show_plot = True):
 
         title = "Residual Distribution Plot of the Linear Model"
 
-    plt.axvline(x=res_mean, label=f"mean: {res_mean.round(2)}", color="red", lw = 4)
-    plt.axvline(x=res_median, label=f"median: {res_median.round(2)}", color = 'black', lw = 4)
-    plt.hist(residual_data, bins=25, color="dodgerblue", alpha = 0.6)
-
-    plt.title(title, fontsize = 20)
-    plt.xlabel("Residual", fontsize = 16)
-    plt.ylabel("Count", fontsize = 16)
-    plt.xticks(fontsize = 14)
-    plt.yticks(fontsize = 14)
-    plt.legend(fontsize = 14)
     if show_plot == True:
+        plt.axvline(x=res_mean, label=f"mean: {res_mean.round(2)}", color="red", lw = 4)
+        plt.axvline(x=res_median, label=f"median: {res_median.round(2)}", color = 'black', lw = 4)
+        plt.hist(residual_data, bins=25, color="dodgerblue", alpha = 0.6)
+
+        plt.title(title, fontsize = 20)
+        plt.xlabel("Residual", fontsize = 16)
+        plt.ylabel("Count", fontsize = 16)
+        plt.xticks(fontsize = 14)
+        plt.yticks(fontsize = 14)
+        plt.legend(fontsize = 14)
         plt.show()
 
     return(res_mean, res_median)
