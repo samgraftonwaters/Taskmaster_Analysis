@@ -43,9 +43,7 @@ model_columns = ['Disqualifications',
 
 series_21_contestents = unscaled_data[scaled_data['Series'] == 'S21'].reset_index(drop = True)
 
-series_21_contestents = series_21_contestents[model_columns]
-
-print(len(series_21_contestents))
+series_21_new_data = series_21_contestents[model_columns]
 
 data = unscaled_data[scaled_data['Series'] != 'S21']
 
@@ -290,6 +288,8 @@ import joblib
 #     "best_params": best_params
 # }
 
+print(best_regression_model)
+
 # joblib.dump(best_regression_model, "ML Modelling/best_regression_model.pkl")
 
 # print("Model saved successfully.")
@@ -439,9 +439,10 @@ plt.show()
 ##########
 #Modelling Series 21 Data
 
-series_21_contestents = series_21_contestents[model_columns]
+# series_21_contestents = series_21_contestents[model_columns]
+scaler = RobustScaler().set_output(transform="pandas")
 
-X_new_data = series_21_contestents
+X_new_data = scaler.transform(series_21_new_data)
 y_new_data = series_21_contestents['Score']
 
 print(X_new_data)
@@ -450,5 +451,17 @@ new_predictions = best_regression_model.predict(X_new_data)
 
 print(new_predictions)
 
-for i in range(1,6):
-    print(i, new_predictions, y_new_data)
+for i in range(5):
+    print(i+1, new_predictions[i], y_new_data[i])
+
+plt.scatter(new_predictions, y_new_data, color="dodgerblue", label="Data")
+lims = [min(y_new_data.min(), new_predictions.min()), max(y_new_data.max(), new_predictions.max())]
+
+plt.plot(lims, lims, color='red', linewidth=3, label = 'Actual Score Line')
+plt.title("Predicted vs Actual (Standardised) Scores for Series 21", fontsize = 20)
+plt.xlabel("Predicted Series 21 Score", fontsize = 16)
+plt.ylabel("Actual Series 21 Score", fontsize = 16)
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.legend(fontsize = 14)
+plt.show()
