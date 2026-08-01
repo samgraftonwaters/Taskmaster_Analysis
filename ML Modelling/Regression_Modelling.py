@@ -62,16 +62,16 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 
 scaler = RobustScaler().set_output(transform="pandas")
 
-X_train = scaler.fit_transform(X_train)
-X_test = scaler.transform(X_test)
+X_train_single = scaler.fit_transform(X_train)
+X_test_single = scaler.transform(X_test)
 
-print(X_train)
+print(X_train_single)
 
 linear_model = LinearRegression()
 
-linear_model.fit(X_train, y_train)
+linear_model.fit(X_train_single, y_train)
 
-y_pred = linear_model.predict(X_test)
+y_pred = linear_model.predict(X_test_single)
 
 cv_scores_r2 = cross_val_score(estimator=linear_model, X=X, y=y, cv=5, scoring="r2")
 cv_scores_mae = cross_val_score(estimator=linear_model, X=X, y=y, cv=5, scoring="neg_mean_absolute_error")
@@ -88,7 +88,7 @@ print("Cross Val MAD Mean Score:", cv_scores_mae.mean()*-1)
 
 ######
 #Model Comparison
-
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=123)
 
 models = {
     "Linear Regression": Pipeline([
@@ -296,8 +296,6 @@ print("Model saved successfully.")
 
 best_model = joblib.load("best_regression_model.pkl")
 
-# new_predictions = best_model.predict(new_data)
-
 y_pred = best_regression_model.predict(X_test)
 
 r2 = r2_score(y_test, y_pred)
@@ -322,14 +320,7 @@ print(f"RMSE : {rmse:.4f}")
 # print("Model RMSE Score:", RMSE_value)
 # print()
 
-
-
-RF.model_coefficients(model_columns = model_columns, model = linear_model, x_cols = X_train, 
-                   show_plot = True)
-
-
 plt.scatter(y_pred, y_test, color="dodgerblue", label="Data")
-# plt.plot(y_test, y_test, color='red', linewidth=3, label = 'Actual Score Line')
 lims = [min(y_test.min(), y_pred.min()), max(y_test.max(), y_pred.max())]
 
 plt.plot(lims, lims, color='red', linewidth=3, label = 'Actual Score Line')
@@ -339,15 +330,11 @@ plt.ylabel("Actual Score", fontsize = 16)
 plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
 plt.legend(fontsize = 14)
-# plt.xlim(-3, 2)
-# plt.ylim(-3, 2)
 plt.show()
 
 
 # Feature to plot
 feature = "Avg_Score_per_Tasks"
-
-print(X_train)
 
 x = np.linspace(X_train[feature].min(), X_train[feature].max(), 100)
 
@@ -445,3 +432,18 @@ sm.qqplot(residual, line='45', fit=True)
 
 plt.title("Q-Q Plot of Residuals")
 plt.show()
+
+##########
+#Modelling Series 21 Data
+
+series_21_contestents = series_21_contestents[model_columns]
+
+X_new_data = series_21_contestents
+y_new_data = data['Score']
+
+print(X)
+
+new_predictions = best_model.predict(X_new_data)
+
+for i in range(1,6):
+    print(i, new_predictions, y_new_data)
