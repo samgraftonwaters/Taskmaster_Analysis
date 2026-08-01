@@ -205,94 +205,94 @@ param_grids = {
     }
 }
 
-results = []
-best_estimators = {}
+# results = []
+# best_estimators = {}
 
-for model_name, model in models.items():
+# for model_name, model in models.items():
 
-    print(f"Running {model_name}...")
+#     print(f"Running {model_name}...")
 
-    grid_search = GridSearchCV(
-        estimator=model,
-        param_grid=param_grids[model_name],
-        scoring="neg_mean_absolute_error",
-        cv=5,
-        n_jobs=-1
-    )
+#     grid_search = GridSearchCV(
+#         estimator=model,
+#         param_grid=param_grids[model_name],
+#         scoring="neg_mean_absolute_error",
+#         cv=5,
+#         n_jobs=-1
+#     )
 
-    grid_search.fit(X_train, y_train)
+#     grid_search.fit(X_train, y_train)
 
-    print(f"\n{model_name} Best parameters: \n", grid_search.best_params_)
+#     print(f"\n{model_name} Best parameters: \n", grid_search.best_params_)
 
-    print(f"\nBest CV {model_name} MAE: \n", -grid_search.best_score_)
+#     print(f"\nBest CV {model_name} MAE: \n", -grid_search.best_score_)
 
-    optimised_model = grid_search.best_estimator_
-    best_estimators[model_name] = grid_search.best_estimator_
+#     optimised_model = grid_search.best_estimator_
+#     best_estimators[model_name] = grid_search.best_estimator_
 
-    y_pred = grid_search.predict(X_test)
+#     y_pred = grid_search.predict(X_test)
 
-    print(optimised_model)
+#     print(optimised_model)
 
-    r2_value = r2_score(y_test, y_pred)
-    mae_value = mean_absolute_error(y_test, y_pred)
-    mse_value = mean_squared_error(y_test, y_pred)
-    rmse_value = root_mean_squared_error(y_test, y_pred)
+#     r2_value = r2_score(y_test, y_pred)
+#     mae_value = mean_absolute_error(y_test, y_pred)
+#     mse_value = mean_squared_error(y_test, y_pred)
+#     rmse_value = root_mean_squared_error(y_test, y_pred)
 
-    residual = y_test - y_pred
+#     residual = y_test - y_pred
 
-    res_stand_mean, res_stand_median = RF.plot_residuals(residual_data = residual, standardised = True, 
-                                                         show_plot = False)
+#     res_stand_mean, res_stand_median = RF.plot_residuals(residual_data = residual, standardised = True, 
+#                                                          show_plot = False)
 
-    res_mean, res_median = RF.plot_residuals(residual_data = residual, standardised = False, 
-                                             show_plot = False)
+#     res_mean, res_median = RF.plot_residuals(residual_data = residual, standardised = False, 
+#                                              show_plot = False)
 
-    results.append({
-        "Model": model_name,
-        "Best MAE": -grid_search.best_score_,
-        "Best Hyperparameters": grid_search.best_params_,
-        "Best Estimator": grid_search.best_estimator_,
-        "R2 Score" : r2_value,
-        "MAE Score" : mae_value,
-        "MSE Score" : mse_value,
-        "RMSE Score" : rmse_value,
-        "Standard Residual Mean" : res_stand_mean,
-        "Standard Residual Median" :res_stand_median,
-        "Residual Mean" : res_mean,
-        "Residual Median" :res_median
-    })
+#     results.append({
+#         "Model": model_name,
+#         "Best MAE": -grid_search.best_score_,
+#         "Best Hyperparameters": grid_search.best_params_,
+#         "Best Estimator": grid_search.best_estimator_,
+#         "R2 Score" : r2_value,
+#         "MAE Score" : mae_value,
+#         "MSE Score" : mse_value,
+#         "RMSE Score" : rmse_value,
+#         "Standard Residual Mean" : res_stand_mean,
+#         "Standard Residual Median" :res_stand_median,
+#         "Residual Mean" : res_mean,
+#         "Residual Median" :res_median
+#     })
 
-model_table = pd.DataFrame(results)
+# model_table = pd.DataFrame(results)
 
-print(type(model_table.loc[0, "Best Estimator"]))
+# print(type(model_table.loc[0, "Best Estimator"]))
 
-print(model_table)
+# print(model_table)
 
-model_table.to_csv(file_path + 'Regression_Modelling_Comparison_Table.csv', sep = ',', index = False)
+# model_table.to_csv(file_path + 'Regression_Modelling_Comparison_Table.csv', sep = ',', index = False)
 
-model_table = pd.read_csv(file_path + 'Regression_Modelling_Comparison_Table.csv')
+# model_table = pd.read_csv(file_path + 'Regression_Modelling_Comparison_Table.csv')
 
-best_model_row = model_table.loc[model_table["Best MAE"].idxmin()]
+# best_model_row = model_table.loc[model_table["Best MAE"].idxmin()]
 
-best_model_name = best_model_row["Model"]
-best_params = best_model_row["Best Hyperparameters"]
-# best_regression_model = best_model_row["Best Estimator"]
-best_regression_model = best_estimators[best_model_name]
+# best_model_name = best_model_row["Model"]
+# best_params = best_model_row["Best Hyperparameters"]
+# # best_regression_model = best_model_row["Best Estimator"]
+# best_regression_model = best_estimators[best_model_name]
 
-print(f"Best model: {best_model_name}")
-print(f"Best CV MAE: {best_model_row['Best MAE']:.3f}")
-print("\nBest Hyperparameters:")
-print(best_params)
+# print(f"Best model: {best_model_name}")
+# print(f"Best CV MAE: {best_model_row['Best MAE']:.3f}")
+# print("\nBest Hyperparameters:")
+# print(best_params)
 
 import joblib
 
-model_info = {
-    "model_name": best_model_name,
-    "best_params": best_params
-}
+# model_info = {
+#     "model_name": best_model_name,
+#     "best_params": best_params
+# }
 
-joblib.dump(best_regression_model, "ML Modelling/best_regression_model.pkl")
+# joblib.dump(best_regression_model, "ML Modelling/best_regression_model.pkl")
 
-print("Model saved successfully.")
+# print("Model saved successfully.")
 
 best_regression_model = joblib.load("ML Modelling/best_regression_model.pkl")
 
