@@ -301,6 +301,10 @@ print(best_regression_model)
 regressor = best_regression_model.named_steps["model"]
 
 coef = pd.Series(regressor.coef_, index=X_train.columns)
+threshold = 1e-4
+
+important_coef = coef[coef.abs() > threshold]
+
 intercept = regressor.intercept_
 
 y_pred = best_regression_model.predict(X_test)
@@ -364,8 +368,11 @@ plt.ylabel("Target")
 plt.legend()
 plt.show()
 
-print(len(model_columns)/2)
-print(round(len(model_columns)/2, 0))
+# RF.model_coefficients(model_columns = model_columns, model_coef = important_coef, 
+#                       model_intercept = intercept, x_cols = X_train, show_plot = True)
+
+RF.model_coefficients(model_coef = important_coef, model_intercept = intercept, 
+                      x_cols = X_train, show_plot = True)
 
 RF.plot_feature_dependancy(model = best_regression_model, x_data = X_test.astype(float), 
                            columns = model_columns[0:6])
@@ -393,10 +400,6 @@ PartialDependenceDisplay.from_estimator(
 )
 
 plt.show()
-
-
-RF.model_coefficients(model_columns = model_columns, model_coef = coef, 
-                      model_intercept = intercept, x_cols = X_train, show_plot = True)
 
 # y_pred_cv = cross_val_predict(estimator=best_regression_model, X=X, y=y, cv=5)
 
