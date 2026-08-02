@@ -288,8 +288,6 @@ import joblib
 #     "best_params": best_params
 # }
 
-
-
 # joblib.dump(best_regression_model, "ML Modelling/best_regression_model.pkl")
 
 # print("Model saved successfully.")
@@ -368,9 +366,6 @@ plt.ylabel("Target")
 plt.legend()
 plt.show()
 
-# RF.model_coefficients(model_columns = model_columns, model_coef = important_coef, 
-#                       model_intercept = intercept, x_cols = X_train, show_plot = True)
-
 RF.model_coefficients(model_coef = important_coef, model_intercept = intercept, 
                       x_cols = X_train, show_plot = True)
 
@@ -378,40 +373,6 @@ RF.model_coefficients(model_coef = important_coef, model_intercept = intercept,
 
 RF.plot_feature_dependancy(model = best_regression_model, x_data = X_test.astype(float), 
                            model_coef = important_coef)
-
-# RF.plot_feature_dependancy(model = best_regression_model, x_data= X_test.astype(float), 
-#                            columns = model_columns[6:12])
-
-# RF.plot_feature_dependancy(model = best_regression_model, x_data= X_test.astype(float), 
-#                            columns = model_columns[12:18])
-
-# RF.plot_feature_dependancy(model = best_regression_model, x_data = X_test.astype(float), 
-#                            columns = model_columns[18:24])
-
-# RF.plot_feature_dependancy(model = best_regression_model, x_data= X_test.astype(float), 
-#                            columns = model_columns[24:])
-
-
-fig, ax = plt.subplots(figsize=(7, 6))
-
-PartialDependenceDisplay.from_estimator(
-    estimator=best_regression_model,
-    X=X_test,
-    features=[("Avg_Score_per_Tasks", "Number_of_Tasks")],
-    ax = ax
-)
-
-plt.show()
-
-# y_pred_cv = cross_val_predict(estimator=best_regression_model, X=X, y=y, cv=5)
-
-# fig, ax = plt.subplots(figsize=(6,6))
-# ax.scatter(y, y_pred_cv, edgecolors=(0, 0, 0), alpha=0.4)
-# ax.plot([y.min(), y.max()], [y.min(), y.max()], 'k--', lw=4)
-# ax.set_xlabel('Measured Count')
-# ax.set_ylabel('Predicted Count')
-# ax.set_title(r"True and Predicted $y_i$")
-# plt.show()
 
 fig, ax = plt.subplots(figsize=(6,6))
 ax.scatter(y_test, y_pred, edgecolors=(0, 0, 0), alpha=0.4)
@@ -440,24 +401,6 @@ plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
 plt.show()
 
-# residual = y - y_pred_cv
-
-# standard_residual = residual / residual.std()
-
-# RF.plot_residuals(residual_data = standard_residual, standardised = True)
-
-# RF.plot_residuals(residual_data = residual, standardised = False)
-
-# plt.axhline(0, color="black", linestyle="--", lw = 4)
-# plt.scatter(y_pred_cv, standard_residual, color="dodgerblue")
-# plt.title("Residual Plot of Predicted Values", fontsize = 20)
-# plt.xlabel("Predicted Value", fontsize = 16)
-# plt.ylabel("Residual", fontsize = 16)
-# plt.xticks(fontsize = 14)
-# plt.yticks(fontsize = 14)
-# plt.show()
-
-
 sm.qqplot(residual, line='45', fit=True)
 
 plt.title("Q-Q Plot of Residuals")
@@ -485,6 +428,7 @@ ratio = (new_predictions - y_new_data)/y_new_data
 
 print(new_predictions, ratio)
 
+print('', 'Pred', 'Act', 'Rat')
 for i in range(5):
     print(i+1, f'{new_predictions[i]:.4f}', y_new_data[i], f'{ratio[i]:.4f}')
 

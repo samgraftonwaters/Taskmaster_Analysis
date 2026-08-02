@@ -31,25 +31,6 @@ def model_coefficients(model_coef, model_intercept, x_cols, show_plot=True):
         plt.title("Feature Importance")
         plt.show()
 
-# def model_coefficients(model_columns, model_coef, model_intercept, x_cols, show_plot = True):
-
-#     print("Model intercept:", model_intercept.round(3))
-
-#     non_zero_coef = np.count_nonzero(model_coef)
-
-#     print(f"Non-zero coefficients: {non_zero_coef}/{len(model_coef)}")
-#     print(f"Coefficients removed: {len(model_coef) - non_zero_coef}")
-
-#     for i, col in enumerate(model_columns):
-#         print(f"{i}. {col} coefficient:", model_coef[i].round(3))
-
-#     if show_plot == True:
-#         coef = pd.Series(model_coef, index=x_cols.columns)
-
-#         coef.sort_values().plot.barh(figsize=(8,6))
-#         plt.xlabel("Coefficient")
-#         plt.title("Feature Importance")
-#         plt.show()
     # print("Model intercept:", model_intercept.round(3))
     # for i, col in enumerate(model_columns):
     #     print(f"{i}. {col} coefficient:", model_coef[i].round(3))
@@ -62,9 +43,7 @@ def model_coefficients(model_coef, model_intercept, x_cols, show_plot=True):
     #     plt.title("Feature Importance")
     #     plt.show()
 
-# import pandas as pd
-# import matplotlib.pyplot as plt
-# from sklearn.pipeline import Pipeline
+
 
 # def plot_linear_coefficients(model, X, show_plot=True):
 #     """
@@ -153,16 +132,4 @@ def plot_feature_dependancy(model, x_data, model_coef):
 
     plt.tight_layout()
     plt.show()
-
-    # coef = model_coef.sort_values()
-
-    # colors = ["dodgerblue" if x > 0 else "red" for x in coef]
-
-    # for i, v in enumerate(coef):
-    #     ax.text(v, i, f"{v:.2f}", va="center")
-
-    # plt.xlabel("Coefficient")
-    # plt.title("Feature Importance")
-    # plt.show()
-
 
