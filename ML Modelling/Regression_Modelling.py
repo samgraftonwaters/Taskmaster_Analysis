@@ -374,20 +374,22 @@ plt.show()
 RF.model_coefficients(model_coef = important_coef, model_intercept = intercept, 
                       x_cols = X_train, show_plot = True)
 
-RF.plot_feature_dependancy(model = best_regression_model, x_data = X_test.astype(float), 
-                           columns = model_columns[0:6])
 
-RF.plot_feature_dependancy(model = best_regression_model, x_data= X_test.astype(float), 
-                           columns = model_columns[6:12])
-
-RF.plot_feature_dependancy(model = best_regression_model, x_data= X_test.astype(float), 
-                           columns = model_columns[12:18])
 
 RF.plot_feature_dependancy(model = best_regression_model, x_data = X_test.astype(float), 
-                           columns = model_columns[18:24])
+                           model_coef = important_coef)
 
-RF.plot_feature_dependancy(model = best_regression_model, x_data= X_test.astype(float), 
-                           columns = model_columns[24:])
+# RF.plot_feature_dependancy(model = best_regression_model, x_data= X_test.astype(float), 
+#                            columns = model_columns[6:12])
+
+# RF.plot_feature_dependancy(model = best_regression_model, x_data= X_test.astype(float), 
+#                            columns = model_columns[12:18])
+
+# RF.plot_feature_dependancy(model = best_regression_model, x_data = X_test.astype(float), 
+#                            columns = model_columns[18:24])
+
+# RF.plot_feature_dependancy(model = best_regression_model, x_data= X_test.astype(float), 
+#                            columns = model_columns[24:])
 
 
 fig, ax = plt.subplots(figsize=(7, 6))
@@ -480,10 +482,11 @@ new_predictions = best_regression_model.predict(X_new_data)
 
 ratio = (new_predictions - y_new_data)/y_new_data
 
-print(new_predictions)
+
+print(new_predictions, ratio)
 
 for i in range(5):
-    print(i+1, f'{new_predictions[i]:.4f}', y_new_data[i], f'{ratio:.4f}')
+    print(i+1, f'{new_predictions[i]:.4f}', y_new_data[i], f'{ratio[i]:.4f}')
 
 plt.scatter(new_predictions, y_new_data, color="dodgerblue", label="Data")
 lims = [min(y_new_data.min(), new_predictions.min()), max(y_new_data.max(), new_predictions.max())]

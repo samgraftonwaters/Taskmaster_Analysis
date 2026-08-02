@@ -21,8 +21,8 @@ def model_coefficients(model_coef, model_intercept, x_cols, show_plot=True):
     # for i, col in enumerate(x_cols.columns):
     #     print(f"{i}. {col} coefficient:", model_coef[i].round(3))
 
-    for col, value in model_coef.items():
-        print(f"{col} coefficient: {value:.3f}")
+    for (i, (col, value)) in enumerate(model_coef.items()):
+        print(f"{i+1}. {col} coefficient: {value:.3f}")
 
     if show_plot:
         model_coef.sort_values().plot.barh(figsize=(8,6))
@@ -136,9 +136,33 @@ def plot_residuals(residual_data, standardised = True, show_plot = True):
     return(res_mean, res_median)
 
 
-def plot_feature_dependancy(model, x_data, columns):
+def plot_feature_dependancy(model, x_data, model_coef):
+
+    cols = []
+    for col, value in model_coef.items():
+
+        cols.append(col)
 
     fig, ax = plt.subplots(figsize=(8, 6))
-    PartialDependenceDisplay.from_estimator(model, x_data,  features=columns, ax = ax)
+    disp = PartialDependenceDisplay.from_estimator(model, x_data,  features=cols, ax = ax)
 
+    coef = model_coef.sort_values()
+
+    for ax, (feature, value) in zip(disp.axes_.ravel(), coef.items()):
+        ax.set_title(f"{feature}\nCoef = {value:.2f}")
+
+    plt.tight_layout()
     plt.show()
+
+    # coef = model_coef.sort_values()
+
+    # colors = ["dodgerblue" if x > 0 else "red" for x in coef]
+
+    # for i, v in enumerate(coef):
+    #     ax.text(v, i, f"{v:.2f}", va="center")
+
+    # plt.xlabel("Coefficient")
+    # plt.title("Feature Importance")
+    # plt.show()
+
+
