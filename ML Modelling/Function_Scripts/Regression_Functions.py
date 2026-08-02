@@ -10,14 +10,14 @@ import statsmodels.api as sm
 from scipy import stats
 
 
-def model_coefficients(model_columns, model, x_cols, show_plot = True):
+def model_coefficients(model_columns, model_coef, model_intercept, x_cols, show_plot = True):
 
-    print("Model intercept:", model.intercept_.round(3))
+    print("Model intercept:", model_intercept.round(3))
     for i, col in enumerate(model_columns):
-        print(f"{i}. {col} coefficient:", model.coef_[i].round(3))
+        print(f"{i}. {col} coefficient:", model_coef[i].round(3))
 
     if show_plot == True:
-        coef = pd.Series(model.coef_, index=x_cols.columns)
+        coef = pd.Series(model_coef, index=x_cols.columns)
 
         coef.sort_values().plot.barh(figsize=(8,6))
         plt.xlabel("Coefficient")
@@ -59,3 +59,11 @@ def plot_residuals(residual_data, standardised = True, show_plot = True):
         plt.show()
 
     return(res_mean, res_median)
+
+
+def plot_feature_dependancy(model, x_data, columns):
+
+    fig, ax = plt.subplots(figsize=(8, 6))
+    PartialDependenceDisplay.from_estimator(model, x_data,  features=columns, ax = ax)
+
+    plt.show()

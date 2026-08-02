@@ -288,13 +288,20 @@ import joblib
 #     "best_params": best_params
 # }
 
-print(best_regression_model)
+
 
 # joblib.dump(best_regression_model, "ML Modelling/best_regression_model.pkl")
 
 # print("Model saved successfully.")
 
 best_regression_model = joblib.load("ML Modelling/best_regression_model.pkl")
+
+print(best_regression_model)
+
+regressor = best_regression_model.named_steps["model"]
+
+coef = pd.Series(regressor.coef_, index=X_train.columns)
+intercept = regressor.intercept_
 
 y_pred = best_regression_model.predict(X_test)
 
@@ -357,11 +364,24 @@ plt.ylabel("Target")
 plt.legend()
 plt.show()
 
+print(len(model_columns)/2)
+print(round(len(model_columns)/2, 0))
 
-fig, ax = plt.subplots(figsize=(8, 6))
-PartialDependenceDisplay.from_estimator(best_regression_model, X_test, features=model_columns, ax = ax)
+RF.plot_feature_dependancy(model = best_regression_model, x_data = X_test.astype(float), 
+                           columns = model_columns[0:6])
 
-plt.show()
+RF.plot_feature_dependancy(model = best_regression_model, x_data= X_test.astype(float), 
+                           columns = model_columns[6:12])
+
+RF.plot_feature_dependancy(model = best_regression_model, x_data= X_test.astype(float), 
+                           columns = model_columns[12:18])
+
+RF.plot_feature_dependancy(model = best_regression_model, x_data = X_test.astype(float), 
+                           columns = model_columns[18:24])
+
+RF.plot_feature_dependancy(model = best_regression_model, x_data= X_test.astype(float), 
+                           columns = model_columns[24:])
+
 
 fig, ax = plt.subplots(figsize=(7, 6))
 
@@ -375,6 +395,8 @@ PartialDependenceDisplay.from_estimator(
 plt.show()
 
 
+RF.model_coefficients(model_columns = model_columns, model_coef = coef, 
+                      model_intercept = intercept, x_cols = X_train, show_plot = True)
 
 # y_pred_cv = cross_val_predict(estimator=best_regression_model, X=X, y=y, cv=5)
 
@@ -440,19 +462,25 @@ plt.show()
 #Modelling Series 21 Data
 
 # series_21_contestents = series_21_contestents[model_columns]
-scaler = RobustScaler().set_output(transform="pandas")
 
-X_new_data = scaler.transform(series_21_new_data)
+X_new_data = series_21_new_data
 y_new_data = series_21_contestents['Score']
 
 print(X_new_data)
 
+print(series_21_new_data.columns.tolist())
+print(X_train.columns.tolist())
+
+print(series_21_new_data.columns.equals(X_train.columns))
+
 new_predictions = best_regression_model.predict(X_new_data)
+
+ratio = (new_predictions - y_new_data)/y_new_data
 
 print(new_predictions)
 
 for i in range(5):
-    print(i+1, new_predictions[i], y_new_data[i])
+    print(i+1, f'{new_predictions[i]:.4f}', y_new_data[i], f'{ratio:.4f}')
 
 plt.scatter(new_predictions, y_new_data, color="dodgerblue", label="Data")
 lims = [min(y_new_data.min(), new_predictions.min()), max(y_new_data.max(), new_predictions.max())]
@@ -465,3 +493,5 @@ plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
 plt.legend(fontsize = 14)
 plt.show()
+
+
