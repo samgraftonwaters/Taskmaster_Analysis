@@ -9,6 +9,8 @@ import numpy as np
 import statsmodels.api as sm
 from scipy import stats
 
+plt.rcParams['figure.figsize'] = (13, 7)
+
 def model_coefficients(model_coef, model_intercept, x_cols, show_plot=True):
 
     print("Model intercept:", model_intercept.round(3))
@@ -25,7 +27,8 @@ def model_coefficients(model_coef, model_intercept, x_cols, show_plot=True):
         print(f"{i+1}. {col} coefficient: {value:.3f}")
 
     if show_plot:
-        model_coef.sort_values().plot.barh(figsize=(8,6))
+        plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.2, right = 0.96)
+        model_coef.sort_values().plot.barh()
 
         plt.xlabel("Coefficient")
         plt.title("Feature Importance")
@@ -100,6 +103,8 @@ def plot_residuals(residual_data, standardised = True, show_plot = True):
         title = "Residual Distribution Plot of the Linear Model"
 
     if show_plot == True:
+        plt.figure()
+        plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
         plt.axvline(x=res_mean, label=f"mean: {res_mean.round(2)}", color="red", lw = 4)
         plt.axvline(x=res_median, label=f"median: {res_median.round(2)}", color = 'black', lw = 4)
         plt.hist(residual_data, bins=25, color="dodgerblue", alpha = 0.6)
@@ -117,18 +122,22 @@ def plot_residuals(residual_data, standardised = True, show_plot = True):
 
 def plot_feature_dependancy(model, x_data, model_coef):
 
+    coef = model_coef.sort_values()
+
     cols = []
-    for col, value in model_coef.items():
+    for col, value in coef.items():
 
         cols.append(col)
 
-    fig, ax = plt.subplots(figsize=(8, 6))
-    disp = PartialDependenceDisplay.from_estimator(model, x_data,  features=cols, ax = ax)
-
-    coef = model_coef.sort_values()
+    fig, ax = plt.subplots()
+    plt.subplots_adjust(wspace=0.1, hspace=0.4, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
+    disp = PartialDependenceDisplay.from_estimator(model, x_data,  features=cols, ax = ax)    
 
     for ax, (feature, value) in zip(disp.axes_.ravel(), coef.items()):
-        ax.set_title(f"{feature}\nCoef = {value:.2f}")
+        print(feature)
+        print(x_data[feature].min())
+        # ax.set_title(f"{feature}\nCoef = {value:.2f}")
+        ax.text(x_data[feature].min(), 160, f"Coef = {value:.2f}", ha =  'left')
 
     plt.tight_layout()
     plt.show()

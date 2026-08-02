@@ -23,6 +23,8 @@ warnings.filterwarnings("ignore", category=UserWarning)
 warnings.filterwarnings("ignore", category=FitFailedWarning)
 warnings.filterwarnings("ignore", category=ConvergenceWarning)
 
+plt.rcParams['figure.figsize'] = (13, 7)
+
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
 scaled_data = pd.read_csv(file_path + 'Full Contestent Table for Modelling Scaled.csv')
 unscaled_data = pd.read_csv(file_path + 'Full Contestent Table for Modelling.csv')
@@ -332,6 +334,9 @@ print(f"RMSE : {rmse:.4f}")
 print(len(y_test))
 print(len(y_pred))
 
+plt.figure()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
+
 plt.scatter(y_pred, y_test, color="dodgerblue", label="Data")
 lims = [min(y_test.min(), y_pred.min()), max(y_test.max(), y_pred.max())]
 
@@ -357,7 +362,9 @@ X_plot[feature] = x
 
 y_plot = best_regression_model.predict(X_plot)
 
-plt.figure(figsize=(8,6))
+plt.figure()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
+
 plt.scatter(X_train[feature], y_train, color="dodgerblue", alpha=0.7, label="Data")
 plt.plot(x, y_plot, color="red", linewidth=3,  label="Regression Line")
 plt.title(f"{feature} Predicting Target")
@@ -374,12 +381,14 @@ RF.model_coefficients(model_coef = important_coef, model_intercept = intercept,
 RF.plot_feature_dependancy(model = best_regression_model, x_data = X_test.astype(float), 
                            model_coef = important_coef)
 
-fig, ax = plt.subplots(figsize=(6,6))
-ax.scatter(y_test, y_pred, edgecolors=(0, 0, 0), alpha=0.4)
-ax.plot([y.min(), y.max()], [y.min(), y.max()], 'k--', lw=4)
-ax.set_xlabel('Measured Count')
-ax.set_ylabel('Predicted Count')
-ax.set_title(r"True and Predicted $y_i$")
+plt.figure()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
+
+plt.scatter(y_test, y_pred, edgecolors=(0, 0, 0), alpha=0.4)
+plt.plot([y.min(), y.max()], [y.min(), y.max()], 'k--', lw=4)
+plt.xlabel('Measured Count')
+plt.ylabel('Predicted Count')
+plt.title(r"True and Predicted $y_i$")
 plt.show()
 
 
@@ -392,6 +401,9 @@ RF.plot_residuals(residual_data = residual, standardised = False)
 
 standard_residual = residual / residual.std()
 
+plt.figure()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
+
 plt.axhline(0, color="black", linestyle="--", lw = 4)
 plt.scatter(y_pred, standard_residual, color="dodgerblue")
 plt.title("Residual Plot of Predicted Values", fontsize = 20)
@@ -400,6 +412,9 @@ plt.ylabel("Residual", fontsize = 16)
 plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
 plt.show()
+
+plt.figure()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
 
 sm.qqplot(residual, line='45', fit=True)
 
@@ -431,6 +446,9 @@ print(new_predictions, ratio)
 print('', 'Pred', 'Act', 'Rat')
 for i in range(5):
     print(i+1, f'{new_predictions[i]:.4f}', y_new_data[i], f'{ratio[i]:.4f}')
+
+plt.figure()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
 
 plt.scatter(new_predictions, y_new_data, color="dodgerblue", label="Data")
 lims = [min(y_new_data.min(), new_predictions.min()), max(y_new_data.max(), new_predictions.max())]
