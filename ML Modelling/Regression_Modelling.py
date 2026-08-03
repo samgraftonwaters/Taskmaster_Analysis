@@ -346,90 +346,48 @@ plt.xlabel("Predicted Score", fontsize = 16)
 plt.ylabel("Actual Score", fontsize = 16)
 plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
-plt.legend(fontsize = 14)
+plt.legend(fontsize = 16)
 plt.show()
 
 
-# Feature to plot
-feature = "Avg_Score_per_Tasks"
+RF.plot_target_feature(x_data = X_train, y_data = y_train, feature = "Avg_Score_per_Tasks",
+                       model = best_regression_model)
 
-x = np.linspace(X_train[feature].min(), X_train[feature].max(), 100)
+RF.plot_target_feature(x_data = X_test, y_data = y_test, feature = "Avg_Score_per_Tasks",
+                       model = best_regression_model)
 
-# Create a DataFrame where every feature is fixed at its mean
-X_plot = pd.DataFrame(np.tile(X_train.mean().values, (len(x), 1)), columns=X_train.columns)
-
-X_plot[feature] = x
-
-y_plot = best_regression_model.predict(X_plot)
-
-plt.figure()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
-
-plt.scatter(X_train[feature], y_train, color="dodgerblue", alpha=0.8, label="Data", s = 60)
-plt.plot(x, y_plot, color="red", linewidth=3,  label="Regression Line")
-plt.title(f"{feature} Predicting Target", fontsize = 20)
-plt.xlabel(feature, fontsize = 16)
-plt.ylabel("Target", fontsize = 16)
-plt.xticks(fontsize = 14)
-plt.yticks(fontsize = 14)
-plt.legend(fontsize = 14)
-
-plt.show()
 
 RF.model_coefficients(model_coef = important_coef, model_intercept = intercept, 
                       x_cols = X_train, show_plot = True)
 
+if len(important_coef) <= 12:
+    RF.plot_feature_dependancy(model = best_regression_model, x_data = X_test.astype(float), 
+                            model_coef = important_coef)
 
+else:
+    split = round(len(important_coef)/2, 0)
+    RF.plot_feature_dependancy(model = best_regression_model, x_data = X_test[0:split].astype(float), 
+                                model_coef = important_coef)
 
-RF.plot_feature_dependancy(model = best_regression_model, x_data = X_test.astype(float), 
-                           model_coef = important_coef)
-
-plt.figure()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
-
-plt.scatter(y_test, y_pred, edgecolors=(0, 0, 0), alpha=0.8, color = 'dodgerblue', s = 60)
-plt.plot([y.min(), y.max()], [y.min(), y.max()], 'k--', lw=4)
-plt.xlabel('Measured Count', fontsize = 16)
-plt.ylabel('Predicted Count', fontsize = 16)
-plt.title(r"True and Predicted $y_i$", fontsize = 20)
-plt.xticks(fontsize = 14)
-plt.yticks(fontsize = 14)
-plt.show()
+    RF.plot_feature_dependancy(model = best_regression_model, x_data = X_test[split:].astype(float), 
+                                    model_coef = important_coef)
 
 
 residual = y_test - y_pred
 
-RF.plot_residuals(residual_data = residual, standardised = True)
+RF.plot_hist_residuals(residual_data = residual, standardised = True)
 
-RF.plot_residuals(residual_data = residual, standardised = False)
-
+RF.plot_hist_residuals(residual_data = residual, standardised = False)
 
 standard_residual = residual / residual.std()
 
-plt.figure()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
+RF.plot_residuals(y_data = y_pred, residuals = residual)
 
-plt.axhline(0, color="black", linestyle="--", lw = 4)
-plt.scatter(y_pred, standard_residual, color="dodgerblue", alpha = 0.8, s = 60)
-plt.title("Residual Plot of Predicted Values", fontsize = 20)
-plt.xlabel("Predicted Value", fontsize = 16)
-plt.ylabel("Residual", fontsize = 16)
-plt.xticks(fontsize = 14)
-plt.yticks(fontsize = 14)
-plt.show()
+RF.plot_residuals(y_data = y_pred, residuals = standard_residual)
 
-plt.figure()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
 
-sm.qqplot(residual, line='45', fit=True, color = 'dodgerblue')
-
-plt.title("Q-Q Plot of Residuals", fontsize = 20)
-plt.xlabel('Theoretial Quartiles', fontsize = 16)
-plt.ylabel('Actual Quartiles', fontsize = 16)
-plt.xticks(fontsize = 14)
-plt.yticks(fontsize = 14)
-
-plt.show()  
+RF.plot_qq(residuals = residual)
+RF.plot_qq(residuals = standard_residual)
 
 ##########
 #Modelling Series 21 Data
@@ -468,7 +426,5 @@ plt.xlabel("Predicted Series 21 Score", fontsize = 16)
 plt.ylabel("Actual Series 21 Score", fontsize = 16)
 plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
-plt.legend(fontsize = 14)
+plt.legend(fontsize = 16)
 plt.show()
-
-

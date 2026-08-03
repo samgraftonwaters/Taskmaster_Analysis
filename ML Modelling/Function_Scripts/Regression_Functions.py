@@ -35,7 +35,7 @@ def model_coefficients(model_coef, model_intercept, x_cols, show_plot=True):
         plt.show()
 
 
-def plot_residuals(residual_data, standardised = True, show_plot = True):
+def plot_hist_residuals(residual_data, standardised = True, show_plot = True):
 
     if standardised == True:
 
@@ -68,7 +68,7 @@ def plot_residuals(residual_data, standardised = True, show_plot = True):
         plt.ylabel("Count", fontsize = 16)
         plt.xticks(fontsize = 14)
         plt.yticks(fontsize = 14)
-        plt.legend(fontsize = 14)
+        plt.legend(fontsize = 16)
         plt.show()
 
     return(res_mean, res_median)
@@ -89,11 +89,92 @@ def plot_feature_dependancy(model, x_data, model_coef):
 
     for ax, (feature, value) in zip(disp.axes_.ravel(), coef.items()):
         ax.text(x_data[feature].min(), 160, f"Coef = {value:.2f}", ha =  'left')
-        plt.xlabel(feature, fontsize = 14)
-        plt.ylabel('Partial Dependence', fontsize = 14)
-        plt.xticks(fontsize = 12)
-        plt.yticks(fontsize = 12)
+        ax.set_xlabel(feature, fontsize = 12)
+        ax.tick_params(axis="x", labelsize=11)
+        ax.tick_params(axis="y", labelsize=11)
 
     plt.tight_layout()
     plt.show()
 
+def plot_target_feature(feature : str, x_data, y_data, model):
+
+    """
+    Scatter plot of target against specified feature, along with line of best fit.
+
+    Parameters:
+    -----------
+        feature (str): column name of the feature to plot against the target variable
+        x_data (DataFrame): DataFrame with all model variables
+        y_data (array): target variable data
+    
+    """
+
+    x = np.linspace(x_data[feature].min(), x_data[feature].max(), 100)
+
+    X_plot = pd.DataFrame(np.tile(x_data.mean().values, (len(x), 1)), columns=x_data.columns)
+
+    X_plot[feature] = x
+
+    y_plot = model.predict(X_plot)
+
+    plt.figure()
+    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
+
+    plt.scatter(x_data[feature], y_data, color="dodgerblue", alpha=0.8, label="Data", s = 60)
+    plt.plot(x, y_plot, color="red", linewidth=3,  label="Regression Line")
+
+    plt.title(f"{feature} Predicting Target", fontsize = 20)
+    plt.xlabel(feature, fontsize = 16)
+    plt.ylabel("Target", fontsize = 16)
+    plt.xticks(fontsize = 14)
+    plt.yticks(fontsize = 14)
+    plt.legend(fontsize = 16)
+
+    plt.show()
+
+
+def plot_qq(residuals):
+
+    """
+    Plot Q-Q plot with 45 degree line
+
+    Parameters:
+    -----------
+        residuals (array): calculated residuals - difference between y_pred and y_test
+    """
+
+    plt.figure()
+    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
+
+    sm.qqplot(residuals, line='45', fit=True, color = 'dodgerblue')
+
+    plt.title("Q-Q Plot of Residuals", fontsize = 20)
+    plt.xlabel('Theoretial Quartiles', fontsize = 16)
+    plt.ylabel('Actual Quartiles', fontsize = 16)
+    plt.xticks(fontsize = 14)
+    plt.yticks(fontsize = 14)
+
+    plt.show()  
+
+def plot_residuals(y_data, residuals):
+
+    """
+    Plot residuals for predicted values
+
+    Parameters:
+    ----------
+        y_data (array): target variable (e.g. y_pred or y_test)
+        residuals: calculated residuals
+    """
+    
+    plt.figure()
+    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
+
+    plt.axhline(0, color="black", linestyle="--", lw = 4)
+    plt.scatter(y_data, residuals, color="dodgerblue", alpha = 0.8, s = 60)
+    plt.title("Residual Plot of Predicted Values", fontsize = 20)
+    plt.xlabel("Predicted Value", fontsize = 16)
+    plt.ylabel("Residual", fontsize = 16)
+    plt.xticks(fontsize = 14)
+    plt.yticks(fontsize = 14)
+    plt.show()
