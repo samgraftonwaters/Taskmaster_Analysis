@@ -20,9 +20,6 @@ def model_coefficients(model_coef, model_intercept, x_cols, show_plot=True):
     print(f"Non-zero coefficients: {non_zero_coef}/{len(x_cols.columns)}")
     print(f"Coefficients removed: {len(x_cols.columns) - non_zero_coef}")
 
-    # for i, col in enumerate(x_cols.columns):
-    #     print(f"{i}. {col} coefficient:", model_coef[i].round(3))
-
     for (i, (col, value)) in enumerate(model_coef.items()):
         print(f"{i+1}. {col} coefficient: {value:.3f}")
 
@@ -30,56 +27,13 @@ def model_coefficients(model_coef, model_intercept, x_cols, show_plot=True):
         plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.2, right = 0.96)
         model_coef.sort_values().plot.barh()
 
-        plt.xlabel("Coefficient")
-        plt.title("Feature Importance")
+        plt.title("Feature Importance", fontsize = 20)
+        plt.xlabel("Coefficient", fontsize = 16)
+        plt.ylabel("Feature", fontsize = 16)
+        plt.xticks(fontsize = 14)
+        plt.yticks(fontsize = 14)
         plt.show()
 
-    # print("Model intercept:", model_intercept.round(3))
-    # for i, col in enumerate(model_columns):
-    #     print(f"{i}. {col} coefficient:", model_coef[i].round(3))
-
-    # if show_plot == True:
-    #     coef = pd.Series(model_coef, index=x_cols.columns)
-
-    #     coef.sort_values().plot.barh(figsize=(8,6))
-    #     plt.xlabel("Coefficient")
-    #     plt.title("Feature Importance")
-    #     plt.show()
-
-
-
-# def plot_linear_coefficients(model, X, show_plot=True):
-#     """
-#     Prints and plots coefficients for Linear, Ridge, Lasso and Elastic Net models.
-#     Works for both plain estimators and Pipelines.
-#     """
-#     if isinstance(model, Pipeline):
-#         regressor = model.named_steps["model"]
-#     else:
-#         regressor = model
-
-#     # Cannot plot coefficients for tree models
-#     if not hasattr(regressor, "coef_"):
-#         print(f"{type(regressor).__name__} has no coefficients.")
-#         return
-
-#     model_coef = regressor.coef_
-#     model_intercept = regressor.intercept_
-
-#     print(f"Model intercept: {model_intercept:.3f}\n")
-
-#     for i, col in enumerate(X.columns):
-#         print(f"{i}. {col}: {model_coef[i]:.3f}")
-
-#     if show_plot:
-#         coef = pd.Series(model_coef, index=X.columns)
-
-#         plt.figure(figsize=(8, 6))
-#         coef.sort_values().plot.barh()
-#         plt.xlabel("Coefficient")
-#         plt.title("Feature Coefficients")
-#         plt.tight_layout()
-#         plt.show()
 
 def plot_residuals(residual_data, standardised = True, show_plot = True):
 
@@ -134,10 +88,11 @@ def plot_feature_dependancy(model, x_data, model_coef):
     disp = PartialDependenceDisplay.from_estimator(model, x_data,  features=cols, ax = ax)    
 
     for ax, (feature, value) in zip(disp.axes_.ravel(), coef.items()):
-        print(feature)
-        print(x_data[feature].min())
-        # ax.set_title(f"{feature}\nCoef = {value:.2f}")
         ax.text(x_data[feature].min(), 160, f"Coef = {value:.2f}", ha =  'left')
+        plt.xlabel(feature, fontsize = 14)
+        plt.ylabel('Partial Dependence', fontsize = 14)
+        plt.xticks(fontsize = 12)
+        plt.yticks(fontsize = 12)
 
     plt.tight_layout()
     plt.show()

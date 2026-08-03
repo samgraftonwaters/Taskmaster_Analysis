@@ -337,7 +337,7 @@ print(len(y_pred))
 plt.figure()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
 
-plt.scatter(y_pred, y_test, color="dodgerblue", label="Data")
+plt.scatter(y_pred, y_test, color="dodgerblue", label="Data", s = 60, alpha = 0.8)
 lims = [min(y_test.min(), y_pred.min()), max(y_test.max(), y_pred.max())]
 
 plt.plot(lims, lims, color='red', linewidth=3, label = 'Actual Score Line')
@@ -365,12 +365,15 @@ y_plot = best_regression_model.predict(X_plot)
 plt.figure()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
 
-plt.scatter(X_train[feature], y_train, color="dodgerblue", alpha=0.7, label="Data")
+plt.scatter(X_train[feature], y_train, color="dodgerblue", alpha=0.8, label="Data", s = 60)
 plt.plot(x, y_plot, color="red", linewidth=3,  label="Regression Line")
-plt.title(f"{feature} Predicting Target")
-plt.xlabel(feature)
-plt.ylabel("Target")
-plt.legend()
+plt.title(f"{feature} Predicting Target", fontsize = 20)
+plt.xlabel(feature, fontsize = 16)
+plt.ylabel("Target", fontsize = 16)
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.legend(fontsize = 14)
+
 plt.show()
 
 RF.model_coefficients(model_coef = important_coef, model_intercept = intercept, 
@@ -384,11 +387,13 @@ RF.plot_feature_dependancy(model = best_regression_model, x_data = X_test.astype
 plt.figure()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
 
-plt.scatter(y_test, y_pred, edgecolors=(0, 0, 0), alpha=0.4)
+plt.scatter(y_test, y_pred, edgecolors=(0, 0, 0), alpha=0.8, color = 'dodgerblue', s = 60)
 plt.plot([y.min(), y.max()], [y.min(), y.max()], 'k--', lw=4)
-plt.xlabel('Measured Count')
-plt.ylabel('Predicted Count')
-plt.title(r"True and Predicted $y_i$")
+plt.xlabel('Measured Count', fontsize = 16)
+plt.ylabel('Predicted Count', fontsize = 16)
+plt.title(r"True and Predicted $y_i$", fontsize = 20)
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
 plt.show()
 
 
@@ -405,7 +410,7 @@ plt.figure()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
 
 plt.axhline(0, color="black", linestyle="--", lw = 4)
-plt.scatter(y_pred, standard_residual, color="dodgerblue")
+plt.scatter(y_pred, standard_residual, color="dodgerblue", alpha = 0.8, s = 60)
 plt.title("Residual Plot of Predicted Values", fontsize = 20)
 plt.xlabel("Predicted Value", fontsize = 16)
 plt.ylabel("Residual", fontsize = 16)
@@ -416,15 +421,19 @@ plt.show()
 plt.figure()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
 
-sm.qqplot(residual, line='45', fit=True)
+sm.qqplot(residual, line='45', fit=True, color = 'dodgerblue')
 
-plt.title("Q-Q Plot of Residuals")
-plt.show()
+plt.title("Q-Q Plot of Residuals", fontsize = 20)
+plt.xlabel('Theoretial Quartiles', fontsize = 16)
+plt.ylabel('Actual Quartiles', fontsize = 16)
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+
+plt.show()  
 
 ##########
 #Modelling Series 21 Data
 
-# series_21_contestents = series_21_contestents[model_columns]
 
 X_new_data = series_21_new_data
 y_new_data = series_21_contestents['Score']
@@ -450,7 +459,7 @@ for i in range(5):
 plt.figure()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
 
-plt.scatter(new_predictions, y_new_data, color="dodgerblue", label="Data")
+plt.scatter(new_predictions, y_new_data, color="dodgerblue", label="Data", s = 60)
 lims = [min(y_new_data.min(), new_predictions.min()), max(y_new_data.max(), new_predictions.max())]
 
 plt.plot(lims, lims, color='red', linewidth=3, label = 'Actual Score Line')
