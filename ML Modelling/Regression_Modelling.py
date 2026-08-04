@@ -85,10 +85,10 @@ for model_name, model in models.items():
 
     residual = y_test - y_pred
 
-    res_stand_mean, res_stand_median = RF.plot_residuals(residual_data = residual, standardised = True, 
+    res_stand_mean, res_stand_median = RF.plot_hist_residuals(residual_data = residual, standardised = True, 
                                                          show_plot = False)
 
-    res_mean, res_median = RF.plot_residuals(residual_data = residual, standardised = False, 
+    res_mean, res_median = RF.plot_hist_residuals(residual_data = residual, standardised = False, 
                                              show_plot = False)
 
     results.append({
@@ -149,20 +149,7 @@ print(f"R²   : {r2:.4f}")
 print(f"MAE  : {mae:.4f}")
 print(f"MSE  : {mse:.4f}")
 print(f"RMSE : {rmse:.4f}")
-
-r2_value = r2_score(y_test, y_pred)
-mae_value = mean_absolute_error(y_test, y_pred)
-MSE_value = mean_squared_error(y_test, y_pred)
-RMSE_value = root_mean_squared_error(y_test, y_pred)
 print()
-print("Model R2 Score:", r2_value)
-print("Model MAE Score:", mae_value)
-print("Model MSE Score:", MSE_value)
-print("Model RMSE Score:", RMSE_value)
-print()
-
-print(len(y_test))
-print(len(y_pred))
 
 plt.figure()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
@@ -227,14 +214,8 @@ RF.plot_qq(residuals = standard_residual)
 ##########
 #Modelling Series 21 Data
 
-
 X_new_data = series_21_new_data
 y_new_data = series_21_contestents['Score']
-
-print(X_new_data)
-
-print(series_21_new_data.columns.tolist())
-print(X_train.columns.tolist())
 
 print(series_21_new_data.columns.equals(X_train.columns))
 
@@ -242,10 +223,7 @@ new_predictions = best_regression_model.predict(X_new_data)
 
 ratio = (new_predictions - y_new_data)/y_new_data
 
-
-print(new_predictions, ratio)
-
-print('', 'Pred', 'Act', 'Rat')
+print(' ', 'Pred', ' ', 'Act', ' ', 'Rat')
 for i in range(5):
     print(i+1, f'{new_predictions[i]:.4f}', y_new_data[i], f'{ratio[i]:.4f}')
 
