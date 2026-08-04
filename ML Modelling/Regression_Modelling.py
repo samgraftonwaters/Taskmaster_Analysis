@@ -1,18 +1,10 @@
 from sklearn.model_selection import train_test_split, cross_val_score, cross_val_predict, GridSearchCV
-from sklearn.linear_model import LinearRegression, Ridge, Lasso, ElasticNet
-from sklearn.tree import DecisionTreeRegressor
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.preprocessing import RobustScaler
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error, root_mean_squared_error
-from sklearn.inspection import PartialDependenceDisplay
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 import statsmodels.api as sm
-from scipy import stats
-
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import PolynomialFeatures
+import joblib
 
 from Function_Scripts import Regression_Functions as RF
 
@@ -57,255 +49,93 @@ y = data['Score']
 print(X)
 print(y)
 
-#####
-#SINGLE MODEL (TEST)
-
-# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=123)
-
-# scaler = RobustScaler().set_output(transform="pandas")
-
-# X_train_single = scaler.fit_transform(X_train)
-# X_test_single = scaler.transform(X_test)
-
-# linear_model = LinearRegression()
-
-# linear_model.fit(X_train_single, y_train)
-
-# y_pred = linear_model.predict(X_test_single)
-
-# cv_scores_r2 = cross_val_score(estimator=linear_model, X=X, y=y, cv=5, scoring="r2")
-# cv_scores_mae = cross_val_score(estimator=linear_model, X=X, y=y, cv=5, scoring="neg_mean_absolute_error")
-
-# print()
-# print("Cross Val R2 Scores:", cv_scores_r2)
-# print("Cross Val R2 Mean Score:", cv_scores_r2.mean())
-
-# print("Cross Val MAD Scores:", cv_scores_mae*-1)
-# print("Cross Val MAD Mean Score:", cv_scores_mae.mean()*-1)
-
-
-
-
 ######
 #Model Comparison
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=123)
 
-models = {
-    "Linear Regression": Pipeline([
-        ("scaler", RobustScaler()),
-        ("model", LinearRegression())
-    ]),
+models, parameters = RF.models_hyperparams()
 
-    "Ridge": Pipeline([
-        ("scaler", RobustScaler()),
-        ("model", Ridge())
-    ]),
+results = []
+best_estimators = {}
 
-    "Lasso": Pipeline([
-        ("scaler", RobustScaler()),
-        ("model", Lasso())
-    ]),
+for model_name, model in models.items():
 
-    "Elastic Net": Pipeline([
-        ("scaler", RobustScaler()),
-        ("model", ElasticNet())
-    ]),
+    print(f"Running {model_name}...")
 
-    # "Polynomial Ridge": Pipeline([ #Best option, but testing the rest
-    #     ("poly", PolynomialFeatures(include_bias=False)),
-    #     ("model", Ridge())
-    # ]),
+    grid_search = GridSearchCV(estimator=model, param_grid=parameters[model_name],
+                               scoring="neg_mean_absolute_error",  cv=5,  n_jobs=-1)
 
-    # "Polynomial Lasso": Pipeline([
-    # ("poly", PolynomialFeatures(include_bias=False)),
-    # ("model", Lasso())
-    # ]),
+    grid_search.fit(X_train, y_train)
 
-    # "Polynomial Elastic Net": Pipeline([
-    # ("poly", PolynomialFeatures(include_bias=False)),
-    # ("model", ElasticNet())
-    # ]),
+    print(f"\n{model_name} Best parameters: \n", grid_search.best_params_)
 
-    "Decision Tree": DecisionTreeRegressor(random_state=42),
+    print(f"\nBest CV {model_name} MAE: \n", -grid_search.best_score_)
 
-    "Random Forest": RandomForestRegressor(random_state=42)
-}
+    optimised_model = grid_search.best_estimator_
+    best_estimators[model_name] = grid_search.best_estimator_
 
-param_grids = {
+    y_pred = grid_search.predict(X_test)
 
-    "Linear Regression": {
-        "model__fit_intercept": [True, False],
-        "model__positive": [True, False]
-    },
+    print(optimised_model)
 
-    "Ridge": {
-        "model__alpha": np.logspace(-3, 3, 20),
-        "model__solver": ["auto", "svd", "cholesky", "lsqr", "sag", "saga"],
-        "model__max_iter": [10000, 20000, 50000],
-        "model__tol": [1e-3, 1e-4, 1e-5],
-        "model__fit_intercept": [True, False]
-    },
+    r2_value = r2_score(y_test, y_pred)
+    mae_value = mean_absolute_error(y_test, y_pred)
+    mse_value = mean_squared_error(y_test, y_pred)
+    rmse_value = root_mean_squared_error(y_test, y_pred)
 
-    "Lasso": {
-        "model__alpha": np.logspace(-3, 3, 20),
-        "model__max_iter": [10000, 20000, 50000],
-        "model__tol": [1e-3, 1e-4, 1e-5],
-        "model__fit_intercept": [True, False],
-        "model__selection": ["cyclic", "random"]
-    },
+    residual = y_test - y_pred
 
-    "Elastic Net": {
-        "model__alpha": np.logspace(-3, 3, 20),
-        "model__l1_ratio": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
-        "model__fit_intercept": [True, False],
-        "model__max_iter": [5000, 10000, 20000, 50000],
-        "model__tol": [1e-3, 1e-4],
-        "model__selection": ["cyclic", "random"]
-    },
+    res_stand_mean, res_stand_median = RF.plot_residuals(residual_data = residual, standardised = True, 
+                                                         show_plot = False)
 
-    # "Polynomial Ridge": {
-    #     "poly__degree": [2, 3],
-    #     "model__alpha": np.logspace(-3, 3, 20),
-    #     "model__solver": ["auto", "svd", "cholesky", "lsqr", "sag", "saga"],
-    #     "model__max_iter": [10000, 20000, 50000],
-    #     "model__tol": [1e-3, 1e-4, 1e-5],
-    #     "model__fit_intercept": [True, False]
-    # },
+    res_mean, res_median = RF.plot_residuals(residual_data = residual, standardised = False, 
+                                             show_plot = False)
 
-    # "Polynomial Lasso": {
-    #     "poly__degree": [2, 3],
-    #     "model__alpha": np.logspace(-3, 3, 20),
-    #     "model__max_iter": [10000, 20000, 50000],
-    #     "model__tol": [1e-3, 1e-4, 1e-5],
-    #     "model__fit_intercept": [True, False],
-    #     "model__selection": ["cyclic", "random"]
-    # },
+    results.append({
+        "Model": model_name,
+        "Best MAE": -grid_search.best_score_,
+        "Best Hyperparameters": grid_search.best_params_,
+        "Best Estimator": grid_search.best_estimator_,
+        "R2 Score" : r2_value,
+        "MAE Score" : mae_value,
+        "MSE Score" : mse_value,
+        "RMSE Score" : rmse_value,
+        "Standard Residual Mean" : res_stand_mean,
+        "Standard Residual Median" :res_stand_median,
+        "Residual Mean" : res_mean,
+        "Residual Median" :res_median
+    })
 
-    # "Polynomial Elastic Net": {
-    #     "poly__degree": [2, 3],
-    #     "model__alpha": np.logspace(-3, 3, 20),
-    #     "model__l1_ratio": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
-    #     "model__fit_intercept": [True, False],
-    #     "model__max_iter": [5000, 10000, 20000, 50000],
-    #     "model__tol": [1e-3, 1e-4],
-    #     "model__selection": ["cyclic", "random"]
-    # },
+model_table = pd.DataFrame(results)
 
-    "Decision Tree": {
-        "max_depth": [None, 5, 10, 20],
-        "min_samples_split": [2, 5, 10],
-        "min_samples_leaf": [1, 2, 4]
-    },
+print(model_table)
 
-    "Random Forest": {
-        "n_estimators": [100, 200, 500],
-        "max_depth": [None, 10, 20],
-        "min_samples_split": [2, 5],
-        "min_samples_leaf": [1, 2]
-    }
-}
+model_table.to_csv(file_path + 'Regression_Modelling_Comparison_Table.csv', sep = ',', index = False)
 
-# results = []
-# best_estimators = {}
+model_table = pd.read_csv(file_path + 'Regression_Modelling_Comparison_Table.csv')
 
-# for model_name, model in models.items():
+best_model_row = model_table.loc[model_table["Best MAE"].idxmin()]
 
-#     print(f"Running {model_name}...")
+best_model_name = best_model_row["Model"]
+best_params = best_model_row["Best Hyperparameters"]
+best_regression_model = best_estimators[best_model_name]
 
-#     grid_search = GridSearchCV(
-#         estimator=model,
-#         param_grid=param_grids[model_name],
-#         scoring="neg_mean_absolute_error",
-#         cv=5,
-#         n_jobs=-1
-#     )
+print(f"Best model: {best_model_name}")
+print(f"Best CV MAE: {best_model_row['Best MAE']:.3f}")
+print("\nBest Hyperparameters:")
+print(best_params)
 
-#     grid_search.fit(X_train, y_train)
+joblib.dump(best_regression_model, "ML Modelling/best_regression_model.pkl")
 
-#     print(f"\n{model_name} Best parameters: \n", grid_search.best_params_)
-
-#     print(f"\nBest CV {model_name} MAE: \n", -grid_search.best_score_)
-
-#     optimised_model = grid_search.best_estimator_
-#     best_estimators[model_name] = grid_search.best_estimator_
-
-#     y_pred = grid_search.predict(X_test)
-
-#     print(optimised_model)
-
-#     r2_value = r2_score(y_test, y_pred)
-#     mae_value = mean_absolute_error(y_test, y_pred)
-#     mse_value = mean_squared_error(y_test, y_pred)
-#     rmse_value = root_mean_squared_error(y_test, y_pred)
-
-#     residual = y_test - y_pred
-
-#     res_stand_mean, res_stand_median = RF.plot_residuals(residual_data = residual, standardised = True, 
-#                                                          show_plot = False)
-
-#     res_mean, res_median = RF.plot_residuals(residual_data = residual, standardised = False, 
-#                                              show_plot = False)
-
-#     results.append({
-#         "Model": model_name,
-#         "Best MAE": -grid_search.best_score_,
-#         "Best Hyperparameters": grid_search.best_params_,
-#         "Best Estimator": grid_search.best_estimator_,
-#         "R2 Score" : r2_value,
-#         "MAE Score" : mae_value,
-#         "MSE Score" : mse_value,
-#         "RMSE Score" : rmse_value,
-#         "Standard Residual Mean" : res_stand_mean,
-#         "Standard Residual Median" :res_stand_median,
-#         "Residual Mean" : res_mean,
-#         "Residual Median" :res_median
-#     })
-
-# model_table = pd.DataFrame(results)
-
-# print(type(model_table.loc[0, "Best Estimator"]))
-
-# print(model_table)
-
-# model_table.to_csv(file_path + 'Regression_Modelling_Comparison_Table.csv', sep = ',', index = False)
-
-# model_table = pd.read_csv(file_path + 'Regression_Modelling_Comparison_Table.csv')
-
-# best_model_row = model_table.loc[model_table["Best MAE"].idxmin()]
-
-# best_model_name = best_model_row["Model"]
-# best_params = best_model_row["Best Hyperparameters"]
-# # best_regression_model = best_model_row["Best Estimator"]
-# best_regression_model = best_estimators[best_model_name]
-
-# print(f"Best model: {best_model_name}")
-# print(f"Best CV MAE: {best_model_row['Best MAE']:.3f}")
-# print("\nBest Hyperparameters:")
-# print(best_params)
-
-import joblib
-
-# model_info = {
-#     "model_name": best_model_name,
-#     "best_params": best_params
-# }
-
-# joblib.dump(best_regression_model, "ML Modelling/best_regression_model.pkl")
-
-# print("Model saved successfully.")
+print("Model saved successfully.")
 
 best_regression_model = joblib.load("ML Modelling/best_regression_model.pkl")
+
+print("Model loaded successfully.")
 
 print(best_regression_model)
 
 regressor = best_regression_model.named_steps["model"]
-
-coef = pd.Series(regressor.coef_, index=X_train.columns)
-threshold = 1e-4
-
-important_coef = coef[coef.abs() > threshold]
-
-intercept = regressor.intercept_
 
 y_pred = best_regression_model.predict(X_test)
 
@@ -320,16 +150,16 @@ print(f"MAE  : {mae:.4f}")
 print(f"MSE  : {mse:.4f}")
 print(f"RMSE : {rmse:.4f}")
 
-# r2_value = r2_score(y_test, y_pred)
-# mae_value = mean_absolute_error(y_test, y_pred)
-# MSE_value = mean_squared_error(y_test, y_pred)
-# RMSE_value = root_mean_squared_error(y_test, y_pred)
-# print()
-# print("Model R2 Score:", r2_value)
-# print("Model MAE Score:", mae_value)
-# print("Model MSE Score:", MSE_value)
-# print("Model RMSE Score:", RMSE_value)
-# print()
+r2_value = r2_score(y_test, y_pred)
+mae_value = mean_absolute_error(y_test, y_pred)
+MSE_value = mean_squared_error(y_test, y_pred)
+RMSE_value = root_mean_squared_error(y_test, y_pred)
+print()
+print("Model R2 Score:", r2_value)
+print("Model MAE Score:", mae_value)
+print("Model MSE Score:", MSE_value)
+print("Model RMSE Score:", RMSE_value)
+print()
 
 print(len(y_test))
 print(len(y_pred))
@@ -356,6 +186,11 @@ RF.plot_target_feature(x_data = X_train, y_data = y_train, feature = "Avg_Score_
 RF.plot_target_feature(x_data = X_test, y_data = y_test, feature = "Avg_Score_per_Tasks",
                        model = best_regression_model)
 
+coef = pd.Series(regressor.coef_, index=X_train.columns)
+threshold = 1e-4
+important_coef = coef[coef.abs() > threshold]
+
+intercept = regressor.intercept_
 
 RF.model_coefficients(model_coef = important_coef, model_intercept = intercept, 
                       x_cols = X_train, show_plot = True)

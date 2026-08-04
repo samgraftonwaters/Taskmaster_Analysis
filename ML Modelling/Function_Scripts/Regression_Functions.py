@@ -1,6 +1,8 @@
 from sklearn.model_selection import train_test_split, cross_val_score, cross_val_predict, GridSearchCV
 from sklearn.linear_model import LinearRegression, Ridge, Lasso, ElasticNet
 from sklearn.preprocessing import RobustScaler
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error, root_mean_squared_error
 from sklearn.inspection import PartialDependenceDisplay
 import matplotlib.pyplot as plt
@@ -9,7 +11,77 @@ import numpy as np
 import statsmodels.api as sm
 from scipy import stats
 
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import PolynomialFeatures
+
 plt.rcParams['figure.figsize'] = (13, 7)
+
+def models_hyperparams():
+
+    """
+    Contains model pipelines and their respective hyperparameters
+    """
+    models = {
+        "Linear Regression": Pipeline([
+        ("scaler", RobustScaler()),
+        ("model", LinearRegression())]),
+
+        "Ridge": Pipeline([
+        ("scaler", RobustScaler()),
+        ("model", Ridge())]),
+
+        "Lasso": Pipeline([
+        ("scaler", RobustScaler()),
+        ("model", Lasso())]),
+
+        "Elastic Net": Pipeline([
+        ("scaler", RobustScaler()),
+        ("model", ElasticNet())]),
+
+        "Decision Tree": DecisionTreeRegressor(random_state=42),
+
+        "Random Forest": RandomForestRegressor(random_state=42) 
+    }
+
+    param_grids = {
+        "Linear Regression": {
+        "model__fit_intercept": [True, False],
+        "model__positive": [True, False]},
+
+        "Ridge": {
+        "model__alpha": np.logspace(-3, 3, 20),
+        "model__solver": ["auto", "svd", "cholesky", "lsqr", "sag", "saga"],
+        "model__max_iter": [10000, 20000, 50000],
+        "model__tol": [1e-3, 1e-4, 1e-5],
+        "model__fit_intercept": [True, False]},
+
+        "Lasso": {
+        "model__alpha": np.logspace(-3, 3, 20),
+        "model__max_iter": [10000, 20000, 50000],
+        "model__tol": [1e-3, 1e-4, 1e-5],
+        "model__fit_intercept": [True, False],
+        "model__selection": ["cyclic", "random"]},
+
+        "Elastic Net": {
+        "model__alpha": np.logspace(-3, 3, 20),
+        "model__l1_ratio": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
+        "model__fit_intercept": [True, False],
+        "model__max_iter": [5000, 10000, 20000, 50000],
+        "model__tol": [1e-3, 1e-4],
+        "model__selection": ["cyclic", "random"]},
+
+        "Decision Tree": {
+        "max_depth": [None, 5, 10, 20],
+        "min_samples_split": [2, 5, 10],
+        "min_samples_leaf": [1, 2, 4]},
+
+        "Random Forest": {
+        "n_estimators": [100, 200, 500],
+        "max_depth": [None, 10, 20],
+        "min_samples_split": [2, 5],
+        "min_samples_leaf": [1, 2]}
+    }
+    return(models, param_grids)
 
 def model_coefficients(model_coef, model_intercept, x_cols, show_plot=True):
 
