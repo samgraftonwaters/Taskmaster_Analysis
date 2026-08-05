@@ -1,6 +1,6 @@
 
 import pandas as pd
-import Regression_Modelling_Run as RMR
+import Regression_Modelling as RM
 
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
 scaled_data = pd.read_csv(file_path + 'Full Contestent Table for Modelling Scaled.csv')
@@ -70,7 +70,7 @@ for (X_data, y_data, feature_run) in zip(model_columns, y_columns, feature_runs)
     print(X)
     print(y)
 
-    RMR.model_comparison_testing(X = X, y = y, file_path = file_path, feature_run = feature_run,
+    RM.model_comparison_testing(X = X, y = y, file_path = file_path, feature_run = feature_run,
                                  series_21_new_data = series_21_new_data, 
                                  series_21_contestents = series_21_contestents)
     
