@@ -157,7 +157,7 @@ def model_comparison_testing(X, y, file_path, feature_run, series_21_new_data,
                                 model_coef = important_coef)
 
     else:
-        split = round(len(important_coef)/2, 0)
+        split = int(round(len(important_coef)/2, 0))
         RF.plot_feature_dependancy(model = best_regression_model, x_data = X_test[0:split].astype(float), 
                                     model_coef = important_coef)
 

@@ -4,13 +4,13 @@ Ridge,6.329594975357425,"{'model__alpha': 6.158482110660261, 'model__fit_interce
                 ('model',
                  Ridge(alpha=6.158482110660261, max_iter=10000,
                        solver='lsqr'))])",0.9577566656277431,5.215464844137245,40.941817240247694,6.398579314210905,0.5131666622207729,0.4226723715750772,2.980922812839996,2.4552524697001417
-Lasso,6.344059008682829,"{'model__alpha': 0.1623776739188721, 'model__fit_intercept': True, 'model__max_iter': 10000, 'model__selection': 'random', 'model__tol': 0.001}","Pipeline(steps=[('scaler', RobustScaler()),
+Lasso,6.356592339401262,"{'model__alpha': 0.1623776739188721, 'model__fit_intercept': True, 'model__max_iter': 20000, 'model__selection': 'random', 'model__tol': 0.0001}","Pipeline(steps=[('scaler', RobustScaler()),
                 ('model',
-                 Lasso(alpha=0.1623776739188721, max_iter=10000,
-                       selection='random', tol=0.001))])",0.9583681967522343,4.849341351203843,40.34912738970205,6.352096298837262,0.42724667236767644,0.15896265682728594,2.5501694650267384,0.9488235713433681
-Elastic Net,6.268186820495336,"{'model__alpha': 0.1623776739188721, 'model__fit_intercept': True, 'model__l1_ratio': 0.8, 'model__max_iter': 50000, 'model__selection': 'random', 'model__tol': 0.001}","Pipeline(steps=[('scaler', RobustScaler()),
+                 Lasso(alpha=0.1623776739188721, max_iter=20000,
+                       selection='random'))])",0.9584056716901418,4.85247999862148,40.31280705463148,6.349236730082717,0.42523896852701937,0.1645955606595213,2.5389623726930766,0.9827460937420938
+Elastic Net,6.261531841085571,"{'model__alpha': 0.1623776739188721, 'model__fit_intercept': True, 'model__l1_ratio': 0.8, 'model__max_iter': 20000, 'model__selection': 'random', 'model__tol': 0.001}","Pipeline(steps=[('scaler', RobustScaler()),
                 ('model',
                  ElasticNet(alpha=0.1623776739188721, l1_ratio=0.8,
-                            max_iter=50000, selection='random', tol=0.001))])",0.9587369702360341,4.957750782809328,39.99171581693809,6.323900364248166,0.43971457412417037,0.25212718897514036,2.600557667662456,1.4911293213818482
+                            max_iter=20000, selection='random', tol=0.001))])",0.9586235521953207,4.994442127124766,40.10163944781719,6.332585526293126,0.44672465477016987,0.27159844941399364,2.638484899359736,1.6041389249872964
 Decision Tree,10.254007936507936,"{'max_depth': 5, 'min_samples_leaf': 4, 'min_samples_split': 2}","DecisionTreeRegressor(max_depth=5, min_samples_leaf=4, random_state=42)",0.7479160783237727,12.916111111111112,244.31721604938275,15.630649892099264,0.017220129791455298,0.07795833406594507,0.27611111111110914,1.25
 Random Forest,8.408312500000001,"{'max_depth': None, 'min_samples_leaf': 1, 'min_samples_split': 2, 'n_estimators': 200}","RandomForestRegressor(n_estimators=200, random_state=42)",0.8646400512283453,9.263250000000001,131.18950875000002,11.453798878538073,0.035316979871402955,-0.01319863021113323,0.4147499999999994,-0.15500000000000114

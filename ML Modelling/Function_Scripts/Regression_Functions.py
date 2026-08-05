@@ -96,7 +96,7 @@ def model_coefficients(model_coef, model_intercept, x_cols, show_plot=True):
         print(f"{i+1}. {col} coefficient: {value:.3f}")
 
     if show_plot:
-        plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.2, right = 0.96)
+        plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.25, right = 0.96)
         model_coef.sort_values().plot.barh()
 
         plt.title("Feature Importance", fontsize = 20)
