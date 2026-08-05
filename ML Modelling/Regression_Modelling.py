@@ -20,7 +20,8 @@ plt.rcParams['figure.figsize'] = (13, 7)
 ######
 #Model Comparison
 
-def model_comparison_testing(X, y, file_path, feature_run, series_21_new_data, series_21_contestents):
+def model_comparison_testing(X, y, file_path, feature_run, series_21_new_data, 
+                             series_21_contestents, target_feature_feature):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=123)
 
     models, parameters = RF.models_hyperparams()
@@ -136,11 +137,10 @@ def model_comparison_testing(X, y, file_path, feature_run, series_21_new_data, s
     plt.legend(fontsize = 16)
     plt.show()
 
-
-    RF.plot_target_feature(x_data = X_train, y_data = y_train, feature = "Avg_Score_per_Tasks",
+    RF.plot_target_feature(x_data = X_train, y_data = y_train, feature = target_feature_feature,
                         model = best_regression_model)
 
-    RF.plot_target_feature(x_data = X_test, y_data = y_test, feature = "Avg_Score_per_Tasks",
+    RF.plot_target_feature(x_data = X_test, y_data = y_test, feature = target_feature_feature,
                         model = best_regression_model)
 
     coef = pd.Series(regressor.coef_, index=X_train.columns)

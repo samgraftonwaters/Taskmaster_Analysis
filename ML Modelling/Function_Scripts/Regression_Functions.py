@@ -215,10 +215,10 @@ def plot_qq(residuals):
         residuals (array): calculated residuals - difference between y_pred and y_test
     """
 
-    plt.figure()
+    fig, ax = plt.subplots()
     plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
 
-    sm.qqplot(residuals, line='45', fit=True, color = 'dodgerblue')
+    sm.qqplot(residuals, line='45', fit=True, ax = ax, color = 'dodgerblue')
 
     plt.title("Q-Q Plot of Residuals", fontsize = 20)
     plt.xlabel('Theoretial Quartiles', fontsize = 16)

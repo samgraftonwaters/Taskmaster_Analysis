@@ -57,8 +57,9 @@ y_run3 = data['Avg_Score_per_Tasks']
 
 model_columns = [model_columns_run1, model_columns_run2, model_columns_run3]
 y_columns = [y_run1, y_run2, y_run3]
+target_features = ["Avg_Score_per_Tasks", 'Team_Score_per_Task', 'Team_Score_per_Task']
 
-for (X_data, y_data, feature_run) in zip(model_columns, y_columns, feature_runs):
+for (X_data, y_data, feature_run, target_feature_feature) in zip(model_columns, y_columns, feature_runs, target_features):
 
     model_data = data[X_data]
 
@@ -72,5 +73,6 @@ for (X_data, y_data, feature_run) in zip(model_columns, y_columns, feature_runs)
 
     RM.model_comparison_testing(X = X, y = y, file_path = file_path, feature_run = feature_run,
                                  series_21_new_data = series_21_new_data, 
-                                 series_21_contestents = series_21_contestents)
+                                 series_21_contestents = series_21_contestents,
+                                 target_feature_feature = target_feature_feature)
     
