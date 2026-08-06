@@ -21,7 +21,7 @@ plt.rcParams['figure.figsize'] = (13, 7)
 #Model Comparison
 
 def model_comparison_testing(X, y, file_path, feature_run, series_21_new_data, 
-                             series_21_contestents, target_feature_feature):
+                             series_21_contestents, target_feature_feature, y_variable):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=123)
 
     models, parameters = RF.models_hyperparams()
@@ -185,7 +185,7 @@ def model_comparison_testing(X, y, file_path, feature_run, series_21_new_data,
     #Modelling Series 21 Data
 
     X_new_data = series_21_new_data
-    y_new_data = series_21_contestents['Score']
+    y_new_data = series_21_contestents[y_variable]
 
     print(series_21_new_data.columns.equals(X_train.columns))
 

@@ -1,16 +1,59 @@
 Model,Best MAE,Best Hyperparameters,Best Estimator,R2 Score,MAE Score,MSE Score,RMSE Score,Standard Residual Mean,Standard Residual Median,Residual Mean,Residual Median
-Linear Regression,6.505990600965416,"{'model__fit_intercept': True, 'model__positive': False}","Pipeline(steps=[('scaler', RobustScaler()), ('model', LinearRegression())])",0.9499232743763125,5.274992059330628,48.533861707221654,6.966624843295471,0.4995678495295368,0.3379703267337555,3.1776383084998847,2.1497529482267197
-Ridge,6.329594975357425,"{'model__alpha': 6.158482110660261, 'model__fit_intercept': True, 'model__max_iter': 10000, 'model__solver': 'lsqr', 'model__tol': 0.0001}","Pipeline(steps=[('scaler', RobustScaler()),
+Linear Regression,6.505990601,"{'model__fit_intercept': True, 'model__positive': False}","Pipeline(steps=[('scaler', RobustScaler()), ('model', LinearRegression())])",0.949923274,5.274992059,48.53386171,6.966624843,0.49956785,0.337970327,3.177638308,2.149752948
+Ridge,6.329594975,"{'model__alpha': 6.158482110660261, 'model__fit_intercept': True, 'model__max_iter': 10000, 'model__solver': 'lsqr', 'model__tol': 0.0001}","Pipeline(steps=[('scaler', RobustScaler()),
                 ('model',
                  Ridge(alpha=6.158482110660261, max_iter=10000,
-                       solver='lsqr'))])",0.9577566656277431,5.215464844137245,40.941817240247694,6.398579314210905,0.5131666622207729,0.4226723715750772,2.980922812839996,2.4552524697001417
-Lasso,6.356592339401262,"{'model__alpha': 0.1623776739188721, 'model__fit_intercept': True, 'model__max_iter': 20000, 'model__selection': 'random', 'model__tol': 0.0001}","Pipeline(steps=[('scaler', RobustScaler()),
+                       solver='lsqr'))])",0.957756666,5.215464844,40.94181724,6.398579314,0.513166662,0.422672372,2.980922813,2.45525247
+Lasso,6.355794122,"{'model__alpha': 0.1623776739188721, 'model__fit_intercept': True, 'model__max_iter': 20000, 'model__selection': 'random', 'model__tol': 0.001}","Pipeline(steps=[('scaler', RobustScaler()),
                 ('model',
                  Lasso(alpha=0.1623776739188721, max_iter=20000,
-                       selection='random'))])",0.9584056716901418,4.85247999862148,40.31280705463148,6.349236730082717,0.42523896852701937,0.1645955606595213,2.5389623726930766,0.9827460937420938
-Elastic Net,6.261531841085571,"{'model__alpha': 0.1623776739188721, 'model__fit_intercept': True, 'model__l1_ratio': 0.8, 'model__max_iter': 20000, 'model__selection': 'random', 'model__tol': 0.001}","Pipeline(steps=[('scaler', RobustScaler()),
+                       selection='random', tol=0.001))])",0.958354867,4.853940507,40.3620467,6.353113151,0.427225806,0.162180812,2.550473206,0.968194827
+Elastic Net,6.257375218,"{'model__alpha': 0.1623776739188721, 'model__fit_intercept': True, 'model__l1_ratio': 0.8, 'model__max_iter': 20000, 'model__selection': 'random', 'model__tol': 0.001}","Pipeline(steps=[('scaler', RobustScaler()),
                 ('model',
                  ElasticNet(alpha=0.1623776739188721, l1_ratio=0.8,
-                            max_iter=20000, selection='random', tol=0.001))])",0.9586235521953207,4.994442127124766,40.10163944781719,6.332585526293126,0.44672465477016987,0.27159844941399364,2.638484899359736,1.6041389249872964
-Decision Tree,10.254007936507936,"{'max_depth': 5, 'min_samples_leaf': 4, 'min_samples_split': 2}","DecisionTreeRegressor(max_depth=5, min_samples_leaf=4, random_state=42)",0.7479160783237727,12.916111111111112,244.31721604938275,15.630649892099264,0.017220129791455298,0.07795833406594507,0.27611111111110914,1.25
-Random Forest,8.408312500000001,"{'max_depth': None, 'min_samples_leaf': 1, 'min_samples_split': 2, 'n_estimators': 200}","RandomForestRegressor(n_estimators=200, random_state=42)",0.8646400512283453,9.263250000000001,131.18950875000002,11.453798878538073,0.035316979871402955,-0.01319863021113323,0.4147499999999994,-0.15500000000000114
+                            max_iter=20000, selection='random', tol=0.001))])",0.958590233,4.996458021,40.13393165,6.335134698,0.447470475,0.271958981,2.643187222,1.606449015
+Decision Tree,10.25400794,"{'max_depth': 5, 'min_samples_leaf': 4, 'min_samples_split': 2}","DecisionTreeRegressor(max_depth=5, min_samples_leaf=4, random_state=42)",0.747916078,12.91611111,244.317216,15.63064989,0.01722013,0.077958334,0.276111111,1.25
+Random Forest,8.4083125,"{'max_depth': None, 'min_samples_leaf': 1, 'min_samples_split': 2, 'n_estimators': 200}","RandomForestRegressor(n_estimators=200, random_state=42)",0.864640051,9.26325,131.1895088,11.45379888,0.03531698,-0.01319863,0.41475,-0.155
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,Test Set Performance,,,,,Best Hyperparameters:,,,
+,,,R_   : 0.9586,,,,,"{'model__alpha': 0.1623776739188721, 'model__fit_intercept': True, 'model__l1_ratio': 0.8, 'model__max_iter': 20000, 'model__selection': 'random', 'model__tol': 0.001}",,,
+,,,MAE  : 4.9965,,,,,Model saved successfully.,,,
+,,,MSE  : 40.1339,,,,,Model loaded successfully.,,,
+,,,RMSE : 6.3351,,,,,"Pipeline(steps=[('scaler', RobustScaler()),",,,
+,,,,,,,,"                ('model',",,,
+,,,Model intercept: 152.297,,,,,"                 ElasticNet(alpha=0.1623776739188721, l1_ratio=0.8,",,,
+,,,Non-zero coefficients: 20/29,,,,,"                            max_iter=20000, selection='random', tol=0.001))])",,,
+,,,Coefficients removed: 9,,,,,,,,
+,,,1. Disqualifications coefficient: -1.969,,,,,,,,
+,,,2. Episode_Percentage_Losses coefficient: -4.870,,,,,,,,
+,,,3. Number_of_Tasks coefficient: 5.589,,,,,,,,
+,,,4. Percent_1s_Scored coefficient: -3.266,,,,,,,,
+,,,5. Tie_Break_Losses coefficient: 1.668,,,,,,,,
+,,,6. Tie_Break_Wins coefficient: 0.133,,,,,,,,
+,,,7. Episode_Percentage_Wins coefficient: 2.550,,,,,,,,
+,,,8. Number_Episodes coefficient: 8.347,,,,,,,,
+,,,9. Number_Team_Tasks coefficient: 0.718,,,,,,,,
+,,,10. Percent_5s_Scored coefficient: 6.947,,,,,,,,
+,,,11. Series_Number coefficient: -1.877,,,,,,,,
+,,,12. Team_Score_per_Task coefficient: 1.499,,,,,,,,
+,,,13. Team_Score_per_Person coefficient: 1.779,,,,,,,,
+,,,14. Age_Ranges_20-29 coefficient: -3.152,,,,,,,,
+,,,15. Age_Ranges_30-39 coefficient: 1.368,,,,,,,,
+,,,16. Age_Ranges_40-49 coefficient: -0.826,,,,,,,,
+,,,17. Age_Ranges_50-59 coefficient: 0.337,,,,,,,,
+,,,18. Seat_Seat_1 coefficient: -0.444,,,,,,,,
+,,,19. Seat_Seat_4 coefficient: -1.234,,,,,,,,
+,,,20. Seat_Seat_5 coefficient: 0.093,,,,,,,,
+,,,Standard Residual Mean: 0.447,,,,,,,,
+,,,Standard Residual Median: 0.272,,,,,,,,
+,,,Residual Mean: 2.643,,,,,,,,
+,,,Residual Median: 1.606,,,,,,,,
+,,,TRUE,,,,,,,,
+,,,  Pred   Act   Rat,,,,,,,,
+,,,1 147.5328 155 -0.0482,,,,,,,,
+,,,2 153.0806 161 -0.0492,,,,,,,,
+,,,3 152.8045 165 -0.0739,,,,,,,,
+,,,4 140.0013 150 -0.0667,,,,,,,,
+,,,5 149.1508 160 -0.0678,,,,,,,,

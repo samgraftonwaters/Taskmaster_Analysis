@@ -52,12 +52,13 @@ y_run1 = data['Score']
 y_run2 = data['Score']
 y_run3 = data['Avg_Score_per_Tasks']
 
-feature_runs = [ 'run2', 'run3'] #'run1',
-model_columns = [ model_columns_run2, model_columns_run3] #model_columns_run1,
-y_columns = [y_run2, y_run3] #y_run1, 
-target_features = [ 'Team_Score_per_Task', 'Team_Score_per_Task'] #"Avg_Score_per_Tasks",
+feature_runs = ['run1', 'run2', 'run3']
+model_columns = [model_columns_run1, model_columns_run2, model_columns_run3] 
+y_columns = [y_run1, y_run2, y_run3]
+target_features = ["Avg_Score_per_Tasks",'Team_Score_per_Task', 'Team_Score_per_Task']
+y_variable = ['Score', 'Score', 'Avg_Score_per_Tasks']
 
-for (X_data, y_data, feature_run, target_feature_feature) in zip(model_columns, y_columns, feature_runs, target_features):
+for (X_data, y_data, feature_run, target_feature_feature, y_variable) in zip(model_columns, y_columns, feature_runs, target_features, y_variable):
 
     model_data = data[X_data]
 
@@ -70,7 +71,7 @@ for (X_data, y_data, feature_run, target_feature_feature) in zip(model_columns, 
     print(y)
 
     RM.model_comparison_testing(X = X, y = y, file_path = file_path, feature_run = feature_run,
-                                 series_21_new_data = series_21_new_data, 
-                                 series_21_contestents = series_21_contestents,
-                                 target_feature_feature = target_feature_feature)
-    
+                                series_21_new_data = series_21_new_data, 
+                                series_21_contestents = series_21_contestents,
+                                target_feature_feature = target_feature_feature,
+                                y_variable=y_variable)
