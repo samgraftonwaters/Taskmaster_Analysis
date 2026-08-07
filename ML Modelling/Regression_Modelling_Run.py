@@ -10,7 +10,7 @@ unscaled_data = pd.read_csv(file_path + 'Full Contestent Table for Modelling.csv
 
 print(scaled_data.head())
 
-model_columns_run1 = ['Disqualifications',
+model_columns_option_1 = ['Disqualifications',
        'Episode_Percentage_Losses', 'Number_of_Tasks', 'Percent_1s_Scored',
        'Tie_Break_Losses', 'Tie_Break_Wins', 'Tie_Breaks_per_series',
        'Avg_Score_per_Episodes', 'Avg_Score_per_Tasks',
@@ -22,7 +22,7 @@ model_columns_run1 = ['Disqualifications',
        'Gender_Non-Binary', 'Seat_Seat_1', 'Seat_Seat_2', 'Seat_Seat_3',
        'Seat_Seat_4', 'Seat_Seat_5']
 
-model_columns_run2 = ['Disqualifications',
+model_columns_option_2 = ['Disqualifications',
        'Episode_Percentage_Losses', 'Number_of_Tasks', 'Percent_1s_Scored',
        'Tie_Break_Losses', 'Tie_Break_Wins', 'Tie_Breaks_per_series',
        'Episode_Percentage_Wins', 'Number_Episodes', 'Number_Team_Tasks',
@@ -33,7 +33,7 @@ model_columns_run2 = ['Disqualifications',
        'Gender_Non-Binary', 'Seat_Seat_1', 'Seat_Seat_2', 'Seat_Seat_3',
        'Seat_Seat_4', 'Seat_Seat_5']
 
-model_columns_run3 = ['Disqualifications',
+model_columns_option_3 = ['Disqualifications', 'Position',
        'Episode_Percentage_Losses', 'Number_of_Tasks', 'Percent_1s_Scored',
        'Tie_Break_Losses', 'Tie_Break_Wins', 'Tie_Breaks_per_series',
        'Episode_Percentage_Wins', 'Number_Episodes', 'Number_Team_Tasks',
@@ -48,15 +48,14 @@ series_21_contestents = unscaled_data[scaled_data['Series'] == 'S21'].reset_inde
 
 data = unscaled_data[scaled_data['Series'] != 'S21']
 
-y_run1 = data['Score']
-y_run2 = data['Score']
-y_run3 = data['Avg_Score_per_Tasks']
+y_option_1 = data['Score']
+y_option_2 = data['Avg_Score_per_Tasks']
 
-feature_runs = ['run1', 'run2', 'run3']
-model_columns = [model_columns_run1, model_columns_run2, model_columns_run3] 
-y_columns = [y_run1, y_run2, y_run3]
-target_features = ["Avg_Score_per_Tasks",'Team_Score_per_Task', 'Team_Score_per_Task']
-y_variable = ['Score', 'Score', 'Avg_Score_per_Tasks']
+feature_runs = ['run4', 'run5'] #['run1', 'run2', 'run3']
+model_columns = [model_columns_option_3, model_columns_option_3]#[model_columns_option_1, model_columns_option_2, model_columns_option_2] 
+y_columns = [y_option_1, y_option_2] #[y_option_1, y_option_1, y_option_2]
+target_features = ['Team_Score_per_Task', 'Team_Score_per_Task'] #["Avg_Score_per_Tasks",'Team_Score_per_Task', 'Team_Score_per_Task']
+y_variable = ['Score', 'Avg_Score_per_Tasks'] #['Score', 'Score', 'Avg_Score_per_Tasks']
 
 for (X_data, y_data, feature_run, target_feature_feature, y_variable) in zip(model_columns, y_columns, feature_runs, target_features, y_variable):
 
