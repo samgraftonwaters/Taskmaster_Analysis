@@ -46,7 +46,9 @@ data = data.drop('Position', axis = 1)
 
 feature_runs = ['run1', 'run2', 'run3']
 model_columns = [model_columns_option_1, model_columns_option_2, model_columns_option_3]
-y_data_col = data['Winner']
+y_data_col = [data['Winner']]#, data['Winner'], data['Winner']]
+
+print(len(y_data_col))
 
 
 for (X_data, y_data, feaure_run) in zip(model_columns, y_data_col, feature_runs):
@@ -61,4 +63,4 @@ for (X_data, y_data, feaure_run) in zip(model_columns, y_data_col, feature_runs)
     print(X)
     print(y)
 
-    CF.regression_model_comparison_testing(X, y)
+    CM.classification_model_comparison_testing(X, y)

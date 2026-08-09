@@ -19,8 +19,9 @@ name_series_cols = ['Name', 'Series', 'Position', 'Score']
 ########
 #To Change
 
-def regression_model_comparison_testing(X, y, sfile_path, feature_run, series_21_new_data, 
-                                series_21_contestents_names_series):
+def classification_model_comparison_testing(X, y):
+                                #             file_path, feature_run, series_21_new_data, 
+                                # series_21_contestents_names_series):
 
     X_train, X_test, y_train, y_test = CF.train_test_split(X, y, test_size=0.2, random_state=123)
 
@@ -56,16 +57,15 @@ def regression_model_comparison_testing(X, y, sfile_path, feature_run, series_21
 
         print(f"Running {model_name}...")
 
-    # for model, model_name, parameters_to_search in zip(classification_models, model_names, hyperparameters):
 
         labels = [1, 0]
         tick_labels = ["Winner", "Non-Winner"]
 
-        if (((X_train.select_dtypes(include="number") < 0).any() == True) & 
-            (model_name == "MultinomialNB")):
-            print('Values are less than 0, therefore cannot run MultinomialNB Model')
-            continue
-
+        # if ((any(X_train.select_dtypes(include="number") < 0) == True) & 
+        #     (model_name == "MultinomialNB")):
+        #     print('Values are less than 0, therefore cannot run MultinomialNB Model')
+        #     continue
+        
         grid_search = CF.GridSearchCV(estimator=model, param_grid=parameters[model_name], 
                                         scoring="f1", cv=5)
 
@@ -80,8 +80,8 @@ def regression_model_comparison_testing(X, y, sfile_path, feature_run, series_21
         optimised_model = grid_search.best_estimator_
         best_estimators[model_name] = grid_search.best_estimator_
 
-        if model_name == 'SVM Linear':
-            optimised_model = CF.CalibratedClassifierCV(optimised_model, method="sigmoid", cv=5)
+        # if model_name == 'LinearSVC':
+        #     optimised_model = CF.CalibratedClassifierCV(optimised_model, method="sigmoid", cv=5)
 
         #find best threshold
         y_train_probs = CF.cross_val_predict(optimised_model, X_train, y_train, cv=5,
@@ -134,8 +134,8 @@ def regression_model_comparison_testing(X, y, sfile_path, feature_run, series_21
             "F1 Score" : F1_Score,
             "precision" : Precision,
             "Recall" : Recall,
-            "ROC AUC" : ROC_AUC, 
-            "Precision Recall AUC" : Precision_Recall_AUC
+            "ROC AUC" : roc_auc, #ROC_AUC, 
+            "Precision Recall AUC" : pr_auc  #Precision_Recall_AUC
         })
 
     model_table = CF.pd.DataFrame(results)

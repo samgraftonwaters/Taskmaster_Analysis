@@ -32,18 +32,20 @@ def models_hyperparams():
         ("model", BernoulliNB())]),
 
         "MultinomialNB": Pipeline([
-        ("scaler", RobustScaler()),
         ("model", MultinomialNB())]),
 
-        "LinearSVM": Pipeline([
+        "LinearSVC": Pipeline([
         ("scaler", RobustScaler()),
-        ("model", LinearSVC(class_weight = 'balanced'))]),
+        ("model", CalibratedClassifierCV(
+                LinearSVC(class_weight="balanced"),
+                method="sigmoid",
+                cv=5))]),
 
         "SVC": Pipeline([
         ("scaler", RobustScaler()),
         ("model", SVC(class_weight = 'balanced', probability=True))]),
 
-        "NuSCV": Pipeline([
+        "NuSVC": Pipeline([
         ("scaler", RobustScaler()),
         ("model", NuSVC(class_weight = 'balanced', probability=True))]),
 
@@ -53,64 +55,73 @@ def models_hyperparams():
     }
 
     param_grids = {
-        "Logistic Regression": {
-        "model__solver": ["lbfgs", "newton-cg"],
+        "Logistic Regression": [
+        {"model__solver": ["lbfgs", "newton-cg"],
         "model__penalty": ["l2", None],
         "model__C": [0.1, 1, 10, 100],
-        "model__tol": [0.0001, 0.001, 0.01, 0.1, 1]
+        "model__tol": [0.0001, 0.001, 0.01, 0.1]
         },
-        "Logistic Regression": {
-        "model__solver": ["liblinear"],
+        {"model__solver": ["liblinear"],
         "model__penalty": ["l1", "l2"],
         "model__C": [0.1, 1, 10, 100],
-        "model__tol": [0.0001, 0.001, 0.01, 0.1, 1]
+        "model__tol": [0.0001, 0.001, 0.01, 0.1]
         },
-        "Logistic Regression": {
-        "model__solver": ["saga"],
+        {"model__solver": ["saga"],
         "model__penalty": ["l1", "l2"],
         "model__C": [0.1, 1, 10, 100],
-        "model__tol": [0.0001, 0.001, 0.01, 0.1, 1]
+        "model__tol": [0.0001, 0.001, 0.01, 0.1]
         },
-        "Logistic Regression": {
-        "model__solver": ["saga"],
+        {"model__solver": ["saga"],
         "model__penalty": ["elasticnet"],
         "model__C": [0.1, 1, 10, 100],
-        "model__tol": [0.0001, 0.001, 0.01, 0.1, 1],
+        "model__tol": [0.0001, 0.001, 0.01, 0.1],
         "model__l1_ratio": [0.5]
-        },
+        }
+        ],
 
-        "BernoulliNB" : {
+        "BernoulliNB": {
         "model__alpha": [0.001, 0.01, 0.1, 0.5, 1, 2]
         },
 
-        "MultinomialNB" : {
+        "MultinomialNB": {
         "model__alpha": [0.001, 0.01, 0.1, 0.5, 1, 2]
         },
 
-        "LinearSVM" : { 
-        "model__C" :  [0.1, 1, 10, 100],
-        "model__tol": [0.0001, 0.001, 0.01, 0.1, 1],
-        "model__penalty" : ["l1", "l2"],
-        "model__loss": ["hinge",  "squared_hinge"],
+        "LinearSVC": [
+        {"model__estimator__C": [0.1, 1, 10, 100],
+        "model__estimator__tol": [0.0001, 0.001, 0.01, 0.1],
+        "model__estimator__penalty": ["l1"],
+        "model__estimator__loss": ["squared_hinge"],
         },
+        {"model__estimator__C": [0.1, 1, 10, 100],
+        "model__estimator__tol": [0.0001, 0.001, 0.01, 0.1],
+        "model__estimator__penalty": ["l2"],
+        "model__estimator__loss": ["hinge", "squared_hinge"],
+        }
+        ],
 
-        "SVC" : {
-        "model__C" :  [0.1, 1, 10, 100],
-        "model__tol": [0.0001, 0.001, 0.01, 0.1, 1],
-        "model__kernel" : ["linear", "poly", "rbf", "sigmoid"],
+        "SVC": [
+        {"model__C": [0.1, 1, 10, 100],
+        "model__tol": [0.0001, 0.001, 0.01, 0.1],
+        "model__kernel": ["linear"],
+        },
+        {"model__C": [0.1, 1, 10, 100],
+        "model__tol": [0.0001, 0.001, 0.01, 0.1],
+        "model__kernel": ["poly", "rbf", "sigmoid"],
         "model__gamma": ["scale", "auto"]
-        },
+        }
+        ],
 
-        "NuSCV" : {
-        "model__tol": [0.0001, 0.001, 0.01, 0.1, 1],
+        "NuSVC": {
+        "model__tol": [0.0001, 0.001, 0.01, 0.1],
         "model__nu": [0.01, 0.02, 0.05, 0.1, 0.2, 0.5],
-        "model__kernel" : ["linear", "poly", "rbf", "sigmoid"],
+        "model__kernel": ["linear", "poly", "rbf", "sigmoid"],
         "model__gamma": ["scale", "auto"]
         },
 
         "DecisionTree": {
         "model__criterion": ["gini", "entropy", "log_loss"],
-        "model__splitter" : ['best', 'random'],
+        "model__splitter": ["best", "random"],
         "model__max_features": [None, "sqrt", "log2"]
         }
     }
