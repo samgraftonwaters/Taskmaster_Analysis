@@ -35,7 +35,7 @@ def models_hyperparams():
         ("scaler", RobustScaler()),
         ("model", MultinomialNB())]),
 
-        "LinearSVC": Pipeline([
+        "LinearSVM": Pipeline([
         ("scaler", RobustScaler()),
         ("model", LinearSVC(class_weight = 'balanced'))]),
 
@@ -51,6 +51,83 @@ def models_hyperparams():
         ("scaler", RobustScaler()),
         ("model", DecisionTreeClassifier(class_weight = 'balanced'))]),
     }
+
+    param_grids = {
+        "Linear Regression": {
+        "model__fit_intercept": [True, False],
+        "model__positive": [True, False]},
+
+        "Ridge": {
+        "model__alpha": np.logspace(-3, 3, 20),
+        "model__solver": ["auto", "svd", "cholesky", "lsqr", "sag", "saga"],
+        "model__max_iter": [10000, 20000, 50000],
+        "model__tol": [1e-3, 1e-4, 1e-5],
+        "model__fit_intercept": [True, False]},
+
+        "Logistic Regression": {
+        "model__solver": ["lbfgs", "newton-cg"],
+        "model__penalty": ["l2", None],
+        "model__C": [0.1, 1, 10, 100],
+        "model__tol": [0.0001, 0.001, 0.01, 0.1, 1]
+        },
+        "Logistic Regression": {
+        "model__solver": ["liblinear"],
+        "model__penalty": ["l1", "l2"],
+        "model__C": [0.1, 1, 10, 100],
+        "model__tol": [0.0001, 0.001, 0.01, 0.1, 1]
+        },
+        "Logistic Regression": {
+        "model__solver": ["saga"],
+        "model__penalty": ["l1", "l2"],
+        "model__C": [0.1, 1, 10, 100],
+        "model__tol": [0.0001, 0.001, 0.01, 0.1, 1]
+        },
+        "Logistic Regression": {
+        "model__solver": ["saga"],
+        "model__penalty": ["elasticnet"],
+        "model__C": [0.1, 1, 10, 100],
+        "model__tol": [0.0001, 0.001, 0.01, 0.1, 1],
+        "model__l1_ratio": [0.5]
+        },
+
+        "BernoulliNB" : {
+        "model__alpha": [0.001, 0.01, 0.1, 0.5, 1, 2]
+        },
+
+        "MultinomialNB" : {
+        "model__alpha": [0.001, 0.01, 0.1, 0.5, 1, 2]
+        },
+
+        "LinearSVM" : { 
+        "model__C" :  [0.1, 1, 10, 100],
+        "model__tol": [0.0001, 0.001, 0.01, 0.1, 1],
+        "model__penalty" : ["l1", "l2"],
+        "model__loss": ["hinge",  "squared_hinge"],
+        },
+
+        "SVC" : {
+        "model__C" :  [0.1, 1, 10, 100],
+        "model__tol": [0.0001, 0.001, 0.01, 0.1, 1],
+        "model__kernel" : ["linear", "poly", "rbf", "sigmoid"],
+        "model__gamma": ["scale", "auto"]
+        },
+
+        "NuSCV" : {
+        "model__tol": [0.0001, 0.001, 0.01, 0.1, 1],
+        "model__nu": [0.01, 0.02, 0.05, 0.1, 0.2, 0.5],
+        "model__kernel" : ["linear", "poly", "rbf", "sigmoid"],
+        "model__gamma": ["scale", "auto"]
+        },
+
+        "DecisionTree": {
+        "model__criterion": ["gini", "entropy", "log_loss"],
+        "model__splitter" : ['best', 'random'],
+        "model__max_features": [None, "sqrt", "log2"]
+        }
+    }
+
+    return(models, param_grids)
+
 
 def calculate_conf_matrix(y_test, y_pred):
 
