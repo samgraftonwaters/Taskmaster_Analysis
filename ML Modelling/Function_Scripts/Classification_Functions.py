@@ -13,8 +13,44 @@ from sklearn.naive_bayes import MultinomialNB, BernoulliNB
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.svm import LinearSVC, SVC, NuSVC
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.pipeline import Pipeline
 
 plt.rcParams['figure.figsize'] = (13, 7)
+
+def models_hyperparams():
+
+    """
+    Contains model pipelines and their respective hyperparameters
+    """
+    models = {
+        "Logistic Regression": Pipeline([
+        ("scaler", RobustScaler()),
+        ("model", LogisticRegression(class_weight="balanced"))]),
+
+        "BernoulliNB": Pipeline([
+        ("scaler", RobustScaler()),
+        ("model", BernoulliNB())]),
+
+        "MultinomialNB": Pipeline([
+        ("scaler", RobustScaler()),
+        ("model", MultinomialNB())]),
+
+        "LinearSVC": Pipeline([
+        ("scaler", RobustScaler()),
+        ("model", LinearSVC(class_weight = 'balanced'))]),
+
+        "SVC": Pipeline([
+        ("scaler", RobustScaler()),
+        ("model", SVC(class_weight = 'balanced', probability=True))]),
+
+        "NuSCV": Pipeline([
+        ("scaler", RobustScaler()),
+        ("model", NuSVC(class_weight = 'balanced', probability=True))]),
+
+        "DecisionTree": Pipeline([
+        ("scaler", RobustScaler()),
+        ("model", DecisionTreeClassifier(class_weight = 'balanced'))]),
+    }
 
 def calculate_conf_matrix(y_test, y_pred):
 

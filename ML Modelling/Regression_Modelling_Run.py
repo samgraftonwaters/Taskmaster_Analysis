@@ -71,7 +71,7 @@ for (X_data, y_data, feature_run, target_feature_feature, y_variable) in zip(mod
     print(X)
     print(y)
 
-    RM.model_comparison_testing(X = X, y = y, file_path = file_path, feature_run = feature_run,
+    RM.regression_model_comparison_testing(X = X, y = y, file_path = file_path, feature_run = feature_run,
                                 series_21_new_data = series_21_new_data, 
                                 series_21_contestents = series_21_contestents,
                                 target_feature_feature = target_feature_feature,

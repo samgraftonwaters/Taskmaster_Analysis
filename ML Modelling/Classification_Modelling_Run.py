@@ -1,5 +1,6 @@
 import pandas as pd
 import Classification_Modelling as CM
+from Function_Scripts import Classification_Functions as CF
 
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
 scaled_data = pd.read_csv(file_path + 'Full Contestent Table for Modelling Scaled.csv')
@@ -34,41 +35,21 @@ model_columns_option_3 = ['Disqualifications',
        'Gender_Non-Binary', 'Seat_Seat_1', 'Seat_Seat_2', 'Seat_Seat_3',
        'Seat_Seat_4', 'Seat_Seat_5']
 
+print(unscaled_data.head())
 
+series_21_contestents = unscaled_data[unscaled_data['Series'] == 'S21'].reset_index(drop = True)
 
-series_21_contestents = unscaled_data[scaled_data['Series'] == 'S21'].reset_index(drop = True)
-
-data = unscaled_data[scaled_data['Series'] != 'S21']
-
-feature_runs = ['run1', 'run2', 'run3']
-model_columns = [model_columns_option_1, model_columns_option_2, model_columns_option_3]
-
-series_21_contestents = data[data['Series'] == 'S21'].reset_index(drop = True)
-series_21_contestents_names_series = series_21_contestents[name_series_cols]
-
-series_21_contestents = series_21_contestents[model_columns]
-
-print(series_21_contestents)
-
-data = data[data['Series'] != 'S21']
-
-data = data[model_columns + ["Position"]]
-
-print(data.head())
+data = unscaled_data[unscaled_data['Series'] != 'S21'].copy()
 
 data['Winner'] = CF.np.where(data['Position'] == 1, 1, 0)
 data = data.drop('Position', axis = 1)
 
-print(data.head())
+feature_runs = ['run1', 'run2', 'run3']
+model_columns = [model_columns_option_1, model_columns_option_2, model_columns_option_3]
+y_data_col = data['Winner']
 
-model_data = data.copy()
 
-print(model_data)
-
-X = model_data.iloc[:,:-1]
-y = model_data['Winner']
-
-for (X_data, y_data) in zip(model_columns, y_columns):
+for (X_data, y_data, feaure_run) in zip(model_columns, y_data_col, feature_runs):
 
     model_data = data[X_data]
 
