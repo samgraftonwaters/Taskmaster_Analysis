@@ -60,3 +60,5 @@ for (X_data, y_data, feaure_run) in zip(model_columns, y_data_col, feature_runs)
 
     print(X)
     print(y)
+
+    CF.regression_model_comparison_testing(X, y)

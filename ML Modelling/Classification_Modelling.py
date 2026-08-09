@@ -19,90 +19,27 @@ name_series_cols = ['Name', 'Series', 'Position', 'Score']
 ########
 #To Change
 
-def regression_model_comparison_testing(X, y, data, file_path, feature_run, series_21_new_data, 
+def regression_model_comparison_testing(X, y, sfile_path, feature_run, series_21_new_data, 
                                 series_21_contestents_names_series):
 
     X_train, X_test, y_train, y_test = CF.train_test_split(X, y, test_size=0.2, random_state=123)
 
-    labels = [1, 0]
-    tick_labels = ["Winner", "Non-Winner"]
+    models, parameters = CF.models_hyperparams()
 
-    log_reg_param_grid = [
-        {
-            "solver": ["lbfgs", "newton-cg"],
-            "penalty": ["l2", None],
-            "C": [0.1, 1, 10, 100],
-            "tol": [0.0001, 0.001, 0.01, 0.1, 1]
-        },
-        {
-            "solver": ["liblinear"],
-            "penalty": ["l1", "l2"],
-            "C": [0.1, 1, 10, 100],
-            "tol": [0.0001, 0.001, 0.01, 0.1, 1]
-        },
-        {
-        "solver": ["saga"],
-        "penalty": ["l1", "l2"],
-        "C": [0.1, 1, 10, 100],
-        "tol": [0.0001, 0.001, 0.01, 0.1, 1]
-        },
-        {
-        "solver": ["saga"],
-        "penalty": ["elasticnet"],
-        "C": [0.1, 1, 10, 100],
-        "tol": [0.0001, 0.001, 0.01, 0.1, 1],
-        "l1_ratio": [0.5]
-        }
-    ]
+    # hyperparameters = [log_reg_param_grid, nb_param_grid, nb_param_grid, svm_linear_param_grid, 
+    #                 svc_param_grid, nu_svc_param_grid, decision_tree_param_grid]
 
-    nb_param_grid = {
-        "alpha": [0.001, 0.01, 0.1, 0.5, 1, 2]
-    }
-
-    svm_linear_param_grid = [
-        { "C" :  [0.1, 1, 10, 100],
-        "tol": [0.0001, 0.001, 0.01, 0.1, 1],
-        "penalty" : ["l1", "l2"],
-        "loss": ["hinge",  "squared_hinge"],
-        }
-    ]
-
-    svc_param_grid = [
-        {"C" :  [0.1, 1, 10, 100],
-        "tol": [0.0001, 0.001, 0.01, 0.1, 1],
-        "kernel" : ["linear", "poly", "rbf", "sigmoid"],
-        "gamma": ["scale", "auto"]
-        }
-    ]
-
-    nu_svc_param_grid = [
-        {"tol": [0.0001, 0.001, 0.01, 0.1, 1],
-        "nu": [0.01, 0.02, 0.05, 0.1, 0.2, 0.5],
-        "kernel" : ["linear", "poly", "rbf", "sigmoid"],
-        "gamma": ["scale", "auto"]
-        }
-    ]
-
-    decision_tree_param_grid = {
-        "criterion": ["gini", "entropy", "log_loss"],
-        "splitter" : ['best', 'random'],
-        "max_features": [None, "sqrt", "log2"]
-    }
-
-    hyperparameters = [log_reg_param_grid, nb_param_grid, nb_param_grid, svm_linear_param_grid, 
-                    svc_param_grid, nu_svc_param_grid, decision_tree_param_grid]
-
-    model_names = ['Logistic Regression', 'Bernoulli NB', 'Multinomial NB', 'SVM Linear', 'SVC', 
-                'NuSVC', 'Decision Tree']
+    # model_names = ['Logistic Regression', 'Bernoulli NB', 'Multinomial NB', 'SVM Linear', 'SVC', 
+    #             'NuSVC', 'Decision Tree']
 
 
 
 
-    if (data.select_dtypes(include="number") < 0).any().any() == True:
-        del hyperparameters[2]
-        del model_names[2]
-        del classification_models[2]
-        print(model_names)
+    # if (data.select_dtypes(include="number") < 0).any().any() == True:
+    #     del hyperparameters[2]
+    #     del model_names[2]
+    #     del classification_models[2]
+    #     print(model_names)
 
     Best_Params = []
     Threshold = []
@@ -112,9 +49,24 @@ def regression_model_comparison_testing(X, y, data, file_path, feature_run, seri
     ROC_AUC = []
     Precision_Recall_AUC = []
 
-    for model, model_name, parameters_to_search in zip(classification_models, model_names, hyperparameters):
+    results = []
+    best_estimators = {}
 
-        grid_search = CF.GridSearchCV(estimator=model, param_grid=parameters_to_search, 
+    for model_name, model in models.items():
+
+        print(f"Running {model_name}...")
+
+    # for model, model_name, parameters_to_search in zip(classification_models, model_names, hyperparameters):
+
+        labels = [1, 0]
+        tick_labels = ["Winner", "Non-Winner"]
+
+        if (((X_train.select_dtypes(include="number") < 0).any() == True) & 
+            (model_name == "MultinomialNB")):
+            print('Values are less than 0, therefore cannot run MultinomialNB Model')
+            continue
+
+        grid_search = CF.GridSearchCV(estimator=model, param_grid=parameters[model_name], 
                                         scoring="f1", cv=5)
 
         grid_search.fit(X_train, y_train)
@@ -126,6 +78,7 @@ def regression_model_comparison_testing(X, y, data, file_path, feature_run, seri
         Best_Params.append(grid_search.best_params_)
 
         optimised_model = grid_search.best_estimator_
+        best_estimators[model_name] = grid_search.best_estimator_
 
         if model_name == 'SVM Linear':
             optimised_model = CF.CalibratedClassifierCV(optimised_model, method="sigmoid", cv=5)
@@ -171,82 +124,85 @@ def regression_model_comparison_testing(X, y, data, file_path, feature_run, seri
         ROC_AUC.append(roc_auc)
         Precision_Recall_AUC.append(pr_auc)
 
-    model_table = CF.pd.DataFrame({
-        "Model Name" : model_names,
-        "Classification Model" : classification_models,
-        "Best Hyperparameters" : Best_Params,
-        "Threshold" : Threshold,
-        "F1 Score" : F1_Score,
-        "precision" : Precision,
-        "Recall" : Recall,
-        "ROC AUC" : ROC_AUC, 
-        "Precision Recall AUC" : Precision_Recall_AUC
-        }
-    )
+        results.append({
+            "Model Name" : model_name,
+            "Best F1": grid_search.best_score_,
+            "Best Hyperparameters": grid_search.best_params_,
+            "Best Estimator": grid_search.best_estimator_,
+            "Best Hyperparameters" : Best_Params,
+            "Threshold" : Threshold,
+            "F1 Score" : F1_Score,
+            "precision" : Precision,
+            "Recall" : Recall,
+            "ROC AUC" : ROC_AUC, 
+            "Precision Recall AUC" : Precision_Recall_AUC
+        })
+
+    model_table = CF.pd.DataFrame(results)
 
     print(model_table)
     print(model_table.info())
 
-    model_table.to_csv(file_path + f'Classification_Modelling_Comparison_Table_{feature_run}.csv', sep = ',', index = False)
+    # model_table.to_csv(file_path + f'Classification_Modelling_Comparison_Table_{feature_run}.csv', sep = ',', index = False)
 
-    best_model_index = (model_table.sort_values(by=["F1 Score", "ROC AUC", "Precision Recall AUC"],
-                                        ascending=False).index[0])
+    # best_model_index = (model_table.sort_values(by=["F1 Score", "ROC AUC", "Precision Recall AUC"],
+    #                                     ascending=False).index[0])
 
-    best_model_table = model_table.loc[best_model_index]
+    # best_model_table = model_table.loc[best_model_index]
 
-    print(best_model_table)
+    # print(best_model_table)
 
-    best_classification_model = classification_models[best_model_index]
+    # best_classification_model = classification_models[best_model_index]
 
-    best_classification_model.set_params(**best_model_table['Best Hyperparameters'])
+    # best_classification_model.set_params(**best_model_table['Best Hyperparameters'])
 
-    best_classification_model.fit(X_train, y_train)
+    # best_classification_model.fit(X_train, y_train)
 
 
-    if hasattr(best_classification_model, "predict_proba"):
-        y_test_probs = best_classification_model.predict_proba(X_test)[:, 1]
-    else:
-        y_test_probs = best_classification_model.decision_function(X_test)
+    # if hasattr(best_classification_model, "predict_proba"):
+    #     y_test_probs = best_classification_model.predict_proba(X_test)[:, 1]
+    # else:
+    #     y_test_probs = best_classification_model.decision_function(X_test)
 
-    y_test_pred = (y_test_probs >= best_model_table['Threshold']).astype(int)
+    # y_test_pred = (y_test_probs >= best_model_table['Threshold']).astype(int)
 
-    conf_matrix = CF.calculate_conf_matrix(y_test = y_test, y_pred = y_test_pred)
+    # conf_matrix = CF.calculate_conf_matrix(y_test = y_test, y_pred = y_test_pred)
 
-    precision, recall, f1 = CF.return_model_metrics(y_true = y_test, y_pred = y_test_pred)
+    # precision, recall, f1 = CF.return_model_metrics(y_true = y_test, y_pred = y_test_pred)
 
-    CF.plot_confusion_matrix(model_matrix = conf_matrix, tick_labels = tick_labels,
-                            title = f'{best_model_table['Model Name']} Model Confusion Matrix', save_plot = True)
+    # CF.plot_confusion_matrix(model_matrix = conf_matrix, tick_labels = tick_labels,
+    #                         title = f'{best_model_table['Model Name']} Model Confusion Matrix', save_plot = True)
 
-    CF.plot_ROC_curve(y_true = y_test, y_scores = y_test_pred, 
-                        title = f'{best_model_table['Model Name']} Model ROC Curve', save_plot = True)
+    # CF.plot_ROC_curve(y_true = y_test, y_scores = y_test_pred, 
+    #                     title = f'{best_model_table['Model Name']} Model ROC Curve', save_plot = True)
 
-    CF.plot_precision_recall_curve(y_true = y_test, y_prob_scores = y_test_probs, 
-                                title = f'{best_model_table['Model Name']} Model Precision Recall Curve',
-                                model_precision = CF.precision_score(y_test, y_test_pred), 
-                                model_recall = CF.recall_score(y_test, y_test_pred),
-                                save_plot = True)
-    ###
-    # Predictions with Series 21
-    ####
+    # CF.plot_precision_recall_curve(y_true = y_test, y_prob_scores = y_test_probs, 
+    #                             title = f'{best_model_table['Model Name']} Model Precision Recall Curve',
+    #                             model_precision = CF.precision_score(y_test, y_test_pred), 
+    #                             model_recall = CF.recall_score(y_test, y_test_pred),
+    #                             save_plot = True)
+    # ###
+    # # Predictions with Series 21
+    # ####
 
-    print(series_21_new_data.columns)
+    # print(series_21_new_data.columns)
 
-    predict_data = series_21_new_data#.iloc[:, 2:]
-    print(predict_data)
+    # predict_data = series_21_new_data#.iloc[:, 2:]
+    # print(predict_data)
 
-    y_predict_probs = best_classification_model.predict_proba(predict_data)[:, 1]
-    y_predict_pred = (y_predict_probs >= best_model_table['Threshold']).astype(int)
+    # y_predict_probs = best_classification_model.predict_proba(predict_data)[:, 1]
+    # y_predict_pred = (y_predict_probs >= best_model_table['Threshold']).astype(int)
 
-    print(y_predict_probs)
-    print(y_predict_pred)
+    # print(y_predict_probs)
+    # print(y_predict_pred)
 
-    series_21_new_data = CF.pd.concat([series_21_new_data, series_21_contestents_names_series], axis = 1)
+    # series_21_new_data = CF.pd.concat([series_21_new_data, series_21_contestents_names_series], axis = 1)
 
-    series_21_new_data['Probability'] = y_predict_probs
-    series_21_new_data['Prediction'] = y_predict_pred
+    # series_21_new_data['Probability'] = y_predict_probs
+    # series_21_new_data['Prediction'] = y_predict_pred
 
-    print(series_21_new_data[series_21_new_data['Prediction'] == 1]['Name'])
+    # print(series_21_new_data[series_21_new_data['Prediction'] == 1]['Name'])
 
-    series_21_new_data[['Name', 'Series', 'Position', 'Score', 
-                        'Prediction', 'Probability']].to_csv(file_path + f'Classification_Modelling_Comparison_Table_{feature_run}_Predicton.csv', 
-                                sep = ',', index = False)
+    # series_21_new_data[['Name', 'Series', 'Position', 'Score', 
+    #                     'Prediction', 'Probability']].to_csv(file_path + f'Classification_Modelling_Comparison_Table_{feature_run}_Predicton.csv', 
+    #                             sep = ',', index = False)

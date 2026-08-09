@@ -53,17 +53,6 @@ def models_hyperparams():
     }
 
     param_grids = {
-        "Linear Regression": {
-        "model__fit_intercept": [True, False],
-        "model__positive": [True, False]},
-
-        "Ridge": {
-        "model__alpha": np.logspace(-3, 3, 20),
-        "model__solver": ["auto", "svd", "cholesky", "lsqr", "sag", "saga"],
-        "model__max_iter": [10000, 20000, 50000],
-        "model__tol": [1e-3, 1e-4, 1e-5],
-        "model__fit_intercept": [True, False]},
-
         "Logistic Regression": {
         "model__solver": ["lbfgs", "newton-cg"],
         "model__penalty": ["l2", None],
