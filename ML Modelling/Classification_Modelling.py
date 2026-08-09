@@ -121,10 +121,10 @@ def classification_model_comparison_testing(X, y, file_path, feature_run, series
             "Best Hyperparameters": grid_search.best_params_,
             "Best Estimator": grid_search.best_estimator_,
             "Best Hyperparameters" : Best_Params,
-            "Threshold" : Threshold,
-            "F1 Score" : F1_Score,
-            "precision" : Precision,
-            "Recall" : Recall,
+            "Threshold" : best_threshold_train,
+            "F1 Score" : f1,
+            "precision" : precision,
+            "Recall" : recall,
             "ROC AUC" : roc_auc, #ROC_AUC, 
             "Precision Recall AUC" : pr_auc  #Precision_Recall_AUC
         })
@@ -139,12 +139,12 @@ def classification_model_comparison_testing(X, y, file_path, feature_run, series
     best_model_row = model_table.sort_values(by=["Best F1", "F1 Score", "ROC AUC", 
                                                  "Precision Recall AUC"], ascending=False).iloc[0]
 
-    best_model_name = best_model_row["Model"]
+    best_model_name = best_model_row["Model Name"]
     best_params = best_model_row["Best Hyperparameters"]
     best_classification_model = best_estimators[best_model_name]
 
     print(f"Best model: {best_model_name}")
-    print(f"Best CV MAE: {best_model_row['Best MAE']:.3f}")
+    print(f"Best CV F1: {best_model_row['Best F1']:.3f}")
     print("\nBest Hyperparameters:")
     print(best_params)
 

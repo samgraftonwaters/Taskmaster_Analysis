@@ -36,9 +36,9 @@ model_columns_option_3 = ['Disqualifications',
        'Seat_Seat_4', 'Seat_Seat_5']
 
 print(unscaled_data.head())
-
+name_series_cols = ['Name', 'Series', 'Score']
 series_21_contestents = unscaled_data[unscaled_data['Series'] == 'S21'].reset_index(drop = True)
-
+series_21_contestents_names_series = series_21_contestents[name_series_cols]
 data = unscaled_data[unscaled_data['Series'] != 'S21'].copy()
 
 data['Winner'] = CF.np.where(data['Position'] == 1, 1, 0)
@@ -63,4 +63,6 @@ for (X_data, y_data, feaure_run) in zip(model_columns, y_data_col, feature_runs)
     print(X)
     print(y)
 
-    CM.classification_model_comparison_testing(X, y)
+    CM.classification_model_comparison_testing(X, y, file_path, feature_run = feature_runs, 
+                                               series_21_new_data = series_21_contestents, 
+                                            series_21_contestents_names_series = series_21_contestents_names_series)
