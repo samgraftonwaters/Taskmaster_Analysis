@@ -51,11 +51,13 @@ data = unscaled_data[scaled_data['Series'] != 'S21']
 y_option_1 = data['Score']
 y_option_2 = data['Avg_Score_per_Tasks']
 
-feature_runs = ['run4', 'run5'] #['run1', 'run2', 'run3']
-model_columns = [model_columns_option_3, model_columns_option_3]#[model_columns_option_1, model_columns_option_2, model_columns_option_2] 
-y_columns = [y_option_1, y_option_2] #[y_option_1, y_option_1, y_option_2]
-target_features = ['Team_Score_per_Task', 'Team_Score_per_Task'] #["Avg_Score_per_Tasks",'Team_Score_per_Task', 'Team_Score_per_Task']
-y_variable = ['Score', 'Avg_Score_per_Tasks'] #['Score', 'Score', 'Avg_Score_per_Tasks']
+feature_runs = ['run1', 'run2', 'run3', 'run4', 'run5']
+model_columns = [model_columns_option_1, model_columns_option_2, model_columns_option_2, 
+                 model_columns_option_3, model_columns_option_3]
+y_columns = [y_option_1, y_option_1, y_option_2, y_option_1, y_option_2]
+target_features = ["Avg_Score_per_Tasks",'Team_Score_per_Task', 'Team_Score_per_Task',
+                   'Team_Score_per_Task', 'Team_Score_per_Task']
+y_variable = ['Score', 'Score', 'Avg_Score_per_Tasks', 'Score', 'Avg_Score_per_Tasks']
 
 for (X_data, y_data, feature_run, target_feature_feature, y_variable) in zip(model_columns, y_columns, feature_runs, target_features, y_variable):
 
