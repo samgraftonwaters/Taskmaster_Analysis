@@ -1,0 +1,17 @@
+Model,Best MAE,Best Hyperparameters,Best Estimator,R2 Score,MAE Score,MSE Score,RMSE Score,Standard Residual Mean,Standard Residual Median,Residual Mean,Residual Median
+Linear Regression,0.04324118358403517,"{'model__fit_intercept': False, 'model__positive': False}","Pipeline(steps=[('scaler', RobustScaler()),
+                ('model', LinearRegression(fit_intercept=False))])",0.9416570591672081,0.039462937079511165,0.0035308358520611234,0.059420836850898724,0.572140972673634,0.26700559097549736,0.030080680574373055,0.01403799111986892
+Ridge,0.0414673397804463,"{'model__alpha': 6.158482110660261, 'model__fit_intercept': True, 'model__max_iter': 10000, 'model__solver': 'lsqr', 'model__tol': 0.0001}","Pipeline(steps=[('scaler', RobustScaler()),
+                ('model',
+                 Ridge(alpha=6.158482110660261, max_iter=10000,
+                       solver='lsqr'))])",0.9567773363853893,0.03940362045320254,0.0026157771297375034,0.0511446686345459,0.6382878355748653,0.45686701993007006,0.028019552639600452,0.020055543597660375
+Lasso,0.037854292497327545,"{'model__alpha': 0.004281332398719396, 'model__fit_intercept': True, 'model__max_iter': 20000, 'model__selection': 'random', 'model__tol': 0.001}","Pipeline(steps=[('scaler', RobustScaler()),
+                ('model',
+                 Lasso(alpha=0.004281332398719396, max_iter=20000,
+                       selection='random', tol=0.001))])",0.950331529880231,0.04120490106183099,0.003005868619453261,0.05482580249712047,0.43007490331653886,0.36702750986717775,0.022132882256406416,0.01888828340856108
+Elastic Net,0.037614144951037785,"{'model__alpha': 0.004281332398719396, 'model__fit_intercept': True, 'model__l1_ratio': 0.8, 'model__max_iter': 10000, 'model__selection': 'random', 'model__tol': 0.001}","Pipeline(steps=[('scaler', RobustScaler()),
+                ('model',
+                 ElasticNet(alpha=0.004281332398719396, l1_ratio=0.8,
+                            max_iter=10000, selection='random', tol=0.001))])",0.9513007533461585,0.040223385546809445,0.002947212526474272,0.05428823561762044,0.4655517689085628,0.3698312313717799,0.02339844268150575,0.018587567370585756
+Decision Tree,0.07417919305307807,"{'max_depth': 5, 'min_samples_leaf': 4, 'min_samples_split': 2}","DecisionTreeRegressor(max_depth=5, min_samples_leaf=4, random_state=42)",0.7919393210250528,0.08279198855149157,0.012591550824191966,0.11221207967145055,0.11262372756504888,0.11965734739393741,0.012880348338960656,0.013684756747726734
+Random Forest,0.060298125927070234,"{'max_depth': 10, 'min_samples_leaf': 1, 'min_samples_split': 2, 'n_estimators': 200}","RandomForestRegressor(max_depth=10, n_estimators=200, random_state=42)",0.8735295209524767,0.07114471232633642,0.0076538223009382025,0.08748612633405484,0.08787872099830768,0.018954321757052434,0.007856028155606997,0.0016944452957696754

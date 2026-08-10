@@ -107,7 +107,7 @@ def classification_model_comparison_testing(X, y, file_path, feature_run, series
 
         results.append({
             "Model Name" : model_name,
-            "CV F1": grid_search.best_score_,
+            "Best F1": grid_search.best_score_,
             "Best Hyperparameters": grid_search.best_params_,
             "Best Estimator": grid_search.best_estimator_,
             "Threshold" : best_threshold_train,
@@ -125,7 +125,7 @@ def classification_model_comparison_testing(X, y, file_path, feature_run, series
 
     model_table.to_csv(file_path + f'Classification_Modelling_Comparison_Table_{feature_run}.csv', sep = ',', index = False)
 
-    best_model_row = model_table.sort_values(by=["CV F1", "ROC AUC", 
+    best_model_row = model_table.sort_values(by=["Best F1", "ROC AUC", 
                                                  "Precision Recall AUC"], ascending=False).iloc[0]
 
     best_model_name = best_model_row["Model Name"]

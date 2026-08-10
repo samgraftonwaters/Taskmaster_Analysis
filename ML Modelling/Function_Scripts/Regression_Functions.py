@@ -83,7 +83,7 @@ def models_hyperparams():
     }
     return(models, param_grids)
 
-def model_coefficients(model_coef, model_intercept, x_cols, show_plot=True):
+def model_coefficients(model_coef, model_intercept, x_cols, fig_name = None, show_plot=True):
 
     print("Model intercept:", model_intercept.round(3))
 
@@ -104,10 +104,11 @@ def model_coefficients(model_coef, model_intercept, x_cols, show_plot=True):
         plt.ylabel("Feature", fontsize = 16)
         plt.xticks(fontsize = 14)
         plt.yticks(fontsize = 14)
+        plt.savefig(f"Plots/{fig_name}.png", dpi=300, bbox_inches="tight")
         plt.show()
 
 
-def plot_hist_residuals(residual_data, standardised = True, show_plot = True):
+def plot_hist_residuals(residual_data, fig_name = None, standardised = True, show_plot = True):
 
     if standardised == True:
 
@@ -119,6 +120,7 @@ def plot_hist_residuals(residual_data, standardised = True, show_plot = True):
         print(f"Standard Residual Mean: {res_mean:.3f}\nStandard Residual Median: {res_median:.3f}")
 
         title = "Standardised Residual Distribution Plot of the Linear Model"
+        data = standard_residual
 
     else:
         res_mean = residual_data.mean()
@@ -127,13 +129,14 @@ def plot_hist_residuals(residual_data, standardised = True, show_plot = True):
         print(f"Residual Mean: {res_mean:.3f}\nResidual Median: {res_median:.3f}")
 
         title = "Residual Distribution Plot of the Linear Model"
+        data = residual_data
 
     if show_plot == True:
         plt.figure()
         plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
         plt.axvline(x=res_mean, label=f"mean: {res_mean.round(2)}", color="red", lw = 4)
         plt.axvline(x=res_median, label=f"median: {res_median.round(2)}", color = 'black', lw = 4)
-        plt.hist(residual_data, bins=25, color="dodgerblue", alpha = 0.6)
+        plt.hist(data, bins=25, color="dodgerblue", alpha = 0.6)
 
         plt.title(title, fontsize = 20)
         plt.xlabel("Residual", fontsize = 16)
@@ -141,12 +144,13 @@ def plot_hist_residuals(residual_data, standardised = True, show_plot = True):
         plt.xticks(fontsize = 14)
         plt.yticks(fontsize = 14)
         plt.legend(fontsize = 16)
+        plt.savefig(f"Plots/{fig_name}.png", dpi=300, bbox_inches="tight")
         plt.show()
 
     return(res_mean, res_median)
 
 
-def plot_feature_dependancy(model, x_data, model_coef):
+def plot_feature_dependancy(model, x_data, model_coef, fig_name = None):
 
     coef = model_coef.sort_values()
 
@@ -166,9 +170,10 @@ def plot_feature_dependancy(model, x_data, model_coef):
         ax.tick_params(axis="y", labelsize=11)
 
     plt.tight_layout()
+    plt.savefig(f"Plots/{fig_name}.png", dpi=300, bbox_inches="tight")
     plt.show()
 
-def plot_target_feature(feature : str, x_data, y_data, model):
+def plot_target_feature(feature : str, x_data, y_data, model, fig_name = None):
 
     """
     Scatter plot of target against specified feature, along with line of best fit.
@@ -178,7 +183,7 @@ def plot_target_feature(feature : str, x_data, y_data, model):
         feature (str): column name of the feature to plot against the target variable
         x_data (DataFrame): DataFrame with all model variables
         y_data (array): target variable data
-    
+        fig_name (str): File name to save figure
     """
 
     x = np.linspace(x_data[feature].min(), x_data[feature].max(), 100)
@@ -201,11 +206,11 @@ def plot_target_feature(feature : str, x_data, y_data, model):
     plt.xticks(fontsize = 14)
     plt.yticks(fontsize = 14)
     plt.legend(fontsize = 16)
-
+    plt.savefig(f"Plots/{fig_name}.png", dpi=300, bbox_inches="tight")
     plt.show()
 
 
-def plot_qq(residuals):
+def plot_qq(residuals, fig_name = None):
 
     """
     Plot Q-Q plot with 45 degree line
@@ -213,6 +218,7 @@ def plot_qq(residuals):
     Parameters:
     -----------
         residuals (array): calculated residuals - difference between y_pred and y_test
+        fig_name (str): File name to save figure
     """
 
     fig, ax = plt.subplots()
@@ -225,10 +231,10 @@ def plot_qq(residuals):
     plt.ylabel('Actual Quartiles', fontsize = 16)
     plt.xticks(fontsize = 14)
     plt.yticks(fontsize = 14)
-
+    plt.savefig(f"Plots/{fig_name}.png", dpi=300, bbox_inches="tight")
     plt.show()  
 
-def plot_residuals(y_data, residuals):
+def plot_residuals(y_data, residuals, fig_name = None, title = "Residual Plot of Predicted Values"):
 
     """
     Plot residuals for predicted values
@@ -237,16 +243,19 @@ def plot_residuals(y_data, residuals):
     ----------
         y_data (array): target variable (e.g. y_pred or y_test)
         residuals: calculated residuals
+        fig_name (str): File name to save figure
+        title (str): title of the plot
     """
     
     plt.figure()
-    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
+    plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.1, right = 0.96)
 
     plt.axhline(0, color="black", linestyle="--", lw = 4)
     plt.scatter(y_data, residuals, color="dodgerblue", alpha = 0.8, s = 60)
-    plt.title("Residual Plot of Predicted Values", fontsize = 20)
+    plt.title(title, fontsize = 20)
     plt.xlabel("Predicted Value", fontsize = 16)
     plt.ylabel("Residual", fontsize = 16)
     plt.xticks(fontsize = 14)
     plt.yticks(fontsize = 14)
+    plt.savefig(f"Plots/{fig_name}.png", dpi=300, bbox_inches="tight")
     plt.show()

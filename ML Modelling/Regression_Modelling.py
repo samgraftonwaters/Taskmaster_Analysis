@@ -135,13 +135,14 @@ def regression_model_comparison_testing(X, y, file_path, feature_run, series_21_
     plt.xticks(fontsize = 14)
     plt.yticks(fontsize = 14)
     plt.legend(fontsize = 16)
+    plt.savefig(f"Plots/Predict_Actual_test_{feature_run}.png", dpi=300, bbox_inches="tight")
     plt.show()
 
     RF.plot_target_feature(x_data = X_train, y_data = y_train, feature = target_feature_feature,
-                        model = best_regression_model)
+                        model = best_regression_model, fig_name = f'feature_target_train_{feature_run}')
 
     RF.plot_target_feature(x_data = X_test, y_data = y_test, feature = target_feature_feature,
-                        model = best_regression_model)
+                        model = best_regression_model, fig_name = f'feature_target_test_{feature_run}')
 
     coef = pd.Series(regressor.coef_, index=X_train.columns)
     threshold = 1e-4
@@ -150,42 +151,50 @@ def regression_model_comparison_testing(X, y, file_path, feature_run, series_21_
     intercept = regressor.intercept_
 
     RF.model_coefficients(model_coef = important_coef, model_intercept = intercept, 
-                        x_cols = X_train, show_plot = True)
+                        x_cols = X_train, show_plot = True, fig_name = f'Important_Features_{feature_run}')
 
     if len(important_coef) <= 12:
         RF.plot_feature_dependancy(model = best_regression_model, x_data = X_test.astype(float), 
-                                model_coef = important_coef)
+                                model_coef = important_coef, fig_name = f'Important_Features_subplots_{feature_run}')
 
     else:
         split = int(round(len(important_coef)/2, 0))
         RF.plot_feature_dependancy(model = best_regression_model, x_data = X_test[0:split].astype(float), 
-                                    model_coef = important_coef)
+                                    model_coef = important_coef, fig_name = f'Important_Features_subplots_{feature_run}_0-{split}')
 
         RF.plot_feature_dependancy(model = best_regression_model, x_data = X_test[split:].astype(float), 
-                                        model_coef = important_coef)
+                                        model_coef = important_coef, 
+                                        fig_name = f'Important_Features_subplots_{feature_run}_{split}')
 
 
     residual = y_test - y_pred
 
-    RF.plot_hist_residuals(residual_data = residual, standardised = True)
+    RF.plot_hist_residuals(residual_data = residual, standardised = True, 
+                           fig_name = f'standard_residual_hist_{feature_run}')
 
-    RF.plot_hist_residuals(residual_data = residual, standardised = False)
+    RF.plot_hist_residuals(residual_data = residual, standardised = False, fig_name = f'residual_hist_{feature_run}')
 
     standard_residual = residual / residual.std()
 
-    RF.plot_residuals(y_data = y_pred, residuals = residual)
+    RF.plot_residuals(y_data = y_pred, residuals = residual, fig_name = f'residual_predict_{feature_run}',
+                      title = "Residual Plot of Predicted Values")
 
-    RF.plot_residuals(y_data = y_pred, residuals = standard_residual)
+    RF.plot_residuals(y_data = y_pred, residuals = standard_residual, 
+                      fig_name = f'standard_residual_predict_{feature_run}',
+                      title = "Standardised Residual Plot of Predicted Values")
 
 
-    RF.plot_qq(residuals = residual)
-    RF.plot_qq(residuals = standard_residual)
+    RF.plot_qq(residuals = residual, fig_name = f'Q-Q_plot_residual_{feature_run}')
+    RF.plot_qq(residuals = standard_residual, fig_name = f'Q-Q_plot_standard_residual_{feature_run}')
 
     ##########
     #Modelling Series 21 Data
 
     X_new_data = series_21_new_data
     y_new_data = series_21_contestents[y_variable]
+
+    if (feature_run == 'run6' | 'run7'):
+        y_new_data = np.log(y_new_data)
 
     print(series_21_new_data.columns.equals(X_train.columns))
 
@@ -210,4 +219,5 @@ def regression_model_comparison_testing(X, y, file_path, feature_run, series_21_
     plt.xticks(fontsize = 14)
     plt.yticks(fontsize = 14)
     plt.legend(fontsize = 16)
+    plt.savefig(f"Plots/Predict_Actual_S21_{feature_run}.png", dpi=300, bbox_inches="tight")
     plt.show()
