@@ -125,8 +125,8 @@ def classification_model_comparison_testing(X, y, file_path, feature_run, series
             "F1 Score" : f1,
             "precision" : precision,
             "Recall" : recall,
-            "ROC AUC" : roc_auc, #ROC_AUC, 
-            "Precision Recall AUC" : pr_auc  #Precision_Recall_AUC
+            "ROC AUC" : roc_auc, 
+            "Precision Recall AUC" : pr_auc 
         })
 
     model_table = CF.pd.DataFrame(results)
