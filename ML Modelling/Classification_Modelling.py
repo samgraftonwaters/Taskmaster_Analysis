@@ -42,13 +42,13 @@ def classification_model_comparison_testing(X, y, file_path, feature_run, series
     #     del classification_models[2]
     #     print(model_names)
 
-    Best_Params = []
-    Threshold = []
-    F1_Score = []
-    Precision = []
-    Recall = []
-    ROC_AUC = []
-    Precision_Recall_AUC = []
+    # Best_Params = []
+    # Threshold = []
+    # F1_Score = []
+    # Precision = []
+    # Recall = []
+    # ROC_AUC = []
+    # Precision_Recall_AUC = []
 
     results = []
     best_estimators = {}
@@ -69,8 +69,6 @@ def classification_model_comparison_testing(X, y, file_path, feature_run, series
 
         print(f"\nBest CV {model_name} F1: \n", grid_search.best_score_)
 
-        Best_Params.append(grid_search.best_params_)
-
         optimised_model = grid_search.best_estimator_
         best_estimators[model_name] = grid_search.best_estimator_
 
@@ -79,8 +77,6 @@ def classification_model_comparison_testing(X, y, file_path, feature_run, series
                                         method="predict_proba")[:, 1]
 
         best_threshold_train = CF.determine_best_threshold(y_train, y_train_probs)
-
-        Threshold.append(best_threshold_train)
 
         optimised_model.fit(X_train, y_train)
 
@@ -99,10 +95,6 @@ def classification_model_comparison_testing(X, y, file_path, feature_run, series
 
         precision, recall, f1 = CF.return_model_metrics(y_true = y_test, y_pred = y_test_pred)
 
-        Precision.append(precision)
-        Recall.append(recall)
-        F1_Score.append(f1)
-
         roc_auc = CF.plot_ROC_curve(y_true = y_test, y_scores = y_test_pred, 
                         title = f'{model_name} Model ROC Curve', save_plot = False)
 
@@ -111,18 +103,15 @@ def classification_model_comparison_testing(X, y, file_path, feature_run, series
                                     model_precision = CF.precision_score(y_test, y_test_pred), 
                                     model_recall = CF.recall_score(y_test, y_test_pred),
                                     save_plot = False)
-        
-        ROC_AUC.append(roc_auc)
-        Precision_Recall_AUC.append(pr_auc)
+    
 
         results.append({
             "Model Name" : model_name,
-            "Best F1": grid_search.best_score_,
+            "CV F1": grid_search.best_score_,
             "Best Hyperparameters": grid_search.best_params_,
             "Best Estimator": grid_search.best_estimator_,
-            "Best Hyperparameters" : Best_Params,
             "Threshold" : best_threshold_train,
-            "F1 Score" : f1,
+            "Test Score" : f1,
             "precision" : precision,
             "Recall" : recall,
             "ROC AUC" : roc_auc, 
@@ -136,7 +125,7 @@ def classification_model_comparison_testing(X, y, file_path, feature_run, series
 
     model_table.to_csv(file_path + f'Classification_Modelling_Comparison_Table_{feature_run}.csv', sep = ',', index = False)
 
-    best_model_row = model_table.sort_values(by=["Best F1", "F1 Score", "ROC AUC", 
+    best_model_row = model_table.sort_values(by=["CV F1", "ROC AUC", 
                                                  "Precision Recall AUC"], ascending=False).iloc[0]
 
     best_model_name = best_model_row["Model Name"]
