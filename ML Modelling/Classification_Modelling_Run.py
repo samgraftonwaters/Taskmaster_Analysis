@@ -36,7 +36,7 @@ model_columns_option_3 = ['Disqualifications',
        'Seat_Seat_4', 'Seat_Seat_5']
 
 print(unscaled_data.head())
-name_series_cols = ['Name', 'Series', 'Score']
+name_series_cols = ['Name', 'Series', 'Score', 'Position']
 series_21_contestents = unscaled_data[unscaled_data['Series'] == 'S21'].reset_index(drop = True)
 series_21_contestents_names_series = series_21_contestents[name_series_cols]
 data = unscaled_data[unscaled_data['Series'] != 'S21'].copy()
