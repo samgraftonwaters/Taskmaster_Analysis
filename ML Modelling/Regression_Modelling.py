@@ -135,7 +135,7 @@ def regression_model_comparison_testing(X, y, file_path, feature_run, series_21_
     plt.xticks(fontsize = 14)
     plt.yticks(fontsize = 14)
     plt.legend(fontsize = 16)
-    plt.savefig(f"Plots/Predict_Actual_test_{feature_run}.png", dpi=300, bbox_inches="tight")
+    plt.savefig(f"ML Modelling/Plots/Predict_Actual_test_{feature_run}.png", dpi=300, bbox_inches="tight")
     plt.show()
 
     RF.plot_target_feature(x_data = X_train, y_data = y_train, feature = target_feature_feature,
@@ -153,18 +153,18 @@ def regression_model_comparison_testing(X, y, file_path, feature_run, series_21_
     RF.model_coefficients(model_coef = important_coef, model_intercept = intercept, 
                         x_cols = X_train, show_plot = True, fig_name = f'Important_Features_{feature_run}')
 
-    if len(important_coef) <= 12:
-        RF.plot_feature_dependancy(model = best_regression_model, x_data = X_test.astype(float), 
-                                model_coef = important_coef, fig_name = f'Important_Features_subplots_{feature_run}')
+    # if len(important_coef) <= 12:
+    #     RF.plot_feature_dependancy(model = best_regression_model, x_data = X_test.astype(float), 
+    #                             model_coef = important_coef, fig_name = f'Important_Features_subplots_{feature_run}')
 
-    else:
-        split = int(round(len(important_coef)/2, 0))
-        RF.plot_feature_dependancy(model = best_regression_model, x_data = X_test[0:split].astype(float), 
-                                    model_coef = important_coef, fig_name = f'Important_Features_subplots_{feature_run}_0-{split}')
+    # else:
+    #     split = int(round(len(important_coef)/2, 0))
+    #     RF.plot_feature_dependancy(model = best_regression_model, x_data = X_test[0:split].astype(float), 
+    #                                 model_coef = important_coef, fig_name = f'Important_Features_subplots_{feature_run}_0-{split}')
 
-        RF.plot_feature_dependancy(model = best_regression_model, x_data = X_test[split:].astype(float), 
-                                        model_coef = important_coef, 
-                                        fig_name = f'Important_Features_subplots_{feature_run}_{split}')
+        # RF.plot_feature_dependancy(model = best_regression_model, x_data = X_test[split:].astype(float), 
+        #                                 model_coef = important_coef, 
+        #                                 fig_name = f'Important_Features_subplots_{feature_run}_{split}')
 
 
     residual = y_test - y_pred
@@ -193,7 +193,7 @@ def regression_model_comparison_testing(X, y, file_path, feature_run, series_21_
     X_new_data = series_21_new_data
     y_new_data = series_21_contestents[y_variable]
 
-    if (feature_run == 'run6' | 'run7'):
+    if feature_run == 'run6' or feature_run == 'run7':
         y_new_data = np.log(y_new_data)
 
     print(series_21_new_data.columns.equals(X_train.columns))
@@ -219,5 +219,5 @@ def regression_model_comparison_testing(X, y, file_path, feature_run, series_21_
     plt.xticks(fontsize = 14)
     plt.yticks(fontsize = 14)
     plt.legend(fontsize = 16)
-    plt.savefig(f"Plots/Predict_Actual_S21_{feature_run}.png", dpi=300, bbox_inches="tight")
+    plt.savefig(f"ML Modelling/Plots/Predict_Actual_S21_{feature_run}.png", dpi=300, bbox_inches="tight")
     plt.show()

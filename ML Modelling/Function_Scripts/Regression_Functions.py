@@ -104,7 +104,7 @@ def model_coefficients(model_coef, model_intercept, x_cols, fig_name = None, sho
         plt.ylabel("Feature", fontsize = 16)
         plt.xticks(fontsize = 14)
         plt.yticks(fontsize = 14)
-        plt.savefig(f"Plots/{fig_name}.png", dpi=300, bbox_inches="tight")
+        plt.savefig(f"ML Modelling/Plots/{fig_name}.png", dpi=300, bbox_inches="tight")
         plt.show()
 
 
@@ -144,7 +144,7 @@ def plot_hist_residuals(residual_data, fig_name = None, standardised = True, sho
         plt.xticks(fontsize = 14)
         plt.yticks(fontsize = 14)
         plt.legend(fontsize = 16)
-        plt.savefig(f"Plots/{fig_name}.png", dpi=300, bbox_inches="tight")
+        plt.savefig(f"ML Modelling/Plots/{fig_name}.png", dpi=300, bbox_inches="tight")
         plt.show()
 
     return(res_mean, res_median)
@@ -170,7 +170,7 @@ def plot_feature_dependancy(model, x_data, model_coef, fig_name = None):
         ax.tick_params(axis="y", labelsize=11)
 
     plt.tight_layout()
-    plt.savefig(f"Plots/{fig_name}.png", dpi=300, bbox_inches="tight")
+    plt.savefig(f"ML Modelling/Plots/{fig_name}.png", dpi=300, bbox_inches="tight")
     plt.show()
 
 def plot_target_feature(feature : str, x_data, y_data, model, fig_name = None):
@@ -206,7 +206,7 @@ def plot_target_feature(feature : str, x_data, y_data, model, fig_name = None):
     plt.xticks(fontsize = 14)
     plt.yticks(fontsize = 14)
     plt.legend(fontsize = 16)
-    plt.savefig(f"Plots/{fig_name}.png", dpi=300, bbox_inches="tight")
+    plt.savefig(f"ML Modelling/Plots/{fig_name}.png", dpi=300, bbox_inches="tight")
     plt.show()
 
 
@@ -231,7 +231,7 @@ def plot_qq(residuals, fig_name = None):
     plt.ylabel('Actual Quartiles', fontsize = 16)
     plt.xticks(fontsize = 14)
     plt.yticks(fontsize = 14)
-    plt.savefig(f"Plots/{fig_name}.png", dpi=300, bbox_inches="tight")
+    plt.savefig(f"ML Modelling/Plots/{fig_name}.png", dpi=300, bbox_inches="tight")
     plt.show()  
 
 def plot_residuals(y_data, residuals, fig_name = None, title = "Residual Plot of Predicted Values"):
@@ -257,5 +257,5 @@ def plot_residuals(y_data, residuals, fig_name = None, title = "Residual Plot of
     plt.ylabel("Residual", fontsize = 16)
     plt.xticks(fontsize = 14)
     plt.yticks(fontsize = 14)
-    plt.savefig(f"Plots/{fig_name}.png", dpi=300, bbox_inches="tight")
+    plt.savefig(f"ML Modelling/Plots/{fig_name}.png", dpi=300, bbox_inches="tight")
     plt.show()
