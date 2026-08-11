@@ -85,6 +85,22 @@ def models_hyperparams():
 
 def model_coefficients(model_coef, model_intercept, x_cols, fig_name = None, show_plot=True):
 
+    """
+    Bar chart to show each features coefficient (or slope). The larger the number, the greater the slope
+
+    Parameters:
+    -----------
+        model_coef: features and respective coeffient values
+        model_intercept: model intercept to y axis
+        x_cols: X feature array
+        fig_name (str): name to save the figure as. Default = None
+        show_plot (bool): If True, will display the plot. Default = True
+    
+    Returns:
+    -------
+        Bar chart showing each features slope value
+    """
+
     print("Model intercept:", model_intercept.round(3))
 
     non_zero_coef = np.count_nonzero(model_coef)
@@ -110,6 +126,22 @@ def model_coefficients(model_coef, model_intercept, x_cols, fig_name = None, sho
 
 def plot_hist_residuals(residual_data, fig_name = None, standardised = True, show_plot = True):
 
+    """
+    Calculate the residuals' mean and median and plots the distribution. 
+
+    Parameters:
+    -----------
+        residual_data (array): calculated residuals
+        fig_name (str): name to save the figure as. Default = None
+        standardised (bool): If True, calculates the standard residuals and plots its histogram
+                             If False, plots the historgram for the residuals. Default = True
+        show_plot (bool): If True, will display the plot. Default = True
+
+    Returns:
+    --------
+        calculated residual mean and median and histogram plot
+    
+    """
     if standardised == True:
 
         standard_residual = residual_data / residual_data.std()
@@ -148,30 +180,6 @@ def plot_hist_residuals(residual_data, fig_name = None, standardised = True, sho
         plt.show()
 
     return(res_mean, res_median)
-
-
-def plot_feature_dependancy(model, x_data, model_coef, fig_name = None):
-
-    coef = model_coef.sort_values()
-
-    cols = []
-    for col, value in coef.items():
-
-        cols.append(col)
-
-    fig, ax = plt.subplots()
-    plt.subplots_adjust(wspace=0.1, hspace=0.4, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
-    disp = PartialDependenceDisplay.from_estimator(model, x_data,  features=cols, ax = ax)    
-
-    for ax, (feature, value) in zip(disp.axes_.ravel(), coef.items()):
-        ax.text(x_data[feature].min(), 160, f"Coef = {value:.2f}", ha =  'left')
-        ax.set_xlabel(feature, fontsize = 12)
-        ax.tick_params(axis="x", labelsize=11)
-        ax.tick_params(axis="y", labelsize=11)
-
-    plt.tight_layout()
-    plt.savefig(f"ML Modelling/Plots/{fig_name}.png", dpi=300, bbox_inches="tight")
-    plt.show()
 
 def plot_target_feature(feature : str, x_data, y_data, model, fig_name = None):
 

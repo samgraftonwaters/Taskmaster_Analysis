@@ -153,20 +153,6 @@ def regression_model_comparison_testing(X, y, file_path, feature_run, series_21_
     RF.model_coefficients(model_coef = important_coef, model_intercept = intercept, 
                         x_cols = X_train, show_plot = True, fig_name = f'Important_Features_{feature_run}')
 
-    # if len(important_coef) <= 12:
-    #     RF.plot_feature_dependancy(model = best_regression_model, x_data = X_test.astype(float), 
-    #                             model_coef = important_coef, fig_name = f'Important_Features_subplots_{feature_run}')
-
-    # else:
-    #     split = int(round(len(important_coef)/2, 0))
-    #     RF.plot_feature_dependancy(model = best_regression_model, x_data = X_test[0:split].astype(float), 
-    #                                 model_coef = important_coef, fig_name = f'Important_Features_subplots_{feature_run}_0-{split}')
-
-        # RF.plot_feature_dependancy(model = best_regression_model, x_data = X_test[split:].astype(float), 
-        #                                 model_coef = important_coef, 
-        #                                 fig_name = f'Important_Features_subplots_{feature_run}_{split}')
-
-
     residual = y_test - y_pred
 
     RF.plot_hist_residuals(residual_data = residual, standardised = True, 
