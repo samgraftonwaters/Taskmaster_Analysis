@@ -96,11 +96,11 @@ def regression_model_comparison_testing(X, y, file_path, feature_run, series_21_
     print("\nBest Hyperparameters:")
     print(best_params)
 
-    joblib.dump(best_regression_model, f"ML Modelling/best_regression_model_{feature_run}.pkl")
+    joblib.dump(best_regression_model, f"ML Modelling/Saved_Models/best_regression_model_{feature_run}.pkl")
 
     print("Model saved successfully.")
 
-    best_regression_model = joblib.load(f"ML Modelling/best_regression_model_{feature_run}.pkl")
+    best_regression_model = joblib.load(f"ML Modelling/Saved_Models/best_regression_model_{feature_run}.pkl")
 
     print("Model loaded successfully.")
 

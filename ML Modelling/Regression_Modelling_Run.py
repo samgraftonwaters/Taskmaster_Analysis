@@ -2,7 +2,7 @@
 import pandas as pd
 import Regression_Modelling as RM
 
-file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
+file_path = '/Data/Script_Outputs/'
 scaled_data = pd.read_csv(file_path + 'Full Contestent Table for Modelling Scaled.csv')
 unscaled_data = pd.read_csv(file_path + 'Full Contestent Table for Modelling.csv')
 

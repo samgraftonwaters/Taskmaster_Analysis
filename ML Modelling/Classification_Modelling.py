@@ -10,15 +10,6 @@ warnings.filterwarnings("ignore", category=UserWarning,
 
 warnings.filterwarnings("ignore", category=ConvergenceWarning)
 
-file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
-data = CF.pd.read_csv(file_path + 'Full Contestent Table for Modelling Scaled.csv')
-# 'Full Contestent Table for Modelling Scaled.csv'
-print(data.head())
-
-name_series_cols = ['Name', 'Series', 'Position', 'Score']
-
-########
-#To Change
 
 def classification_model_comparison_testing(X, y, file_path, feature_run, series_21_new_data, 
                                             series_21_contestents_names_series):
@@ -26,29 +17,6 @@ def classification_model_comparison_testing(X, y, file_path, feature_run, series
     X_train, X_test, y_train, y_test = CF.train_test_split(X, y, test_size=0.2, random_state=123)
 
     models, parameters = CF.models_hyperparams()
-
-    # hyperparameters = [log_reg_param_grid, nb_param_grid, nb_param_grid, svm_linear_param_grid, 
-    #                 svc_param_grid, nu_svc_param_grid, decision_tree_param_grid]
-
-    # model_names = ['Logistic Regression', 'Bernoulli NB', 'Multinomial NB', 'SVM Linear', 'SVC', 
-    #             'NuSVC', 'Decision Tree']
-
-
-
-
-    # if (data.select_dtypes(include="number") < 0).any().any() == True:
-    #     del hyperparameters[2]
-    #     del model_names[2]
-    #     del classification_models[2]
-    #     print(model_names)
-
-    # Best_Params = []
-    # Threshold = []
-    # F1_Score = []
-    # Precision = []
-    # Recall = []
-    # ROC_AUC = []
-    # Precision_Recall_AUC = []
 
     results = []
     best_estimators = {}
@@ -72,7 +40,6 @@ def classification_model_comparison_testing(X, y, file_path, feature_run, series
         optimised_model = grid_search.best_estimator_
         best_estimators[model_name] = grid_search.best_estimator_
 
-        #find best threshold
         y_train_probs = CF.cross_val_predict(optimised_model, X_train, y_train, cv=5,
                                         method="predict_proba")[:, 1]
 
@@ -137,22 +104,11 @@ def classification_model_comparison_testing(X, y, file_path, feature_run, series
     print("\nBest Hyperparameters:")
     print(best_params)
 
-
-    # best_model_table = model_table.loc[best_model_index]
-
-    # print(best_model_table)
-
-    # best_classification_model = classification_models[best_model_index]
-
-    # best_classification_model.set_params(**best_model_table['Best Hyperparameters'])
-
-    # best_classification_model.fit(X_train, y_train)
-
-    joblib.dump(best_classification_model, f"ML Modelling/best_classification_model_{feature_run}.pkl")
+    joblib.dump(best_classification_model, f"ML Modelling/Saved_Models/best_classification_model_{feature_run}.pkl")
 
     print("Model saved successfully.")
 
-    best_classification_model = joblib.load(f"ML Modelling/best_classification_model_{feature_run}.pkl")
+    best_classification_model = joblib.load(f"ML Modelling/Saved_Models/best_classification_model_{feature_run}.pkl")
 
     print("Model loaded successfully.")
 
