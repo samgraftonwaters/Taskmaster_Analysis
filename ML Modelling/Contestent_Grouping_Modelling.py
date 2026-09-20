@@ -19,13 +19,30 @@ plt.rcParams['figure.figsize'] = (13, 7)
 
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
 model_data = pd.read_csv(file_path + 'Full Contestent Table for Modelling Scaled.csv')
-
+model_data = model_data[model_data['Series'] != 'S21']
 data = pd.DataFrame(model_data)
+
 
 cluster_data = model_data[['Series', 'Name']].copy()
 
 #Selecting only Numerical Data
 data_nums = data.select_dtypes(include=[float, int])
+
+print(data_nums.columns)
+
+data_nums = data_nums.drop(columns = ['Score', 'Avg_Score_per_Episodes', 'Team_Score_per_Person'], 
+                           axis = 1)
+
+# ['Position', 'Score', 'Disqualifications', 'Episode_Percentage_Losses',
+#        'Number_of_Tasks', 'Percent_1s_Scored', 'Tie_Break_Losses',
+#        'Tie_Break_Wins', 'Tie_Breaks_per_series', 'Avg_Score_per_Episodes',
+#        'Avg_Score_per_Tasks', 'Episode_Percentage_Wins', 'Number_Episodes',
+#        'Number_Team_Tasks', 'Percent_5s_Scored', 'Series_Number',
+#        'Team_Score_per_Task', 'Team_Score_per_Person', 'Team_A', 'Team_B',
+#        'Age_Ranges_20-29', 'Age_Ranges_30-39', 'Age_Ranges_40-49',
+#        'Age_Ranges_50-59', 'Age_Ranges_60-69', 'Gender_Female', 'Gender_Male',
+#        'Gender_Non-Binary', 'Seat_Seat_1', 'Seat_Seat_2', 'Seat_Seat_3',
+#        'Seat_Seat_4', 'Seat_Seat_5']
 
 # # PCA
 pca = PCA(n_components=2)
@@ -330,7 +347,7 @@ cluster_model_parameters = pd.DataFrame({
 
 })
 
-filtered = cluster_model_parameters[cluster_model_parameters['Number of Clusters'] > 2]
+filtered = cluster_model_parameters[cluster_model_parameters['Number of Clusters'] >= 1]
 
 best_cluster_model = filtered.loc[filtered['Silhouette Score'].idxmax()]
 
@@ -346,10 +363,13 @@ overall_rank = pd.read_csv(file_path + 'Overall Contestent Performance.csv')
 positions = positions[['Name','Score','Position']]
 overall_rank = overall_rank[['Name', 'final_score_rescale', 'Contestent Rank']]
 
-cluster_data_grouped = cluster_data_grouped.merge(pd.merge(positions, overall_rank, on = 'Name', 
-                                                           how = 'left'), 
-                                                           on = 'Name', how = 'left')
+# cluster_data_grouped = cluster_data_grouped.merge(pd.merge(positions, data_nums, on = 'Name', 
+#                                                            how = 'left'), 
+#                                                            on = 'Name', how = 'left')
+
+cluster_data_grouped = pd.concat([cluster_data_grouped, positions['Score'], data_nums], axis = 1)                                                    
 print(cluster_data_grouped.head())
+print(cluster_data_grouped.columns)
 
 different_groups = []
 grouped_details = []
@@ -361,7 +381,7 @@ for i, group in enumerate(best_cluster_model["Cluster Values"]):
     print(cluster_group.head())
     print(len(cluster_group))
     
-    for col in ['Score', 'Position', 'final_score_rescale', 'Contestent Rank']:
+    for col in ['Score', 'Position', 'Team_Score_per_Task', 'Avg_Score_per_Tasks']:#'final_score_rescale', 'Contestent Rank']:
 
         median_value = round(different_groups[i][col].median(), 2)
         average_value = round(different_groups[i][col].mean(), 2)
@@ -381,8 +401,10 @@ grouped_details_df = pd.DataFrame(grouped_details)
 
 print(grouped_details_df)
 
-GCF.plot_bar_groups(dataframe = grouped_details_df, average_metric = 'Average')
-GCF.plot_bar_groups(dataframe = grouped_details_df, average_metric = 'Median')
+GCF.plot_bar_groups(dataframe = grouped_details_df, average_metric = 'Average', 
+                    columns = ['Score', 'Position', 'Team_Score_per_Task', 'Avg_Score_per_Tasks'])
+GCF.plot_bar_groups(dataframe = grouped_details_df, average_metric = 'Median',
+                    columns = ['Score', 'Position', 'Team_Score_per_Task', 'Avg_Score_per_Tasks'])
 
 print(best_cluster_model)
 
