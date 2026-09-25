@@ -1,4 +1,4 @@
 Cluster Model,Number of Clusters,Cluster Values,Silhouette Score,Main Model Parameter,Distance Method,Link Type,Cluster Column
-Kmeans,2,[0 1],0.7708641417610832,2.0,euclidean,,Group (kmeans euclidean)
-DBSCAN,2,[0 1],0.7708641417610832,2.809090909090909,euclidean,,Group (dbscan euclidean)
-Agglomerative,2,[0 1],0.7708641417610832,2.0,euclidean,single,Group (Agg euclidean single)
+Kmeans,3,[0 1 2],0.4020274972783149,3.0,euclidean,,Group (kmeans euclidean)
+DBSCAN,2,[-1  0],0.4595517955783406,1.304040404040404,euclidean,,Group (dbscan euclidean)
+Agglomerative,2,[0 1],0.4780041394008297,2.0,euclidean,single,Group (Agg euclidean single)

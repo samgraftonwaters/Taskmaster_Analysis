@@ -30,8 +30,8 @@ data_nums = data.select_dtypes(include=[float, int])
 
 print(data_nums.columns)
 
-data_nums = data_nums.drop(columns = ['Score', 'Avg_Score_per_Episodes', 'Team_Score_per_Person'], 
-                           axis = 1)
+data_nums = data_nums.drop(columns = ['Score', 'Avg_Score_per_Episodes', 'Team_Score_per_Person',
+                                      'Number_Episodes', 'Number_of_Tasks'],  axis = 1)
 
 # ['Position', 'Score', 'Disqualifications', 'Episode_Percentage_Losses',
 #        'Number_of_Tasks', 'Percent_1s_Scored', 'Tie_Break_Losses',
@@ -372,7 +372,7 @@ print(cluster_data_grouped.head())
 print(cluster_data_grouped.columns)
 
 different_groups = []
-grouped_details = []
+# grouped_details = []
 
 for i, group in enumerate(best_cluster_model["Cluster Values"]):
     cluster_group = cluster_data_grouped[cluster_data_grouped[best_cluster_model['Cluster Column']] == group].reset_index(drop = True)
@@ -381,32 +381,32 @@ for i, group in enumerate(best_cluster_model["Cluster Values"]):
     print(cluster_group.head())
     print(len(cluster_group))
     
-    for col in ['Score', 'Position', 'Team_Score_per_Task', 'Avg_Score_per_Tasks']:#'final_score_rescale', 'Contestent Rank']:
+#     for col in ['Score', 'Position', 'Team_Score_per_Task', 'Avg_Score_per_Tasks']:#'final_score_rescale', 'Contestent Rank']:
 
-        median_value = round(different_groups[i][col].median(), 2)
-        average_value = round(different_groups[i][col].mean(), 2)
+#         median_value = round(different_groups[i][col].median(), 2)
+#         average_value = round(different_groups[i][col].mean(), 2)
 
-        average_median_groups = {
-            "Group": i,
-            "Metric" : col,
-            f"Average": average_value,
-            f"Median": median_value
-        }
+#         average_median_groups = {
+#             "Group": i,
+#             "Metric" : col,
+#             f"Average": average_value,
+#             f"Median": median_value
+#         }
 
-        grouped_details.append(average_median_groups)
+#         grouped_details.append(average_median_groups)
 
-    print()
+#     print()
 
-grouped_details_df = pd.DataFrame(grouped_details)
+# grouped_details_df = pd.DataFrame(grouped_details)
 
-print(grouped_details_df)
+# print(grouped_details_df)
 
-GCF.plot_bar_groups(dataframe = grouped_details_df, average_metric = 'Average', 
-                    columns = ['Score', 'Position', 'Team_Score_per_Task', 'Avg_Score_per_Tasks'])
-GCF.plot_bar_groups(dataframe = grouped_details_df, average_metric = 'Median',
-                    columns = ['Score', 'Position', 'Team_Score_per_Task', 'Avg_Score_per_Tasks'])
+# GCF.plot_bar_groups(dataframe = grouped_details_df, average_metric = 'Average', 
+#                     columns = ['Score', 'Position', 'Team_Score_per_Task', 'Avg_Score_per_Tasks'])
+# GCF.plot_bar_groups(dataframe = grouped_details_df, average_metric = 'Median',
+#                     columns = ['Score', 'Position', 'Team_Score_per_Task', 'Avg_Score_per_Tasks'])
 
-print(best_cluster_model)
+# print(best_cluster_model)
 
 #Save final data tables
 
