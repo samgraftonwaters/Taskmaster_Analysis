@@ -29,6 +29,11 @@ k_values = range(2, 12)
 
 X_data = data_nums
 
+axes_pars = ['Avg_Score_per_Episodes', 'Team_Score_per_Person']
+
+par1_idx = X_data.columns.get_loc(axes_pars[0])
+par2_idx = X_data.columns.get_loc(axes_pars[0])
+
 print()
 #####
 #1. Kmeans Method
@@ -59,13 +64,11 @@ X_data['Group'] = kmeans_labels
 groups_kmeans = np.unique(kmeans_labels)
 print(groups_kmeans)
 
-print(centers_scaled)
 
+feature_names = [par1_idx, par2_idx]
+centers_df = pd.DataFrame(centers_scaled[:, feature_names], columns=axes_pars)
 
-feature_names = ['Par1', 'Par2', 'Par3']
-centers_df = pd.DataFrame(centers_scaled, columns=feature_names)
-
-axes_pars = ['Avg_Score_per_Episodes', 'Team_Score_per_Person']
+print(centers_df)
 
 colours = plt.cm.tab10.colors
 
@@ -77,7 +80,7 @@ for group, colour in zip(groups_kmeans, colours):
                 X_data[X_data['Group']==group][axes_pars[1]], 
                 label = f'Class {group}', color = colour, marker = 'o', s = 50)
 
-    plt.scatter(centers_df.iloc[[group]]['Par1'], centers_df.iloc[[group]]['Par2'], 
+    plt.scatter(centers_df.iloc[[group]][axes_pars[0]], centers_df.iloc[[group]][axes_pars[1]], 
                 marker ='*', s = 450, color=colour, edgecolor = 'black',
                 label = f'Class {group} Center')
 
