@@ -94,11 +94,14 @@ cluster_data[f'Group (kmeans {kmeans_distance_method})'] = kmeans.labels_
 kmeans_labels = kmeans.labels_
 centers_scaled = kmeans.cluster_centers_
 
+print(centers_scaled)
+
 groups_kmeans = np.unique(kmeans.labels_)
 print(groups_kmeans)
 
 feature_names = ['PCA1', 'PCA2']
 centers_df = pd.DataFrame(centers_scaled, columns=feature_names)
+print(centers_df)
 
 colours = plt.cm.tab10.colors
 
