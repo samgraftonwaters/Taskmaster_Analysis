@@ -31,7 +31,8 @@ data_nums = data.select_dtypes(include=[float, int])
 print(data_nums.columns)
 
 data_nums = data_nums.drop(columns = ['Score', 'Avg_Score_per_Episodes', 'Team_Score_per_Person',
-                                      'Number_Episodes', 'Number_of_Tasks'],  axis = 1)
+                                     'Number_Episodes', 'Number_of_Tasks'
+                                      ], axis = 1)
 
 # ['Position', 'Score', 'Disqualifications', 'Episode_Percentage_Losses',
 #        'Number_of_Tasks', 'Percent_1s_Scored', 'Tie_Break_Losses',
@@ -45,11 +46,14 @@ data_nums = data_nums.drop(columns = ['Score', 'Avg_Score_per_Episodes', 'Team_S
 #        'Seat_Seat_4', 'Seat_Seat_5']
 
 # # PCA
-pca = PCA(n_components=2)
+pca = PCA(n_components=3)
 X_pca = pca.fit_transform(data_nums)
 
 cluster_data["PCA1"] = X_pca[:,0]
 cluster_data["PCA2"] = X_pca[:,1]
+cluster_data["PCA3"] = X_pca[:,2]
+
+feature_names = ['PCA1', 'PCA2', 'PCA3']
 
 k_values = range(2, 12)
 
@@ -99,7 +103,6 @@ print(centers_scaled)
 groups_kmeans = np.unique(kmeans.labels_)
 print(groups_kmeans)
 
-feature_names = ['PCA1', 'PCA2']
 centers_df = pd.DataFrame(centers_scaled, columns=feature_names)
 print(centers_df)
 
@@ -357,6 +360,8 @@ best_cluster_model = filtered.loc[filtered['Silhouette Score'].idxmax()]
 cluster_data_grouped = cluster_data[['Series', 'Name', 'PCA1', 'PCA2', 
                                      best_cluster_model['Cluster Column']]]
 
+print(cluster_model_parameters)
+
 
 #Read in some other data to determine what each group means
 
@@ -383,6 +388,8 @@ for i, group in enumerate(best_cluster_model["Cluster Values"]):
     print(f'\nGroup {i}')
     print(cluster_group.head())
     print(len(cluster_group))
+
+
     
 #     for col in ['Score', 'Position', 'Team_Score_per_Task', 'Avg_Score_per_Tasks']:#'final_score_rescale', 'Contestent Rank']:
 
