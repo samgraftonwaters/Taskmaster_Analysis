@@ -34,86 +34,169 @@ print(X_data.columns)
 
 pca_comps = [2, 3, 4]
 
-for k, pca in zip(k_values, pca_comps):
 
-    pca_model = PCA(n_components=pca)
-    X_pca = pca_model.fit_transform(X_data)
+for k in k_values:
+    for pca in pca_comps:
 
-    if pca == 2:
+        pca_model = PCA(n_components=pca)
+        X_pca = pca_model.fit_transform(X_data)
 
-        cluster_data["PCA1"] = X_pca[:,0]
-        cluster_data["PCA2"] = X_pca[:,1]
+        if pca == 2:
 
-    if pca == 3:
-        cluster_data["PCA1"] = X_pca[:,0]
-        cluster_data["PCA2"] = X_pca[:,1]
-        cluster_data["PCA3"] = X_pca[:,2]
+            cluster_data["PCA1"] = X_pca[:,0]
+            cluster_data["PCA2"] = X_pca[:,1]
 
-    if pca == 4:
-        cluster_data["PCA1"] = X_pca[:,0]
-        cluster_data["PCA2"] = X_pca[:,1]
-        cluster_data["PCA3"] = X_pca[:,2]
-        cluster_data["PCA4"] = X_pca[:,3]
+        if pca == 3:
+            cluster_data["PCA1"] = X_pca[:,0]
+            cluster_data["PCA2"] = X_pca[:,1]
+            cluster_data["PCA3"] = X_pca[:,2]
 
-    feature_names = ['PCA1', 'PCA2', 'PCA3', 'PCA4']
+        if pca == 4:
+            cluster_data["PCA1"] = X_pca[:,0]
+            cluster_data["PCA2"] = X_pca[:,1]
+            cluster_data["PCA3"] = X_pca[:,2]
+            cluster_data["PCA4"] = X_pca[:,3]
 
-    print()
-    #####
-    #1. Kmeans Method
-    #####
+        feature_names = ['PCA1', 'PCA2', 'PCA3', 'PCA4']
 
-    print('Kmeans Method')
-    sil_values_kmeans_eucl = GCF.determine_kmeans_sil_values(k_range = k_values, X_data = X_pca, 
-                                                            distance_method = 'euclidean')
+        print()
+        #####
+        #1. Kmeans Method
+        #####
 
-    sil_values_kmeans_man = GCF.determine_kmeans_sil_values(k_range = k_values, X_data = X_pca, 
-                                                            distance_method = 'manhattan')
+        print('Kmeans Method')
+        sil_values_kmeans_eucl = GCF.determine_kmeans_sil_values(k_range = k_values, X_data = X_pca, 
+                                                                distance_method = 'euclidean')
 
-    GCF.plot_clustering_line_graphs(x_values = k_values, y_values = [sil_values_kmeans_eucl, sil_values_kmeans_man], 
-                        labels = ['Euclidean', 'Manhattan'], colours = ['darkgreen', 'dodgerblue'],
-                        title = "Kmeans Silhouette Scores for different Number of Clusters (K)",
-                        x_label = "Number of Clusters (K)", y_label = "Silhoette Score")
+        sil_values_kmeans_man = GCF.determine_kmeans_sil_values(k_range = k_values, X_data = X_pca, 
+                                                                distance_method = 'manhattan')
+
+        GCF.plot_clustering_line_graphs(x_values = k_values, y_values = [sil_values_kmeans_eucl, sil_values_kmeans_man], 
+                            labels = ['Euclidean', 'Manhattan'], colours = ['darkgreen', 'dodgerblue'],
+                            title = "Kmeans Silhouette Scores for different Number of Clusters (K)",
+                            x_label = "Number of Clusters (K)", y_label = "Silhoette Score")
 
 
 
-    kmeans = KMeans(n_clusters=k)
-    kmeans.fit(X_pca)
+        kmeans = KMeans(n_clusters=k)
+        kmeans.fit(X_pca)
 
-    kmeans_labels = kmeans.labels_
-    centers_scaled = kmeans.cluster_centers_
+        kmeans_labels = kmeans.labels_
+        centers_scaled = kmeans.cluster_centers_
 
-    # X_data['kmeans Group'] = kmeans_labels
-    cluster_data[f'Group kmeans'] = kmeans_labels
+        # X_data['kmeans Group'] = kmeans_labels
+        cluster_data[f'Group kmeans'] = kmeans_labels
 
-    groups_kmeans = np.unique(kmeans_labels)
-    print(groups_kmeans)
+        groups_kmeans = np.unique(kmeans_labels)
+        print(groups_kmeans)
 
-    print(feature_names[0:pca])
+        print(feature_names[0:pca])
 
-    kmeans_centers_df = pd.DataFrame(centers_scaled, columns=feature_names[0:pca])
-
-    print(kmeans_centers_df)
-
-    print()
-    print('Agglomerative Method')
-    cluster_method_euclidean = ['single', 'complete', 'average', 'ward']
-    cluster_method_manhattan = ['single', 'complete', 'average']
-    
-    for link in cluster_method_manhattan:
-        agg_model = AgglomerativeClustering(n_clusters=k, linkage=link, 
-                                    metric = 'manhattan').fit(X_data)
-
-        #Access labels assigned for each method
-        agg_labels = agg_model.labels_
-        cluster_data[f'Group Agg'] = agg_labels
-        groups_agg = np.unique(agg_labels)
-        print(groups_agg)
-
-        centers = cluster_data.groupby('Group Agg')[feature_names[0:pca]].mean()
-
-        agg_centers_df = pd.DataFrame(centers_scaled, columns=feature_names[0:pca])
+        kmeans_centers_df = pd.DataFrame(centers_scaled, columns=feature_names[0:pca])
 
         print(kmeans_centers_df)
+
+        print()
+        print('Agglomerative Method')
+        cluster_method_euclidean = ['single', 'complete', 'average', 'ward']
+        cluster_method_manhattan = ['single', 'complete', 'average']
+        
+        for link in cluster_method_manhattan:
+            agg_model = AgglomerativeClustering(n_clusters=k, linkage=link, 
+                                        metric = 'manhattan').fit(X_data)
+
+            #Access labels assigned for each method
+            agg_labels = agg_model.labels_
+            cluster_data[f'Group Agg'] = agg_labels
+            groups_agg = np.unique(agg_labels)
+            print(groups_agg)
+
+            centers = cluster_data.groupby('Group Agg')[feature_names[0:pca]].mean()
+
+            agg_centers_df = pd.DataFrame(centers_scaled, columns=feature_names[0:pca])
+
+            print(kmeans_centers_df)
+
+# for k, pca in zip(k_values, pca_comps):
+
+#     pca_model = PCA(n_components=pca)
+#     X_pca = pca_model.fit_transform(X_data)
+
+#     if pca == 2:
+
+#         cluster_data["PCA1"] = X_pca[:,0]
+#         cluster_data["PCA2"] = X_pca[:,1]
+
+#     if pca == 3:
+#         cluster_data["PCA1"] = X_pca[:,0]
+#         cluster_data["PCA2"] = X_pca[:,1]
+#         cluster_data["PCA3"] = X_pca[:,2]
+
+#     if pca == 4:
+#         cluster_data["PCA1"] = X_pca[:,0]
+#         cluster_data["PCA2"] = X_pca[:,1]
+#         cluster_data["PCA3"] = X_pca[:,2]
+#         cluster_data["PCA4"] = X_pca[:,3]
+
+#     feature_names = ['PCA1', 'PCA2', 'PCA3', 'PCA4']
+
+#     print()
+#     #####
+#     #1. Kmeans Method
+#     #####
+
+#     print('Kmeans Method')
+#     sil_values_kmeans_eucl = GCF.determine_kmeans_sil_values(k_range = k_values, X_data = X_pca, 
+#                                                             distance_method = 'euclidean')
+
+#     sil_values_kmeans_man = GCF.determine_kmeans_sil_values(k_range = k_values, X_data = X_pca, 
+#                                                             distance_method = 'manhattan')
+
+#     GCF.plot_clustering_line_graphs(x_values = k_values, y_values = [sil_values_kmeans_eucl, sil_values_kmeans_man], 
+#                         labels = ['Euclidean', 'Manhattan'], colours = ['darkgreen', 'dodgerblue'],
+#                         title = "Kmeans Silhouette Scores for different Number of Clusters (K)",
+#                         x_label = "Number of Clusters (K)", y_label = "Silhoette Score")
+
+
+
+#     kmeans = KMeans(n_clusters=k)
+#     kmeans.fit(X_pca)
+
+#     kmeans_labels = kmeans.labels_
+#     centers_scaled = kmeans.cluster_centers_
+
+#     # X_data['kmeans Group'] = kmeans_labels
+#     cluster_data[f'Group kmeans'] = kmeans_labels
+
+#     groups_kmeans = np.unique(kmeans_labels)
+#     print(groups_kmeans)
+
+#     print(feature_names[0:pca])
+
+#     kmeans_centers_df = pd.DataFrame(centers_scaled, columns=feature_names[0:pca])
+
+#     print(kmeans_centers_df)
+
+#     print()
+#     print('Agglomerative Method')
+#     cluster_method_euclidean = ['single', 'complete', 'average', 'ward']
+#     cluster_method_manhattan = ['single', 'complete', 'average']
+
+#     for link in cluster_method_manhattan:
+#         agg_model = AgglomerativeClustering(n_clusters=k, linkage=link, 
+#                                     metric = 'manhattan').fit(X_data)
+
+#         #Access labels assigned for each method
+#         agg_labels = agg_model.labels_
+#         cluster_data[f'Group Agg'] = agg_labels
+#         groups_agg = np.unique(agg_labels)
+#         print(groups_agg)
+
+#         centers = cluster_data.groupby('Group Agg')[feature_names[0:pca]].mean()
+
+#         agg_centers_df = pd.DataFrame(centers_scaled, columns=feature_names[0:pca])
+
+#         print(kmeans_centers_df)
 
 # centers = cluster_data.groupby(f'Group (Agg {agg_distance_method} {agg_cluster_method})')[["PCA1","PCA2"]].mean()
 
