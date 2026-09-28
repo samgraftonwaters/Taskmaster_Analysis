@@ -138,6 +138,23 @@ agg_clustering_results = pd.DataFrame(agg_clustering_results)
 print(kmeans_clustering_results)
 print(agg_clustering_results)
 
+kmeans_eucl = kmeans_clustering_results[kmeans_clustering_results['K Means Silhouette Score (Eucl)'] == kmeans_clustering_results['K Means Silhouette Score (Eucl)'].max()]
+kmeans_man = kmeans_clustering_results[kmeans_clustering_results['K Means Silhouette Score (Man)'] == kmeans_clustering_results['K Means Silhouette Score (Man)'].max()]
+
+print(kmeans_eucl)
+if kmeans_clustering_results['K Means Silhouette Score (Eucl)'].max() > kmeans_clustering_results['K Means Silhouette Score (Man)'].max():
+    kmeans_best_model = kmeans_eucl
+    print(kmeans_eucl['K Means Silhouette Score (Eucl)'])
+    
+else:
+    kmeans_best_model = kmeans_man
+    print(kmeans_man['K Means Silhouette Score (Man)'])
+
+print(kmeans_best_model)
+
+agg_best_model = agg_clustering_results[agg_clustering_results['Agg Silhouette Score (Eucl)'] == agg_clustering_results['Agg Silhouette Score (Eucl)'].max()]
+print(agg_best_model)
+
 
 
 # for k, pca in zip(k_values, pca_comps):
