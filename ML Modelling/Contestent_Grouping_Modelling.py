@@ -283,6 +283,30 @@ plt.yticks(fontsize = 14)
 plt.legend(fontsize = 16)
 plt.show()
 
+
+fig, ax = plt.subplots()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.1, right = 0.98)
+
+for sil_values, cluster, colour in zip(eucl_agg_sil_values, cluster_method, colours):
+    plt.plot(k_values, sil_values, c=colour, marker='o', linestyle = ':', label = cluster,
+             lw = 3, markersize = 12)
+
+for sil_values, cluster, colour in zip(man_agg_sil_values, cluster_method[0:3], colours):
+    plt.plot(k_values, sil_values, c=colour, marker='o', linestyle = '--', label = cluster,
+             lw = 3, markersize = 12)
+
+plt.plot([], [], ':', lw = 3, color = 'k', label = 'Euclidean')
+plt.plot([], [], '--', lw = 3, color = 'k', label = 'Manhattan')
+
+plt.title("Hierarchical Clustering Silhouette Scores for different \n K using the Euclidean or Manhattan distance methods", fontsize = 22)
+plt.xlabel("Number of Clusters (K)", fontsize = 16)
+plt.ylabel("Silhoette Score", fontsize = 16)
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.legend(fontsize = 16, ncol = 2)
+plt.show()
+
+
 #Determine best agg method
 
 if highest_eucl_sil_value > highest_man_sil_value:

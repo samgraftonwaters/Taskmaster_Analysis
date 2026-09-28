@@ -22,72 +22,150 @@ model_data = pd.read_csv(file_path + 'Full Contestent Table for Modelling Scaled
 model_data = model_data[model_data['Series'] != 'S21']
 data = pd.DataFrame(model_data)
 
+cluster_data = model_data[['Series', 'Name']].copy()
 data_nums = data.select_dtypes(include=[float, int])
-print(data_nums.columns)
 
-k_values = range(2, 12)
+k_values = range(2, 7)
 
-X_data = data_nums
+cols_to_drop = []
 
-axes_pars = ['Avg_Score_per_Episodes', 'Team_Score_per_Person']
+X_data = data_nums.drop(cols_to_drop, axis = 1)
+print(X_data.columns)
 
-par1_idx = X_data.columns.get_loc(axes_pars[0])
-par2_idx = X_data.columns.get_loc(axes_pars[0])
+pca_comps = [2, 3, 4]
 
-print()
-#####
-#1. Kmeans Method
-#####
+for k, pca in zip(k_values, pca_comps):
 
-print('Kmeans Method')
-sil_values_kmeans_eucl = GCF.determine_kmeans_sil_values(k_range = k_values, X_data = X_data, 
-                                                         distance_method = 'euclidean')
+    pca_model = PCA(n_components=pca)
+    X_pca = pca_model.fit_transform(X_data)
 
-sil_values_kmeans_man = GCF.determine_kmeans_sil_values(k_range = k_values, X_data = X_data, 
-                                                         distance_method = 'manhattan')
+    if pca == 2:
 
-GCF.plot_clustering_line_graphs(x_values = k_values, y_values = [sil_values_kmeans_eucl, sil_values_kmeans_man], 
-                       labels = ['Euclidean', 'Manhattan'], colours = ['darkgreen', 'dodgerblue'],
-                       title = "Kmeans Silhouette Scores for different Number of Clusters (K)",
-                       x_label = "Number of Clusters (K)", y_label = "Silhoette Score")
+        cluster_data["PCA1"] = X_pca[:,0]
+        cluster_data["PCA2"] = X_pca[:,1]
+
+    if pca == 3:
+        cluster_data["PCA1"] = X_pca[:,0]
+        cluster_data["PCA2"] = X_pca[:,1]
+        cluster_data["PCA3"] = X_pca[:,2]
+
+    if pca == 4:
+        cluster_data["PCA1"] = X_pca[:,0]
+        cluster_data["PCA2"] = X_pca[:,1]
+        cluster_data["PCA3"] = X_pca[:,2]
+        cluster_data["PCA4"] = X_pca[:,3]
+
+    feature_names = ['PCA1', 'PCA2', 'PCA3', 'PCA4']
+
+    print()
+    #####
+    #1. Kmeans Method
+    #####
+
+    print('Kmeans Method')
+    sil_values_kmeans_eucl = GCF.determine_kmeans_sil_values(k_range = k_values, X_data = X_pca, 
+                                                            distance_method = 'euclidean')
+
+    sil_values_kmeans_man = GCF.determine_kmeans_sil_values(k_range = k_values, X_data = X_pca, 
+                                                            distance_method = 'manhattan')
+
+    GCF.plot_clustering_line_graphs(x_values = k_values, y_values = [sil_values_kmeans_eucl, sil_values_kmeans_man], 
+                        labels = ['Euclidean', 'Manhattan'], colours = ['darkgreen', 'dodgerblue'],
+                        title = "Kmeans Silhouette Scores for different Number of Clusters (K)",
+                        x_label = "Number of Clusters (K)", y_label = "Silhoette Score")
 
 
 
-kmeans = KMeans(n_clusters=3)#sil_max_K_value_kmeans)
-kmeans.fit(X_data)
+    kmeans = KMeans(n_clusters=k)
+    kmeans.fit(X_pca)
 
-kmeans_labels = kmeans.labels_
-centers_scaled = kmeans.cluster_centers_
+    kmeans_labels = kmeans.labels_
+    centers_scaled = kmeans.cluster_centers_
 
-X_data['Group'] = kmeans_labels
+    # X_data['kmeans Group'] = kmeans_labels
+    cluster_data[f'Group kmeans'] = kmeans_labels
 
-groups_kmeans = np.unique(kmeans_labels)
-print(groups_kmeans)
+    groups_kmeans = np.unique(kmeans_labels)
+    print(groups_kmeans)
+
+    print(feature_names[0:pca])
+
+    kmeans_centers_df = pd.DataFrame(centers_scaled, columns=feature_names[0:pca])
+
+    print(kmeans_centers_df)
+
+    print()
+    print('Agglomerative Method')
+    cluster_method_euclidean = ['single', 'complete', 'average', 'ward']
+    cluster_method_manhattan = ['single', 'complete', 'average']
+    
+    for link in cluster_method_manhattan:
+        agg_model = AgglomerativeClustering(n_clusters=k, linkage=link, 
+                                    metric = 'manhattan').fit(X_data)
+
+        #Access labels assigned for each method
+        agg_labels = agg_model.labels_
+        cluster_data[f'Group Agg'] = agg_labels
+        groups_agg = np.unique(agg_labels)
+        print(groups_agg)
+
+        centers = cluster_data.groupby('Group Agg')[feature_names[0:pca]].mean()
+
+        agg_centers_df = pd.DataFrame(centers_scaled, columns=feature_names[0:pca])
+
+        print(kmeans_centers_df)
+
+# centers = cluster_data.groupby(f'Group (Agg {agg_distance_method} {agg_cluster_method})')[["PCA1","PCA2"]].mean()
 
 
-feature_names = [par1_idx, par2_idx]
-centers_df = pd.DataFrame(centers_scaled[:, feature_names], columns=axes_pars)
 
-print(centers_df)
 
-colours = plt.cm.tab10.colors
 
-fig, ax = plt.subplots()
-plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
 
-for group, colour in zip(groups_kmeans, colours):
-    plt.scatter(X_data[X_data['Group']==group][axes_pars[0]], 
-                X_data[X_data['Group']==group][axes_pars[1]], 
-                label = f'Class {group}', color = colour, marker = 'o', s = 50)
 
-    plt.scatter(centers_df.iloc[[group]][axes_pars[0]], centers_df.iloc[[group]][axes_pars[1]], 
-                marker ='*', s = 450, color=colour, edgecolor = 'black',
-                label = f'Class {group} Center')
 
-plt.legend(fontsize = 15, ncols = 2)
-plt.title(f'Comparing Kmeans clusters', fontsize = 22)
-plt.xlabel("PCA1", fontsize = 16)
-plt.ylabel("PCA2", fontsize = 16)
-plt.xticks(fontsize = 14)
-plt.yticks(fontsize = 14)
-plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# colours = plt.cm.tab10.colors
+
+# fig, ax = plt.subplots()
+# plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
+
+# for group, colour in zip(groups_kmeans, colours):
+#     plt.scatter(X_data[X_data['Group']==group][axes_pars[0]], 
+#                 X_data[X_data['Group']==group][axes_pars[1]], 
+#                 label = f'Class {group}', color = colour, marker = 'o', s = 50)
+
+#     plt.scatter(centers_df.iloc[[group]][axes_pars[0]], centers_df.iloc[[group]][axes_pars[1]], 
+#                 marker ='*', s = 450, color=colour, edgecolor = 'black',
+#                 label = f'Class {group} Center')
+
+# plt.legend(fontsize = 15, ncols = 2)
+# plt.title(f'Comparing Kmeans clusters', fontsize = 22)
+# plt.xlabel("PCA1", fontsize = 16)
+# plt.ylabel("PCA2", fontsize = 16)
+# plt.xticks(fontsize = 14)
+# plt.yticks(fontsize = 14)
+# plt.show()
