@@ -27,121 +27,118 @@ data_nums = data.select_dtypes(include=[float, int])
 
 k_values = range(2, 7)
 
-cols_to_drop = []
-
-X_data = data_nums.drop(cols_to_drop, axis = 1)
-print(X_data.columns)
+cols_to_drop = [[], ['Score', 'Avg_Score_per_Episodes', 'Team_Score_per_Person'],
+                ['Score', 'Avg_Score_per_Episodes', 'Team_Score_per_Person', 'Number_Episodes', 'Number_of_Tasks']]
 
 pca_comps = [2, 3, 4]
 
-clustering_results = []
+kmeans_clustering_results = []
+agg_clustering_results = []
 
 for k in k_values:
     for pca in pca_comps:
+        for drop_cols in cols_to_drop:
 
-        pca_model = PCA(n_components=pca)
-        X_pca = pca_model.fit_transform(X_data)
+            pca_model = PCA(n_components=pca)
+            X_data = data_nums.drop(drop_cols, axis = 1)
+            print(X_data.columns)
+            X_pca = pca_model.fit_transform(X_data)
 
-        if pca == 2:
+            if pca == 2:
 
-            cluster_data["PCA1"] = X_pca[:,0]
-            cluster_data["PCA2"] = X_pca[:,1]
+                cluster_data["PCA1"] = X_pca[:,0]
+                cluster_data["PCA2"] = X_pca[:,1]
 
-        if pca == 3:
-            cluster_data["PCA1"] = X_pca[:,0]
-            cluster_data["PCA2"] = X_pca[:,1]
-            cluster_data["PCA3"] = X_pca[:,2]
+            if pca == 3:
+                cluster_data["PCA1"] = X_pca[:,0]
+                cluster_data["PCA2"] = X_pca[:,1]
+                cluster_data["PCA3"] = X_pca[:,2]
 
-        if pca == 4:
-            cluster_data["PCA1"] = X_pca[:,0]
-            cluster_data["PCA2"] = X_pca[:,1]
-            cluster_data["PCA3"] = X_pca[:,2]
-            cluster_data["PCA4"] = X_pca[:,3]
+            if pca == 4:
+                cluster_data["PCA1"] = X_pca[:,0]
+                cluster_data["PCA2"] = X_pca[:,1]
+                cluster_data["PCA3"] = X_pca[:,2]
+                cluster_data["PCA4"] = X_pca[:,3]
 
-        feature_names = ['PCA1', 'PCA2', 'PCA3', 'PCA4']
+            feature_names = ['PCA1', 'PCA2', 'PCA3', 'PCA4']
 
-        print()
-        #####
-        #1. Kmeans Method
-        #####
+            print()
+            print('Kmeans Method')
 
-        print('Kmeans Method')
-        # sil_values_kmeans_eucl = GCF.determine_kmeans_sil_values(k_range = k_values, X_data = X_pca, 
-        #                                                         distance_method = 'euclidean')
+            kmeans = KMeans(n_clusters=k, init="random", 
+                                max_iter=300, random_state=123)
+            kmeans.fit(X_pca)
+            kmeans_pred = kmeans.fit_predict(X_pca)
 
-        # sil_values_kmeans_man = GCF.determine_kmeans_sil_values(k_range = k_values, X_data = X_pca, 
-        #                                                         distance_method = 'manhattan')
+            kmeans_labels = kmeans.labels_
+            centers_scaled = kmeans.cluster_centers_
 
-        # GCF.plot_clustering_line_graphs(x_values = k_values, y_values = [sil_values_kmeans_eucl, sil_values_kmeans_man], 
-        #                     labels = ['Euclidean', 'Manhattan'], colours = ['darkgreen', 'dodgerblue'],
-        #                     title = "Kmeans Silhouette Scores for different Number of Clusters (K)",
-        #                     x_label = "Number of Clusters (K)", y_label = "Silhoette Score")
+            # X_data['kmeans Group'] = kmeans_labels
+            cluster_data[f'Group kmeans'] = kmeans_labels
 
+            groups_kmeans = np.unique(kmeans_labels)
+            print(groups_kmeans)
 
+            print(feature_names[0:pca])
 
-        kmeans = KMeans(n_clusters=k, init="random", 
-                            max_iter=300, random_state=123)
-        kmeans.fit(X_pca)
-        kmeans_pred = kmeans.fit_predict(X_pca)
+            kmeans_centers_df = pd.DataFrame(centers_scaled, columns=feature_names[0:pca])
 
-        kmeans_labels = kmeans.labels_
-        centers_scaled = kmeans.cluster_centers_
+            print(kmeans_centers_df)
 
-        # X_data['kmeans Group'] = kmeans_labels
-        cluster_data[f'Group kmeans'] = kmeans_labels
+            kmeans_ss_eucl = silhouette_score(X = X_pca, labels = kmeans_pred, metric='euclidean')
+            kmeans_ss_man = silhouette_score(X = X_pca, labels = kmeans_pred, metric='manhattan')
 
-        groups_kmeans = np.unique(kmeans_labels)
-        print(groups_kmeans)
+            kmeans_clustering_results.append({
+                'Number of Clusters' : k,
+                'Number of PCAs' : pca,
+                'K Means Silhouette Score (Eucl)': kmeans_ss_eucl,
+                'K Means Silhouette Score (Man)': kmeans_ss_man,
+                'Columns Dropped' : drop_cols
+            })
 
-        print(feature_names[0:pca])
+            print()
+            print('Agglomerative Method')
+            cluster_method_euclidean = ['single', 'complete', 'average', 'ward']
+            cluster_method_manhattan = ['single', 'complete', 'average']
+            
+            for link in cluster_method_euclidean:
+                agg_model = AgglomerativeClustering(n_clusters=k, linkage=link, 
+                                            metric = 'euclidean').fit(X_pca)
 
-        kmeans_centers_df = pd.DataFrame(centers_scaled, columns=feature_names[0:pca])
+                agg_pred = agg_model.fit_predict(X_pca)
 
-        print(kmeans_centers_df)
+                #Access labels assigned for each method
+                agg_labels = agg_model.labels_
+                cluster_data[f'Group Agg'] = agg_labels
+                groups_agg = np.unique(agg_labels)
+                # print(groups_agg)
 
-        kmeans_ss_eucl = silhouette_score(X = X_pca, labels = kmeans_pred, metric='euclidean')
-        kmeans_ss_man = silhouette_score(X = X_pca, labels = kmeans_pred, metric='manhattan')
+                agg_centers = cluster_data.groupby('Group Agg')[feature_names[0:pca]].mean()
 
-        print()
-        print('Agglomerative Method')
-        cluster_method_euclidean = ['single', 'complete', 'average', 'ward']
-        cluster_method_manhattan = ['single', 'complete', 'average']
+                agg_centers_df = pd.DataFrame(agg_centers, columns=feature_names[0:pca])
+
+                print(agg_centers_df)
+
+                agg_ss_eucl = silhouette_score(X = X_pca, labels = agg_pred, metric='euclidean')
+                # agg_ss_man = silhouette_score(X = X_pca, labels = agg_pred, metric='manhattan')
+
+                agg_clustering_results.append({
+                    'Number of Clusters' : k,
+                    'Number of PCAs' : pca,
         
-        for link in cluster_method_manhattan:
-            agg_model = AgglomerativeClustering(n_clusters=k, linkage=link, 
-                                        metric = 'manhattan').fit(X_data)
+                    'Agg Silhouette Score (Eucl)' : agg_ss_eucl,
+                    # 'Agg Silhouette Score (man)' : agg_ss_man,
+                    'Agg Link' : link,
+                    'Columns Dropped' : drop_cols
 
-            agg_pred = agg_model.fit_predict(X_pca)
+                })
 
-            #Access labels assigned for each method
-            agg_labels = agg_model.labels_
-            cluster_data[f'Group Agg'] = agg_labels
-            groups_agg = np.unique(agg_labels)
-            print(groups_agg)
+kmeans_clustering_results = pd.DataFrame(kmeans_clustering_results)
+agg_clustering_results = pd.DataFrame(agg_clustering_results)
+print(kmeans_clustering_results)
+print(agg_clustering_results)
 
-            agg_centers = cluster_data.groupby('Group Agg')[feature_names[0:pca]].mean()
 
-            agg_centers_df = pd.DataFrame(centers_scaled, columns=feature_names[0:pca])
-
-            print(agg_centers_df)
-
-            agg_ss_eucl = silhouette_score(X = X_pca, labels = agg_pred, metric='euclidean')
-            # agg_ss_man = silhouette_score(X = X_pca, labels = agg_pred, metric='manhattan')
-
-        clustering_results.append({
-            'Number of Clusters' : k,
-            'Number of PCAs' : pca,
-            'K Means Silhouette Score (Eucl)': kmeans_ss_eucl,
-            'K Means Silhouette Score (Man)': kmeans_ss_man,
-
-            'Agg Silhouette Score (Eucl)' : agg_ss_eucl,
-            # 'Agg Silhouette Score (man)' : agg_ss_man,
-            'Agg Link' : link
-
-        })
-
-clustering_results = pd.DataFrame(clustering_results)
-print(clustering_results)
 
 # for k, pca in zip(k_values, pca_comps):
 
