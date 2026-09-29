@@ -257,3 +257,39 @@ def plot_bar_groups(dataframe, average_metric : str, columns : str | list):
 
     plt.legend(fontsize = 15, ncol = 2)
     plt.show()
+
+
+def get_pca_clusters(data, pca_num, X_pca):
+
+    """
+    Get the individual PCA groups into separate dataframe columns
+
+    Parameters:
+    ------------
+        data (DataFrame): Data to concatonate the PCA data to
+        pca_num (int): Number of PCA groups
+        X_pca (Numpy.Array): PCA groups
+
+    Returns:
+        DataFrame containing the PCA groups as differnt coluns
+    
+    """
+    data = data.copy()
+
+    if pca_num == 2:
+
+        data["PCA1"] = X_pca[:,0]
+        data["PCA2"] = X_pca[:,1]
+
+    if pca_num == 3:
+        data["PCA1"] = X_pca[:,0]
+        data["PCA2"] = X_pca[:,1]
+        data["PCA3"] = X_pca[:,2]
+
+    if pca_num == 4:
+        data["PCA1"] = X_pca[:,0]
+        data["PCA2"] = X_pca[:,1]
+        data["PCA3"] = X_pca[:,2]
+        data["PCA4"] = X_pca[:,3]
+
+    return(data)
