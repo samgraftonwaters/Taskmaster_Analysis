@@ -25,7 +25,7 @@ data = pd.DataFrame(model_data)
 cluster_data = model_data[['Series', 'Name']].copy()
 data_nums = data.select_dtypes(include=[float, int])
 
-k_values = range(2, 7)
+k_values = range(3, 7)
 
 cols_to_drop = [[], ['Score', 'Avg_Score_per_Episodes', 'Team_Score_per_Person'],
                 ['Score', 'Avg_Score_per_Episodes', 'Team_Score_per_Person', 'Number_Episodes', 'Number_of_Tasks']]
@@ -141,18 +141,17 @@ print(agg_clustering_results)
 kmeans_eucl = kmeans_clustering_results[kmeans_clustering_results['K Means Silhouette Score (Eucl)'] == kmeans_clustering_results['K Means Silhouette Score (Eucl)'].max()]
 kmeans_man = kmeans_clustering_results[kmeans_clustering_results['K Means Silhouette Score (Man)'] == kmeans_clustering_results['K Means Silhouette Score (Man)'].max()]
 
-print(kmeans_eucl)
 if kmeans_clustering_results['K Means Silhouette Score (Eucl)'].max() > kmeans_clustering_results['K Means Silhouette Score (Man)'].max():
     kmeans_best_model = kmeans_eucl
-    print(kmeans_eucl['K Means Silhouette Score (Eucl)'])
+    print(f"The Euclidean Silhouette Score is: {kmeans_eucl['K Means Silhouette Score (Eucl)']}")
     
 else:
     kmeans_best_model = kmeans_man
-    print(kmeans_man['K Means Silhouette Score (Man)'])
+    print(f"The Manhattan Silhouette Score is: {kmeans_man['K Means Silhouette Score (Man)']}")
 
 print(kmeans_best_model)
 
-agg_best_model = agg_clustering_results[agg_clustering_results['Agg Silhouette Score (Eucl)'] == agg_clustering_results['Agg Silhouette Score (Eucl)'].max()]
+agg_best_model = agg_clustering_results[agg_clustering_results['Agg Silhouette Score (Eucl)'] == agg_clustering_results['Agg Silhouette Score (Eucl)'].max()].reset_index(drop = True)
 print(agg_best_model)
 
 
