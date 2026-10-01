@@ -127,6 +127,7 @@ groups_kmeans = np.unique(kmeans_labels)
 cluster_data_kmeans = GCF.get_pca_clusters(data = cluster_data, pca_num = kmeans_best_model['Number of PCAs'].iloc[0], X_pca = X_pca_kmeans)
 
 cluster_data_kmeans[f'Group kmeans'] = kmeans_labels
+cluster_data_kmeans = pd.concat([cluster_data_kmeans, X_data_kmeans], axis = 1)
 
 kmeans_centers_df = pd.DataFrame(centers_scaled, columns=feature_names[0:kmeans_best_model['Number of PCAs'].iloc[0]])
 
@@ -151,6 +152,7 @@ groups_agg = np.unique(agg_labels)
 cluster_data_agg = GCF.get_pca_clusters(data = cluster_data, pca_num = agg_best_model['Number of PCAs'].iloc[0], X_pca = X_pca_agg)
 
 cluster_data_agg[f'Group Agg'] = agg_labels
+cluster_data_agg = pd.concat([cluster_data_agg, X_data_agg], axis = 1)
 
 
 agg_centers = cluster_data_agg.groupby('Group Agg')[feature_names[0:agg_best_model['Number of PCAs'].iloc[0]]].mean()
@@ -210,12 +212,12 @@ plt.show()
 fig, ax = plt.subplots()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.9, left = 0.07, right = 0.98)
 
-for group, colour in zip(groups_agg, colours):
-    plt.scatter(cluster_data_agg[cluster_data_agg['Group Agg']==group][feature_names[0]], 
-                cluster_data_agg[cluster_data_agg['Group Agg']==group][feature_names[1]], 
+for group, colour in zip(groups_kmeans, colours):
+    plt.scatter(cluster_data_kmeans[cluster_data_kmeans['Group kmeans']==group][feature_names[0]], 
+                cluster_data_kmeans[cluster_data_kmeans['Group kmeans']==group][feature_names[1]], 
                 label = f'Class {group}', color = colour, marker = 'o', s = 50)
 
-    plt.scatter(agg_centers_df.iloc[[group]][feature_names[0]], agg_centers_df.iloc[[group]][feature_names[1]], 
+    plt.scatter(kmeans_centers_df.iloc[[group]][feature_names[0]], kmeans_centers_df.iloc[[group]][feature_names[1]], 
                 marker ='*', s = 450, color=colour, edgecolor = 'black',
                 label = f'Class {group} Center')
 
@@ -235,3 +237,9 @@ plt.ylabel("PCA2", fontsize = 16)
 plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
 plt.show()
+
+cluster_data_kmeans.to_csv(file_path + 'Contestent_Clustering_kmeans.csv', sep = ',', index = False)
+cluster_data_agg.to_csv(file_path + 'Contestent_Clustering_Agg.csv', sep = ',', index = False)
+
+kmeans_best_model.to_csv(file_path + 'kmeans_model_parameters', sep = ',', index = False)
+agg_best_model.to_csv(file_path + 'agg_model_parameters', sep = ',', index = False)
