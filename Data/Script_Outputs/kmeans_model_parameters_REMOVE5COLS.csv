@@ -1,0 +1,2 @@
+Number of Clusters,Number of PCAs,K Means Silhouette Score (Eucl),K Means Silhouette Score (Man),Columns Dropped
+3,2,0.4020274972783149,0.3976938394902709,"['Score', 'Avg_Score_per_Episodes', 'Team_Score_per_Person', 'Number_Episodes', 'Number_of_Tasks']"
