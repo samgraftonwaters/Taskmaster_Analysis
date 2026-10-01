@@ -241,5 +241,5 @@ plt.show()
 cluster_data_kmeans.to_csv(file_path + 'Contestent_Clustering_kmeans.csv', sep = ',', index = False)
 cluster_data_agg.to_csv(file_path + 'Contestent_Clustering_Agg.csv', sep = ',', index = False)
 
-kmeans_best_model.to_csv(file_path + 'kmeans_model_parameters', sep = ',', index = False)
-agg_best_model.to_csv(file_path + 'agg_model_parameters', sep = ',', index = False)
+kmeans_best_model.to_csv(file_path + 'kmeans_model_parameters.csv', sep = ',', index = False)
+agg_best_model.to_csv(file_path + 'agg_model_parameters.csv', sep = ',', index = False)
