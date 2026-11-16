@@ -9,10 +9,10 @@ file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outp
 model_data = pd.read_csv(file_path + 'Full Contestent Table for Modelling Scaled.csv')
 
 series_21_contestents = model_data[model_data['Series'] == 'S21'].reset_index(drop = True)
-
+model_data = model_data[model_data['Series'] != 'S21'].reset_index(drop = True)
 X = model_data.select_dtypes(include=[float, int])
 
-print(X.columns)
+# print(X.columns)
 
 scaler = StandardScaler()
 
@@ -63,6 +63,8 @@ rank_results = []
 
 weights_series = pd.Series(final_weights, index=X_norm.columns)
 
+# print(weights_series)
+
 for i in range(n_sim):
 
     # sample contestants WITH their features
@@ -80,7 +82,7 @@ for i in range(n_sim):
     rank_results.append(ranking[["Name","Rank"]])
 
 rank_df = pd.concat(rank_results).reset_index(drop = True)
-print(rank_df.groupby("Name")["Rank"].mean())
+# print(rank_df.groupby("Name")["Rank"].mean())
 
 rank_probs = rank_df.groupby(["Name","Rank"]).size().div(n_sim).unstack(fill_value=0)
 

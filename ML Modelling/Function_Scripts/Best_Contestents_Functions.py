@@ -7,7 +7,7 @@ from sklearn.decomposition import PCA
 def get_pca_weights(data, number_pca_comps):
 
     """
-    Obtains each feature weight using the PCA method..
+    Obtains each feature weight using the PCA method.
     
     Parameters:
     -----------
