@@ -4,7 +4,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 
 
-def get_pca_weights(data):
+def get_pca_weights(data, number_pca_comps):
 
     """
     Obtains each feature weight using the PCA method..
@@ -12,13 +12,14 @@ def get_pca_weights(data):
     Parameters:
     -----------
         data (DataFrame): scaled features for modelling
+        number_pca_comps (int): Number of PCA components to create
     
     Returns:
     --------
         Returns normalised weights associated with each feature based on the PCA method
     
     """
-    pca = PCA(n_components=1)
+    pca = PCA(n_components=number_pca_comps)
     pca.fit(data)
 
     weights = pd.Series(pca.components_[0], index=data.columns)

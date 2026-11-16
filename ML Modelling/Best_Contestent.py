@@ -8,10 +8,21 @@ from Function_Scripts import Best_Contestents_Functions as BCF
 file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
 model_data = pd.read_csv(file_path + 'Full Contestent Table for Modelling Scaled.csv')
 
+series_21_contestents = model_data[model_data['Series'] == 'S21'].reset_index(drop = True)
+
 X = model_data.select_dtypes(include=[float, int])
 
+print(X.columns)
+
+scaler = StandardScaler()
+
+X_scaled = scaler.fit_transform(X)
+
+X = pd.DataFrame(X_scaled, columns=X.columns)
+
+
 # PCA ("Which combination of metrics best explains differences between contestants?")
-pca_weights = BCF.get_pca_weights(data = X)
+pca_weights = BCF.get_pca_weights(data = X, number_pca_comps = 2)
 
 model_data["pca_score"] = (X * pca_weights).sum(axis=1)
 

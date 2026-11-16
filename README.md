@@ -1,12 +1,12 @@
 # Taskmaster_Analysis
 
-## The purpose of this project was to apply my learning and gain experience in using data sciencetools and methods I had learned on the Office of National Statics (ONS) Data Science Campus GraduateProgram [2] between 2023 and 2025 as part of working in the public sector 1. I decided to applythis learning to Taskmaster data because it is unique, complex and interesting, plus it is one of myfavourite TV shows. Further, little analysis has been carried out on similar projects, but some doexist [e.g., 7]. ## UPDATE - carried out during evenings and weekends
+##The purpose of this project was to apply my learning and gain experience in using data sciencetools and methods I had learned on the Office of National Statics (ONS) Data Science Campus GraduateProgram [2] between 2023 and 2025 as part of working in the public sector 1. I decided to applythis learning to Taskmaster data because it is unique, complex and interesting, plus it is one of myfavourite TV shows. Further, little analysis has been carried out on similar projects, but some doexist [e.g., 7]. ## UPDATE - carried out during evenings and weekends
 
 ## Abstract
 To be completed
 
 ## Taskmaster Report
-To be completed - ## report on analysis, methods and findings ##
+To be completed - ##report on analysis, methods and findings##
 
 ## Reproducibility
 Due to the complexity and niche-ness of this project, the majority of the scripts are non reproducible and there is no reproducible pipeline process. Instead,it is a once-off piece of analysis using analytical and data science methods, specific to what I wanted to explore, where I kept adding/updating ideas, so the scripts evolved quickly and without repeatable steps.
