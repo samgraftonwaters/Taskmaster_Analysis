@@ -94,7 +94,6 @@ def set_corr_thresholds(corr_data, range : bool, threshold : int | list):
 
     return(result)
 
-
 def axis_values_for_variables(data_table, variable_column : str, axis_column : str):
 
     """

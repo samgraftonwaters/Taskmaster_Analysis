@@ -10,7 +10,6 @@ warnings.filterwarnings("ignore", category=UserWarning,
 
 warnings.filterwarnings("ignore", category=ConvergenceWarning)
 
-
 def classification_model_comparison_testing(X, y, file_path, feature_run, series_21_new_data, 
                                             series_21_contestents_names_series):
 
@@ -71,7 +70,6 @@ def classification_model_comparison_testing(X, y, file_path, feature_run, series
                                     model_recall = CF.recall_score(y_test, y_test_pred),
                                     save_plot = False)
     
-
         results.append({
             "Model Name" : model_name,
             "Best F1": grid_search.best_score_,

@@ -18,7 +18,6 @@ X_scaled = scaler.fit_transform(X)
 
 X = pd.DataFrame(X_scaled, columns=X.columns)
 
-
 # PCA ("Which combination of metrics best explains differences between contestants?")
 pca_weights = BCF.get_pca_weights(data = X, number_pca_comps = 2)
 
@@ -30,8 +29,7 @@ model_data["pca_score_rescale"] = BCF.get_scale_score(data = model_data, score_c
 
 #Entropy Weighting (gives higher weight to variables with more variation.)
 
-# normalize X (0-1)
-X_norm = (X - X.min()) / (X.max() - X.min())
+X_norm = (X - X.min()) / (X.max() - X.min()) # normalize X (0-1)
 
 ent_weights = BCF.get_entropy_weights(data = X_norm)
 

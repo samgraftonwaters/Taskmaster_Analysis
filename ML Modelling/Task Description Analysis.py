@@ -67,7 +67,6 @@ cleaned_all_tasks = TTCF.clean_task_description(task_description_text = all_task
 all_k, all_sil = full_task_theme_analysis(cleaned_task_text = cleaned_all_tasks, theme_type = 'All', 
                          output_file_name = 'All_Task_Descriptions', k_range = k_values)
 
-
 ###### Prize Tasks
 
 prize_task_description = task_data[task_data['Prize Task'] == 1]['Description']
@@ -77,7 +76,6 @@ cleaned_prize_tasks = TTCF.clean_task_description(task_description_text = prize_
 prize_k, prize_sil = full_task_theme_analysis(cleaned_task_text = cleaned_prize_tasks, 
                                               theme_type = 'Prize', output_file_name = 'Prize_Task_Descriptions',
                                                 k_range = k_values)
-
 
 ###### Team Tasks
 

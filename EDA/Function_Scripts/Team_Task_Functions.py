@@ -220,7 +220,6 @@ def total_team_scores(team_table, number_of_series):
     Input table with new columns that contain Total scores and ratios based off number of tasks and people per team
     
     """
-
     A_total = []
     B_total = []
     for series in range(0, number_of_series):
@@ -250,10 +249,8 @@ def total_team_scores(team_table, number_of_series):
     team_table['Team_A_per_person_task'] = round(team_table['Team_A_per_person'] / team_table['Number'], 1)
     team_table['Team_B_per_person_task'] = round(team_table['Team_B_per_person'] / team_table['Number'], 1)
 
-    print('HERE')
     print(team_table)
     return(team_table)
-
 
 def include_team_names(team_score_table, team_two_table, team_three_table, number_of_series : int):
 
@@ -290,7 +287,6 @@ def include_team_names(team_score_table, team_two_table, team_three_table, numbe
                                 pd.DataFrame(team_B_names, columns = ['Team B Names']).reset_index(drop = True)], axis = 1)
     
     return(team_task_totals)
-
 
 def percent_diff(score_team_A, score_team_B):
 

@@ -45,8 +45,6 @@ age_series = GAF.age_group_series(table = age_binned_table)
 GAF.age_series_stacked_bar(table = age_series, series_seat = 'Series', 
                            title = 'Number of Age Ranges for each Contestent per Series')
 
-
-
 #Count number of gender and age groups per seat
 print('\n Seat Analysis \n')
 
@@ -59,7 +57,6 @@ GAF.gender_count_series_bar(gender_age_table = seat_gender_table, series_seat = 
 
 GAF.age_series_stacked_bar(table = seat_age_table, series_seat = 'seat', 
                            title = 'Number of Age Ranges for each Seat')
-
 
 print(final_scores_age_gender.head())
 
@@ -143,7 +140,6 @@ GAF.episode_gender_age_bar(data_table = episode_age, number_percentage = 'number
 
 GAF.episode_gender_age_bar(data_table = episode_age, number_percentage = 'percentage', gender_age = 'age', 
                        bartitle = 'Percentage of Episode Wins and Losses for all Contestents a split by Age Range')
-
 
 #Chi Squared Analysis
 

@@ -128,7 +128,6 @@ def models_hyperparams():
 
     return(models, param_grids)
 
-
 def calculate_conf_matrix(y_test, y_pred):
 
     """

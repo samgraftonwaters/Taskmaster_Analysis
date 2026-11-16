@@ -3,7 +3,6 @@ import numpy as np
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 
-
 def get_pca_weights(data, number_pca_comps):
 
     """
@@ -43,7 +42,6 @@ def get_entropy_weights(data):
         Returns normalised weights associated with each feature based on the entropy method
     
     """
-
     # convert to probabilities
     P = data / data.sum()
 
@@ -71,7 +69,6 @@ def get_shift_score(data, score_column_name:str):
     Returns:
     --------
         Contestent scores shifted to set the worst performing contestent to 0.
-
     """
 
     shift_score = data[score_column_name] - data[score_column_name].min()

@@ -31,7 +31,6 @@ plt.ylabel('Total of all 5 Contestant Scores', fontsize = 18)
 plt.title("Sum of All 5 Contestants Score Totals in each Series", fontsize = 20)
 plt.show()
 
-
 plt.figure()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
 

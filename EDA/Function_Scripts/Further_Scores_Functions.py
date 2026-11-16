@@ -78,7 +78,6 @@ def point_counts(datatable, named_table, score_column_name : str, int_per : str)
     merged_table = merged_table.rename(columns = {'Score' : score_column_name})
     return(merged_table)
 
-
 def most_least_scores(count_scores, named_table, score : int, size : str, int_per : str):
 
     """
@@ -139,7 +138,6 @@ def most_least_scores(count_scores, named_table, score : int, size : str, int_pe
         least['index'] = least.index.values + 1
 
         return(least)
-
 
 def high_low_ep_scores(data_table, named_table, direction : str):
 

@@ -60,8 +60,6 @@ def clean_numerical(file_path, file_name, number_sheets, output_filename):
 
             df.to_excel(writer, sheet_name = f'Series_{series}', index = False)
 
-
-
 def seat_to_name(file_path, file_name, number_sheets):
 
     """

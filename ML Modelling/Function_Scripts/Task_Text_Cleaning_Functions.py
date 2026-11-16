@@ -91,7 +91,6 @@ def save_task_themes(task_clusters, theme_type:str, file_name:str, file_path:str
         file_path (str): location of folder to save the file to
         descriptions: task description text data.
     
-    
     Reurns:
     -------
         .txt file with groups/themes for the tasks    

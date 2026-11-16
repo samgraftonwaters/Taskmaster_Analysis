@@ -18,7 +18,6 @@ warnings.filterwarnings("ignore", category=ConvergenceWarning)
 plt.rcParams['figure.figsize'] = (13, 7)
 
 ######
-#Model Comparison
 
 def regression_model_comparison_testing(X, y, file_path, feature_run, series_21_new_data, 
                              series_21_contestents, target_feature_feature, y_variable):

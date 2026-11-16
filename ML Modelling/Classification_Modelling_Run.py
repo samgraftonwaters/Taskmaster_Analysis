@@ -6,7 +6,6 @@ file_path = '/Data/Script_Outputs/'
 scaled_data = pd.read_csv(file_path + 'Full Contestent Table for Modelling Scaled.csv')
 unscaled_data = pd.read_csv(file_path + 'Full Contestent Table for Modelling.csv')
 
-
 model_columns_option_1 = ['Number_Episodes', 'Team_A', 'Team_B', 
            'Age_Ranges_20-29', 'Age_Ranges_30-39', 'Age_Ranges_40-49', 
            'Age_Ranges_50-59', 'Age_Ranges_60-69', 'Gender_Female', 'Gender_Male',
@@ -49,7 +48,6 @@ model_columns = [model_columns_option_1, model_columns_option_2, model_columns_o
 y_data_col = [data['Winner'], data['Winner'], data['Winner']]
 
 print(len(y_data_col))
-
 
 for (X_data, y_data, feature_run) in zip(model_columns, y_data_col, feature_runs):
 

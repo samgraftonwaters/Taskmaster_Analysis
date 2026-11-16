@@ -45,7 +45,6 @@ def gender_count_series(gender_age_table):
     print(gender_series)
     return(gender_series)
 
-
 def gender_count_series_bar(gender_age_table, series_seat : bool, title: str):
     """
     Creates a bar chart for the number of male, female or non-binary contestests either per series or for each seat

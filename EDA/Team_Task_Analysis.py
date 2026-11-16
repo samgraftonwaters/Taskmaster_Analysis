@@ -160,7 +160,6 @@ plt.title('Absolute Percentage Differences between Team of Three and Team \n of 
 plt.legend(loc = 'upper right', fontsize = 16, ncol = 2)
 plt.show()
     
-
 # Next four plots show bar charts for the team scores from four different methods:
 # 1. Sum Contestent scores for each team task to give total team score
 # 2. Total team score per person (divide team total by number of team members)
@@ -191,7 +190,6 @@ plt.ylabel('Team Scores Total', fontsize = 20)
 plt.title('Total Team Scores for Each Series', fontsize = 18)
 plt.legend(loc = 'upper left', fontsize = 16, ncol = 2)
 plt.show()
-
 
 plt.figure()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.08, right = 0.96)

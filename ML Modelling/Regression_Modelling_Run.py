@@ -8,8 +8,6 @@ unscaled_data = pd.read_csv(file_path + 'Full Contestent Table for Modelling.csv
 
 ######
 
-print(scaled_data.head())
-
 model_columns_option_1 = ['Disqualifications',
        'Episode_Percentage_Losses', 'Number_of_Tasks', 'Percent_1s_Scored',
        'Tie_Break_Losses', 'Tie_Break_Wins', 'Tie_Breaks_per_series',

@@ -59,8 +59,6 @@ count_dq = number_dq_ordered['DQ'].value_counts().reset_index()
 count_dq.columns = ['DQ', 'Count']
 count_dq = count_dq.sort_values(by = 'DQ', ascending=True).reset_index(drop = True)
 
-print(count_dq)
-
 missed_score_table = final_positions_dq[['Name', 'Series', 'Total Missed Scores']]
 
 #Getting new positions
@@ -80,8 +78,6 @@ new_positions = pd.DataFrame(np.vstack(new_positions), columns = ['Name', 'Serie
 final_positions_dq = pd.merge(final_positions_dq, new_positions.drop(['Series', 'Total Missed Scores'], axis = 1), on = 'Name', how = 'left')
 
 final_positions_dq['Position Difference'] = final_positions_dq['Position'] - final_positions_dq['New Position']
-
-# final_positions_dq.loc[final_positions_dq['Name'] == 'Maisie Adam', 'Total Score'] += 1
 
 print(final_positions_dq)
 
@@ -124,7 +120,6 @@ print([(ax1_y_pos[i] + ax1_y_pos[i+1]) / 2  for i in range(0, len(ax1_y_pos) - 3
 ax2_y_pos = [0.6, 1.22, 1.83, 2.43, 3.05, 3.67, 4.28, 4.88, 5.5, 6.27] #[0.76, 1.67, 2.58, 3.49, 4.4, 5.31, 6.22, 7.13, 8.04, 8.95]
 ax2_x_pos = [1, 2, 3, 4, 5]
 
-
 fig = plt.figure()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.9, left = 0.15)
 ax1 = fig.subplots()
@@ -146,14 +141,14 @@ xgrid = np.arange(xmin, xmax+0.1, 1)
 ax3.vlines(xgrid, ymin=ax3.get_ylim()[0], ymax=ax3.get_ylim()[1],
           colors='lightgray', linestyles='--', linewidth=0.8)
 
-ax3.plot(dq_change_plus['Position'], ax1_y_pos_up, #[0.7 + i for i in range(int(len(dq_change)/2))], #[0.7, 1.7, 2.7, 3.7, 4.7, 5.7], #, 6.7], 
+ax3.plot(dq_change_plus['Position'], ax1_y_pos_up, 
          'o', markersize = 12, color = 'blue')
-ax3.plot(dq_change_minus['Position'], ax1_y_pos_down, #[0.3 + i for i in range(int(len(dq_change)/2))], #[0.3, 1.3, 2.3, 3.3, 4.3, 5.3],# 6.3], 
+ax3.plot(dq_change_minus['Position'], ax1_y_pos_down, 
          'o', markersize = 12, color = 'blue')
 
-ax3.plot(dq_change_plus['New Position'], ax1_y_pos_up, # [0.7 + i for i in range(int(len(dq_change)/2))], #[0.7, 1.7, 2.7, 3.7, 4.7, 5.7],# 6.7], 
+ax3.plot(dq_change_plus['New Position'], ax1_y_pos_up, 
          '^', markersize = 12, color = 'darkgreen')
-ax3.plot(dq_change_minus['New Position'], ax1_y_pos_down, # [0.3 + i for i in range(int(len(dq_change)/2))], #[0.3, 1.3, 2.3, 3.3, 4.3, 5.3],# 6.3], 
+ax3.plot(dq_change_minus['New Position'], ax1_y_pos_down, 
          'v', markersize = 12, color = 'darkred')
 
 ax1.text(42, (int(len(dq_change)/2) + 1.1), '# DQ', fontsize = 16)

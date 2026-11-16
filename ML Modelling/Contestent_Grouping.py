@@ -12,7 +12,6 @@ from Function_Scripts import Grouping_Contestent_Functions as GCF
 
 import sys
 sys.path.append('/Users/SamWaters/Documents/Data Science/Taskmaster/')
-# sys.path.append("../..")
 from Correlations import Correlation_Functions as CF
 
 plt.rcParams['figure.figsize'] = (13, 7)
@@ -25,14 +24,10 @@ data = pd.DataFrame(model_data)
 cluster_data = model_data[['Series', 'Name']].copy()
 data = data.select_dtypes(include=[float, int])
 
-print(data)
-
 scaler = RobustScaler()
 data_nums = scaler.fit_transform(data)
 
 data_nums = pd.DataFrame(data_nums, columns=data.columns, index=data.index)
-
-print(data_nums.head())
 
 k_values = range(3, 7)
 

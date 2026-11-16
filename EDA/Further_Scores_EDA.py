@@ -45,15 +45,10 @@ count_five = FSF.count_scores(dataframe = scores_series_table, score = 5, number
 count_one = pd.concat([count_one, number_tasks['Number of Tasks']], axis = 1)
 count_five = pd.concat([count_five, number_tasks['Number of Tasks']], axis = 1)
 
-print(count_one)
-
 for i in range(1,6):
     
     count_one[f'Seat {i} Percent'] = (count_one[f'Seat {i}'] / count_one['Number of Tasks'] ) * 100
     count_five[f'Seat {i} Percent'] = (count_five[f'Seat {i}'] / count_five['Number of Tasks'] ) * 100
-
-print(count_one)
-print(count_five)
 
 count_fives = FSF.point_counts(datatable = count_five, named_table = named_series_table_reformatted, 
                            score_column_name = 'Number 5s Scored', int_per = 'int')
@@ -65,9 +60,6 @@ percent_fives = FSF.point_counts(datatable = count_five, named_table = named_ser
 percent_ones = FSF.point_counts(datatable = count_one, named_table = named_series_table_reformatted, 
                            score_column_name = 'Percent 1s Scored', int_per = 'percent')
 
-print(count_fives)
-print(percent_fives)
-
 most_ones = FSF.most_least_scores(count_scores = count_one, named_table = named_series_table_reformatted, 
                                   score = 1, size = 'most', int_per = 'int')
 least_ones = FSF.most_least_scores(count_scores = count_one, named_table = named_series_table_reformatted, 
@@ -77,7 +69,6 @@ most_fives = FSF.most_least_scores(count_scores = count_five, named_table = name
                                    score = 5, size = 'most', int_per = 'int')
 least_fives = FSF.most_least_scores(count_scores = count_five, named_table = named_series_table_reformatted, 
                                     score = 5, size = 'least', int_per = 'int')
-print(most_fives)
 
 most_ones_percent = FSF.most_least_scores(count_scores = count_one, named_table = named_series_table_reformatted, 
                                   score = 1, size = 'most', int_per = 'percent')

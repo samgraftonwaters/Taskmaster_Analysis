@@ -171,7 +171,6 @@ def total_score_tables(table, extra_columns:list | str, drop_total=True):
 
     return(total_table)
 
-
 def find_highest_seat(value_table, name_table):
 
     """
@@ -217,7 +216,6 @@ def find_highest_seat(value_table, name_table):
 
     return(max_named_table)
 
-
 def find_lowest_seat(value_table, name_table):
 
     """
@@ -261,8 +259,6 @@ def find_lowest_seat(value_table, name_table):
     min_named_table = min_named_table.drop('Series Name', axis = 1)
 
     return(min_named_table)
-
-
 
 def total_scores_all_series(total_scores_df, number_episodes_df, number_tasks_df):
 
@@ -308,7 +304,6 @@ def total_scores_all_series(total_scores_df, number_episodes_df, number_tasks_df
     summed_totals_table['Averages'] = round(summed_totals_table[summed_totals_table.columns[0:5]].sum(axis = 1)/5, 2)
 
     return(summed_totals_table)
-
 
 def seat_winner_each_series(dataframe):
 
@@ -363,7 +358,6 @@ def seat_loser_each_series(dataframe):
     losing_seat.columns = ['Series', 'Seat Loser']
     
     return(losing_seat)
-
 
 def final_score_seat_positions(score_table, name_table, contain_summed_total = True):
 
@@ -467,7 +461,6 @@ def ordering_final_scores_positions(dataframe, series_col:str, name_col:str, sco
 
     return(final_position)
     
-
 def ordering_final_scores_all_positions(datafame, series_col:list, name_cols:list, score_cols:list, 
                                seat_cols:list, positions:int, order_col:str, order:bool = True):
 
@@ -518,4 +511,3 @@ def ordering_final_scores_all_positions(datafame, series_col:list, name_cols:lis
 
     return(final_positions_full_table)
     
-

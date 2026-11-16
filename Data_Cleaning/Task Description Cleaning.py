@@ -18,7 +18,6 @@ for series in range(1, 21):
 
     text_data.append(data)
 
-
 task_descriptions = pd.DataFrame(np.vstack(text_data), columns = ['Description', 'Episode', 'Series', 
                                                                   'Tasknumber', 'Team Task', 'Prize Task', 
                                                                   'Live Task'])

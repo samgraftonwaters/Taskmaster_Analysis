@@ -108,7 +108,6 @@ def dq_series_bar(datatable):
     Parameters:
     -----------
         datatable (dataframe): data table that contains the series and number of disqualification columns 
-
     """
 
     fig = plt.figure()
@@ -196,12 +195,4 @@ def dq_contestent_count_bar(datatable):
     plt.xlabel('Number of Disqualifications per Contestent', fontsize = 16)
     plt.ylabel('Count', fontsize = 16)
     plt.title('Count of Number of Disqualifications per Contestent', fontsize = 20)
-    plt.show()
-
-
-
-
-    
-
-
-    
+    plt.show()    

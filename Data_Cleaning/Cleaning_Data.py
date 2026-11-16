@@ -15,7 +15,6 @@ print(seat_contestent_table)
 
 seat_contestent_table.to_csv(file_path + 'seat_contestent_series_table.csv', index = False, sep = ',')
 
-
 #Series 21
 
 cleaned_data_series_21 = CF.clean_numerical(file_path = file_path, file_name = 'Taskmaster_Series_21_Only_Scores', 

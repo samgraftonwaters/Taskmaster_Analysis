@@ -2,13 +2,11 @@ import time
 import pandas as pd
 import scraping_functions as SF
 
-
 single_series_number = 21
 start_series = 1
 final_series = 21
 output_filename_all = 'Taskmaster_Series_Scores'
 output_filename_single = 'Taskmaster_Series_21_Only_Scores'
-
 
 output_filepath = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
 
@@ -18,7 +16,6 @@ SF.get_main_series_data_scraped(output_filepath, output_filename = output_filena
 SF.get_main_series_data_scraped(output_filepath, output_filename = output_filename_single, start_series_number = 21,
                                  final_series_number = 21, single_series_number = 21)
         
-
 #Champion of Champions
 champ_of_champs = ['', '_2', "_3", "_4"]
 with pd.ExcelWriter(output_filepath + 'Taskmaster_CoC_Scores.xlsx') as writer:
@@ -53,7 +50,6 @@ with pd.ExcelWriter(output_filepath + 'Taskmaster_CoC_Scores.xlsx') as writer:
         df.to_excel(writer, sheet_name = f'CoC_{series}', index = False)
 
         time.sleep(5)
-
 
 #New Years Treats
 url = f"https://taskmaster.fandom.com/wiki/Taskmaster%27s_New_Year_Treat"

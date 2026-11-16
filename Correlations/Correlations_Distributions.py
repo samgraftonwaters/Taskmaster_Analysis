@@ -138,7 +138,6 @@ result_medium_corrs_split = result_medium_corrs.iloc[60:].reset_index(drop = Tru
 print(result_medium_corrs_split)
 CF.corr_subplots(data_table = data, corr_table = result_medium_corrs_split)
 
-####
 #Score vs Average Score Tasks (0.61)   
 
 scores = data[['Avg Score Tasks', 'Score', 'Position', 'Seat', 'Series']]
@@ -238,7 +237,6 @@ plt.ylabel('Average Score per Number of Episodes', fontsize = 15)
 plt.legend(loc = 'lower right', ncol = 2, fontsize = 14)
 plt.ylim(11, 19.5)
 plt.show()
-
 
 score_above = avg_scores[avg_scores['Avg Score Episodes'] > y][['Avg Score Episodes', 'Avg Score Tasks']]
 score_below = avg_scores[avg_scores['Avg Score Episodes'] <= y][['Avg Score Episodes', 'Avg Score Tasks']]

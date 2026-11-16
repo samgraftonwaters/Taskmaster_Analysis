@@ -123,7 +123,6 @@ def model_coefficients(model_coef, model_intercept, x_cols, fig_name = None, sho
         plt.savefig(f"ML Modelling/Plots/{fig_name}.png", dpi=300, bbox_inches="tight")
         plt.show()
 
-
 def plot_hist_residuals(residual_data, fig_name = None, standardised = True, show_plot = True):
 
     """
@@ -216,7 +215,6 @@ def plot_target_feature(feature : str, x_data, y_data, model, fig_name = None):
     plt.legend(fontsize = 16)
     plt.savefig(f"ML Modelling/Plots/{fig_name}.png", dpi=300, bbox_inches="tight")
     plt.show()
-
 
 def plot_qq(residuals, fig_name = None):
 

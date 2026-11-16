@@ -43,9 +43,6 @@ def bar_number_seat_wins_loses(seat_number_winner, seat_number_losers, count_win
     plt.legend(loc = 'best', fontsize = 14)
     plt.show()
 
-
-# ##Total scores and averages for all series summed/combined
-
 def summed_total_scores(dataframe):
 
     """
@@ -105,9 +102,6 @@ def summed_total_scores(dataframe):
         plt.yticks(fontsize = 14)
         plt.legend(loc = 'upper left', fontsize = 16)
         plt.show()
-
-
-#Total scores per seat for each series
 
 def scores_over_series_single(total_series_table, total_episodes_table, total_tasks_table):
 
@@ -401,7 +395,6 @@ def lowest_scores_each_seat(lowest_seat_series_table, lowest_seat_episodes_table
         plt.yticks(fontsize = 15)
 
         plt.show()
-
 
 def final_score_seat_positions(position_tables, colour_list, top = True, top_n = 20, bottom = False, 
                                bottom_n = 1):

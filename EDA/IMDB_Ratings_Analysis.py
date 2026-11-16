@@ -160,7 +160,6 @@ grouped_variables = CF.group_corr_variables(correlations)
 high_corr = CF.set_corr_thresholds(corr_data = grouped_variables, range = False, threshold = 0.8).reset_index(drop = True)
 
 print(high_corr)
-print()
 
 high_corr, cmap, norm = CF.set_correlation_colours(data_table = high_corr, corr_column = 'correlation', limits = 1)
 
@@ -178,7 +177,6 @@ for row, ax in enumerate(axes.flatten()[:len(high_corr)]):
     legend = ax.legend(frameon=True, loc = 'best', labelcolor = 'white', 
                     facecolor = high_corr['colour'][row])
 plt.show()
-
 
 #### Correlations between Series Averages variables
 print()

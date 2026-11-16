@@ -45,7 +45,6 @@ for series in range(1, num_series+1):
         else:
             rating = None
 
-        print(rating)
         # Votes
         if i < len(votes):
             votes_text = votes[i].text

@@ -115,7 +115,6 @@ def scrape_with_selenium_imdb(url):
 
     return BeautifulSoup(html, 'html.parser')
 
-
 def extracting_table(table):
 
     """

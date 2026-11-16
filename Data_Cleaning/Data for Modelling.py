@@ -43,10 +43,8 @@ data_merged = pd.concat([data, concat_ohe_data], axis = 1)
 
 data_merged.to_csv(output_path + 'Full Contestent Table OHE.csv', sep = ',', index = False)
 
-
 data_modelling_all = data_merged.drop(['Age_Ranges', 'Team', 'Gender', 'Seat', 
                                     'Episode Wins', 'Episode Losses', 'First_Air_Date'], axis = 1)
-
 
 data_modelling_all = data_modelling_all[['Series', 'Name', 'Position', 'Score', 
                                          'Disqualifications', 'Episode Percentage Losses',

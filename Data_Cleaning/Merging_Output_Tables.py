@@ -50,7 +50,6 @@ merged_scores_table = pd.merge(left = merged_scores_table, right = avg_task_scor
 count_fives_ones = pd.merge(left = count_fives.drop(['Series', 'Seat'], axis = 1), 
                  right = count_ones.drop(['Series', 'Seat'], axis = 1), on = 'Name', how = 'left')
 
-
 percent_fives = pd.merge(left = percent_fives, 
                              right = number_tasks.drop(['Seat 1', 'Seat 2', 'Seat 3', 'Seat 4', 
                                                         'Seat 5'], axis = 1), 
@@ -60,7 +59,6 @@ percent_fives_ones = pd.merge(left = percent_fives.drop(['Series', 'Seat'], axis
                  right = percent_ones.drop(['Series', 'Seat'], axis = 1), on = 'Name', how = 'left')
 
 print(percent_fives_ones)
-
 
 #Tie Breaks
 tie_winners = (tie_winners.drop(['Series', 'Seat', 'Double Losers'], axis = 1)

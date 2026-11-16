@@ -38,7 +38,6 @@ def plot_heatmap(data, x_label : str, y_label : str, title : str, min_range : fl
     plt.tight_layout()
     plt.show()
 
-
 def plot_linegraph_or_barchart(x_data, y_data, line_colour:str, x_label:str, y_label:str, 
                                title:str, bar_or_line : str):
 
@@ -92,7 +91,6 @@ def plot_linegraph_or_barchart(x_data, y_data, line_colour:str, x_label:str, y_l
     plt.yticks(fontsize = 16)
     plt.legend(loc = 'best', fontsize = 18)
     plt.show()
-
 
 def line_plot_episodes_series(episode_x, episode_y, series_x, series_y, series_boundaries, 
                               series_number_col, x_label : str, y_label : str, title : str):

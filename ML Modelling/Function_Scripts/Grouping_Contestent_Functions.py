@@ -7,7 +7,6 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-
 def determine_kmeans_sil_values(k_range, X_data, distance_method):
 
     """
@@ -131,7 +130,6 @@ def get_dbscan_silhouette_epsilon_values(X_data, epsilon_range, distance_method)
         
     return(sil_values, eps_values)
 
-
 def determine_sil_values_agg_both_distance_methods(k_range, X_data, link_type):
 
     """
@@ -169,7 +167,6 @@ def determine_sil_values_agg_both_distance_methods(k_range, X_data, link_type):
         
     return(eucl_sil_values, man_sil_values)
 
-
 def determine_sil_values_agg(k_range, X_data, link_type, distance_method):
 
     """
@@ -199,7 +196,6 @@ def determine_sil_values_agg(k_range, X_data, link_type, distance_method):
         
     return(sil_values)
 
-
 def plot_bar_groups(dataframe, average_metric : str, columns : str | list):
 
     """
@@ -226,11 +222,6 @@ def plot_bar_groups(dataframe, average_metric : str, columns : str | list):
     bar3_val = columns[2]
     bar4_val = columns[3]
 
-    #   score = pivot["Score"]
-    #     position = pivot["Position"]
-    #     rescale = pivot["final_score_rescale"]
-    #     rank = pivot["Contestent Rank"]
-
     fig, ax = plt.subplots()
     plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.92, left = 0.2, right = 0.98)
 
@@ -238,12 +229,6 @@ def plot_bar_groups(dataframe, average_metric : str, columns : str | list):
     bar2 = plt.bar(groups - 0.10, bar2_val, width=0.18, edgecolor='black', label=columns[1])
     bar3 = plt.bar(groups + 0.10, bar3_val, width=0.18, edgecolor='black', label=columns[2])
     bar4 = plt.bar(groups + 0.30, bar4_val, width=0.18, edgecolor='black', label=columns[3])
-
-
-    # bar1 = plt.bar(groups - 0.30, score, width=0.18, edgecolor='black', label='Score')
-    # bar2 = plt.bar(groups - 0.10, position, width=0.18, edgecolor='black', label='Position')
-    # bar3 = plt.bar(groups + 0.10, rescale, width=0.18, edgecolor='black', label='Final Score Rescale')
-    # bar4 = plt.bar(groups + 0.30, rank, width=0.18, edgecolor='black', label='Contestant Rank')
 
     for bars in [bar1, bar2, bar3, bar4]:
         plt.bar_label(bars, fmt='%.2f', fontsize=12, color = 'black', label_type='edge')
@@ -257,7 +242,6 @@ def plot_bar_groups(dataframe, average_metric : str, columns : str | list):
 
     plt.legend(fontsize = 15, ncol = 2)
     plt.show()
-
 
 def get_pca_clusters(data, pca_num, X_pca):
 
