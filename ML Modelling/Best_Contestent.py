@@ -12,8 +12,6 @@ series_21_contestents = model_data[model_data['Series'] == 'S21'].reset_index(dr
 model_data = model_data[model_data['Series'] != 'S21'].reset_index(drop = True)
 X = model_data.select_dtypes(include=[float, int])
 
-# print(X.columns)
-
 scaler = StandardScaler()
 
 X_scaled = scaler.fit_transform(X)
@@ -63,8 +61,6 @@ rank_results = []
 
 weights_series = pd.Series(final_weights, index=X_norm.columns)
 
-# print(weights_series)
-
 for i in range(n_sim):
 
     # sample contestants WITH their features
@@ -88,8 +84,7 @@ rank_probs = rank_df.groupby(["Name","Rank"]).size().div(n_sim).unstack(fill_val
 
 model_data["Confidence"] = model_data.apply(
     lambda row: rank_probs.loc[row["Name"], row["Contestent Rank"]],
-    axis=1
-)
+    axis=1)
 
 model_data["Confidence_%"] = model_data["Confidence"] * 100
 
