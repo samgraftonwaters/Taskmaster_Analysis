@@ -54,13 +54,9 @@ This folder contains the scripts (and function scripts) where the machine learni
 3. **Contestent_Grouping_Run.py**: Groups the contestents from Series 1 - 20, while **Contestent_Grouping_Test.py** is a script that tested out the models and methods for grouping the data, before being finalised in the **Contestent_Grouping_Run.py**.
 4. **Best_Contestent.py**: Script to determine the best contesent (and worse) within 20 Series of Taskmaster.
 5. **Task Description Analysis.py**: A script to try and group the tasks into themes based on their descriptions.
-
-### Data
-
-**Explain outputs/excel files and figures**
-
-The following folders are where data were saved to be used in other scripts, or where figures and plots were stored.
-
+---
+### Data Folder
+The **Data** folder contains all the Excel files either created from one of the Python scripts or manually. Some are subsequently used by other Python Scripts. 
 
 ## Reproducibility
 Due to the complexity and niche-ness of this project, and as a result of working on this in my spare time, the majority of the scripts are not reproducible. Instead, this project is a once-off piece of analytical and data science work, specific to what I wanted to explore and model. As I kept adding/updating ideas, the scripts evolved quickly, and as consequence, without repeatable steps.
