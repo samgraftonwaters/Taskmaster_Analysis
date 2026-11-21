@@ -9,14 +9,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from Function_Scripts import Grouping_Contestent_Functions as GCF
-
-import sys
-sys.path.append('/Users/SamWaters/Documents/Data Science/Taskmaster/')
 from Correlations import Correlation_Functions as CF
 
 plt.rcParams['figure.figsize'] = (13, 7)
 
-file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
+file_path = '../Data/Script_Outputs/'
 model_data = pd.read_csv(file_path + 'Full Contestent Table for Modelling.csv')
 model_data = model_data[model_data['Series'] != 'S21']
 data = pd.DataFrame(model_data)

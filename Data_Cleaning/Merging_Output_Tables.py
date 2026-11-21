@@ -8,8 +8,8 @@ plt.rcParams['figure.figsize'] = (13, 7)
 colours = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2',
  '#7f7f7f', '#bcbd22', '#17becf']
 
-file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
-output_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
+file_path = '../Data/Script_Outputs/'
+output_path = '../Data/'
 
 DQ_table = pd.read_csv(file_path + 'DQ_Table.csv', encoding="utf-8")
 Episode_win_loss = pd.read_csv(file_path + 'Episode Wins and Losses.csv', encoding="utf-8")

@@ -5,7 +5,7 @@ from sklearn.decomposition import PCA
 
 from Function_Scripts import Best_Contestents_Functions as BCF
 
-file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
+file_path = '../Data/Script_Outputs/'
 model_data = pd.read_csv(file_path + 'Full Contestent Table for Modelling Scaled.csv')
 
 series_21_contestents = model_data[model_data['Series'] == 'S21'].reset_index(drop = True)

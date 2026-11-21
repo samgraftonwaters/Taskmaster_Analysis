@@ -8,8 +8,8 @@ plt.rcParams['figure.figsize'] = (13, 7)
 
 number_of_series = 21
 
-file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
-output_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
+file_path = '../Data/'
+output_path = '../Data/Script_Outputs/'
 
 team_table = pd.read_csv(file_path+'Teams.csv', encoding="utf-8")
 

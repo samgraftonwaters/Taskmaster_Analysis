@@ -7,8 +7,8 @@ from Function_Scripts import Grouping_Contestent_Functions as GCF
 plt.rcParams['figure.figsize'] = (13, 7)
 
 
-file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
-output_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
+file_path = '../Data/'
+output_path = '../Data/Script_Outputs/'
 task_data = pd.read_csv(file_path + 'Task Descriptions Only.csv')
 
 k_values = range(2, 30)

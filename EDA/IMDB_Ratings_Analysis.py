@@ -3,15 +3,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from Function_Scripts import IMDB_functions as IF
-
-import sys
-sys.path.append('/Users/SamWaters/Documents/Data Science/Taskmaster/')
 from Correlations import Correlation_Functions as CF
 
 plt.rcParams['figure.figsize'] = (13, 7)
 
-file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
-output_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
+file_path = '../Data/'
+output_path = '../Data/Script_Outputs/'
 
 imdb_data = pd.read_csv(file_path + 'Taskmaster_IMDB_Ratings.csv')
 

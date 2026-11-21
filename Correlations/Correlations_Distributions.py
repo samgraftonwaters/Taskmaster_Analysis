@@ -15,14 +15,14 @@ plt.rcParams['figure.figsize'] = (13, 7)
 colours = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2',
  '#7f7f7f', '#bcbd22', '#17becf']
 
-input_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
+input_path = '../Data/'
 
 data = pd.read_csv(input_path + 'Full Contestent Table.csv')
 data = data.rename(columns = {'DQ' : 'Disqualifications'})
 data['Seat Num'] = data['Seat'].str.replace('Seat ', '').astype(int)
 data.columns = data.columns.str.replace('_', ' ')
 
-input_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
+input_path = '../Data/Script_Outputs/'
 
 print(data.head())
 print(data.info())

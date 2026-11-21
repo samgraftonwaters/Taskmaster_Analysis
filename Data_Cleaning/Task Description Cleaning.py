@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import Cleaning_Functions as CF
 
-file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
+file_path = '../Data/'
 
 text_data = []
 

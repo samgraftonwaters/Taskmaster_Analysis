@@ -8,7 +8,7 @@ final_series = 21
 output_filename_all = 'Taskmaster_Series_Scores'
 output_filename_single = 'Taskmaster_Series_21_Only_Scores'
 
-output_filepath = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
+output_filepath = '../Data/'
 
 SF.get_main_series_data_scraped(output_filepath, output_filename = output_filename_all, start_series_number = final_series,
                                  final_series_number = final_series, single_series_number = None)

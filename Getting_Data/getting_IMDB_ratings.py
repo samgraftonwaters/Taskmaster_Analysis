@@ -4,7 +4,7 @@ import time
 import scraping_functions as SF
 import re
 
-output_filepath = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
+output_filepath = '../Data/'
 
 num_series = 20
 

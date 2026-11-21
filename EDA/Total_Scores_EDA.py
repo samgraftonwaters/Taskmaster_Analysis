@@ -2,8 +2,8 @@ import pandas as pd
 import numpy as np
 from Function_Scripts import EDA_Functions as EF
 
-file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
-output_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
+file_path = '../Data/'
+output_path = '../Data/Script_Outputs/'
 
 named_series_table = pd.read_csv(file_path + 'seat_contestent_series_table.csv')
 scores_series_table = file_path + 'Taskmaster_Series_Scores_Cleaned.xlsx'

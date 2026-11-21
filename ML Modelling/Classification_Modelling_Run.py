@@ -2,7 +2,7 @@ import pandas as pd
 import Classification_Modelling as CM
 from Function_Scripts import Classification_Functions as CF
 
-file_path = '/Data/Script_Outputs/'
+file_path = '../Data/Script_Outputs/'
 scaled_data = pd.read_csv(file_path + 'Full Contestent Table for Modelling Scaled.csv')
 unscaled_data = pd.read_csv(file_path + 'Full Contestent Table for Modelling.csv')
 

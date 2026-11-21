@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import Cleaning_Functions as CF
 
-file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
+file_path = '../Data/'
 
 cleaned_data = CF.clean_numerical(file_path = file_path, file_name = 'Taskmaster_Series_Scores', 
                 number_sheets = 20, output_filename = 'Taskmaster_Series_Scores_Cleaned')

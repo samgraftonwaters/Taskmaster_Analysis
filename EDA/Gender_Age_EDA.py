@@ -7,8 +7,8 @@ from Function_Scripts import gender_age_functions as GAF
 plt.rcParams['figure.figsize'] = (13, 7)
 
 #Read in the data
-file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
-output_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
+file_path = '../Data/'
+output_path = '../Data/Script_Outputs/'
 
 episode_scores = pd.read_csv(output_path + 'Episode Wins and Losses.csv', encoding="utf-8")
 final_scores = pd.read_csv(output_path + 'Total Final Scores and Positions.csv', encoding="utf-8")
