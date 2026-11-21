@@ -49,14 +49,11 @@ This folder contains the **Correlations_Distributions.py** script (and the **Cor
 ### 5. ML Modelling
 This folder contains the scripts (and function scripts) where the machine learning models are used on the data. It also contains a folder with the saved models as .pkl files.
 
-1. 
-2. 
-3. 
-4. 
-5. 
-6. 
-7. 
-8. 
+1. **Classification_Modelling.py** and **Classification_Modelling_Run.py** are the scripts used to predict the Series 21 winner based on a classification model.
+2. **Regression_Modelling.py** and **Regression_Modelling_Run.py** are scripts to predict the Series 21 winner based on a regression model.
+3. **Contestent_Grouping_Run.py**: Groups the contestents from Series 1 - 20, while **Contestent_Grouping_Test.py** is a script that tested out the models and methods for grouping the data, before being finalised in the **Contestent_Grouping_Run.py**.
+4. **Best_Contestent.py**: Script to determine the best contesent (and worse) within 20 Series of Taskmaster.
+5. **Task Description Analysis.py**: A script to try and group the tasks into themes based on their descriptions.
 
 ### Data
 
