@@ -94,7 +94,6 @@ def set_corr_thresholds(corr_data, range : bool, threshold : int | list):
 
     return(result)
 
-
 def axis_values_for_variables(data_table, variable_column : str, axis_column : str):
 
     """
@@ -206,7 +205,7 @@ def correlation_compare_plot(data_table, xaxis_column : str, yaxis_column : str,
                     alpha=0.9))
     plt.xlim(-0.5, data_table[xaxis_column].max() + 0.5)
     plt.ylim(-0.5, data_table[yaxis_column].max() + 0.5)
-    plt.xticks(data_table[xaxis_column], var1_labels, fontsize = 12)
+    plt.xticks(data_table[xaxis_column], var1_labels, fontsize = 10)
     plt.yticks(data_table[yaxis_column], data_table[var2_column], fontsize = 12)
     plt.title(title, fontsize = 20)
     plt.grid(True, linestyle="--", alpha=0.3)
@@ -217,7 +216,7 @@ def correlation_compare_plot(data_table, xaxis_column : str, yaxis_column : str,
 def corr_subplots(data_table, corr_table):
 
     """
-    Creates a figure with subplots for each variable pair
+    Creates a figure with scatter subplots for each variable pair
 
     Parameters:
     -----------

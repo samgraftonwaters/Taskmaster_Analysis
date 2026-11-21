@@ -2,16 +2,16 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-import gender_age_functions as GAF
+from Function_Scripts import gender_age_functions as GAF
 
 plt.rcParams['figure.figsize'] = (13, 7)
 
 #Read in the data
-file_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/'
-output_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
+file_path = '../Data/'
+output_path = '../Data/Script_Outputs/'
 
-episode_scores = pd.read_csv(file_path + 'Episode Wins and Losses.csv', encoding="utf-8")
-final_scores = pd.read_csv(file_path + 'Total Final Scores and Positions.csv', encoding="utf-8")
+episode_scores = pd.read_csv(output_path + 'Episode Wins and Losses.csv', encoding="utf-8")
+final_scores = pd.read_csv(output_path + 'Total Final Scores and Positions.csv', encoding="utf-8")
 
 gender_age_table = pd.read_csv(file_path + 'Contestent_Gender_Age.csv', encoding="utf-8")
 gender_age_table['Series Number'] = gender_age_table['Series'].str.replace('S', '').astype(int)
@@ -32,19 +32,18 @@ age_table = gender_age_table[['Name', 'Series Number', 'Age_at_First_Air']]
 
 age_binned_table = GAF.setting_age_bins(table = age_table)
 
+print('\n Merging Tables \n')
+#Merge gender, age and total score tables together
+
+final_scores_age_gender = GAF.merge_series_age_gender(series_table = final_scores, gender_table = gender_age_table, 
+                        age_table = age_binned_table)
+
 age_range_counts = GAF.age_range_metrics(table = age_binned_table)
 
 age_series = GAF.age_group_series(table = age_binned_table)
 
 GAF.age_series_stacked_bar(table = age_series, series_seat = 'Series', 
                            title = 'Number of Age Ranges for each Contestent per Series')
-
-print('\n Merging Tables \n')
-#Merge gender, age and total score tables together
-final_scores_age_gender = GAF.merge_series_age_gender(series_table = final_scores, gender_table = gender_age_table, 
-                        age_table = age_binned_table)
-
-final_scores_age_gender.to_csv(output_path + 'Gender_Age_Series_Scores.csv', index = False, sep = ',', encoding="utf-8")
 
 #Count number of gender and age groups per seat
 print('\n Seat Analysis \n')
@@ -59,22 +58,18 @@ GAF.gender_count_series_bar(gender_age_table = seat_gender_table, series_seat = 
 GAF.age_series_stacked_bar(table = seat_age_table, series_seat = 'seat', 
                            title = 'Number of Age Ranges for each Seat')
 
-
 print(final_scores_age_gender.head())
 
 #Removed "non-binary" as only one contestent out of 100 who identifies, which makes the maths later more complex
 
-final_scores_age_gender = final_scores_age_gender[final_scores_age_gender['Gender'] != 'Non-Binary']
+final_scores_age_gender_nonbin = final_scores_age_gender[final_scores_age_gender['Gender'] != 'Non-Binary']
 
 #Created gender/age position tables for chi-squared and bias testing
-position_gender_table = final_scores_age_gender[['Position', 'Gender', 'Score']]
-position_age_table = final_scores_age_gender[['Position', 'Age_Ranges', 'Score']]
+position_gender_table = final_scores_age_gender_nonbin[['Position', 'Gender', 'Score']]
+position_age_table = final_scores_age_gender_nonbin[['Position', 'Age_Ranges', 'Score']]
 
 position_gender_count = position_gender_table.groupby(['Gender', 'Position'], observed=True)['Score'].sum().reset_index()
 position_age_count = position_age_table.groupby(['Age_Ranges', 'Position'], observed=True)['Score'].sum().reset_index()
-
-print(position_age_count)
-print(position_gender_count)
 
 #Carried out Chi-Squared Tests
 print('\n Chi-Squared and Bias Testing \n')
@@ -98,13 +93,13 @@ gender_chi2 = GAF.chi2_test(data_table = position_gender_count, series_episode =
 # if Gender and position were unrelated.
 
 #Carried out bias tests
-grouped_ages = GAF.formatting_table(data_table = final_scores_age_gender)
+grouped_ages = GAF.formatting_table(data_table = final_scores_age_gender_nonbin)
 grouped_ages_model = GAF.model_fitting(data_table = grouped_ages, target_variable = 'Score_Z', 
                   test_variables = ['Gender', 'Age_Ranges'])
 GAF.anova_test(model = grouped_ages_model)
 
 #
-ages = GAF.formatting_table(data_table = final_scores_age_gender)
+ages = GAF.formatting_table(data_table = final_scores_age_gender_nonbin)
 ages_model = GAF.model_fitting(data_table = grouped_ages, target_variable = 'Score_Z', 
                   test_variables = ['Gender', 'age_c'])
 GAF.anova_test(model = ages_model)
@@ -116,8 +111,6 @@ print('\n Episode Analysis \n')
 episode_scores_age_gender = GAF.merge_series_age_gender(series_table = episode_scores, 
                                                         gender_table = gender_age_table.drop(['First_Air_Date', 'Birth_Date'], axis = 1),
                                                         age_table = age_binned_table)
-
-print(episode_scores_age_gender.head(20))
 
 eps_per_series = episode_scores_age_gender.groupby('Series')['Number_Episodes'].first().reset_index()
 num_eps = eps_per_series['Number_Episodes'].sum()
@@ -137,17 +130,16 @@ print(episode_age)
 #count/percentage bar charts for wins/losses split by age range or gender
 
 GAF.episode_gender_age_bar(data_table = episode_gender, number_percentage = 'number', gender_age = 'gender', 
-                       bartitle = 'Number of Wins and Losses for all Contestents a split by Gender')
+                       bartitle = 'Number of Episode Wins and Losses for all Contestents a split by Gender')
 
 GAF.episode_gender_age_bar(data_table = episode_gender, number_percentage = 'percentage', gender_age = 'gender', 
-                       bartitle = 'Percentage of Wins and Losses for all Contestents a split by Gender')
+                       bartitle = 'Percentage of Episode Wins and Losses for all Contestents a split by Gender')
 
 GAF.episode_gender_age_bar(data_table = episode_age, number_percentage = 'number', gender_age = 'age', 
-                       bartitle = 'Number of Wins and Losses for all Contestents a split by Age Range')
+                       bartitle = 'Number of Episode Wins and Losses for all Contestents a split by Age Range')
 
 GAF.episode_gender_age_bar(data_table = episode_age, number_percentage = 'percentage', gender_age = 'age', 
-                       bartitle = 'Percentage of Wins and Losses for all Contestents a split by Age Range')
-
+                       bartitle = 'Percentage of Episode Wins and Losses for all Contestents a split by Age Range')
 
 #Chi Squared Analysis
 
@@ -161,3 +153,8 @@ GAF.chi2_test(data_table = episode_gender, series_episode = 'episode', values = 
 
 GAF.chi2_test(data_table = episode_age, series_episode = 'episode', values = None, index = None, 
                      columns = None, agg = "sum")
+
+final_scores_age_gender.to_csv(output_path + 'Gender_Age_Series_Scores.csv', index = False, sep = ',', encoding="utf-8")
+episode_scores_age_gender.to_csv(output_path + 'Episode Scores per age and gender .csv', index = False, sep = ',', encoding="utf-8")
+position_age_count.to_csv(output_path + 'Age Final Position Count.csv', index = False, sep = ',', encoding="utf-8")
+position_gender_count.to_csv(output_path + 'Gender Final Position Count.csv', index = False, sep = ',', encoding="utf-8")

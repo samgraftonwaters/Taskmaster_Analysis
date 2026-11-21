@@ -1,5 +1,5 @@
 import Total_Scores_EDA as TSE
-import Score_Visual_Functions as VF
+from Function_Scripts import Score_Visual_Functions as VF
 
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -12,6 +12,61 @@ colours2 = colours + colours #Some plots require more than 10 bars, therefore co
 
 ## other settings, e.g.
 plt.rcParams['figure.figsize'] = (13, 7)
+
+plt.figure()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
+
+plt.bar(x = TSE.series_all_totals['Series'], height = TSE.series_all_totals['Total'], width = 0.8,
+        color = 'dodgerblue', alpha = 0.8, edgecolor = 'black')
+
+for i in range(0, 20):
+    plt.text(i, TSE.series_all_totals['Total'][i]+5, 
+            TSE.series_all_totals['Total'][i], ha='center', fontsize = 14, color = 'dodgerblue')
+
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.xlim(-0.6, 19.6)
+plt.xlabel('Series', fontsize = 18)
+plt.ylabel('Total of all 5 Contestant Scores', fontsize = 18)
+plt.title("Sum of All 5 Contestants Score Totals in each Series", fontsize = 20)
+plt.show()
+
+plt.figure()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
+
+plt.bar(x = TSE.series_all_totals['Series'], height = TSE.series_all_totals['Total per Number of Episodes'], width = 0.8,
+        color = 'green', alpha = 0.6, edgecolor = 'black')
+
+for i in range(0, 20):
+    plt.text(i, TSE.series_all_totals['Total per Number of Episodes'][i]+0.5, 
+            f"{TSE.series_all_totals['Total per Number of Episodes'][i]:.2f}", ha='center', fontsize = 14, color = 'green')
+
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.xlim(-0.6, 19.6)
+plt.xlabel('Series', fontsize = 18)
+plt.ylabel('Total per Number of Episodes', fontsize = 18)
+plt.title("Total of All 5 Contestants Scores per Number of Episodes in each Series", fontsize = 20)
+plt.show()
+
+plt.figure()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.1, top = 0.94, left = 0.08, right = 0.96)
+
+plt.bar(x = TSE.series_all_totals['Series'], height = TSE.series_all_totals['Total per Number of Tasks'], width = 0.8,
+        color = 'red', alpha = 0.6, edgecolor = 'black')
+
+for i in range(0, 20):
+    plt.text(i, TSE.series_all_totals['Total per Number of Tasks'][i]+0.5, 
+            f"{TSE.series_all_totals['Total per Number of Tasks'][i]:.2f}", ha='center', fontsize = 14, color = 'red')
+
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.ylim(0, 16)
+plt.xlim(-0.6, 19.6)
+plt.xlabel('Series', fontsize = 18)
+plt.ylabel('Total per Number of Tasks', fontsize = 18)
+plt.title("Total of All 5 Contestants Scores per Number of Tasks in each Series", fontsize = 20)
+plt.show()
 
 #Bar chart to show Number of times each seat won or lost over all series of Taskmaster
 VF.bar_number_seat_wins_loses(seat_number_winner = TSE.seat_winners['Seat Number'],

@@ -15,12 +15,14 @@ plt.rcParams['figure.figsize'] = (13, 7)
 colours = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2',
  '#7f7f7f', '#bcbd22', '#17becf']
 
-input_path = '/Users/SamWaters/Documents/Data Science/Taskmaster/Data/Script_Outputs/'
+input_path = '../Data/'
 
 data = pd.read_csv(input_path + 'Full Contestent Table.csv')
 data = data.rename(columns = {'DQ' : 'Disqualifications'})
 data['Seat Num'] = data['Seat'].str.replace('Seat ', '').astype(int)
 data.columns = data.columns.str.replace('_', ' ')
+
+input_path = '../Data/Script_Outputs/'
 
 print(data.head())
 print(data.info())
@@ -43,6 +45,8 @@ grouped_variables = CF.group_corr_variables(correlations = correlations)
 #high correlations
 
 result_high = CF.set_corr_thresholds(corr_data = grouped_variables, range = False, threshold = 0.7)
+
+result_high = result_high.sort_values('correlation', ascending= True).reset_index(drop = True)
 
 result_high_var1 = CF.axis_values_for_variables(data_table = result_high, variable_column = 'var_1',
                                              axis_column = 'x_axis')
@@ -69,17 +73,19 @@ data.columns = data.columns.str.replace('Percentage', '%').str.replace(' per ', 
 result_high_corrs['var_1'] = result_high_corrs['var_1'].str.replace('Percentage', '%').str.replace(' per ', ' ')
 result_high_corrs['var_2'] = result_high_corrs['var_2'].str.replace('Percentage', '%').str.replace(' per ', ' ')
 
-result_high_corrs_split = result_high_corrs.iloc[:11]
+result_high_corrs_split = result_high_corrs.iloc[:12]
 print(result_high_corrs_split)
 CF.corr_subplots(data_table = data, corr_table = result_high_corrs_split)
 
-result_high_corrs_split = result_high_corrs.iloc[11:].reset_index(drop = True)
+result_high_corrs_split = result_high_corrs.iloc[12:].reset_index(drop = True)
 print(result_high_corrs_split)
 CF.corr_subplots(data_table = data, corr_table = result_high_corrs_split)
 
 #medium Correlations
 
 result_medium = CF.set_corr_thresholds(corr_data = grouped_variables, range = True, threshold = [0.4, 0.7])
+
+result_medium = result_medium.sort_values('correlation', ascending= True).reset_index(drop = True)
 
 result_medium_var1 = CF.axis_values_for_variables(data_table = result_medium, variable_column = 'var_1',
                                              axis_column = 'x_axis')
@@ -88,6 +94,8 @@ result_medium_var2 = CF.axis_values_for_variables(data_table = result_medium, va
 
 result_medium = pd.merge(result_medium, result_medium_var1, on = 'var_1', how = 'left')
 result_medium = pd.merge(result_medium, result_medium_var2, on = 'var_2', how = 'left')
+print('\nHERE')
+print(result_medium)
 
 var1_labels_medium = result_medium['var_1'].str.replace(' ', '\n').str.replace('Percentage', '%').str.replace(' per ', ' ')
 result_medium['var_2'] = result_medium['var_2'].str.replace('Percentage', '%').str.replace(' per ', ' ')
@@ -122,14 +130,17 @@ result_medium_corrs_split = result_medium_corrs.iloc[36:48].reset_index(drop = T
 print(result_medium_corrs_split)
 CF.corr_subplots(data_table = data, corr_table = result_medium_corrs_split)
 
-result_medium_corrs_split = result_medium_corrs.iloc[48:].reset_index(drop = True)
+result_medium_corrs_split = result_medium_corrs.iloc[48:60].reset_index(drop = True)
 print(result_medium_corrs_split)
 CF.corr_subplots(data_table = data, corr_table = result_medium_corrs_split)
 
-####
+result_medium_corrs_split = result_medium_corrs.iloc[60:].reset_index(drop = True)
+print(result_medium_corrs_split)
+CF.corr_subplots(data_table = data, corr_table = result_medium_corrs_split)
+
 #Score vs Average Score Tasks (0.61)   
 
-scores = data[['Avg Score Tasks', 'Score', 'Position', 'Seat']]
+scores = data[['Avg Score Tasks', 'Score', 'Position', 'Seat', 'Series']]
 
 m = CF.slope(y1 = 80, y2 = 150,
           x1 = scores['Avg Score Tasks'].min(), x2 = scores['Avg Score Tasks'].max())
@@ -138,6 +149,7 @@ c = CF.intercept(y1 = 80, x1 = scores['Avg Score Tasks'].min(), slope = m)
 
 y = (scores['Avg Score Tasks'] * m) + c
 
+print(data[(data['Score'] < 100) & (data['Avg Score Tasks']<3.1)])
 
 fig, ax = plt.subplots()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.98, left = 0.1, right = 0.95)
@@ -145,6 +157,17 @@ sns.scatterplot(x = scores['Avg Score Tasks'], y = scores['Score'],
                 hue = scores['Position'], size = scores['Seat'])
 sns.regplot(x = scores['Avg Score Tasks'], y = scores['Score'])
 plt.plot(scores['Avg Score Tasks'], y, color = 'green', lw = 3)
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.xlabel('Average Score per Number of Tasks', fontsize = 15)
+plt.ylabel('Total Score', fontsize = 15)
+plt.legend(loc = 'lower right', ncol = 2, fontsize = 14)
+plt.show()
+
+fig, ax = plt.subplots()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.98, left = 0.1, right = 0.95)
+sns.scatterplot(x = scores['Avg Score Tasks'], y = scores['Score'], 
+                hue = scores['Series'])
 plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
 plt.xlabel('Average Score per Number of Tasks', fontsize = 15)
@@ -170,14 +193,14 @@ plt.text(3, 110, round(below_115_corr.loc['Score', 'Avg Score Tasks'], 4), fonts
 plt.text(2.2, 160, round(above_115_corr.loc['Score', 'Avg Score Tasks'], 4), fontsize = 18, color = 'dodgerblue')
 plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
-plt.xlabel('Average Score per Number of Tasks', fontsize = 15)
-plt.ylabel('Total Score', fontsize = 15)
-plt.title('Splitting the Data and Extracting Separate Correlations for \n Total Scores and Average Score per Tasks', fontsize = 16)
+plt.xlabel('Average Score per Number of Tasks', fontsize = 16)
+plt.ylabel('Total Score', fontsize = 16)
+plt.title(' Total Scores vs Average Score per Tasks - Splitting the Data', fontsize = 20)
 plt.show()
 
 #Average Score Tasks vs Average Score Episodes (0.61)
 
-avg_scores = data[['Avg Score Tasks', 'Avg Score Episodes', 'Position', 'Seat']]
+avg_scores = data[['Avg Score Tasks', 'Avg Score Episodes', 'Position', 'Seat', 'Series']]
 print(avg_scores)
 
 m = CF.slope(y1 = 14.5, y2 = 19,
@@ -186,6 +209,8 @@ m = CF.slope(y1 = 14.5, y2 = 19,
 c = CF.intercept(y1 = 14.5, x1 = 2, slope = m)
 
 y = (avg_scores['Avg Score Tasks'] * m) + c
+
+print(data[(data['Avg Score Episodes'] > 15) & (data['Avg Score Tasks']<2.4)])
 
 fig, ax = plt.subplots()
 plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.98, left = 0.1, right = 0.95)
@@ -201,6 +226,17 @@ plt.legend(loc = 'lower right', ncol = 2, fontsize = 14)
 plt.ylim(11, 19.5)
 plt.show()
 
+fig, ax = plt.subplots()
+plt.subplots_adjust(wspace=0, hspace=0, bottom = 0.08, top = 0.98, left = 0.1, right = 0.95)
+sns.scatterplot(x = avg_scores['Avg Score Tasks'], y = avg_scores['Avg Score Episodes'], 
+                hue = avg_scores['Series'])
+plt.xticks(fontsize = 14)
+plt.yticks(fontsize = 14)
+plt.xlabel('Average Score per Number of Tasks', fontsize = 15)
+plt.ylabel('Average Score per Number of Episodes', fontsize = 15)
+plt.legend(loc = 'lower right', ncol = 2, fontsize = 14)
+plt.ylim(11, 19.5)
+plt.show()
 
 score_above = avg_scores[avg_scores['Avg Score Episodes'] > y][['Avg Score Episodes', 'Avg Score Tasks']]
 score_below = avg_scores[avg_scores['Avg Score Episodes'] <= y][['Avg Score Episodes', 'Avg Score Tasks']]
@@ -220,8 +256,8 @@ plt.text(3.1, 16, round(below_corr.loc['Avg Score Tasks', 'Avg Score Episodes'],
 plt.text(2.3, 18, round(above_corr.loc['Avg Score Tasks', 'Avg Score Episodes'], 4), fontsize = 18, color = 'dodgerblue')
 plt.xticks(fontsize = 14)
 plt.yticks(fontsize = 14)
-plt.xlabel('Average Score per Number of Tasks', fontsize = 15)
-plt.ylabel('Average Score per Number of Episodes', fontsize = 15)
-plt.title('Splitting the Data and Extracting Separate Correlations for \n Average Scores per Number of Tasks or Episodes', fontsize = 16)
+plt.xlabel('Average Score per Number of Tasks', fontsize = 16)
+plt.ylabel('Average Score per Number of Episodes', fontsize = 16)
+plt.title('Average Scores per Number of Tasks or Episodes - Splitting the Data', fontsize = 20)
 plt.ylim(11, 19.5)
 plt.show()

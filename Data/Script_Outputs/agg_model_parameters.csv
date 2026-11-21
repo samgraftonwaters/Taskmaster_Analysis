@@ -1,0 +1,3 @@
+Number of Clusters,Number of PCAs,Agg Silhouette Score (Eucl),Agg Link,Columns Dropped
+3,2,0.7065817955857727,single,"['Score', 'Avg_Score_per_Episodes', 'Team_Score_per_Person']"
+3,2,0.7065817955857727,average,"['Score', 'Avg_Score_per_Episodes', 'Team_Score_per_Person']"

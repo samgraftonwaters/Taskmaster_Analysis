@@ -1,6 +1,6 @@
 ﻿Series,Name,Number_Episodes,Team_A,Team_B,Age_Ranges_20 - 29,Age_Ranges_30 - 39,Age_Ranges_40 - 49,Age_Ranges_50 - 59,Age_Ranges_60 - 69,Gender_Female,Gender_Male,Seat_Seat 1,Seat_Seat 2,Seat_Seat 3,Seat_Seat 4,Seat_Seat 5
-21,Amy Gledhill,10,0,0,0,1,0,0,0,1,0,1,0,0,0,0
-21,Armando Iannucci,10,0,0,0,0,0,0,1,0,1,0,1,0,0,0
-21,Joanna Page,10,0,0,0,0,1,0,0,1,0,0,0,1,0,0
-21,Joel Dommett,10,0,0,0,0,1,0,0,0,1,0,0,0,1,0
-21,Kumail Nanjiani ,10,0,0,0,0,1,0,0,0,1,0,0,0,0,1
+21,Amy Gledhill,10,0,1,0,1,0,0,0,1,0,1,0,0,0,0
+21,Armando Iannucci,10,1,0,0,0,0,0,1,0,1,0,1,0,0,0
+21,Joanna Page,10,1,0,0,0,1,0,0,1,0,0,0,1,0,0
+21,Joel Dommett,10,0,1,0,0,1,0,0,0,1,0,0,0,1,0
+21,Kumail Nanjiani ,10,0,1,0,0,1,0,0,0,1,0,0,0,0,1
