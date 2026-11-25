@@ -76,5 +76,7 @@ GPT was used in three main ways:
 2. Writing single lines of code where I do not fully know the correct syntax
 3. Writing more complex code where I have an envision or idea I want to pursue, but did not have the time or resources to work it out given a solo and personal project.
 
+The rest of the code was written by me.
+
 
 
